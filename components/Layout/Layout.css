@@ -1,0 +1,7 @@
+@import '../../defaults.css';
+
+.container {
+  width: 100%;
+  max-width: var(--layout-width);
+  padding: 0 rem-calc(10px);
+}
