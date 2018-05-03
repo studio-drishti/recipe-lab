@@ -1,5 +1,31 @@
 @import '../../defaults.css';
 
 .form {
+  display: flex;
 
+  & label {
+    display: block;
+    margin-bottom: 1rem;
+  }
+
+  & input,
+  & textarea {
+    display: block;
+    width: 100%;
+  }
+}
+
+.primaryFieldset,
+.secondaryFieldset {
+  flex: 1;
+  border: none;
+  padding: 0;
+}
+
+.primaryFieldset {
+  padding-right: 1rem;
+}
+
+.secondaryFieldset {
+  padding-left: 1rem;
 }

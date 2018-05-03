@@ -4,4 +4,5 @@
   width: 100%;
   max-width: var(--layout-width);
   padding: 0 rem-calc(10px);
+  margin: 0 auto;
 }
