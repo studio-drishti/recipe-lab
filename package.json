@@ -11,6 +11,7 @@
     "@zeit/next-css": "0.0.7",
     "express": "^4.16.3",
     "isomorphic-unfetch": "^2.0.0",
+    "mongoose": "^5.0.17",
     "next": "^6.0.0",
     "normalize.css": "^8.0.0",
     "postcss-cssnext": "^3.1.0",
