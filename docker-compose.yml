@@ -1,0 +1,21 @@
+version: "2"
+services:
+  app:
+    container_name: app
+    build: .
+    volumes:
+      - .:/usr/src/app
+      - /usr/app/node_modules
+    ports:
+      - "3000:3000"
+    links:
+      - mongo
+    environment:
+      NODE_ENV: development
+  mongo:
+    container_name: mongo
+    image: mongo:latest
+    # volumes:
+    #   - ./data:/data/db
+    ports:
+      - "27017:27017"
