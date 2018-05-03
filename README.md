@@ -1,7 +1,13 @@
 # Schooled Lunch
 Yet another recipe website.
+
 ## Docker Setup for Development
-run `docker-compose build` followed by `docker-compose up`
+First time setup: 
+`docker-compose build` 
+
+Start the live-reloading dev server:
+`docker-compose up`
 
 ## Installing Node Modules with Docker
-run `docker-compose run --rm app yarn add <package name>`
+Installing via Docker ensures container uses correct dependencies:
+`docker-compose run --rm app yarn add <package name>`
