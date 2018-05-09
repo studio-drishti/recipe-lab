@@ -31,22 +31,6 @@ export const recipes = [
         notes: '',
       },
       {
-        name: 'avocado oil',
-        quantity: 2,
-        unit: 'tbsp',
-        toTaste: false,
-        processing: '',
-        notes: 'plus another few tablespoons for cooking the meatballs',
-      },
-      {
-        name: 'medium onion',
-        quantity: 1,
-        unit: '',
-        toTaste: false,
-        processing: 'chopped',
-        notes: 'Preferablly red, but brown onions work just as well.',
-      },
-      {
         name: 'garlic cloves',
         quantity: 2,
         unit: '',
@@ -95,7 +79,28 @@ export const recipes = [
       {
         directions: `Heat a large pot over medium-high heat. Add 2 tablespoons of the avocado oil, and when it's warm, saute the onion until it's brown and translucent`,
         notes: 'Try to cook the onions longer than you think will be necessary. Get them real carmelized. Yum Yum.',
+        ingredients: [
+          {
+            name: 'avocado oil',
+            quantity: 2,
+            unit: 'tbsp',
+            toTaste: false,
+            processing: '',
+            notes: 'plus another few tablespoons for cooking the meatballs',
+          },
+          {
+            name: 'medium onion',
+            quantity: 1,
+            unit: '',
+            toTaste: false,
+            processing: 'chopped',
+            notes: 'Preferablly red, but brown onions work just as well.',
+          },
+        ],
       },
+      {
+        directions: ''
+      }
     ],
   },
 ]
