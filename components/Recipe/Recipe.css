@@ -1,5 +1,42 @@
 @import '../../defaults.css';
 
 .recipe {
+  border: 1px solid lightslategray;
+  background: rgb(220, 222, 222);
+  margin-bottom: 1rem;
+  display: flex;
+  flex-direction: row;
 
+  & > div {
+    flex: 1;
+    padding: 1rem;
+  }
+}
+
+.recipeMain {
+  border-right: 1px solid lightslategray;
+}
+
+.recipeDetail {
+}
+
+.ingredients {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+
+  & > li + li {
+    margin-top: 0.5rem;
+    border-top: 1px dotted rgba(0, 0, 0, 0.1);
+  }
+
+  & > li > ul {
+    list-style: square;
+  }
+}
+
+.steps {
+  & > li {
+    cursor: pointer;
+  }
 }
