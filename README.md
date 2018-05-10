@@ -11,3 +11,6 @@ Start the live-reloading dev server:
 ## Installing Node Modules with Docker
 Installing via Docker ensures container uses correct dependencies:
 `docker-compose run --rm app yarn add <package name>`
+
+## Running Tests
+`docker-compose run --rm app yarn test`

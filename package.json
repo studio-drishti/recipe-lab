@@ -1,14 +1,17 @@
 {
-  "name": "with-css-modules",
+  "name": "schooled-lunch",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
+    "test": "NODE_ENV=test jest",
     "dev": "node server.js",
     "build": "next build",
     "start": "next start"
   },
   "dependencies": {
     "@zeit/next-css": "0.0.7",
+    "babel-core": "7.0.0-bridge.0",
+    "babel-jest": "^22.4.3",
     "express": "^4.16.3",
     "isomorphic-unfetch": "^2.0.0",
     "mongoose": "^5.0.17",
@@ -18,5 +21,12 @@
     "postcss-import": "^11.1.0",
     "react": "^16.3.2",
     "react-dom": "^16.3.2"
+  },
+  "devDependencies": {
+    "enzyme": "^3.3.0",
+    "enzyme-adapter-react-16": "^1.1.1",
+    "jest": "^22.4.3",
+    "react-addons-test-utils": "^15.6.2",
+    "react-test-renderer": "^16.3.2"
   }
 }
