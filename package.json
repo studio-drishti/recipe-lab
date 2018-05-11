@@ -4,6 +4,7 @@
   "main": "server.js",
   "scripts": {
     "test": "NODE_ENV=test jest",
+    "test:watch": "NODE_ENV=test jest --watch",
     "dev": "node server.js",
     "build": "next build",
     "start": "next start"

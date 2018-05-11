@@ -21,18 +21,7 @@
 }
 
 .ingredients {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-
-  & > li + li {
-    margin-top: 0.5rem;
-    border-top: 1px dotted rgba(0, 0, 0, 0.1);
-  }
-
-  & > li > ul {
-    list-style: square;
-  }
+  list-style: square;
 }
 
 .steps {

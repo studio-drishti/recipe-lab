@@ -1,6 +1,8 @@
 import Link from 'next/link'
-import css from './Recipe.css'
 import { Component } from 'react'
+
+import css from './Recipe.css'
+import { stepsToIngredientTotals, formatIngredientTotal } from '../../util/recipeTools';
 
 class Recipe extends Component {
   state = {
@@ -15,17 +17,9 @@ class Recipe extends Component {
         <div className={css.recipeMain}>
           <h3>Ingredients</h3>
           <ul className={css.ingredients}>
-            {recipe.steps.filter(step => step.ingredients.length > 0).map((step, i) => (
+            {stepsToIngredientTotals(recipe.steps).map((ingredient, i) => (
               <li key={i}>
-                <small>Step {i + 1}</small>
-                <ul>
-                  {step.ingredients.map((ingredient, i) => (
-                    <li key={i}>
-                      {ingredient.quantity} {ingredient.unit} {ingredient.name}
-                      {ingredient.processing && `, ${ingredient.processing}`}
-                    </li>
-                  ))}
-                </ul>
+                {formatIngredientTotal(ingredient)}
               </li>
             ))}
           </ul>

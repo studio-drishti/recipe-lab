@@ -14,3 +14,5 @@ Installing via Docker ensures container uses correct dependencies:
 
 ## Running Tests
 `docker-compose run --rm app yarn test`
+or
+`docker-compose run --rm app yarn test:watch`

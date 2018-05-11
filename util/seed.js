@@ -37,7 +37,6 @@ module.exports = [
             unit: 'tbsp',
             toTaste: false,
             processing: '',
-            notes: 'plus another few tablespoons for cooking the meatballs',
           },
           {
             name: 'medium onion',
@@ -45,7 +44,6 @@ module.exports = [
             unit: '',
             toTaste: false,
             processing: 'chopped',
-            notes: 'Preferablly red, but brown onions work just as well.',
           },
         ],
       },
@@ -59,7 +57,6 @@ module.exports = [
             unit: '',
             toTaste: false,
             processing: 'minced',
-            notes: '',
           },
           {
             name: 'italian seasoning',
@@ -67,7 +64,6 @@ module.exports = [
             unit: 'tsp',
             toTaste: false,
             processing: '',
-            notes: '',
           },
         ],
       },
@@ -81,7 +77,6 @@ module.exports = [
             unit: 'cup',
             toTaste: false,
             processing: '',
-            notes: '',
           },
         ],
       },
@@ -95,7 +90,6 @@ module.exports = [
             unit: 'cup',
             toTaste: false,
             processing: '',
-            notes: '',
           },
           {
             name: 'chicken stock',
@@ -103,7 +97,6 @@ module.exports = [
             unit: 'cup',
             toTaste: false,
             processing: '',
-            notes: '',
           },
           {
             name: '28-ounce can whole peeled tomatoes',
@@ -111,7 +104,6 @@ module.exports = [
             unit: '',
             toTaste: false,
             processing: 'blended into a puree',
-            notes: '',
           },
         ]
       },
@@ -125,7 +117,6 @@ module.exports = [
             unit: 'lb',
             toTaste: false,
             processing: '',
-            notes: '',
           },
         ],
       },
