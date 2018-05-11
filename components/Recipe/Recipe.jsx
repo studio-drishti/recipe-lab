@@ -13,22 +13,27 @@ class Recipe extends Component {
     editing: false,
   }
 
-  // componentDidMount() {
-  //   if(localStorage.getItem('recipeMods') !== null) {
-  //     const mods = JSON.parse(localStorage.getItem('recipeMods'));
-  //     let { recipe } = this.state
-  //     console.log(mods)
-  //     recipe = merge(recipe, mods);
-  //     this.setState({ recipe })
-  //   }
-  // }
+  componentDidMount() {
+    if(localStorage.getItem('recipeMods') !== null) {
+      const mods = JSON.parse(localStorage.getItem('recipeMods'));
+      let { recipe } = this.state
+      Object.entries(mods.steps).forEach(([key, val]) => {
+        recipe.steps[key] = merge(recipe.steps[key], val);
+      })
+    }
+  }
 
-  toggleEdit = (e) => {
+  toggleEdit = () => {
     if(this.state.editing === false) {
       this.setState({editing: true})
     } else {
       this.setState({editing: false})
     }
+  }
+
+  resetMods = () => {
+    localStorage.removeItem('recipeMods')
+    this.setState({recipe: this.props.recipe})
   }
 
   handleStepChange = (e) => {
@@ -37,13 +42,16 @@ class Recipe extends Component {
     recipe.steps[this.state.currentStep][name] = value
 
 
-    // localStorage.setItem('recipeMods', JSON.stringify({
-    //   steps: {
-    //     [this.state.currentStep]: {
-    //       [name]: value
-    //     }
-    //   }
-    // }))
+    localStorage.setItem('recipeMods', JSON.stringify(merge(
+      localStorage.getItem('recipeMods') !== null ? JSON.parse(localStorage.getItem('recipeMods')) : {},
+      {
+        steps: {
+          [this.state.currentStep]: {
+            [name]: value
+          }
+        }
+      }
+  )))
 
     this.setState({recipe})
   }
@@ -76,7 +84,7 @@ class Recipe extends Component {
               <button onClick={this.toggleEdit}>
                 <i className="material-icons">edit</i>
               </button>
-              <button>
+              <button onClick={this.resetMods}>
                 <i className="material-icons">delete</i>
               </button>
             </div>
