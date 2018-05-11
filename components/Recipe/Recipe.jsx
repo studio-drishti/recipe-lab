@@ -13,15 +13,15 @@ class Recipe extends Component {
     editing: false,
   }
 
-  componentDidMount() {
-    if(localStorage.getItem('recipeMods') !== null) {
-      const mods = JSON.parse(localStorage.getItem('recipeMods'));
-      let { recipe } = this.state
-      Object.entries(mods.steps).forEach(([key, val]) => {
-        recipe.steps[key] = merge(recipe.steps[key], val);
-      })
-    }
-  }
+  // componentDidMount() {
+  //   if(localStorage.getItem('recipeMods') !== null) {
+  //     const mods = JSON.parse(localStorage.getItem('recipeMods'));
+  //     let { recipe } = this.state
+  //     Object.entries(mods.steps).forEach(([key, val]) => {
+  //       recipe.steps[key] = merge(recipe.steps[key], val);
+  //     })
+  //   }
+  // }
 
   toggleEdit = () => {
     if(this.state.editing === false) {
@@ -31,10 +31,10 @@ class Recipe extends Component {
     }
   }
 
-  resetMods = () => {
-    localStorage.removeItem('recipeMods')
-    this.setState({recipe: this.props.recipe})
-  }
+  // resetMods = () => {
+  //   localStorage.removeItem('recipeMods')
+  //   this.setState({recipe: this.props.recipe})
+  // }
 
   handleStepChange = (e) => {
     const { name, value } = e.target
@@ -42,16 +42,16 @@ class Recipe extends Component {
     recipe.steps[this.state.currentStep][name] = value
 
 
-    localStorage.setItem('recipeMods', JSON.stringify(merge(
-      localStorage.getItem('recipeMods') !== null ? JSON.parse(localStorage.getItem('recipeMods')) : {},
-      {
-        steps: {
-          [this.state.currentStep]: {
-            [name]: value
-          }
-        }
-      }
-  )))
+    // localStorage.setItem('recipeMods', JSON.stringify(merge(
+    //   localStorage.getItem('recipeMods') !== null ? JSON.parse(localStorage.getItem('recipeMods')) : {},
+    //   {
+    //     steps: {
+    //       [this.state.currentStep]: {
+    //         [name]: value
+    //       }
+    //     }
+    //   }
+    // )))
 
     this.setState({recipe})
   }
@@ -84,9 +84,9 @@ class Recipe extends Component {
               <button onClick={this.toggleEdit}>
                 <i className="material-icons">edit</i>
               </button>
-              <button onClick={this.resetMods}>
+              {/* <button onClick={this.resetMods}>
                 <i className="material-icons">delete</i>
-              </button>
+              </button> */}
             </div>
             {recipe.steps[currentStep].ingredients.length > 0 && (
               <div>
