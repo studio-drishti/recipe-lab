@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import { Component } from 'react'
 import Textarea from "react-textarea-autosize";
-import merge from 'deepmerge';
+// import merge from 'deepmerge';
 
 import css from './Recipe.css'
 import { stepsToIngredientTotals, formatIngredientTotal } from '../../util/recipeTools';
