@@ -40,7 +40,7 @@ export const sortIngredientQuantites = quantities => {
 
 export const formatIngredientTotal = ingredient => {
   const quantities = sortIngredientQuantites(ingredient.quantities);
-  let text = quantities.map( qty => [`${qty.quantity} ${qty.unit}`]).join(', ')
+  let text = quantities.map( qty => [`${qty.quantity} ${qty.unit}`]).join(' + ')
   text += ' ' + ingredient.name
   if(ingredient.divided) text += ', divided'
   return text
