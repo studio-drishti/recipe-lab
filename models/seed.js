@@ -1,26 +1,27 @@
-module.exports = [
-  {
-    id: 0,
+const Recipe = require('./Recipe')
+
+module.exports = async function generateDummyData() {
+  const recipe1 = new Recipe({
     title: 'Spaghetti and Meatballs',
-    author: 'The Curnielswensens',
-    source: 'Clean Eats',
+    // author: 'The Curnielswensens',
+    // source: 'Clean Eats',
     time: 'medium',
     skill: 'easy',
-    yields: {
-      quantity: 4,
-      unit: "servings"
-    },
-    tags: [
-      'Gluten Free',
-    ],
-    images: [
-      'https://media.giphy.com/media/ToMjGpyWnjWUZbfi7rq/giphy.gif',
-    ],
+    // yields: {
+    //   quantity: 4,
+    //   unit: "servings"
+    // },
+    // tags: [
+    //   'Gluten Free',
+    // ],
+    // images: [
+    //   'https://media.giphy.com/media/ToMjGpyWnjWUZbfi7rq/giphy.gif',
+    // ],
     description: `It's spaghett! This super easy recipe is delcious,
                   nutritious, and sure to be a crowd pleaser.
                   Rice noodles done right are practically indistinguishable
                   from their glutenfull counterparts.`,
-    type: 'main',
+    course: 'main',
     steps: [
       {
         directions: 'Preheat the oven to 350 F',
@@ -121,5 +122,7 @@ module.exports = [
         ],
       },
     ],
-  },
-]
+  })
+
+  Recipe.create(recipe1)
+}

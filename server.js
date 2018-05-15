@@ -1,31 +1,59 @@
 const express = require('express')
 const next = require('next')
+const mongoose = require('mongoose')
 
 const dev = process.env.NODE_ENV !== 'production'
 const app = next({ dev })
 const handle = app.getRequestHandler()
 
-const recipes = require('./util/seed');
+const db = require('./models')
+const seed = require('./models/seed')
+
+const MONGO_URL = process.env.MONGO_URL || 'mongodb://localhost:27017/schooled-lunch'
+mongoose.connect( MONGO_URL, err => {
+  if(err) {
+    console.error('Please make sure Mongodb is installed and running!')
+    throw error
+  } else {
+    console.log(`Connected to DB at ${MONGO_URL}`)
+  }
+
+  seed();
+})
 
 app.prepare()
 .then(() => {
   const server = express()
 
-  // Fake Api Routes
-  // TODO: make them real and move into a separate file
+  // TODO: Move api routs into a different file
   server.get('/api/recipes', (req, res) => {
-    res.json({
-      'title': `Ma's Awesome Sauce`,
-      'description': 'A totally awesome sauce made by my ma.'
-    });
+    db.Recipe.find({})
+    .then(data => {
+      res.json(data)
+    })
+    .catch(err => {
+      throw err
+      res.json(err)
+    })
   })
 
-  // super dumb route just to test working with a recipe
   server.get('/api/recipes/:id', (req, res) => {
-    // const recipes = require('./util/seed.js');
+    db.Recipe.findOne({'_id': req.params.id})
+    .then(data => {
+      console.log(data)
+      res.json(data)
+    })
+    .catch(err => {
+      throw err
+      res.json(err)
+    })
+  })
 
-    res.json(recipes[req.params.id]);
-  });
+  server.get('/recipes/:id', (req, res) => {
+    const actualPage = '/recipe'
+    const queryParams = { id: req.params.id }
+    app.render(req, res, actualPage, queryParams)
+  })
 
   server.get('*', (req, res) => {
     return handle(req, res)

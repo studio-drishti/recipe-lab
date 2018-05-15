@@ -11,6 +11,7 @@ services:
       - mongo
     environment:
       NODE_ENV: development
+      MONGO_URL: mongodb://mongo:27017/schooled-lunch
   mongo:
     image: mongo:latest
     # volumes:

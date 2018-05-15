@@ -12,14 +12,13 @@ const Page = ({recipe}) => (
   </Layout>
 )
 
-Page.getInitialProps = async function() {
-  const res = await fetch(`${API_URL}/api/recipes/0`)
-  const data = await res.json()
-
-  console.log(`Show data fetched. Count: ${data.length}`)
+Page.getInitialProps = async function(context) {
+  const { id } = context.query
+  const res = await fetch(`${API_URL}/api/recipes/${id}`)
+  const recipe = await res.json()
 
   return {
-    recipe: data
+    recipe
   }
 }
 
