@@ -16,3 +16,10 @@ Installing via Docker ensures container uses correct dependencies:
 `docker-compose run --rm app yarn test`
 or
 `docker-compose run --rm app yarn test:watch`
+
+## Database
+To seed the database:
+`docker-compose run --rm app yarn seed`
+
+Use when server is running to view data:
+`docker-compose exec mongo mongo`

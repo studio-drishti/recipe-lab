@@ -1,32 +1,55 @@
-const express = require('express')
-const next = require('next')
 const mongoose = require('mongoose')
-
-const dev = process.env.NODE_ENV !== 'production'
-const app = next({ dev })
-const handle = app.getRequestHandler()
+// Load Next.js dependencies and Next Auth config
+const next = require('next')
+const nextAuth = require('next-auth')
+const nextAuthConfig = require('./next-auth.config')
 
 const db = require('./models')
-const seed = require('./models/seed')
 
-const MONGO_URL = process.env.MONGO_URL || 'mongodb://localhost:27017/schooled-lunch'
-mongoose.connect( MONGO_URL, err => {
-  if(err) {
-    console.error('Please make sure Mongodb is installed and running!')
-    throw error
-  } else {
-    console.log(`Connected to DB at ${MONGO_URL}`)
-  }
+// Load environment variables
+// require('dotenv').load()
 
-  seed();
+process.on('uncaughtException', function(err) {
+  console.error('Uncaught Exception: ', err)
 })
 
-app.prepare()
+process.on('unhandledRejection', (reason, p) => {
+  console.error('Unhandled Rejection: Promise:', p, 'Reason:', reason)
+})
+
+// Default when run with `npm start` is 'production' and default port is '80'
+// `npm run dev` defaults mode to 'development' & port to '3000'
+process.env.NODE_ENV = process.env.NODE_ENV || 'production'
+process.env.PORT = process.env.PORT || 80
+
+process.env.MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/schooled-lunch'
+
+// Initialize the Next.js app
+const nextApp = next({
+  dir: '.',
+  dev: (process.env.NODE_ENV !== 'production')
+})
+
+nextApp.prepare()
 .then(() => {
-  const server = express()
+  return mongoose.connect(process.env.MONGO_URI)
+})
+.then(() => {
+  // Load configuration and return config object
+  return nextAuthConfig()
+})
+.then(nextAuthOptions => {
+  // Don't pass a port to NextAuth so we can use custom express routes
+  if (nextAuthOptions.port) delete nextAuthOptions.port
+
+  return nextAuth(nextApp, nextAuthOptions)
+})
+.then(({ express, expressApp }) => {
+
+  // const server = express()
 
   // TODO: Move api routs into a different file
-  server.get('/api/recipes', (req, res) => {
+  expressApp.get('/api/recipes', (req, res) => {
     db.Recipe.find({})
     .then(data => {
       res.json(data)
@@ -37,8 +60,9 @@ app.prepare()
     })
   })
 
-  server.get('/api/recipes/:id', (req, res) => {
+  expressApp.get('/api/recipes/:id', (req, res) => {
     db.Recipe.findOne({'_id': req.params.id})
+    .populate('author')
     .then(data => {
       console.log(data)
       res.json(data)
@@ -49,19 +73,19 @@ app.prepare()
     })
   })
 
-  server.get('/recipes/:id', (req, res) => {
+  expressApp.get('/recipes/:id', (req, res) => {
     const actualPage = '/recipe'
-    const queryParams = { id: req.params.id }
-    app.render(req, res, actualPage, queryParams)
+    nextApp.render(req, res, actualPage, req.params)
   })
 
-  server.get('*', (req, res) => {
-    return handle(req, res)
+  expressApp.all('*', (req, res) => {
+    let nextRequestHandler = nextApp.getRequestHandler()
+    return nextRequestHandler(req, res)
   })
 
-  server.listen(3000, (err) => {
+  expressApp.listen(process.env.PORT, (err) => {
     if (err) throw err
-    console.log('> Ready on http://localhost:3000')
+    console.log(`> Ready on http://localhost:${process.env.PORT}`)
   })
 })
 .catch((ex) => {

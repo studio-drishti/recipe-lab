@@ -39,7 +39,11 @@ const RecipeSchema = new Schema({
     type: String,
     required: true,
   },
-  // TODO: add related author model
+  author: {
+    type: Schema.Types.ObjectId,
+    ref: 'User',
+    required: true,
+  },
   // TODO: Add source or sources (web / book / etc.)
   // TODO: Add fields for amount recipe yields (quantity, unit)
   // TODO: Add related tags field

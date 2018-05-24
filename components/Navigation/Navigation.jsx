@@ -16,9 +16,9 @@ export default () => (
         About
       </a>
     </Link>
-    <Link href="/submit">
+    <Link href="/register">
       <a>
-        Submit
+        Register
       </a>
     </Link>
     <input type="search" placeholder="Search..." />

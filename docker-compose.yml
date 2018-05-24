@@ -11,7 +11,9 @@ services:
       - mongo
     environment:
       NODE_ENV: development
-      MONGO_URL: mongodb://mongo:27017/schooled-lunch
+      PORT: 3000
+      MONGO_URI: mongodb://mongo:27017/schooled-lunch
+      EMAIL_FROM: no-reply@schooledlunch.club
   mongo:
     image: mongo:latest
     # volumes:

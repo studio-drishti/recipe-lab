@@ -1,9 +1,36 @@
-const Recipe = require('./Recipe')
+const mongoose = require('mongoose')
 
-module.exports = async function generateDummyData() {
-  const recipe1 = new Recipe({
+const Recipe = require('./Recipe')
+const User = require('./User');
+
+process.env.MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/schooled-lunch'
+
+mongoose.connect(process.env.MONGO_URI)
+.then(() => {
+  return Recipe.deleteMany({}).then(() => User.deleteMany({}))
+})
+.then(() => {
+  return User.create([
+    {
+      name: 'Jay',
+      email: 'jay@schooledlunch.club',
+      emailVerified: true,
+    },
+    {
+      name: 'Emma',
+      email: 'emma@schooledlunch.club',
+      emailVerified: true,
+    },
+  ])
+})
+.then(users => {
+  users.forEach(user => {
+    console.log("Created User: ", user.name)
+  })
+
+  return Recipe.create({
     title: 'Spaghetti and Meatballs',
-    // author: 'The Curnielswensens',
+    author: users[0]._id,
     // source: 'Clean Eats',
     time: 'medium',
     skill: 'easy',
@@ -123,6 +150,12 @@ module.exports = async function generateDummyData() {
       },
     ],
   })
-
-  Recipe.create(recipe1)
-}
+})
+.then(recipe => {
+  console.log('Created Recipe: ', recipe.title)
+  mongoose.connection.close()
+})
+.catch(ex => {
+  console.error(ex.stack)
+  process.exit(1)
+})
