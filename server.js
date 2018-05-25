@@ -32,6 +32,7 @@ const nextApp = next({
 
 nextApp.prepare()
 .then(() => {
+  // Ensure that we are connected to mongo
   return mongoose.connect(process.env.MONGO_URI)
 })
 .then(() => {
@@ -45,8 +46,6 @@ nextApp.prepare()
   return nextAuth(nextApp, nextAuthOptions)
 })
 .then(({ express, expressApp }) => {
-
-  // const server = express()
 
   // TODO: Move api routs into a different file
   expressApp.get('/api/recipes', (req, res) => {

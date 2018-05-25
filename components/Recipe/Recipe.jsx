@@ -8,7 +8,10 @@ import { stepsToIngredientTotals, formatIngredientTotal } from '../../util/recip
 
 class Recipe extends Component {
   state = {
-    currentStep: 0,
+    active: {
+      item: 0,
+      step: 0,
+    },
     recipe: this.props.recipe,
     editing: false,
   }
@@ -38,8 +41,8 @@ class Recipe extends Component {
 
   handleStepChange = (e) => {
     const { name, value } = e.target
-    const { recipe } = this.state
-    recipe.steps[this.state.currentStep][name] = value
+    const { recipe, active } = this.state
+    recipe.items[active.item].steps[active.step][name] = value
 
 
     // localStorage.setItem('recipeMods', JSON.stringify(merge(
@@ -56,28 +59,45 @@ class Recipe extends Component {
     this.setState({recipe})
   }
 
+  setActiveStep = (itemI, stepI) => {
+    this.setState({
+      active: {
+        item: itemI,
+        step: stepI,
+      }
+    })
+  }
+
   render() {
-    const { recipe, currentStep, editing } = this.state;
+    const { recipe, active, editing } = this.state;
     return (
       <article className={css.recipe}>
         <div className={css.recipeMain}>
-          <h3>Ingredients</h3>
-          <ul className={css.ingredients}>
-            {stepsToIngredientTotals(recipe.steps).map((ingredient, i) => (
-              <li key={i}>
-                {formatIngredientTotal(ingredient)}
-              </li>
-            ))}
-          </ul>
+          {recipe.items.map(item => (
+            <div>
+              <h3>Ingredients for {item.name}</h3>
+              <ul className={css.ingredients}>
+                {stepsToIngredientTotals(item.steps).map((ingredient, i) => (
+                  <li key={i}>
+                    {formatIngredientTotal(ingredient)}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
 
-          <h3>Directions</h3>
-          <ol className={css.steps}>
-            {recipe.steps.map((step, i) => (
-              <li key={i} onClick={() => this.setState({currentStep: i})}>
-                {step.directions}
-              </li>
-            ))}
-          </ol>
+          {recipe.items.map((item, itemI) => (
+            <div key={item._id}>
+              <h3>Directions for {item.name}</h3>
+              <ol className={css.steps}>
+                {item.steps.map((step, stepI) => (
+                  <li key={step._id} onClick={() => this.setActiveStep(itemI, stepI)}>
+                    {step.directions}
+                  </li>
+                ))}
+              </ol>
+            </div>
+          ))}
         </div>
         <div className={css.recipeDetail}>
             <div className={css.recipeActions}>
@@ -88,12 +108,12 @@ class Recipe extends Component {
                 <i className="material-icons">delete</i>
               </button> */}
             </div>
-            {recipe.steps[currentStep].ingredients.length > 0 && (
+            {recipe.items[active.item].steps[active.step].ingredients.length > 0 && (
               <div>
 
                 <h3>Ingredients Used</h3>
                 <ul>
-                  {recipe.steps[currentStep].ingredients.map((ingredient, i) => (
+                  {recipe.items[active.item].steps[active.step].ingredients.map((ingredient, i) => (
                     <li key={i}>
                       {ingredient.quantity} {ingredient.unit} {ingredient.name}
                       {ingredient.processing && `, ${ingredient.processing}`}
@@ -107,24 +127,24 @@ class Recipe extends Component {
             {editing ? (
               <Textarea
                 name="directions"
-                value={recipe.steps[currentStep].directions}
+                value={recipe.items[active.item].steps[active.step].directions}
                 placeholder="Directions"
                 onChange={this.handleStepChange} />
             ) : (
               <p>
-                {recipe.steps[currentStep].directions}
+                {recipe.items[active.item].steps[active.step].directions}
               </p>
             )}
 
             {editing ? (
               <Textarea
                 name="notes"
-                value={recipe.steps[currentStep].notes}
+                value={recipe.items[active.item].steps[active.step].notes}
                 placeholder="Additional Notes"
                 onChange={this.handleStepChange} />
             ) : (
               <p>
-                {recipe.steps[currentStep].notes}
+                {recipe.items[active.item].steps[active.step].notes}
               </p>
             )}
         </div>

@@ -28,33 +28,9 @@ mongoose.connect(process.env.MONGO_URI)
     console.log("Created User: ", user.name)
   })
 
-  return Recipe.create({
-    title: 'Spaghetti and Meatballs',
-    author: users[0]._id,
-    // source: 'Clean Eats',
-    time: 'medium',
-    skill: 'easy',
-    // yields: {
-    //   quantity: 4,
-    //   unit: "servings"
-    // },
-    // tags: [
-    //   'Gluten Free',
-    // ],
-    // images: [
-    //   'https://media.giphy.com/media/ToMjGpyWnjWUZbfi7rq/giphy.gif',
-    // ],
-    description: `It's spaghett! This super easy recipe is delcious,
-                  nutritious, and sure to be a crowd pleaser.
-                  Rice noodles done right are practically indistinguishable
-                  from their glutenfull counterparts.`,
-    course: 'main',
+  const spaghetti = {
+    name: 'Spaghetti',
     steps: [
-      {
-        directions: 'Preheat the oven to 350 F',
-        notes: '',
-        ingredients: [],
-      },
       {
         directions: `Heat a large pot over medium-high heat. Add 2 tablespoons of the avocado oil, and when it's warm, saute the onion until it's brown and translucent`,
         notes: 'Try to cook the onions longer than you think will be necessary. Get them real carmelized. Yum Yum.',
@@ -63,14 +39,10 @@ mongoose.connect(process.env.MONGO_URI)
             name: 'avocado oil',
             quantity: 2,
             unit: 'tbsp',
-            toTaste: false,
-            processing: '',
           },
           {
             name: 'medium onion',
             quantity: 1,
-            unit: '',
-            toTaste: false,
             processing: 'chopped',
           },
         ],
@@ -82,16 +54,12 @@ mongoose.connect(process.env.MONGO_URI)
           {
             name: 'garlic cloves',
             quantity: 2,
-            unit: '',
-            toTaste: false,
             processing: 'minced',
           },
           {
             name: 'italian seasoning',
             quantity: 2,
             unit: 'tsp',
-            toTaste: false,
-            processing: '',
           },
         ],
       },
@@ -103,8 +71,6 @@ mongoose.connect(process.env.MONGO_URI)
             name: 'red wine',
             quantity: 1,
             unit: 'cup',
-            toTaste: false,
-            processing: '',
           },
         ],
       },
@@ -116,21 +82,15 @@ mongoose.connect(process.env.MONGO_URI)
             name: 'red wine',
             quantity: 1,
             unit: 'cup',
-            toTaste: false,
-            processing: '',
           },
           {
             name: 'chicken stock',
             quantity: 0.5,
             unit: 'cup',
-            toTaste: false,
-            processing: '',
           },
           {
             name: '28-ounce can whole peeled tomatoes',
             quantity: 1,
-            unit: '',
-            toTaste: false,
             processing: 'blended into a puree',
           },
         ]
@@ -143,12 +103,91 @@ mongoose.connect(process.env.MONGO_URI)
             name: 'gulten-free spaghetti',
             quantity: 1,
             unit: 'lb',
-            toTaste: false,
-            processing: '',
           },
         ],
       },
     ],
+  }
+
+  const meatballs = {
+    name: 'Meatballs',
+    steps: [
+      {
+        directions: 'Preheat the oven to 350 F',
+      },
+      {
+        directions: 'Stir together all the ingredients for the meatballs until they are well combined.',
+        ingredients: [
+          {
+            quantity: 1,
+            unit: 'lb',
+            name: 'ground beef',
+          },
+          {
+            quantity: .25,
+            unit: 'cup',
+            name: 'onion',
+            processing: 'minced',
+          },
+          {
+            quantity: 1,
+            name: 'egg',
+          },
+          {
+            quantity: 1,
+            unit: 'tbsp',
+            name: 'chia seeds',
+          },
+          {
+            quantity: 2,
+            unit: 'tbsp',
+            name: 'almond flour',
+          },
+          {
+            quantity: .25,
+            unit: 'cup',
+            name: 'parsley',
+          },
+          {
+            quantity: 2,
+            unit: 'tsp',
+            name: 'sea salt',
+          },
+          {
+            quantity: .25,
+            unit: 'tsp',
+            name: 'black pepper',
+            processing: 'freshly ground',
+          },
+        ],
+      },
+      {
+        directions: 'Using your hands, form even size balls, about the size of golf balls, and set them aside. Heat another few tablespoons of avocado oil in an ovenproof saute pan. When the oil is hot, add the meatballs and brown them about 2 minutes on each side before transferring the pan to the oven. Cook them for about 10 minutes.',
+        ingredients: [
+          {
+            quantity: 2,
+            unit: 'tbsp',
+            name: 'avocado oil',
+          }
+        ]
+      }
+    ],
+  }
+
+  return Recipe.create({
+    title: 'Spaghetti and Meatballs',
+    author: users[0]._id,
+    time: 'medium',
+    skill: 'easy',
+    description: `It's spaghett! This super easy recipe is delcious,
+                  nutritious, and sure to be a crowd pleaser.
+                  Rice noodles done right are practically indistinguishable
+                  from their glutenfull counterparts.`,
+    course: 'main',
+    items: [
+      spaghetti,
+      meatballs,
+    ]
   })
 })
 .then(recipe => {

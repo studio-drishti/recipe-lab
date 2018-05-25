@@ -34,6 +34,14 @@ const StepSchema = new Schema({
   // TODO: add images array
 })
 
+const ItemSchema = new Schema({
+  name: {
+    type: String,
+    required: true,
+  },
+  steps: [StepSchema],
+})
+
 const RecipeSchema = new Schema({
   title: {
     type: String,
@@ -64,7 +72,7 @@ const RecipeSchema = new Schema({
     type: String,
     required: true,
   },
-  steps: [StepSchema],
+  items: [ItemSchema],
 })
 
 const Recipe = mongoose.model('Recipe', RecipeSchema)

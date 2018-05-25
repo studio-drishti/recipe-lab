@@ -6,10 +6,12 @@
   margin-bottom: 1rem;
   display: flex;
   flex-direction: row;
+  max-height: 80vh;
 
   & > div {
     flex: 1;
     padding: 1rem;
+    overflow-y: scroll;
   }
 }
 
