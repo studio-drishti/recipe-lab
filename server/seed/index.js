@@ -1,16 +1,15 @@
 const mongoose = require('mongoose')
 
-const Recipe = require('./Recipe')
-const User = require('./User');
+const db = require('../models')
 
 process.env.MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/schooled-lunch'
 
 mongoose.connect(process.env.MONGO_URI)
 .then(() => {
-  return Recipe.deleteMany({}).then(() => User.deleteMany({}))
+  return db.Recipe.deleteMany({}).then(() => db.User.deleteMany({}))
 })
 .then(() => {
-  return User.create([
+  return db.User.create([
     {
       name: 'Jay',
       email: 'jay@schooledlunch.club',
@@ -174,7 +173,7 @@ mongoose.connect(process.env.MONGO_URI)
     ],
   }
 
-  return Recipe.create({
+  return db.Recipe.create({
     title: 'Spaghetti and Meatballs',
     author: users[0]._id,
     time: 'medium',

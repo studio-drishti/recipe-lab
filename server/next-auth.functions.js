@@ -41,12 +41,6 @@
 // Load environment variables from a .env file if one exists
 // require('dotenv').load()
 
-// This config file uses MongoDB for User accounts, as well as session storage.
-// This config includes options for NeDB, which it defaults to if no DB URI
-// is specified. NeDB is an in-memory only database intended here for testing.
-// const MongoClient = require('mongodb').MongoClient
-// const NeDB = require('nedb')
-// const MongoObjectId = (process.env.MONGO_URI) ? require('mongodb').ObjectId : (id) => { return id }
 const User = require('./models/User')
 
 // Use Node Mailer for email sign in
@@ -77,7 +71,7 @@ module.exports = () => {
       // Find needs to support looking up a user by ID, Email, Email Token,
       // and Provider Name + Users ID for that Provider
       if (id) {
-        query = { _id: MongoObjectId(id) }
+        query = { _id: id }
       } else if (email) {
         query = { email: email }
       } else if (emailToken) {

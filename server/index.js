@@ -5,6 +5,7 @@ const nextAuth = require('next-auth')
 const nextAuthConfig = require('./next-auth.config')
 
 const db = require('./models')
+const routes = require('./routes')
 
 // Load environment variables
 // require('dotenv').load()
@@ -47,30 +48,7 @@ nextApp.prepare()
 })
 .then(({ express, expressApp }) => {
 
-  // TODO: Move api routs into a different file
-  expressApp.get('/api/recipes', (req, res) => {
-    db.Recipe.find({})
-    .then(data => {
-      res.json(data)
-    })
-    .catch(err => {
-      throw err
-      res.json(err)
-    })
-  })
-
-  expressApp.get('/api/recipes/:id', (req, res) => {
-    db.Recipe.findOne({'_id': req.params.id})
-    .populate('author')
-    .then(data => {
-      console.log(data)
-      res.json(data)
-    })
-    .catch(err => {
-      throw err
-      res.json(err)
-    })
-  })
+  expressApp.use(routes)
 
   expressApp.get('/recipes/:id', (req, res) => {
     const actualPage = '/recipe'
@@ -78,7 +56,7 @@ nextApp.prepare()
   })
 
   expressApp.all('*', (req, res) => {
-    let nextRequestHandler = nextApp.getRequestHandler()
+    const nextRequestHandler = nextApp.getRequestHandler()
     return nextRequestHandler(req, res)
   })
 
