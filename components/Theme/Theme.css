@@ -28,3 +28,15 @@ h6 {
   letter-spacing: 1px;
   font-weight: var(--heading-font-weight);
 }
+
+h6 {
+  font-size: 0.75rem;
+}
+
+img {
+  max-width: 100%;
+}
+
+i {
+  vertical-align: middle;
+}

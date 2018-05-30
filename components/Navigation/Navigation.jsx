@@ -6,21 +6,22 @@ export default () => (
     <Link href="/">
       <a className={css.logo}>Schooled Lunch</a>
     </Link>
-    <Link href="/recipes">
-      <a>
-        Recipes
-      </a>
-    </Link>
-    <Link href="/about">
-      <a>
-        About
-      </a>
-    </Link>
-    <Link href="/register">
-      <a>
-        Register
-      </a>
-    </Link>
-    <input type="search" placeholder="Search..." />
+    <div className={css.links}>
+      <Link href="/recipes">
+        <a>
+          Recipes
+        </a>
+      </Link>
+      <Link href="/about">
+        <a>
+          About
+        </a>
+      </Link>
+      <Link href="/register">
+        <a>
+          Register
+        </a>
+      </Link>
+    </div>
   </nav>
 )

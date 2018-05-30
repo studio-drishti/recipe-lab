@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { Component } from 'react'
-import Textarea from "react-textarea-autosize";
+import Textarea from 'react-textarea-autosize'
+import Swiper from 'react-id-swiper'
 // import merge from 'deepmerge';
 
 import css from './Recipe.css'
@@ -69,7 +70,21 @@ class Recipe extends Component {
   }
 
   render() {
-    const { recipe, active, editing } = this.state;
+    const { recipe, active, editing } = this.state
+
+    const swiperParams = {
+      pagination: {
+        el: '.swiper-pagination',
+        type: 'bullets',
+        clickable: true
+      },
+      navigation: {
+        nextEl: '.swiper-button-next',
+        prevEl: '.swiper-button-prev',
+      },
+      spaceBetween: 20,
+    }
+
     return (
       <article className={css.recipe}>
         <div className={css.recipeMain}>
@@ -92,62 +107,83 @@ class Recipe extends Component {
               <ol className={css.steps}>
                 {item.steps.map((step, stepI) => (
                   <li key={step._id} onClick={() => this.setActiveStep(itemI, stepI)}>
-                    {step.directions}
+                    <div className={css.stepNum}>
+                      <span>
+                        {stepI + 1}.
+                      </span>
+                    </div>
+                    <div className={css.stepDirections}>
+                      {step.directions}
+                    </div>
                   </li>
                 ))}
               </ol>
             </div>
           ))}
         </div>
-        <div className={css.recipeDetail}>
-            <div className={css.recipeActions}>
+        <aside className={css.recipeDetail}>
+          <div className={css.sticky}>
+            {/* <div className={css.recipeActions}>
               <button onClick={this.toggleEdit}>
                 <i className="material-icons">edit</i>
               </button>
-              {/* <button onClick={this.resetMods}>
+              <button onClick={this.resetMods}>
                 <i className="material-icons">delete</i>
-              </button> */}
+              </button>
+            </div> */}
+
+            <header className={css.recipeDetailHeader}>
+              <h6>{recipe.items[active.item].name} &gt; Step {active.step + 1}</h6>
+              <p>{recipe.items[active.item].steps[active.step].directions}</p>
+            </header>
+            <div className={css.recipeDetailContent}>
+              <Swiper {...swiperParams}>
+                <img src={`https://loremflickr.com/530/300/food,cooking,spaghetti?s=${active.step}_1`} />
+                <img src={`https://loremflickr.com/530/300/food,cooking,spaghetti?s=${active.step}_2`} />
+                <img src={`https://loremflickr.com/530/300/food,cooking,spaghetti?s=${active.step}_3`} />
+              </Swiper>
+
+              {recipe.items[active.item].steps[active.step].ingredients.length > 0 && (
+                <div>
+                  <h3>Ingredients Used</h3>
+                  <ul className={css.ingredients}>
+                    {recipe.items[active.item].steps[active.step].ingredients.map((ingredient, i) => (
+                      <li key={i}>
+                        {ingredient.quantity} {ingredient.unit} {ingredient.name}
+                        {ingredient.processing && `, ${ingredient.processing}`}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+              {/* {editing ? (
+                <Textarea
+                  name="directions"
+                  value={recipe.items[active.item].steps[active.step].directions}
+                  placeholder="Directions"
+                  onChange={this.handleStepChange} />
+              ) : (
+                <p>
+                  {recipe.items[active.item].steps[active.step].directions}
+                </p>
+              )} */}
+
+              <h3>Notes</h3>
+              {editing ? (
+                <Textarea
+                  name="notes"
+                  value={recipe.items[active.item].steps[active.step].notes}
+                  placeholder="Additional Notes"
+                  onChange={this.handleStepChange} />
+              ) : (
+                <p>
+                  {recipe.items[active.item].steps[active.step].notes}
+                </p>
+              )}
             </div>
-            {recipe.items[active.item].steps[active.step].ingredients.length > 0 && (
-              <div>
-
-                <h3>Ingredients Used</h3>
-                <ul>
-                  {recipe.items[active.item].steps[active.step].ingredients.map((ingredient, i) => (
-                    <li key={i}>
-                      {ingredient.quantity} {ingredient.unit} {ingredient.name}
-                      {ingredient.processing && `, ${ingredient.processing}`}
-                    </li>
-                  ))}
-                </ul>
-
-              </div>
-            )}
-
-            {editing ? (
-              <Textarea
-                name="directions"
-                value={recipe.items[active.item].steps[active.step].directions}
-                placeholder="Directions"
-                onChange={this.handleStepChange} />
-            ) : (
-              <p>
-                {recipe.items[active.item].steps[active.step].directions}
-              </p>
-            )}
-
-            {editing ? (
-              <Textarea
-                name="notes"
-                value={recipe.items[active.item].steps[active.step].notes}
-                placeholder="Additional Notes"
-                onChange={this.handleStepChange} />
-            ) : (
-              <p>
-                {recipe.items[active.item].steps[active.step].notes}
-              </p>
-            )}
-        </div>
+          </div>
+        </aside>
       </article>
     )
   }
