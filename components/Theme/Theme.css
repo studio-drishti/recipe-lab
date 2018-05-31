@@ -1,6 +1,5 @@
 @import 'normalize.css';
 @import '../../defaults.css';
-@import url('https://fonts.googleapis.com/css?family=Cormorant+Garamond:300|Noto+Sans:400,400i,700|Material+Icons');
 
 html {
   font-size: 1em;
@@ -30,7 +29,7 @@ h6 {
 }
 
 h6 {
-  font-size: 0.75rem;
+  font-size: 1rem;
 }
 
 img {
@@ -39,4 +38,8 @@ img {
 
 i {
   vertical-align: middle;
+}
+
+button {
+  cursor: pointer;
 }

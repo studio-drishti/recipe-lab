@@ -35,10 +35,27 @@ class Recipe extends Component {
     }
   }
 
-  // resetMods = () => {
-  //   localStorage.removeItem('recipeMods')
-  //   this.setState({recipe: this.props.recipe})
-  // }
+  nextStep = () => {
+    const { active, recipe } = this.state;
+    if(recipe.items[active.item] && recipe.items[active.item].steps.length - 1 > active.step) {
+      active.step++
+    } else if (recipe.items[active.item + 1]) {
+      active.item++
+      active.step = 0
+    }
+    this.setState({ active })
+  }
+
+  prevStep = () => {
+    const { active, recipe } = this.state;
+    if(recipe.items[active.item] && active.step > 0) {
+      active.step--
+    } else if (recipe.items[active.item - 1]) {
+      active.item--
+      active.step = recipe.items[active.item].steps.length - 1;
+    }
+    this.setState({ active })
+  }
 
   handleStepChange = (e) => {
     const { name, value } = e.target
@@ -89,7 +106,7 @@ class Recipe extends Component {
       <article className={css.recipe}>
         <div className={css.recipeMain}>
           {recipe.items.map(item => (
-            <div>
+            <div key={item._id}>
               <h3>Ingredients for {item.name}</h3>
               <ul className={css.ingredients}>
                 {stepsToIngredientTotals(item.steps).map((ingredient, i) => (
@@ -106,7 +123,10 @@ class Recipe extends Component {
               <h3>Directions for {item.name}</h3>
               <ol className={css.steps}>
                 {item.steps.map((step, stepI) => (
-                  <li key={step._id} onClick={() => this.setActiveStep(itemI, stepI)}>
+                  <li
+                    key={step._id}
+                    data-active={active.item == itemI && active.step == stepI}
+                    onClick={() => this.setActiveStep(itemI, stepI)}>
                     <div className={css.stepNum}>
                       <span>
                         {stepI + 1}.
@@ -123,18 +143,33 @@ class Recipe extends Component {
         </div>
         <aside className={css.recipeDetail}>
           <div className={css.sticky}>
-            {/* <div className={css.recipeActions}>
-              <button onClick={this.toggleEdit}>
-                <i className="material-icons">edit</i>
-              </button>
-              <button onClick={this.resetMods}>
-                <i className="material-icons">delete</i>
-              </button>
-            </div> */}
-
             <header className={css.recipeDetailHeader}>
-              <h6>{recipe.items[active.item].name} &gt; Step {active.step + 1}</h6>
-              <p>{recipe.items[active.item].steps[active.step].directions}</p>
+              <div className={css.recipeDetailToolbar}>
+                <h6>{recipe.items[active.item].name} &gt; Step {active.step + 1}</h6>
+                <div className={css.recipeActions}>
+                  <button onClick={this.toggleEdit}>
+                    <i className="material-icons">edit</i>
+                  </button>
+                  <button onClick={this.prevStep}>
+                    <i className="material-icons">navigate_before</i>
+                  </button>
+                  <button onClick={this.nextStep}>
+                    <i className="material-icons">navigate_next</i>
+                  </button>
+                </div>
+              </div>
+
+              {editing ? (
+                <Textarea
+                  name="directions"
+                  value={recipe.items[active.item].steps[active.step].directions}
+                  placeholder="Directions"
+                  onChange={this.handleStepChange} />
+              ) : (
+                <p>
+                  {recipe.items[active.item].steps[active.step].directions}
+                </p>
+              )}
             </header>
             <div className={css.recipeDetailContent}>
               <Swiper {...swiperParams}>
@@ -156,18 +191,6 @@ class Recipe extends Component {
                   </ul>
                 </div>
               )}
-
-              {/* {editing ? (
-                <Textarea
-                  name="directions"
-                  value={recipe.items[active.item].steps[active.step].directions}
-                  placeholder="Directions"
-                  onChange={this.handleStepChange} />
-              ) : (
-                <p>
-                  {recipe.items[active.item].steps[active.step].directions}
-                </p>
-              )} */}
 
               <h3>Notes</h3>
               {editing ? (

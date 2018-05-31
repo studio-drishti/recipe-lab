@@ -27,8 +27,8 @@ mongoose.connect(process.env.MONGO_URI)
     console.log("Created User: ", user.name)
   })
 
-  const spaghetti = {
-    name: 'Spaghetti',
+  const marinara = {
+    name: 'Marinara Sauce',
     steps: [
       {
         directions: `Heat a large pot over medium-high heat. Add 2 tablespoons of the avocado oil, and when it's warm, saute the onion until it's brown and translucent`,
@@ -178,13 +178,10 @@ mongoose.connect(process.env.MONGO_URI)
     author: users[0]._id,
     time: 'medium',
     skill: 'easy',
-    description: `It's spaghett! This super easy recipe is delcious,
-                  nutritious, and sure to be a crowd pleaser.
-                  Rice noodles done right are practically indistinguishable
-                  from their glutenfull counterparts.`,
+    description: `It's spaghett! This super easy recipe is delcious, nutritious, and sure to be a crowd pleaser. Rice noodles done right are practically indistinguishable from their glutenfull counterparts.`,
     course: 'main',
     items: [
-      spaghetti,
+      marinara,
       meatballs,
     ]
   })

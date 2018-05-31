@@ -30,6 +30,13 @@
   }
 }
 
+.recipeDetailToolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
 .recipeDetailHeader {
   border: 1px solid lightgrey;
   padding: 1rem;
@@ -38,6 +45,26 @@
 
   & h6, & p {
     margin: 0;
+  }
+}
+
+.recipeActions {
+  float: right;
+
+  & button {
+    background: none;
+    border: 1px solid lightgray;
+    font-size: 0.3rem;
+    padding: 0.25rem;
+    transition: background linear 0.1s;
+
+    &:hover {
+      background: rgba(0,0,0,.05);
+    }
+  }
+
+  & i {
+    font-size: rem-calc(18px);
   }
 }
 
@@ -84,6 +111,11 @@
     grid-template-columns: 1fr 11fr;
     cursor: pointer;
     margin-bottom: 1rem;
+    transition: all linear 0.2s;
+  }
+
+  & [data-active=true] {
+    background: lightgoldenrodyellow;
   }
 
   & .stepNum {

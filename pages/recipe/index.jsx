@@ -17,13 +17,13 @@ const Page = ({recipe}) => (
       </div>
       <div className={css.stats}>
         <span>
-          <i class="material-icons">
+          <i className="material-icons">
             timer
           </i>
           {recipe.time}
         </span>
         <span>
-          <i class="material-icons">
+          <i className="material-icons">
             school
           </i>
           {recipe.skill}
