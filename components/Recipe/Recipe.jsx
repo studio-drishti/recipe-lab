@@ -2,6 +2,7 @@ import Link from 'next/link'
 import { Component } from 'react'
 import Textarea from 'react-textarea-autosize'
 import Swiper from 'react-id-swiper'
+import DiffMatchPatch from 'diff-match-patch'
 // import merge from 'deepmerge';
 
 import css from './Recipe.css'
@@ -14,18 +15,9 @@ class Recipe extends Component {
       step: 0,
     },
     recipe: this.props.recipe,
+    stepMods: [],
     editing: false,
   }
-
-  // componentDidMount() {
-  //   if(localStorage.getItem('recipeMods') !== null) {
-  //     const mods = JSON.parse(localStorage.getItem('recipeMods'));
-  //     let { recipe } = this.state
-  //     Object.entries(mods.steps).forEach(([key, val]) => {
-  //       recipe.steps[key] = merge(recipe.steps[key], val);
-  //     })
-  //   }
-  // }
 
   toggleEdit = () => {
     if(this.state.editing === false) {
@@ -59,22 +51,27 @@ class Recipe extends Component {
 
   handleStepChange = (e) => {
     const { name, value } = e.target
-    const { recipe, active } = this.state
-    recipe.items[active.item].steps[active.step][name] = value
+    const { recipe, active, stepMods } = this.state
+    const stepId = recipe.items[active.item].steps[active.step]._id
+    const modI = stepMods.findIndex( stepMod => stepMod.step === stepId )
+    if(modI > -1) {
+      stepMods[modI][name] = value
+    } else {
+      stepMods.push({
+        step: stepId,
+        [name]: value,
+      })
+    }
+    this.setState({ stepMods })
+  }
 
-
-    // localStorage.setItem('recipeMods', JSON.stringify(merge(
-    //   localStorage.getItem('recipeMods') !== null ? JSON.parse(localStorage.getItem('recipeMods')) : {},
-    //   {
-    //     steps: {
-    //       [this.state.currentStep]: {
-    //         [name]: value
-    //       }
-    //     }
-    //   }
-    // )))
-
-    this.setState({recipe})
+  getStepDirectionsValue = (step) => {
+    const { stepMods } = this.state
+    const mod = stepMods.find( stepMod => stepMod.step === step._id )
+    if(mod) {
+      return mod.directions
+    }
+    return step.directions
   }
 
   setActiveStep = (itemI, stepI) => {
@@ -86,8 +83,31 @@ class Recipe extends Component {
     })
   }
 
+  getDirectionsWithMods = (step) => {
+    const { stepMods } = this.state
+    const mod = stepMods.find( stepMod => stepMod.step === step._id )
+    if(mod) {
+      const dmp = new DiffMatchPatch()
+      const diff = dmp.diff_main(step.directions, mod.directions)
+      dmp.diff_cleanupSemantic(diff)
+      return diff.map((match, i) => {
+        switch(match[0]) {
+          case 1:
+            return <ins key={i}>{match[1]}</ins>
+          case -1:
+            return <del key={i}>{match[1]}</del>
+          default:
+            return <span key={i}>{match[1]}</span>
+        }
+      })
+    }
+    return step.directions
+  }
+
   render() {
-    const { recipe, active, editing } = this.state
+    const { recipe, active, editing, mods } = this.state
+    const activeItem = recipe.items[active.item]
+    const activeStep = activeItem.steps[active.step]
 
     const swiperParams = {
       pagination: {
@@ -133,7 +153,7 @@ class Recipe extends Component {
                       </span>
                     </div>
                     <div className={css.stepDirections}>
-                      {step.directions}
+                      {this.getDirectionsWithMods(step)}
                     </div>
                   </li>
                 ))}
@@ -162,12 +182,12 @@ class Recipe extends Component {
               {editing ? (
                 <Textarea
                   name="directions"
-                  value={recipe.items[active.item].steps[active.step].directions}
-                  placeholder="Directions"
+                  value={this.getStepDirectionsValue(activeStep)}
+                  placeholder={activeStep.directions.length ? activeStep.directions : 'Directions'}
                   onChange={this.handleStepChange} />
               ) : (
                 <p>
-                  {recipe.items[active.item].steps[active.step].directions}
+                  {this.getDirectionsWithMods(activeStep)}
                 </p>
               )}
             </header>

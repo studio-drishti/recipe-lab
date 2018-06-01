@@ -17,6 +17,9 @@
   & textarea {
     width: 100%;
     height: auto;
+    line-height: inherit;
+    padding: 0.5rem;
+    resize: none;
   }
 
   & .sticky {
