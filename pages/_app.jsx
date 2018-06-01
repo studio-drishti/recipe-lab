@@ -20,7 +20,7 @@ export default class MyApp extends App {
 
   render () {
     const {Component, pageProps, session} = this.props
-    console.log("session", session)
+    // console.log("session", session)
     return (
       <Theme>
         <Container>

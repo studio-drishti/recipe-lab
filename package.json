@@ -15,7 +15,6 @@
     "babel-core": "7.0.0-bridge.0",
     "babel-jest": "^22.4.3",
     "connect-mongo": "^2.0.1",
-    "deepmerge": "^2.1.0",
     "diff-match-patch": "^1.0.1",
     "dotenv": "^5.0.1",
     "express": "^4.16.3",

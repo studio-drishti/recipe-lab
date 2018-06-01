@@ -105,16 +105,13 @@
 }
 
 .steps {
-  list-style: none;
-  padding: 0;
   margin-bottom: 2rem;
 
-  & > li {
+  & > div {
     display: grid;
     grid-template-columns: 1fr 11fr;
-    cursor: pointer;
     margin-bottom: 1rem;
-    transition: all linear 0.2s;
+    transition: background linear 0.2s;
   }
 
   & [data-active=true] {
@@ -123,6 +120,7 @@
 
   & .stepNum {
     font-weight: 100;
+    cursor: grab;
 
     & span::after {
       content: '';
@@ -135,5 +133,9 @@
       transform: rotate(45deg) translateY(-.05em);
       vertical-align: middle;
     }
+  }
+
+  & .stepDirections {
+    cursor: pointer;
   }
 }

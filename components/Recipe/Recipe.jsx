@@ -3,10 +3,19 @@ import { Component } from 'react'
 import Textarea from 'react-textarea-autosize'
 import Swiper from 'react-id-swiper'
 import DiffMatchPatch from 'diff-match-patch'
-// import merge from 'deepmerge';
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
 
 import css from './Recipe.css'
 import { stepsToIngredientTotals, formatIngredientTotal } from '../../util/recipeTools';
+
+// a little function to help us with reordering the result
+const reorder = (list, startIndex, endIndex) => {
+  const result = Array.from(list);
+  const [removed] = result.splice(startIndex, 1);
+  result.splice(endIndex, 0, removed);
+
+  return result;
+}
 
 class Recipe extends Component {
   state = {
@@ -104,6 +113,30 @@ class Recipe extends Component {
     return step.directions
   }
 
+  onDragEnd = result => {
+    console.log(result)
+    // dropped outside the list
+    if (!result.destination) {
+      return
+    }
+
+    const { recipe } = this.state
+
+    if(result.type.startsWith('STEP')) {
+      const itemId = result.destination.droppableId
+      const itemIndex = recipe.items.findIndex( item => item._id === itemId)
+      recipe.items[itemIndex].steps = reorder(
+        recipe.items[itemIndex].steps,
+        result.source.index,
+        result.destination.index
+      )
+    }
+
+    this.setState({
+      recipe,
+    })
+  }
+
   render() {
     const { recipe, active, editing, mods } = this.state
     const activeItem = recipe.items[active.item]
@@ -138,28 +171,55 @@ class Recipe extends Component {
             </div>
           ))}
 
-          {recipe.items.map((item, itemI) => (
-            <div key={item._id}>
-              <h3>Directions for {item.name}</h3>
-              <ol className={css.steps}>
-                {item.steps.map((step, stepI) => (
-                  <li
-                    key={step._id}
-                    data-active={active.item == itemI && active.step == stepI}
-                    onClick={() => this.setActiveStep(itemI, stepI)}>
-                    <div className={css.stepNum}>
-                      <span>
-                        {stepI + 1}.
-                      </span>
-                    </div>
-                    <div className={css.stepDirections}>
-                      {this.getDirectionsWithMods(step)}
-                    </div>
-                  </li>
-                ))}
-              </ol>
-            </div>
-          ))}
+          <DragDropContext onDragEnd={this.onDragEnd}>
+            {recipe.items.map((item, itemI) => (
+              <div key={item._id}>
+                <h3>Directions for {item.name}</h3>
+                  <Droppable type={`STEP-${itemI}`} droppableId={item._id}>
+                    {(provided, snapshot) => (
+                      <div
+                        className={css.steps}
+                        ref={provided.innerRef}
+                        {...provided.droppableProps}
+                      >
+                        {item.steps.map((step, stepI) => (
+                          <Draggable
+                            type={`STEP-${itemI}`}
+                            key={step._id}
+                            draggableId={step._id}
+                            index={stepI}
+                          >
+                            {(provided, snapshot) => (
+                              <div
+                                ref={provided.innerRef}
+                                {...provided.draggableProps}
+                                data-active={active.item == itemI && active.step == stepI}
+                              >
+                                <div
+                                  className={css.stepNum}
+                                  {...provided.dragHandleProps}
+                                >
+                                  <span>
+                                    {stepI + 1}.
+                                  </span>
+                                </div>
+                                <div
+                                  className={css.stepDirections}
+                                  onClick={() => this.setActiveStep(itemI, stepI)}
+                                >
+                                  {this.getDirectionsWithMods(step)}
+                                </div>
+                              </div>
+                            )}
+                          </Draggable>
+                        ))}
+                        {provided.placeholder}
+                      </div>
+                    )}
+                  </Droppable>
+              </div>
+            ))}
+          </DragDropContext>
         </div>
         <aside className={css.recipeDetail}>
           <div className={css.sticky}>
