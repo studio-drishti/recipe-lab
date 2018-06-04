@@ -7,15 +7,7 @@ import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
 
 import css from './Recipe.css'
 import { stepsToIngredientTotals, formatIngredientTotal } from '../../util/recipeTools';
-
-// a little function to help us with reordering the result
-const reorder = (list, startIndex, endIndex) => {
-  const result = Array.from(list);
-  const [removed] = result.splice(startIndex, 1);
-  result.splice(endIndex, 0, removed);
-
-  return result;
-}
+import reorder from '../../util/reorder';
 
 class Recipe extends Component {
   state = {
