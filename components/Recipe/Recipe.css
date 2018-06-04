@@ -64,6 +64,10 @@
     &:hover {
       background: rgba(0,0,0,.05);
     }
+
+    &[disabled] {
+      opacity: .5;
+    }
   }
 
   & i {

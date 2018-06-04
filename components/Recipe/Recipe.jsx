@@ -19,10 +19,8 @@ const reorder = (list, startIndex, endIndex) => {
 
 class Recipe extends Component {
   state = {
-    active: {
-      item: 0,
-      step: 0,
-    },
+    activeItem: this.props.recipe.items[0],
+    activeStep: this.props.recipe.items[0].steps[0],
     recipe: this.props.recipe,
     stepMods: [],
     editing: false,
@@ -37,31 +35,35 @@ class Recipe extends Component {
   }
 
   nextStep = () => {
-    const { active, recipe } = this.state;
-    if(recipe.items[active.item] && recipe.items[active.item].steps.length - 1 > active.step) {
-      active.step++
-    } else if (recipe.items[active.item + 1]) {
-      active.item++
-      active.step = 0
+    let { activeItem, activeStep, recipe } = this.state;
+    const nextItemIndex = recipe.items.findIndex(item => item._id === activeItem._id) + 1
+    const nextStepIndex = activeItem.steps.findIndex(step => step._id === activeStep._id) + 1
+    if(nextStepIndex < activeItem.steps.length) {
+      activeStep = activeItem.steps[nextStepIndex]
+    } else if (nextItemIndex < recipe.items.length) {
+      activeItem = recipe.items[nextItemIndex]
+      activeStep = recipe.items[nextItemIndex].steps[0]
     }
-    this.setState({ active })
+    this.setState({ activeStep, activeItem })
   }
 
   prevStep = () => {
-    const { active, recipe } = this.state;
-    if(recipe.items[active.item] && active.step > 0) {
-      active.step--
-    } else if (recipe.items[active.item - 1]) {
-      active.item--
-      active.step = recipe.items[active.item].steps.length - 1;
+    let { activeItem, activeStep, recipe } = this.state;
+    const prevItemIndex = recipe.items.findIndex(item => item._id === activeItem._id) - 1
+    const prevStepIndex = activeItem.steps.findIndex(step => step._id === activeStep._id) - 1
+    if(prevStepIndex >= 0) {
+      activeStep = activeItem.steps[prevStepIndex]
+    } else if (prevItemIndex >= 0) {
+      activeItem = recipe.items[prevItemIndex]
+      activeStep = recipe.items[prevItemIndex].steps[activeItem.steps.length - 1]
     }
-    this.setState({ active })
+    this.setState({ activeStep, activeItem })
   }
 
   handleStepChange = (e) => {
     const { name, value } = e.target
-    const { recipe, active, stepMods } = this.state
-    const stepId = recipe.items[active.item].steps[active.step]._id
+    const { recipe, activeStep, stepMods } = this.state
+    const stepId = activeStep._id
     const modI = stepMods.findIndex( stepMod => stepMod.step === stepId )
     if(modI > -1) {
       stepMods[modI][name] = value
@@ -85,10 +87,8 @@ class Recipe extends Component {
 
   setActiveStep = (itemI, stepI) => {
     this.setState({
-      active: {
-        item: itemI,
-        step: stepI,
-      }
+      activeItem: this.state.recipe.items[itemI],
+      activeStep: this.state.recipe.items[itemI].steps[stepI],
     })
   }
 
@@ -138,9 +138,7 @@ class Recipe extends Component {
   }
 
   render() {
-    const { recipe, active, editing, mods } = this.state
-    const activeItem = recipe.items[active.item]
-    const activeStep = activeItem.steps[active.step]
+    const { recipe, activeItem, activeStep, editing, mods } = this.state
 
     const swiperParams = {
       pagination: {
@@ -154,6 +152,11 @@ class Recipe extends Component {
       },
       spaceBetween: 20,
     }
+
+    const activeItemIndex = recipe.items.findIndex(item => item._id === activeItem._id)
+    const activeStepIndex = activeItem.steps.findIndex(step => step._id === activeStep._id)
+    const hasPrevStep = (activeItemIndex === 0 && activeStepIndex > 0) || (activeItemIndex > 0)
+    const hasNextStep = (activeItemIndex < recipe.items.length - 1) || (activeStepIndex < activeItem.steps.length - 1)
 
     return (
       <article className={css.recipe}>
@@ -193,7 +196,7 @@ class Recipe extends Component {
                               <div
                                 ref={provided.innerRef}
                                 {...provided.draggableProps}
-                                data-active={active.item == itemI && active.step == stepI}
+                                data-active={activeItem._id === item._id && activeStep._id === step._id}
                               >
                                 <div
                                   className={css.stepNum}
@@ -225,15 +228,21 @@ class Recipe extends Component {
           <div className={css.sticky}>
             <header className={css.recipeDetailHeader}>
               <div className={css.recipeDetailToolbar}>
-                <h6>{recipe.items[active.item].name} &gt; Step {active.step + 1}</h6>
+                <h6>{activeItem.name} &gt; Step {activeStepIndex + 1}</h6>
                 <div className={css.recipeActions}>
                   <button onClick={this.toggleEdit}>
                     <i className="material-icons">edit</i>
                   </button>
-                  <button onClick={this.prevStep}>
+                  <button
+                    onClick={this.prevStep}
+                    disabled={!hasPrevStep}
+                  >
                     <i className="material-icons">navigate_before</i>
                   </button>
-                  <button onClick={this.nextStep}>
+                  <button
+                    onClick={this.nextStep}
+                    disabled={!hasNextStep}
+                  >
                     <i className="material-icons">navigate_next</i>
                   </button>
                 </div>
@@ -253,16 +262,16 @@ class Recipe extends Component {
             </header>
             <div className={css.recipeDetailContent}>
               <Swiper {...swiperParams}>
-                <img src={`https://loremflickr.com/530/300/food,cooking,spaghetti?s=${active.step}_1`} />
-                <img src={`https://loremflickr.com/530/300/food,cooking,spaghetti?s=${active.step}_2`} />
-                <img src={`https://loremflickr.com/530/300/food,cooking,spaghetti?s=${active.step}_3`} />
+                <img src={`https://loremflickr.com/530/300/food,cooking,spaghetti?s=${activeStep._id}_1`} />
+                <img src={`https://loremflickr.com/530/300/food,cooking,spaghetti?s=${activeStep._id}_2`} />
+                <img src={`https://loremflickr.com/530/300/food,cooking,spaghetti?s=${activeStep._id}_3`} />
               </Swiper>
 
-              {recipe.items[active.item].steps[active.step].ingredients.length > 0 && (
+              {activeStep.ingredients.length > 0 && (
                 <div>
                   <h3>Ingredients Used</h3>
                   <ul className={css.ingredients}>
-                    {recipe.items[active.item].steps[active.step].ingredients.map((ingredient, i) => (
+                    {activeStep.ingredients.map((ingredient, i) => (
                       <li key={i}>
                         {ingredient.quantity} {ingredient.unit} {ingredient.name}
                         {ingredient.processing && `, ${ingredient.processing}`}
@@ -276,12 +285,12 @@ class Recipe extends Component {
               {editing ? (
                 <Textarea
                   name="notes"
-                  value={recipe.items[active.item].steps[active.step].notes}
+                  value={activeStep.notes}
                   placeholder="Additional Notes"
                   onChange={this.handleStepChange} />
               ) : (
                 <p>
-                  {recipe.items[active.item].steps[active.step].notes}
+                  {activeStep.notes}
                 </p>
               )}
             </div>
