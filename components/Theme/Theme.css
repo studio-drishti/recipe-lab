@@ -1,5 +1,5 @@
 @import 'normalize.css';
-@import '../../defaults.css';
+@import '../../config/defaults.css';
 
 html {
   font-size: 1em;

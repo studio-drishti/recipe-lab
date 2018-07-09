@@ -1,22 +1,41 @@
-version: "3"
+version: "3.4"
 services:
   app:
-    build: .
-    volumes:
-      - .:/usr/src/app
-      # - /usr/src/app/node_modules
+    build:
+      context: ./
+      dockerfile: Dockerfile
+      target: development
+    depends_on:
+      - db
     ports:
-      - "3000:3000"
-    links:
-      - mongo
+      - "${WEB_PORT:-3000}:3000"
+    volumes:
+      - ./server:/usr/src/app/server
+      - ./pages:/usr/src/app/pages
+      - ./components:/usr/src/app/components
+      - ./util:/usr/src/app/util
+      - ./config:/usr/src/app/config
+      - ./.babelrc:/usr/src/app/.babelrc
+      - ./next.config.js:/usr/src/app/next.config.js
+      - ./postcss.config.js:/usr/src/app/postcss.config.js
+      - ./package.json:/usr/src/app/package.json
+      - ./yarn.lock:/usr/src/app/yarn.lock
+      - ./jest.config.js:/usr/src/app/jest.config.js
+      - ./jest.setup.js:/usr/src/app/jest.setup.js
+      - ./__mocks__:/usr/src/app/__mocks__
+      - ./__tests__:/usr/src/app/__tests__
     environment:
       NODE_ENV: development
       PORT: 3000
-      MONGO_URI: mongodb://mongo:27017/schooled-lunch
+      MONGO_URI: mongodb://db:27017/schooled-lunch
       EMAIL_FROM: no-reply@schooledlunch.club
-  mongo:
+    stdin_open: true
+    tty: true
+  db:
     image: mongo:latest
-    # volumes:
-    #   - ./data:/data/db
+    volumes:
+      - dbdata:/data/db
     ports:
       - "27017:27017"
+volumes:
+  dbdata:
