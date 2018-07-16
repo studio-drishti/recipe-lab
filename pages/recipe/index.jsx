@@ -47,10 +47,13 @@ const Page = ({recipe}) => (
 
 Page.getInitialProps = async function(context) {
   const { id } = context.query
-  const res = await fetch(`${API_URL}/api/recipes/${id}`)
-  const recipe = await res.json()
+  const recipeResponse = await fetch(`${API_URL}/api/recipes/${id}`)
+  const recipe = await recipeResponse.json()
+  // const modificationResponse = await fetch(`${API_URL}/api/modifications/?recipe=${id}`)
+  // const modification = modificationResponse.json()
   return {
-    recipe
+    recipe,
+    // modification
   }
 }
 

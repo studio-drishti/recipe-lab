@@ -6,31 +6,42 @@ import DiffMatchPatch from 'diff-match-patch'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
 
 import css from './Recipe.css'
-import { stepsToIngredientTotals, formatIngredientTotal } from '../../util/recipeTools';
-import reorder from '../../util/reorder';
+import { stepsToIngredientTotals, formatIngredientTotal } from '../../util/recipeTools'
+import reorder from '../../util/reorder'
+import { updateOrInsertInArray } from '../../util/arrayTools'
 
 class Recipe extends Component {
   state = {
     activeItem: this.props.recipe.items[0],
     activeStep: this.props.recipe.items[0].steps[0],
     recipe: this.props.recipe,
-    mods: [],
+    modification: {
+      sortItems: [],
+      sortSteps: [],
+      alteredItems: [],
+      alteredSteps: [],
+      additionalItems: [],
+      additionalSteps: [],
+      additionalIngredients: [],
+    },
     editing: false,
   }
 
   componentDidMount() {
-    const mods = localStorage.getItem('mods') ? JSON.parse(localStorage.getItem('mods')) : []
     const { recipe } = this.state
-    mods
-    .filter(mod => mod.type === 'sort' && mod.modified === 'item')
-    .forEach(mod => {
-      console.log(mod)
-      const itemIndex = recipe.items.findIndex(item => item._id === mod.modifiedId)
-      console.log(itemIndex)
-      recipe.items[itemIndex].steps = recipe.items[itemIndex].steps.sort((a, b) => mod.value.indexOf(a._id) > mod.value.indexOf(b._id))
-      console.log(recipe.items)
+    let { modification } = this.state
+
+    if(localStorage.getItem('modification')) {
+      modification = JSON.parse(localStorage.getItem('modification'))
+    }
+
+    modification.sortSteps.forEach( mod => {
+      const itemIndex = recipe.items.findIndex(item => item._id === mod.itemId)
+      recipe.items[itemIndex].steps = recipe.items[itemIndex].steps.sort(
+        (a, b) => mod.steps.indexOf(a._id) > mod.steps.indexOf(b._id)
+      )
     })
-    this.setState({ recipe, mods })
+    this.setState({ recipe, modification })
   }
 
   toggleEdit = () => {
@@ -69,31 +80,28 @@ class Recipe extends Component {
 
   handleStepChange = (e) => {
     const { name, value } = e.target
-    const { recipe, activeStep, mods } = this.state
-    const stepId = activeStep._id
-    const stepMod = {
-      modified: 'step',
-      modifiedId: stepId,
-      type: name,
-      value: value
-    }
-    const modIndex = mods.findIndex( mod => mod.modifiedId === stepId && mod.type === name )
-    if(modIndex > -1) {
-      mods[modIndex] = stepMod
-    } else {
-      mods.push(stepMod)
-    }
-    localStorage.setItem('mods', JSON.stringify(mods))
-    this.setState({ mods })
+    const { activeStep, modification } = this.state
+
+    modification.alteredSteps = updateOrInsertInArray(
+      modification.alteredSteps,
+      {
+        stepId: activeStep._id,
+        field: name,
+        value: value
+      },
+      'stepId'
+    )
+
+    localStorage.setItem('modification', JSON.stringify(modification))
+    this.setState({ modification })
   }
 
   getStepDirectionsValue = (step) => {
-    const { mods } = this.state
-    const mod = mods.find( mod => mod.modifiedId === step._id && mod.type === 'directions' )
-    if(mod) {
-      return mod.value
-    }
-    return step.directions
+    const { modification } = this.state
+    const mod = modification.alteredSteps.find(
+      mod => mod.stepId === step._id && mod.field === 'directions'
+    )
+    return mod ? mod.value : step.directions
   }
 
   setActiveStep = (itemI, stepI) => {
@@ -104,8 +112,10 @@ class Recipe extends Component {
   }
 
   getDirectionsWithMods = (step) => {
-    const { mods } = this.state
-    const mod = mods.find( mod => mod.modifiedId === step._id && mod.type === 'directions' )
+    const { modification } = this.state
+    const mod = modification.alteredSteps.find(
+      mod => mod.stepId === step._id && mod.field === 'directions'
+    )
     if(mod) {
       const dmp = new DiffMatchPatch()
       const diff = dmp.diff_main(step.directions, mod.value)
@@ -130,33 +140,32 @@ class Recipe extends Component {
       return
     }
 
-    const { mods, recipe } = this.state
+    const { modification, recipe } = this.state
 
+    // Handle onDragEnd for steps
     if(result.type.startsWith('STEP')) {
       const itemId = result.destination.droppableId
       const itemIndex = recipe.items.findIndex( item => item._id === itemId)
+      // Reorder the dropped step in the recipe item array
       recipe.items[itemIndex].steps = reorder(
         recipe.items[itemIndex].steps,
         result.source.index,
         result.destination.index
       )
-
-      const sortMod = {
-        modified: 'item',
-        modifiedId: itemId,
-        type: 'sort',
-        value: recipe.items[itemIndex].steps.map(step => step._id)
-      }
-      const modIndex = mods.findIndex(mod => mod.modifiedId === itemId)
-      if(modIndex > -1) {
-        mods[modIndex] = sortMod
-      } else {
-        mods.push(sortMod)
-      }
-      localStorage.setItem('mods', JSON.stringify(mods))
+      // Update or insert the step sort modification
+      modification.sortSteps = updateOrInsertInArray(
+        modification.sortSteps,
+        {
+          itemId: itemId,
+          steps: recipe.items[itemIndex].steps.map(step => step._id)
+        },
+        'itemId'
+      )
+      // Save changes to local storage
+      localStorage.setItem('modification', JSON.stringify(modification))
     }
 
-    this.setState({ recipe, mods })
+    this.setState({ recipe, modification })
   }
 
   render() {

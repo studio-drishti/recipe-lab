@@ -19,7 +19,6 @@ router.get('/:id', (req, res) => {
   db.Recipe.findOne({'_id': req.params.id})
     .populate('author')
     .then(data => {
-      console.log(data)
       res.json(data)
     })
     .catch(err => {
