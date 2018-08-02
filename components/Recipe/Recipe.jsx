@@ -3,12 +3,17 @@ import { Component } from 'react'
 import Textarea from 'react-textarea-autosize'
 import Swiper from 'react-id-swiper'
 import DiffMatchPatch from 'diff-match-patch'
-import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
+import { DragDropContext } from 'react-beautiful-dnd'
 
 import css from './Recipe.css'
 import { stepsToIngredientTotals, formatIngredientTotal } from '../../util/recipeTools'
 import reorder from '../../util/reorder'
 import { updateOrInsertInArray } from '../../util/arrayTools'
+
+import StepList from '../StepList'
+import Step from '../Step'
+import ItemList from '../ItemList'
+import Item from '../Item'
 
 class Recipe extends Component {
   state = {
@@ -32,15 +37,24 @@ class Recipe extends Component {
     let { modification } = this.state
 
     if(localStorage.getItem('modification')) {
-      modification = JSON.parse(localStorage.getItem('modification'))
+      modification = Object.assign(modification, JSON.parse(localStorage.getItem('modification')))
     }
 
+    // Apply any step sorting modifications
     modification.sortSteps.forEach( mod => {
       const itemIndex = recipe.items.findIndex(item => item._id === mod.itemId)
       recipe.items[itemIndex].steps = recipe.items[itemIndex].steps.sort(
         (a, b) => mod.steps.indexOf(a._id) > mod.steps.indexOf(b._id)
       )
     })
+
+    // Apply item sort mofidification if any exists
+    if(modification.sortItems.length) {
+      recipe.items = recipe.items.sort(
+        (a, b) => modification.sortItems.indexOf(a._id) > modification.sortItems.indexOf(b._id)
+      )
+    }
+
     this.setState({ recipe, modification })
   }
 
@@ -161,10 +175,18 @@ class Recipe extends Component {
         },
         'itemId'
       )
-      // Save changes to local storage
-      localStorage.setItem('modification', JSON.stringify(modification))
+    } else if(result.type.startsWith('ITEM')) {
+      // Reorder the dropped item in the recipe item array
+      recipe.items = reorder(
+        recipe.items,
+        result.source.index,
+        result.destination.index
+      )
+      modification.sortItems = recipe.items.map(item => item._id)
     }
 
+    // Save changes to local storage and update state
+    localStorage.setItem('modification', JSON.stringify(modification))
     this.setState({ recipe, modification })
   }
 
@@ -206,53 +228,25 @@ class Recipe extends Component {
           ))}
 
           <DragDropContext onDragEnd={this.onDragEnd}>
-            {recipe.items.map((item, itemI) => (
-              <div key={item._id}>
-                <h3>Directions for {item.name}</h3>
-                  <Droppable type={`STEP-${itemI}`} droppableId={item._id}>
-                    {(provided, snapshot) => (
-                      <div
-                        className={css.steps}
-                        ref={provided.innerRef}
-                        {...provided.droppableProps}
-                      >
-                        {item.steps.map((step, stepI) => (
-                          <Draggable
-                            type={`STEP-${itemI}`}
-                            key={step._id}
-                            draggableId={step._id}
-                            index={stepI}
-                          >
-                            {(provided, snapshot) => (
-                              <div
-                                ref={provided.innerRef}
-                                {...provided.draggableProps}
-                                data-active={activeItem._id === item._id && activeStep._id === step._id}
-                              >
-                                <div
-                                  className={css.stepNum}
-                                  {...provided.dragHandleProps}
-                                >
-                                  <span>
-                                    {stepI + 1}.
-                                  </span>
-                                </div>
-                                <div
-                                  className={css.stepDirections}
-                                  onClick={() => this.setActiveStep(itemI, stepI)}
-                                >
-                                  {this.getDirectionsWithMods(step)}
-                                </div>
-                              </div>
-                            )}
-                          </Draggable>
-                        ))}
-                        {provided.placeholder}
-                      </div>
-                    )}
-                  </Droppable>
-              </div>
-            ))}
+            <ItemList recipeId={recipe._id}>
+              {recipe.items.map((item, itemI) => (
+                <Item key={item._id} item={item} index={itemI}>
+                  <StepList itemId={item._id}>
+                      {item.steps.map((step, stepI) => (
+                        <Step
+                          key={step._id}
+                          index={stepI}
+                          itemId={item._id}
+                          stepId={step._id}
+                          isActive={activeItem._id === item._id && activeStep._id === step._id}
+                          clickHandler={() => this.setActiveStep(itemI, stepI)}
+                          content={this.getDirectionsWithMods(step)}
+                        />
+                      ))}
+                    </StepList>
+                </Item>
+              ))}
+            </ItemList>
           </DragDropContext>
         </div>
         <aside className={css.recipeDetail}>

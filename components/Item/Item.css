@@ -1,0 +1,19 @@
+.item {
+  & h3 {
+    position: relative;
+    cursor: move;
+  }
+
+  & h3 i {
+    position: absolute;
+    left: -0.25em;
+    top: 50%;
+    transform: translate(-100%, -50%);
+    opacity: 0;
+    transition: all linear 0.2s;
+  }
+
+  & h3:hover i {
+    opacity: 0.5;
+  }
+}
