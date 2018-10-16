@@ -25,6 +25,7 @@ class Recipe extends Component {
       sortSteps: [],
       alteredItems: [],
       alteredSteps: [],
+      alteredIngredients: [],
       additionalItems: [],
       additionalSteps: [],
       additionalIngredients: [],
@@ -110,12 +111,63 @@ class Recipe extends Component {
     this.setState({ modification })
   }
 
+  handleIngredientChange = (index, e) => {
+    const { name, value } = e.target
+    const { activeStep, modification } = this.state
+
+    modification.alteredIngredients = updateOrInsertInArray(
+      modification.alteredIngredients,
+      {
+        ingredientId: activeStep.ingredients[index]._id,
+        field: name,
+        value: value,
+      },
+      'ingredientId',
+      'field'
+    )
+
+    localStorage.setItem('modification', JSON.stringify(modification))
+    this.setState({ modification })
+  }
+
   getStepDirectionsValue = (step) => {
     const { modification } = this.state
     const mod = modification.alteredSteps.find(
       mod => mod.stepId === step._id && mod.field === 'directions'
     )
     return mod ? mod.value : step.directions
+  }
+
+  getIngredientValue = (ingredient, fieldName) => {
+    const { modification } = this.state
+    const mod = modification.alteredIngredients.find(
+      mod => mod.ingredientId === ingredient._id && mod.field === fieldName
+    )
+    return mod ? mod.value : ingredient[fieldName]
+  }
+
+  renderIngredientWithMods = (ingredient) => {
+    const { modification } = this.state
+    const mods = {}
+    modification.alteredIngredients.filter(
+      mod => mod.ingredientId === ingredient._id
+    ).forEach(mod => {
+      mods[mod.field] = mod.value
+    })
+
+    const formatted = []
+    const fields = ['quantity', 'unit', 'name', 'processing']
+    fields.forEach((fieldName, i) => {
+      const separator = ingredient[fieldName] && 'processing' === fieldName ? ', ' : ''
+      if(mods.hasOwnProperty(fieldName)) {
+        formatted.push(<del key={"del" + i}>{ingredient[fieldName]}</del>)
+        formatted.push(<ins key={"ins" + i}>{separator}{mods[fieldName]}</ins>)
+      } else {
+        formatted.push(<span key={i}>{separator}{ingredient[fieldName]}</span>)
+      }
+    })
+
+    return formatted
   }
 
   setActiveStep = (itemI, stepI) => {
@@ -125,7 +177,7 @@ class Recipe extends Component {
     })
   }
 
-  getDirectionsWithMods = (step) => {
+  renderDirectionsWithMods = (step) => {
     const { modification } = this.state
     const mod = modification.alteredSteps.find(
       mod => mod.stepId === step._id && mod.field === 'directions'
@@ -240,7 +292,7 @@ class Recipe extends Component {
                           stepId={step._id}
                           isActive={activeItem._id === item._id && activeStep._id === step._id}
                           clickHandler={() => this.setActiveStep(itemI, stepI)}
-                          content={this.getDirectionsWithMods(step)}
+                          content={this.renderDirectionsWithMods(step)}
                         />
                       ))}
                     </StepList>
@@ -281,7 +333,7 @@ class Recipe extends Component {
                   onChange={this.handleStepChange} />
               ) : (
                 <p>
-                  {this.getDirectionsWithMods(activeStep)}
+                  {this.renderDirectionsWithMods(activeStep)}
                 </p>
               )}
             </header>
@@ -295,11 +347,38 @@ class Recipe extends Component {
               {activeStep.ingredients.length > 0 && (
                 <div>
                   <h3>Ingredients Used</h3>
-                  <ul className={css.ingredients}>
+                  <ul className={editing ? css.editIngredients : css.ingredients}>
                     {activeStep.ingredients.map((ingredient, i) => (
-                      <li key={i}>
-                        {ingredient.quantity} {ingredient.unit} {ingredient.name}
-                        {ingredient.processing && `, ${ingredient.processing}`}
+                      <li key={ingredient._id}>
+                        {editing ? (
+                          <fieldset>
+                            <input
+                              name="quantity"
+                              value={this.getIngredientValue(ingredient, "quantity")}
+                              placeholder={ingredient.quantity ? ingredient.quantity : 'Qty'}
+                              onChange={this.handleIngredientChange.bind(this, i)} />
+                            <input
+                              name="unit"
+                              value={this.getIngredientValue(ingredient, "unit")}
+                              placeholder={ingredient.unit ? ingredient.unit : 'Unit'}
+                              onChange={this.handleIngredientChange.bind(this, i)} />
+                            <input
+                              name="name"
+                              value={this.getIngredientValue(ingredient, "name")}
+                              placeholder={ingredient.name ? ingredient.name : 'Name'}
+                              onChange={this.handleIngredientChange.bind(this, i)} />
+                            <input
+                              name="processing"
+                              value={this.getIngredientValue(ingredient, "processing")}
+                              placeholder={ingredient.processing ? ingredient.processing : 'Process'}
+                              onChange={this.handleIngredientChange.bind(this, i)} />
+                          </fieldset>
+                        ) : (
+                          <span>
+                            {this.renderIngredientWithMods(ingredient)}
+                          </span>
+                        )}
+
                       </li>
                     ))}
                   </ul>
