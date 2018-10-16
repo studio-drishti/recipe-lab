@@ -13,7 +13,6 @@ export default class MyDocument extends Document {
         <Head>
           <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Cormorant+Garamond:300|Noto+Sans:400,400i,700|Material+Icons' />
           <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/4.2.6/css/swiper.min.css" />
-          <link rel='stylesheet' href='/_next/static/style.css' />
         </Head>
         <body>
           <Main />
