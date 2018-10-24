@@ -11,5 +11,4 @@ COPY .babelrc next.config.js postcss.config.js ./
 COPY server ./
 COPY pages components util config ./
 COPY jest.config.js jest.setup.js __mocks__ __tests__ ./
-RUN npm run build
 CMD [ "npm", "run", "start:dev" ]
