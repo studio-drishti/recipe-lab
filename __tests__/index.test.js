@@ -1,10 +1,8 @@
-/* eslint-env jest */
-
 import { shallow } from 'enzyme'
 import React from 'react'
-import renderer from 'react-test-renderer'
+// import renderer from 'react-test-renderer'
 
-import App from '../pages/index'
+import App from 'schooled-lunch/pages/index'
 
 describe('With Enzyme', () => {
   it('App shows "Welcome to Schooled Lunch!"', () => {
