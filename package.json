@@ -11,7 +11,9 @@
     "start": "next start",
     "start:dev": "nodemon server",
     "build": "next build",
-    "seed": "node ./server/seed"
+    "seed": "node ./server/seed",
+    "docker:test": "docker-compose run --rm app npm run test",
+    "docker:up": "docker-compose up"
   },
   "dependencies": {
     "@zeit/next-css": "1.0.1",

@@ -1,6 +1,7 @@
 const mongoose = require('mongoose')
 // Load Next.js dependencies and Next Auth config
 const next = require('next')
+const nextConfig = require('../next.config.js')
 const nextAuth = require('next-auth')
 const nextAuthConfig = require('./next-auth.config')
 
@@ -27,8 +28,9 @@ process.env.MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/scho
 
 // Initialize the Next.js app
 const nextApp = next({
-  dir: '.',
-  dev: (process.env.NODE_ENV !== 'production')
+  dir: './client',
+  dev: (process.env.NODE_ENV !== 'production'),
+  conf: nextConfig
 })
 
 nextApp.prepare()

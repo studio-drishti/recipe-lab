@@ -1,4 +1,4 @@
-import { stepsToIngredientTotals, sortIngredientQuantites } from 'schooled-lunch/util/recipeTools';
+import { stepsToIngredientTotals, sortIngredientQuantites } from 'schooled-lunch/client/util/recipeTools';
 
 describe("Refactor step based ingredients as total ingredients", () => {
   it('should return false when not an array', () => {

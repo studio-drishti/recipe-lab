@@ -9,6 +9,6 @@ COPY package.json package-lock.json ./
 RUN npm install
 COPY .babelrc next.config.js postcss.config.js ./
 COPY server ./
-COPY pages components util config ./
+COPY client ./
 COPY jest.config.js jest.setup.js __mocks__ __tests__ ./
 CMD [ "npm", "run", "start:dev" ]

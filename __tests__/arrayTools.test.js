@@ -1,4 +1,4 @@
-import { updateOrInsertInArray } from 'schooled-lunch/util/arrayTools';
+import { updateOrInsertInArray } from 'schooled-lunch/client/util/arrayTools';
 
 describe("Update or insert an item in an array", () => {
   const arr = [
