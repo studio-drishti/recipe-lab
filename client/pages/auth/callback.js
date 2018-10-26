@@ -1,5 +1,4 @@
 import React from 'react';
-import Link from 'next/link';
 import Head from 'next/head';
 import Router from 'next/router';
 import { NextAuth } from 'next-auth/client';
@@ -14,7 +13,7 @@ export default class extends React.Component {
   async componentDidMount() {
     // Get latest session data after rendering on client then redirect.
     // The ensures client state is always updated after signing in or out.
-    const session = await NextAuth.init({ force: true });
+    await NextAuth.init({ force: true });
     Router.push('/');
   }
 

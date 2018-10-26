@@ -27,7 +27,7 @@ export default class extends React.Component {
 
   async componentDidMount() {
     if (this.props.session.user) {
-      Router.push(`/auth/`);
+      Router.push('/auth/');
     }
   }
 

@@ -195,5 +195,5 @@ mongoose
   })
   .catch(ex => {
     console.error(ex.stack);
-    process.exit(1);
+    throw "Couldn't create recipe";
   });

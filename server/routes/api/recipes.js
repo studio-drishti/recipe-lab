@@ -9,7 +9,6 @@ router.get('/', (req, res) => {
       res.json(data);
     })
     .catch(err => {
-      throw err;
       res.json(err);
     });
 });
@@ -22,7 +21,6 @@ router.get('/:id', (req, res) => {
       res.json(data);
     })
     .catch(err => {
-      throw err;
       res.json(err);
     });
 });

@@ -53,7 +53,7 @@ nextApp
 
     return nextAuth(nextApp, nextAuthOptions);
   })
-  .then(({ express, expressApp }) => {
+  .then(({ expressApp }) => {
     expressApp.use(routes);
 
     expressApp.get('/recipes/:id', (req, res) => {

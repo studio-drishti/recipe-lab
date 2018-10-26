@@ -17,9 +17,11 @@
     "ecmaVersion": 2017,
     "sourceType": "module"
   },
-  "plugins": [
-    "react"
-  ],
+  "settings": {
+    "react": {
+      "version": "16.6.0"
+    }
+  },
   "rules": {
     "quotes": [
       "error",
@@ -46,7 +48,8 @@
         "browser": true
       },
       "rules": {
-        "node/no-unsupported-features/es-syntax": "off"
+        "node/no-unsupported-features/es-syntax": "off",
+        "react/display-name": "off"
       }
     }
   ]
