@@ -1,2 +1,2 @@
-import Component from './Layout.jsx'
-export default Component
+import Component from './Layout.jsx';
+export default Component;

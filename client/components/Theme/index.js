@@ -1,2 +1,2 @@
-import Component from './Theme.jsx'
-export default Component
+import Component from './Theme.jsx';
+export default Component;

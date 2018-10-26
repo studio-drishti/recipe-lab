@@ -44,9 +44,10 @@
   border: 1px solid lightgrey;
   padding: 1rem;
   flex: 0 0 auto;
-  box-shadow: 0 .1rem .7rem rgba(0,0,0,.15);
+  box-shadow: 0 0.1rem 0.7rem rgba(0, 0, 0, 0.15);
 
-  & h6, & p {
+  & h6,
+  & p {
     margin: 0;
   }
 }
@@ -62,11 +63,11 @@
     transition: background linear 0.1s;
 
     &:hover {
-      background: rgba(0,0,0,.05);
+      background: rgba(0, 0, 0, 0.05);
     }
 
     &[disabled] {
-      opacity: .5;
+      opacity: 0.5;
     }
   }
 
@@ -104,9 +105,9 @@
       content: '';
       height: 1px;
       width: 1em;
-      background: rgba(0,0,0,.4);
+      background: rgba(0, 0, 0, 0.4);
       position: absolute;
-      top: .75em;
+      top: 0.75em;
       left: 0;
     }
   }

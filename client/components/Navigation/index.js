@@ -1,2 +1,2 @@
-import Component from './Navigation.jsx'
-export default Component
+import Component from './Navigation.jsx';
+export default Component;

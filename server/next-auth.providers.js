@@ -24,7 +24,7 @@
 // require('dotenv').load()
 
 module.exports = () => {
-  let providers = []
+  let providers = [];
 
   if (process.env.FACEBOOK_ID && process.env.FACEBOOK_SECRET) {
     providers.push({
@@ -44,9 +44,9 @@ module.exports = () => {
           id: profile.id,
           name: profile.displayName,
           email: profile._json.email
-        }
+        };
       }
-    })
+    });
   }
 
   if (process.env.GOOGLE_ID && process.env.GOOGLE_SECRET) {
@@ -66,9 +66,9 @@ module.exports = () => {
           id: profile.id,
           name: profile.displayName,
           email: profile.emails[0].value
-        }
+        };
       }
-    })
+    });
   }
 
   /**
@@ -91,18 +91,22 @@ module.exports = () => {
       strategyOptions: {
         consumerKey: process.env.TWITTER_KEY,
         consumerSecret: process.env.TWITTER_SECRET,
-        userProfileURL: 'https://api.twitter.com/1.1/account/verify_credentials.json?include_email=true'
+        userProfileURL:
+          'https://api.twitter.com/1.1/account/verify_credentials.json?include_email=true'
       },
       getProfile(profile) {
         // Normalize profile into one with {id, name, email} keys
         return {
           id: profile.id,
           name: profile.displayName,
-          email: (profile.emails && profile.emails[0].value) ? profile.emails[0].value : ''
-        }
+          email:
+            profile.emails && profile.emails[0].value
+              ? profile.emails[0].value
+              : ''
+        };
       }
-    })
+    });
   }
 
-  return providers
-}
+  return providers;
+};

@@ -1,2 +1,2 @@
-import Component from './Item.jsx'
-export default Component
+import Component from './Item.jsx';
+export default Component;

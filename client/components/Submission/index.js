@@ -1,2 +1,2 @@
-import Component from './Submission.jsx'
-export default Component
+import Component from './Submission.jsx';
+export default Component;
