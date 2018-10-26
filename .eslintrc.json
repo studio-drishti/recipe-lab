@@ -1,6 +1,5 @@
 {
   "env": {
-    "browser": true,
     "es6": true,
     "node": true
   },
@@ -10,6 +9,7 @@
     "plugin:react/recommended",
     "plugin:prettier/recommended"
   ],
+  "parser": "babel-eslint",
   "parserOptions": {
     "ecmaFeatures": {
       "jsx": true
@@ -30,10 +30,24 @@
       }
     ]
   },
-  "overrides": [{
-    "files": ["__tests__/**/*.js"],
-    "env": {
-      "jest": true
+  "overrides": [
+    {
+      "files": ["__tests__/**/*.js", "jest.setup.js"],
+      "env": {
+        "jest": true
+      },
+      "rules": {
+        "node/no-unsupported-features/es-syntax": "off"
+      }
+    },
+    {
+      "files": ["client/**/*.js", "client/**/*.jsx"],
+      "env": {
+        "browser": true
+      },
+      "rules": {
+        "node/no-unsupported-features/es-syntax": "off"
+      }
     }
-  }]
+  ]
 }
