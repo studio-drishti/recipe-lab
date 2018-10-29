@@ -1,6 +1,6 @@
-import Link from 'next/link'
-import css from './Submission.css'
-import { Component } from 'react'
+import Link from 'next/link';
+import css from './Submission.css';
+import { Component } from 'react';
 
 class Submission extends Component {
   state = {
@@ -10,37 +10,37 @@ class Submission extends Component {
     ingredients: [
       {
         ingredient: '',
-        detail: '',
-      },
+        detail: ''
+      }
     ]
-  }
+  };
 
   addIngredient = () => {
-    const { ingredients } = this.state
+    const { ingredients } = this.state;
     ingredients.push({
       ingredient: '',
       detail: ''
-    })
-    this.setState({ingredients})
-  }
+    });
+    this.setState({ ingredients });
+  };
 
-  showIngredientDetails = (i) => {
-    this.setState({currentIngredient: i})
-  }
+  showIngredientDetails = i => {
+    this.setState({ currentIngredient: i });
+  };
 
-  handleIngredientChange = (e) => {
+  handleIngredientChange = e => {
     const { ingredients } = this.state;
-    const i = e.target.getAttribute('data-index')
+    const i = e.target.getAttribute('data-index');
     ingredients[i].ingredient = e.target.value;
-    this.setState({ingredients})
-  }
+    this.setState({ ingredients });
+  };
 
-  handleIngredientDetailChange = (e) => {
-    const { ingredients } = this.state
-    const i = e.target.getAttribute('data-index')
+  handleIngredientDetailChange = e => {
+    const { ingredients } = this.state;
+    const i = e.target.getAttribute('data-index');
     ingredients[i].detail = e.target.value;
-    this.setState({ingredients})
-  }
+    this.setState({ ingredients });
+  };
 
   render() {
     const { ingredients, currentIngredient } = this.state;
@@ -54,7 +54,7 @@ class Submission extends Component {
 
           <label>
             Description
-            <textarea></textarea>
+            <textarea />
           </label>
 
           <p>Ingredients</p>
@@ -65,15 +65,19 @@ class Submission extends Component {
                 placeholder={`Ingredient #${i}`}
                 data-index={i}
                 onChange={this.handleIngredientChange}
-                onFocus={() => this.showIngredientDetails(i)} />
+                onFocus={() => this.showIngredientDetails(i)}
+              />
             </label>
           ))}
-          <button type="button" onClick={this.addIngredient}>Add Ingredient</button>
-
+          <button type="button" onClick={this.addIngredient}>
+            Add Ingredient
+          </button>
         </fieldset>
         <fieldset className={css.secondaryFieldset}>
           <label>
-            {`Additonal details about the ingredient: ${ingredients[currentIngredient].ingredient}`}
+            {`Additonal details about the ingredient: ${
+              ingredients[currentIngredient].ingredient
+            }`}
             <textarea
               value={ingredients[currentIngredient].detail}
               data-index={currentIngredient}
@@ -82,7 +86,7 @@ class Submission extends Component {
           </label>
         </fieldset>
       </form>
-    )
+    );
   }
 }
 

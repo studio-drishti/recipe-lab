@@ -1,5 +1,5 @@
-import Link from 'next/link'
-import css from './Footer.css'
+import Link from 'next/link';
+import css from './Footer.css';
 
 export default () => (
   <footer className={css.footer}>
@@ -7,9 +7,8 @@ export default () => (
       Copyright &copy; {new Date().getFullYear()} Schooled Lunch
     </div>
     <div className={css.social}>
-      <a href="#">Instagram</a> |
-      <a href="#">Facebook</a> |
+      <a href="#">Instagram</a> |<a href="#">Facebook</a> |
       <a href="#">Mastadon</a>
     </div>
   </footer>
-)
+);

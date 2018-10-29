@@ -31,6 +31,21 @@ Use when server is running to view data:
 
 ## Editor Configuration
 
-Recommended VSCode project settings:
+Recommended VSCode project settings. Copy and paste the following json to `.vscode/settings.json`
 
-`{ "css.validate": false, "editor.formatOnSave": true }`
+```json
+{
+  "css.validate": false,
+  "editor.formatOnSave": true,
+  "javascript.format.enable": false,
+  "prettier.eslintIntegration": true,
+  "prettier.stylelintIntegration": true
+}
+```
+
+Recommended VSCode extensions:
+
+- Prettier
+- Stylelint
+- Eslint
+- EditorConfig

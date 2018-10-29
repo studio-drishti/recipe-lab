@@ -1,5 +1,5 @@
-import Link from 'next/link'
-import css from './Navigation.css'
+import Link from 'next/link';
+import css from './Navigation.css';
 
 export default () => (
   <nav className={css.nav}>
@@ -8,20 +8,14 @@ export default () => (
     </Link>
     <div className={css.links}>
       <Link href="/recipes">
-        <a>
-          Recipes
-        </a>
+        <a>Recipes</a>
       </Link>
       <Link href="/about">
-        <a>
-          About
-        </a>
+        <a>About</a>
       </Link>
       <Link href="/register">
-        <a>
-          Register
-        </a>
+        <a>Register</a>
       </Link>
     </div>
   </nav>
-)
+);

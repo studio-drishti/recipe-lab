@@ -14,7 +14,7 @@
     "test:watch": "NODE_ENV=test jest --watchAll",
     "lint:css": "stylelint \"client/**/*.css\"",
     "lint:js": "eslint ./*.js __tests__ __mocks__ client server",
-    "format": "prettier --write \"{,!(node_modules|.next)/**/}*.js\"",
+    "format": "prettier --write \"**/*.{js,jsx,json,yml,xml,md,css}\"",
     "docker:test": "docker-compose run --rm app npm run test",
     "docker:up": "docker-compose up"
   },

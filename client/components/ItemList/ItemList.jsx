@@ -1,6 +1,6 @@
-import { Droppable } from 'react-beautiful-dnd'
+import { Droppable } from 'react-beautiful-dnd';
 
-import css from './ItemList.css'
+import css from './ItemList.css';
 
 export default ({ children, recipeId }) => (
   <Droppable type="ITEM" droppableId={recipeId}>
@@ -15,4 +15,4 @@ export default ({ children, recipeId }) => (
       </div>
     )}
   </Droppable>
-)
+);

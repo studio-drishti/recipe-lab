@@ -1,4 +1,4 @@
-version: "3.4"
+version: '3.4'
 services:
   app:
     build:
@@ -8,7 +8,7 @@ services:
     depends_on:
       - db
     ports:
-      - "${WEB_PORT:-3000}:3000"
+      - '${WEB_PORT:-3000}:3000'
     volumes:
       - ./server:/usr/src/app/server
       - ./client:/usr/src/app/client
@@ -33,6 +33,6 @@ services:
     volumes:
       - dbdata:/data/db
     ports:
-      - "27017:27017"
+      - '27017:27017'
 volumes:
-  dbdata:
+  ? dbdata

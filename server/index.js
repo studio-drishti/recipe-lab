@@ -40,7 +40,9 @@ nextApp
     // Ensure that we are connected to mongo
     return mongoose.connect(
       process.env.MONGO_URI,
-      { useNewUrlParser: true }
+      {
+        useNewUrlParser: true
+      }
     );
   })
   .then(() => {
@@ -73,5 +75,5 @@ nextApp
   })
   .catch(ex => {
     console.error(ex.stack);
-    process.exit(1);
+    throw 'Could not set up express server';
   });

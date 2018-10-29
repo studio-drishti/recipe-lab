@@ -1,6 +1,6 @@
-import { Droppable } from 'react-beautiful-dnd'
+import { Droppable } from 'react-beautiful-dnd';
 
-import css from './StepList.css'
+import css from './StepList.css';
 
 export default ({ children, itemId }) => (
   <Droppable type={`STEP-${itemId}`} droppableId={itemId}>
@@ -15,4 +15,4 @@ export default ({ children, itemId }) => (
       </ol>
     )}
   </Droppable>
-)
+);

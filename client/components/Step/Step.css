@@ -4,7 +4,7 @@
   margin-bottom: 1rem;
   transition: background linear 0.2s;
 
-  &[data-active=true] {
+  &[data-active='true'] {
     background: lightgoldenrodyellow;
   }
 
@@ -20,7 +20,7 @@
       border-color: black;
       height: 0.75em;
       width: 0.75em;
-      transform: rotate(45deg) translateY(-.05em);
+      transform: rotate(45deg) translateY(-0.05em);
       vertical-align: middle;
     }
   }

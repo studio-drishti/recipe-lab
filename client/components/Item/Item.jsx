@@ -1,13 +1,9 @@
-import { Draggable } from 'react-beautiful-dnd'
+import { Draggable } from 'react-beautiful-dnd';
 
-import css from './Item.css'
+import css from './Item.css';
 
 export default ({ children, item, index }) => (
-  <Draggable
-    type="ITEM"
-    draggableId={item._id}
-    index={index}
-  >
+  <Draggable type="ITEM" draggableId={item._id} index={index}>
     {(provided, snapshot) => (
       <div
         className={css.item}
@@ -24,4 +20,4 @@ export default ({ children, item, index }) => (
       </div>
     )}
   </Draggable>
-)
+);

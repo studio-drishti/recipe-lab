@@ -31,7 +31,6 @@ export default class extends React.Component {
             ) : (
               <span>your inbox</span>
             )}
-            .
           </p>
           <p>
             <Link href="/">

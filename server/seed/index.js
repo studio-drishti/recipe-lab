@@ -33,7 +33,8 @@ mongoose
       name: 'Marinara Sauce',
       steps: [
         {
-          directions: "Heat a large pot over medium-high heat. Add 2 tablespoons of the avocado oil, and when it's warm, saute the onion until it's brown and translucent",
+          directions:
+            "Heat a large pot over medium-high heat. Add 2 tablespoons of the avocado oil, and when it's warm, saute the onion until it's brown and translucent",
           notes:
             'Try to cook the onions longer than you think will be necessary. Get them real carmelized. Yum Yum.',
           ingredients: [
@@ -50,7 +51,8 @@ mongoose
           ]
         },
         {
-          directions: 'Add the garlic and italian seasoning. Briefly stir and fry until the mixture is fragrant.',
+          directions:
+            'Add the garlic and italian seasoning. Briefly stir and fry until the mixture is fragrant.',
           notes: '',
           ingredients: [
             {
@@ -66,7 +68,8 @@ mongoose
           ]
         },
         {
-          directions: 'Add a 1 cup of red wine and simmer the mixture until the liquid has reduced by half.',
+          directions:
+            'Add a 1 cup of red wine and simmer the mixture until the liquid has reduced by half.',
           notes: '',
           ingredients: [
             {
@@ -77,7 +80,8 @@ mongoose
           ]
         },
         {
-          directions: 'Add the remaining red wine, chicken stock, and tomato puree.',
+          directions:
+            'Add the remaining red wine, chicken stock, and tomato puree.',
           notes: '',
           ingredients: [
             {
@@ -184,7 +188,8 @@ mongoose
       author: users[0]._id,
       time: 'medium',
       skill: 'easy',
-      description: "It's spaghett! This super easy recipe is delcious, nutritious, and sure to be a crowd pleaser. Rice noodles done right are practically indistinguishable from their glutenfull counterparts.",
+      description:
+        "It's spaghett! This super easy recipe is delcious, nutritious, and sure to be a crowd pleaser. Rice noodles done right are practically indistinguishable from their glutenfull counterparts.",
       course: 'main',
       items: [marinara, meatballs]
     });

@@ -7,7 +7,7 @@
   padding: 25vh 1rem 1rem;
   margin-bottom: 2rem;
   position: relative;
-  border-radius: .2rem;
+  border-radius: 0.2rem;
   overflow: hidden;
   color: white;
   align-items: end;
@@ -19,12 +19,16 @@
     left: 0;
     right: 0;
     height: 60%;
-    background: linear-gradient(to top, rgba(0,0,0,.75) 0%, rgba(0,0,0,0) 100%);
+    background: linear-gradient(
+      to top,
+      rgba(0, 0, 0, 0.75) 0%,
+      rgba(0, 0, 0, 0) 100%
+    );
   }
 }
 
 .title {
-  text-shadow: 0 0 2px rgba(0,0,0,.5);
+  text-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
   z-index: 1;
 
   & h1,
