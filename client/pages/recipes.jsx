@@ -1,9 +1,9 @@
+import React from 'react';
 import fetch from 'isomorphic-unfetch';
 import Link from 'next/link';
 
 import { API_URL } from '../config';
 import Layout from '../components/Layout';
-import Recipe from '../components/Recipe';
 
 const Page = ({ recipes }) => (
   <Layout>

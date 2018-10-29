@@ -1,3 +1,4 @@
+import React from 'react';
 import { Draggable } from 'react-beautiful-dnd';
 
 import css from './Item.css';

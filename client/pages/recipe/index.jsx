@@ -1,3 +1,4 @@
+import React from 'react';
 import fetch from 'isomorphic-unfetch';
 
 import { API_URL } from '../../config';

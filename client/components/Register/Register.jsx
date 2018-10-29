@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import React from 'react';
 import css from './Register.css';
 import { Component } from 'react';
 

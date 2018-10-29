@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import React from 'react';
 import { Component } from 'react';
 import Textarea from 'react-textarea-autosize';
 import Swiper from 'react-id-swiper';
