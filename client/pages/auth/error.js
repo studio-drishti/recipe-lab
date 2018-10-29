@@ -1,3 +1,5 @@
+/* eslint-disable */
+/* turning off linter until auth refactor */
 import React from 'react';
 import Head from 'next/head';
 import Link from 'next/link';

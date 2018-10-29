@@ -1,3 +1,5 @@
+/* eslint-disable */
+/* turning off linter until auth refactor */
 import React from 'react';
 import Head from 'next/head';
 import Router from 'next/router';
@@ -52,7 +54,7 @@ export default class extends React.Component {
       password: this.state.password
     })
       .then(authenticated => {
-        Router.push(`/auth/callback`);
+        Router.push('/auth/callback');
       })
       .catch(() => {
         alert('Authentication failed.');

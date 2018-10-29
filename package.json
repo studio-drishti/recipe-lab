@@ -13,7 +13,7 @@
     "test": "NODE_ENV=test jest",
     "test:watch": "NODE_ENV=test jest --watchAll",
     "lint:css": "stylelint \"client/**/*.css\"",
-    "lint:js": "eslint ./*.js __tests__ __mocks__ client server",
+    "lint:js": "eslint \"**/*.{js,jsx}\"",
     "format": "prettier --write \"**/*.{js,jsx,json,yml,xml,md,css}\"",
     "docker:test": "docker-compose run --rm app npm run test",
     "docker:up": "docker-compose up"
@@ -37,7 +37,8 @@
     "react-beautiful-dnd": "9.0.2",
     "react-dom": "16.6.0",
     "react-id-swiper": "1.6.8",
-    "react-textarea-autosize": "7.0.4"
+    "react-textarea-autosize": "7.0.4",
+    "winston": "3.1.0"
   },
   "devDependencies": {
     "@babel/core": "7.1.2",

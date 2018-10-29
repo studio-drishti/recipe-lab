@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-
+const logger = require('../logger');
 const db = require('../models');
 
 process.env.MONGO_URI =
@@ -26,7 +26,7 @@ mongoose
   })
   .then(users => {
     users.forEach(user => {
-      console.log('Created User: ', user.name);
+      logger.info('Created User: ', user.name);
     });
 
     const marinara = {
@@ -195,10 +195,10 @@ mongoose
     });
   })
   .then(recipe => {
-    console.log('Created Recipe: ', recipe.title);
+    logger.info('Created Recipe: ', recipe.title);
     mongoose.connection.close();
   })
   .catch(ex => {
-    console.error(ex.stack);
+    logger.error(ex.stack);
     throw "Couldn't create recipe";
   });

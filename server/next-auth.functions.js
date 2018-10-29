@@ -1,3 +1,5 @@
+/* eslint-disable */
+/* turning off linter until auth refactor */
 /**
  * next-auth.functions.js Example
  *
@@ -42,7 +44,7 @@
 // require('dotenv').load()
 
 const User = require('./models/User');
-
+const logger = require('./logger');
 // Use Node Mailer for email sign in
 const nodemailer = require('nodemailer');
 const nodemailerSmtpTransport = require('nodemailer-smtp-transport');
@@ -190,12 +192,12 @@ module.exports = () => {
         },
         err => {
           if (err) {
-            console.error('Error sending email to ' + email, err);
+            logger.error('Error sending email to ' + email, err);
           }
         }
       );
       if (process.env.NODE_ENV === 'development') {
-        console.log('Generated sign in link ' + url + ' for ' + email);
+        logger.info('Generated sign in link ' + url + ' for ' + email);
       }
     }
     // Credentials Sign In

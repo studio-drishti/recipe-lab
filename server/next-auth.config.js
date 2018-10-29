@@ -40,7 +40,7 @@ module.exports = () => {
   // next-auth.functions.js returns an async method that does that and returns
   // an object with the functions needed for authentication.
   return nextAuthFunctions().then(functions => {
-    return new Promise((resolve, reject) => {
+    return new Promise(resolve => {
       // This is the config block we return, ready to be passed to NextAuth
       resolve({
         // Define a port (if none passed, will not start Express)

@@ -1,22 +1,22 @@
 const mongoose = require('mongoose');
+const logger = require('./logger');
 // Load Next.js dependencies and Next Auth config
 const next = require('next');
 const nextConfig = require('../next.config.js');
 const nextAuth = require('next-auth');
 const nextAuthConfig = require('./next-auth.config');
 
-const db = require('./models');
 const routes = require('./routes');
 
 // Load environment variables
 // require('dotenv').load()
 
 process.on('uncaughtException', function(err) {
-  console.error('Uncaught Exception: ', err);
+  logger.error('Uncaught Exception: ', err);
 });
 
 process.on('unhandledRejection', (reason, p) => {
-  console.error('Unhandled Rejection: Promise:', p, 'Reason:', reason);
+  logger.error('Unhandled Rejection: Promise:', p, 'Reason:', reason);
 });
 
 // Default when run with `npm start` is 'production' and default port is '80'
@@ -70,10 +70,10 @@ nextApp
 
     expressApp.listen(process.env.PORT, err => {
       if (err) throw err;
-      console.log(`🍽  Ready on http://localhost:${process.env.PORT}`);
+      logger.info(`🍽  Ready on http://localhost:${process.env.PORT}`);
     });
   })
   .catch(ex => {
-    console.error(ex.stack);
+    logger.error(ex.stack);
     throw 'Could not set up express server';
   });
