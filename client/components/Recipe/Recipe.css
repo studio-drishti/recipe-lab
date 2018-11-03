@@ -1,0 +1,134 @@
+@import '../../config/defaults.css';
+
+.recipe {
+  margin-bottom: 2rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-column-gap: 2rem;
+}
+
+.recipeDetail {
+  position: relative;
+
+  & img {
+    width: 100%;
+  }
+
+  & textarea {
+    width: 100%;
+    height: auto;
+    line-height: inherit;
+    padding: 0.5rem;
+    resize: none;
+  }
+
+  & .sticky {
+    position: sticky;
+    top: 2rem;
+    height: auto;
+    max-height: calc(100vh - 4rem);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+}
+
+.recipeDetailToolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.recipeDetailHeader {
+  border: 1px solid lightgrey;
+  padding: 1rem;
+  flex: 0 0 auto;
+  box-shadow: 0 0.1rem 0.7rem rgba(0, 0, 0, 0.15);
+
+  & h6,
+  & p {
+    margin: 0;
+  }
+}
+
+.recipeActions {
+  float: right;
+
+  & button {
+    background: none;
+    border: 1px solid lightgray;
+    font-size: 0.3rem;
+    padding: 0.25rem;
+    transition: background linear 0.1s;
+
+    &:hover {
+      background: rgba(0, 0, 0, 0.05);
+    }
+
+    &[disabled] {
+      opacity: 0.5;
+    }
+  }
+
+  & i {
+    font-size: rem-calc(18px);
+  }
+}
+
+.recipeDetailContent {
+  padding: 1rem;
+  border: 1px solid lightgray;
+  border-top: 0;
+  overflow-y: scroll;
+  flex: 0 1 auto;
+}
+
+.ingredients {
+  padding: 0;
+  list-style: none;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-column-gap: 1rem;
+  grid-row-gap: 0.5rem;
+  margin-bottom: 2rem;
+
+  & > li {
+    padding-left: 2em;
+    position: relative;
+
+    & span > * + * {
+      margin-left: 0.25em;
+    }
+
+    &::before {
+      content: '';
+      height: 1px;
+      width: 1em;
+      background: rgba(0, 0, 0, 0.4);
+      position: absolute;
+      top: 0.75em;
+      left: 0;
+    }
+  }
+}
+
+.editIngredients {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+
+  & fieldset {
+    border: none;
+    padding: 0;
+    margin: 0;
+    margin-bottom: 1rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr 2fr 2fr;
+    grid-column-gap: 1rem;
+  }
+
+  & input {
+    width: 100%;
+  }
+}

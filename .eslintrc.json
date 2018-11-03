@@ -1,0 +1,56 @@
+{
+  "env": {
+    "es6": true,
+    "node": true
+  },
+  "extends": [
+    "eslint:recommended",
+    "plugin:node/recommended",
+    "plugin:react/recommended",
+    "plugin:prettier/recommended"
+  ],
+  "parser": "babel-eslint",
+  "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true
+    },
+    "ecmaVersion": 2017,
+    "sourceType": "module"
+  },
+  "settings": {
+    "react": {
+      "version": "16.6.0"
+    }
+  },
+  "rules": {
+    "quotes": [
+      "error",
+      "single",
+      {
+        "avoidEscape": true,
+        "allowTemplateLiterals": false
+      }
+    ]
+  },
+  "overrides": [
+    {
+      "files": ["__tests__/**/*.js", "jest.setup.js"],
+      "env": {
+        "jest": true
+      },
+      "rules": {
+        "node/no-unsupported-features/es-syntax": "off"
+      }
+    },
+    {
+      "files": ["client/**/*.js", "client/**/*.jsx"],
+      "env": {
+        "browser": true
+      },
+      "rules": {
+        "node/no-unsupported-features/es-syntax": "off",
+        "react/display-name": "off"
+      }
+    }
+  ]
+}

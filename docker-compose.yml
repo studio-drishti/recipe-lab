@@ -1,4 +1,4 @@
-version: "3.4"
+version: '3.4'
 services:
   app:
     build:
@@ -8,18 +8,15 @@ services:
     depends_on:
       - db
     ports:
-      - "${WEB_PORT:-3000}:3000"
+      - '${WEB_PORT:-3000}:3000'
     volumes:
       - ./server:/usr/src/app/server
-      - ./pages:/usr/src/app/pages
-      - ./components:/usr/src/app/components
-      - ./util:/usr/src/app/util
-      - ./config:/usr/src/app/config
+      - ./client:/usr/src/app/client
       - ./.babelrc:/usr/src/app/.babelrc
       - ./next.config.js:/usr/src/app/next.config.js
       - ./postcss.config.js:/usr/src/app/postcss.config.js
       - ./package.json:/usr/src/app/package.json
-      - ./yarn.lock:/usr/src/app/yarn.lock
+      - ./package-lock.json:/usr/src/app/package-lock.json
       - ./jest.config.js:/usr/src/app/jest.config.js
       - ./jest.setup.js:/usr/src/app/jest.setup.js
       - ./__mocks__:/usr/src/app/__mocks__
@@ -36,6 +33,6 @@ services:
     volumes:
       - dbdata:/data/db
     ports:
-      - "27017:27017"
+      - '27017:27017'
 volumes:
-  dbdata:
+  ? dbdata

@@ -1,21 +1,20 @@
-const router = require("express").Router()
+const router = require('express').Router();
 
-const db = require("../../models")
+const db = require('../../models');
 
 // Matches /api/modifications
 router.get('/', (req, res) => {
-  const query = {}
+  const query = {};
   // if(req.query.recipe) {
   //   query.recipe = req.query.recipe
   // }
   db.Modification.find(query)
     .then(data => {
-      res.json(data)
+      res.json(data);
     })
     .catch(err => {
-      throw err
-      res.json(err)
-    })
-})
+      res.json(err);
+    });
+});
 
 module.exports = router;

@@ -1,0 +1,18 @@
+:root {
+  /* Layout
+  --------- */
+  --layout-width: rem-calc(1200px);
+
+  /* Typography
+  ------------- */
+  --body-font-color: #333;
+  --body-font-family: 'Noto Sans', sans-serif;
+  --body-font-weight: 400;
+  --heading-font-color: color(var(--body-font-color) lightness(5%));
+  --heading-font-family: 'Cormorant Garamond', serif;
+  --heading-font-weight: 300;
+
+  /* Colors
+  --------- */
+  --color-light-gray: #ccc;
+}

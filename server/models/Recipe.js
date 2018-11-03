@@ -1,56 +1,56 @@
-const mongoose = require("mongoose")
+const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const IngredientSchema = new Schema({
   name: {
     type: String,
-    required: true,
+    required: true
   },
   quantity: {
     type: Number,
-    required: true,
+    required: true
   },
   unit: {
-    type: String,
+    type: String
   },
   processing: {
-    type: String,
+    type: String
   },
   toTaste: {
     type: Boolean,
-    default: false,
+    default: false
   }
-})
+});
 
 const StepSchema = new Schema({
   directions: {
     type: String,
-    required: true,
+    required: true
   },
   notes: {
-    type: String,
+    type: String
   },
-  ingredients: [IngredientSchema],
+  ingredients: [IngredientSchema]
   // TODO: add images array
-})
+});
 
 const ItemSchema = new Schema({
   name: {
     type: String,
-    required: true,
+    required: true
   },
-  steps: [StepSchema],
-})
+  steps: [StepSchema]
+});
 
 const RecipeSchema = new Schema({
   title: {
     type: String,
-    required: true,
+    required: true
   },
   author: {
     type: Schema.Types.ObjectId,
     ref: 'User',
-    required: true,
+    required: true
   },
   // TODO: Add source or sources (web / book / etc.)
   // TODO: Add fields for amount recipe yields (quantity, unit)
@@ -58,23 +58,23 @@ const RecipeSchema = new Schema({
   // TODO: Add featured image field
   time: {
     type: String,
-    required: true,
+    required: true
   },
   skill: {
     type: String,
-    required: true,
+    required: true
   },
   description: {
     type: String,
-    required: true,
+    required: true
   },
   course: {
     type: String,
-    required: true,
+    required: true
   },
-  items: [ItemSchema],
-})
+  items: [ItemSchema]
+});
 
-const Recipe = mongoose.model('Recipe', RecipeSchema)
+const Recipe = mongoose.model('Recipe', RecipeSchema);
 
-module.exports = Recipe
+module.exports = Recipe;
