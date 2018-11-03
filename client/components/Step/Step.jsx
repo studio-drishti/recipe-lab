@@ -3,17 +3,9 @@ import { Draggable } from 'react-beautiful-dnd';
 
 import css from './Step.css';
 
-export default ({
-  children,
-  index,
-  itemId,
-  stepId,
-  isActive,
-  content,
-  clickHandler
-}) => (
+export default ({ index, itemId, stepId, isActive, content, clickHandler }) => (
   <Draggable type={`STEP-${itemId}`} draggableId={stepId} index={index}>
-    {(provided, snapshot) => (
+    {provided => (
       <li
         className={css.step}
         data-active={isActive}

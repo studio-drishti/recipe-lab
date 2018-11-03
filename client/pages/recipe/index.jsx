@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import fetch from 'isomorphic-unfetch';
 
 import { API_URL } from '../../config';
@@ -53,6 +54,10 @@ const Page = ({ recipe }) => (
     </div>
   </Layout>
 );
+
+Page.propTypes = {
+  recipe: PropTypes.object
+};
 
 Page.getInitialProps = async function(context) {
   const { id } = context.query;

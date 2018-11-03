@@ -5,7 +5,7 @@ import css from './Item.css';
 
 export default ({ children, item, index }) => (
   <Draggable type="ITEM" draggableId={item._id} index={index}>
-    {(provided, snapshot) => (
+    {provided => (
       <div
         className={css.item}
         ref={provided.innerRef}

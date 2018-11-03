@@ -5,7 +5,7 @@ import css from './StepList.css';
 
 export default ({ children, itemId }) => (
   <Droppable type={`STEP-${itemId}`} droppableId={itemId}>
-    {(provided, snapshot) => (
+    {provided => (
       <ol
         className={css.steps}
         ref={provided.innerRef}

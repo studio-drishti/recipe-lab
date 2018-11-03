@@ -54,8 +54,8 @@ class Register extends Component {
           Password
           <input
             type="password"
-            name="firstName"
-            value={firstName}
+            name="password"
+            value={password}
             onChange={this.handleInputChange}
           />
         </label>

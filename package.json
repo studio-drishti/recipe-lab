@@ -15,6 +15,7 @@
     "lint:css": "stylelint \"client/**/*.css\"",
     "lint:js": "eslint \"**/*.{js,jsx}\"",
     "format": "prettier --write \"**/*.{js,jsx,json,yml,xml,md,css}\"",
+    "docker:init": "docker-compose build; docker-compose run --rm app npm run seed",
     "docker:test": "docker-compose run --rm app npm run test",
     "docker:up": "docker-compose up"
   },
@@ -33,6 +34,7 @@
     "nodemailer-direct-transport": "3.3.2",
     "nodemailer-smtp-transport": "2.7.4",
     "normalize.css": "8.0.0",
+    "prop-types": "^15.6.2",
     "react": "16.6.0",
     "react-beautiful-dnd": "9.0.2",
     "react-dom": "16.6.0",

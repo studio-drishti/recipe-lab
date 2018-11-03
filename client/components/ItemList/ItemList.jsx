@@ -5,7 +5,7 @@ import css from './ItemList.css';
 
 export default ({ children, recipeId }) => (
   <Droppable type="ITEM" droppableId={recipeId}>
-    {(provided, snapshot) => (
+    {provided => (
       <div
         className={css.steps}
         ref={provided.innerRef}

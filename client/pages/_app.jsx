@@ -5,7 +5,7 @@ import { NextAuth } from 'next-auth/client';
 import Theme from '../components/Theme';
 
 export default class MyApp extends App {
-  static async getInitialProps({ Component, router, ctx, req }) {
+  static async getInitialProps({ Component, ctx, req }) {
     let pageProps = {};
 
     if (Component.getInitialProps) {
@@ -19,7 +19,7 @@ export default class MyApp extends App {
   }
 
   render() {
-    const { Component, pageProps, session } = this.props;
+    const { Component, pageProps } = this.props;
     // console.log("session", session)
     return (
       <Theme>

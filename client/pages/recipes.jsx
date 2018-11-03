@@ -1,6 +1,7 @@
 import React from 'react';
 import fetch from 'isomorphic-unfetch';
 import Link from 'next/link';
+import PropTypes from 'prop-types';
 
 import { API_URL } from '../config';
 import Layout from '../components/Layout';
@@ -26,6 +27,10 @@ Page.getInitialProps = async function() {
   return {
     recipes
   };
+};
+
+Page.propTypes = {
+  recipes: PropTypes.object
 };
 
 export default Page;

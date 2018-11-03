@@ -270,7 +270,7 @@ class Recipe extends Component {
   };
 
   render() {
-    const { recipe, activeItem, activeStep, editing, mods } = this.state;
+    const { recipe, activeItem, activeStep, editing } = this.state;
 
     const swiperParams = {
       pagination: {
