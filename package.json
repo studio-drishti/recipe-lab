@@ -17,6 +17,7 @@
     "format": "prettier --write \"**/*.{js,jsx,json,yml,xml,md,css}\"",
     "docker:init": "docker-compose build; docker-compose run --rm app npm run seed",
     "docker:test": "docker-compose run --rm app npm run test",
+    "docker:test:watch": "docker-compose run --rm app npm run test:watch",
     "docker:up": "docker-compose up"
   },
   "dependencies": {
