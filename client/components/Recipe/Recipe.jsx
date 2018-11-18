@@ -4,6 +4,7 @@ import Textarea from 'react-textarea-autosize';
 import Swiper from 'react-id-swiper';
 import DiffMatchPatch from 'diff-match-patch';
 import { DragDropContext } from 'react-beautiful-dnd';
+import { MdEdit, MdNavigateBefore, MdNavigateNext } from 'react-icons/md';
 
 import css from './Recipe.css';
 import {
@@ -303,13 +304,13 @@ class Recipe extends Component {
                 </h6>
                 <div className={css.recipeActions}>
                   <button onClick={this.toggleEdit}>
-                    <i className="material-icons">edit</i>
+                    <MdEdit />
                   </button>
                   <button onClick={this.prevStep} disabled={!hasPrevStep}>
-                    <i className="material-icons">navigate_before</i>
+                    <MdNavigateBefore />
                   </button>
                   <button onClick={this.nextStep} disabled={!hasNextStep}>
-                    <i className="material-icons">navigate_next</i>
+                    <MdNavigateNext />
                   </button>
                 </div>
               </div>

@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import fetch from 'isomorphic-unfetch';
+import { MdSchool, MdTimer } from 'react-icons/md';
 
 import { API_URL } from '../../config';
 import Layout from '../../components/Layout';
@@ -23,11 +24,15 @@ const Page = ({ recipe }) => (
       </div>
       <div className={css.stats}>
         <span>
-          <i className="material-icons">timer</i>
+          <i>
+            <MdTimer />
+          </i>
           {recipe.time}
         </span>
         <span>
-          <i className="material-icons">school</i>
+          <i>
+            <MdSchool />
+          </i>
           {recipe.skill}
         </span>
       </div>

@@ -13,7 +13,7 @@ export default class MyDocument extends Document {
         <Head>
           <link
             rel="stylesheet"
-            href="https://fonts.googleapis.com/css?family=Cormorant+Garamond:300|Noto+Sans:400,400i,700|Material+Icons"
+            href="https://fonts.googleapis.com/css?family=Cormorant+Garamond:300|Noto+Sans:400,400i,700"
           />
           <link
             rel="stylesheet"

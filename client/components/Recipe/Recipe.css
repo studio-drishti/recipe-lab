@@ -58,7 +58,6 @@
   & button {
     background: none;
     border: 1px solid lightgray;
-    font-size: 0.3rem;
     padding: 0.25rem;
     transition: background linear 0.1s;
 
@@ -69,10 +68,6 @@
     &[disabled] {
       opacity: 0.5;
     }
-  }
-
-  & i {
-    font-size: rem-calc(18px);
   }
 }
 

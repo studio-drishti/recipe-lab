@@ -1,5 +1,6 @@
 import React from 'react';
 import { Draggable } from 'react-beautiful-dnd';
+import { MdDragHandle } from 'react-icons/md';
 
 import css from './Item.css';
 
@@ -13,7 +14,9 @@ export default ({ children, item, index }) => (
       >
         <div {...provided.dragHandleProps}>
           <h3>
-            <i className="material-icons">drag_indicator</i>
+            <i>
+              <MdDragHandle />
+            </i>
             Directions for {item.name}
           </h3>
         </div>
