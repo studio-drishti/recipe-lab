@@ -1,0 +1,18 @@
+.ingredient {
+  padding-left: 2em;
+  position: relative;
+
+  & span > * + * {
+    margin-left: 0.25em;
+  }
+
+  &::before {
+    content: '';
+    height: 1px;
+    width: 1em;
+    background: rgba(0, 0, 0, 0.4);
+    position: absolute;
+    top: 0.75em;
+    left: 0;
+  }
+}

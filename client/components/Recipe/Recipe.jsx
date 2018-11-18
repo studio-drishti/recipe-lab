@@ -17,6 +17,7 @@ import StepList from '../StepList';
 import Step from '../Step';
 import ItemList from '../ItemList';
 import Item from '../Item';
+import IngredientList from '../IngredientList';
 
 class Recipe extends Component {
   state = {
@@ -149,49 +150,6 @@ class Recipe extends Component {
       mod => mod.stepId === step._id && mod.field === 'directions'
     );
     return mod ? mod.value : step.directions;
-  };
-
-  getIngredientValue = (ingredient, fieldName) => {
-    const { modification } = this.state;
-    const mod = modification.alteredIngredients.find(
-      mod => mod.ingredientId === ingredient._id && mod.field === fieldName
-    );
-    return mod ? mod.value : ingredient[fieldName];
-  };
-
-  renderIngredientWithMods = ingredient => {
-    const { modification } = this.state;
-    const mods = {};
-    modification.alteredIngredients
-      .filter(mod => mod.ingredientId === ingredient._id)
-      .forEach(mod => {
-        mods[mod.field] = mod.value;
-      });
-
-    const formatted = [];
-    const fields = ['quantity', 'unit', 'name', 'processing'];
-    fields.forEach((fieldName, i) => {
-      const separator =
-        ingredient[fieldName] && 'processing' === fieldName ? ', ' : '';
-      if (mods.hasOwnProperty(fieldName)) {
-        formatted.push(<del key={'del' + i}>{ingredient[fieldName]}</del>);
-        formatted.push(
-          <ins key={'ins' + i}>
-            {separator}
-            {mods[fieldName]}
-          </ins>
-        );
-      } else {
-        formatted.push(
-          <span key={i}>
-            {separator}
-            {ingredient[fieldName]}
-          </span>
-        );
-      }
-    });
-
-    return formatted;
   };
 
   setActiveStep = (itemI, stepI) => {
@@ -393,82 +351,7 @@ class Recipe extends Component {
               {activeStep.ingredients.length > 0 && (
                 <div>
                   <h3>Ingredients Used</h3>
-                  <ul
-                    className={editing ? css.editIngredients : css.ingredients}
-                  >
-                    {activeStep.ingredients.map((ingredient, i) => (
-                      <li key={ingredient._id}>
-                        {editing ? (
-                          <fieldset>
-                            <input
-                              name="quantity"
-                              value={this.getIngredientValue(
-                                ingredient,
-                                'quantity'
-                              )}
-                              placeholder={
-                                ingredient.quantity
-                                  ? ingredient.quantity
-                                  : 'Qty'
-                              }
-                              onChange={this.handleIngredientChange.bind(
-                                this,
-                                i
-                              )}
-                            />
-                            <input
-                              name="unit"
-                              value={this.getIngredientValue(
-                                ingredient,
-                                'unit'
-                              )}
-                              placeholder={
-                                ingredient.unit ? ingredient.unit : 'Unit'
-                              }
-                              onChange={this.handleIngredientChange.bind(
-                                this,
-                                i
-                              )}
-                            />
-                            <input
-                              name="name"
-                              value={this.getIngredientValue(
-                                ingredient,
-                                'name'
-                              )}
-                              placeholder={
-                                ingredient.name ? ingredient.name : 'Name'
-                              }
-                              onChange={this.handleIngredientChange.bind(
-                                this,
-                                i
-                              )}
-                            />
-                            <input
-                              name="processing"
-                              value={this.getIngredientValue(
-                                ingredient,
-                                'processing'
-                              )}
-                              placeholder={
-                                ingredient.processing
-                                  ? ingredient.processing
-                                  : 'Process'
-                              }
-                              onChange={this.handleIngredientChange.bind(
-                                this,
-                                i
-                              )}
-                            />
-                          </fieldset>
-                        ) : (
-                          <span>
-                            {this.renderIngredientWithMods(ingredient)}
-                          </span>
-                        )}
-                      </li>
-                    ))}
-                  </ul>
+                  <IngredientList ingredients={activeStep.ingredients} />
                 </div>
               )}
 
