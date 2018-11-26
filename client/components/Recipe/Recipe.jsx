@@ -31,6 +31,9 @@ class Recipe extends Component {
       alteredItems: [],
       alteredSteps: [],
       alteredIngredients: [],
+      removedItems: [],
+      removedSteps: [],
+      removedIngredients: [],
       additionalItems: [],
       additionalSteps: [],
       additionalIngredients: []
@@ -228,8 +231,34 @@ class Recipe extends Component {
     this.setState({ recipe, modification });
   };
 
+  removeIngredient = ingredient => {
+    const { modification } = this.state;
+    if (!modification.removedIngredients.includes(ingredient._id)) {
+      modification.removedIngredients.push(ingredient._id);
+      this.setState({ modification });
+    }
+  };
+
+  restoreIngredient = ingredient => {
+    const { modification } = this.state;
+    const restoredIngredientIndex = modification.removedIngredients.indexOf(
+      ingredient._id
+    );
+
+    if (restoredIngredientIndex > -1) {
+      modification.removedIngredients.splice(restoredIngredientIndex, 1);
+      this.setState({ modification });
+    }
+  };
+
   render() {
-    const { recipe, activeItem, activeStep, editing } = this.state;
+    const {
+      recipe,
+      activeItem,
+      activeStep,
+      editing,
+      modification
+    } = this.state;
 
     const swiperParams = {
       pagination: {
@@ -352,7 +381,12 @@ class Recipe extends Component {
               {activeStep.ingredients.length > 0 && (
                 <div>
                   <h3>Ingredients Used</h3>
-                  <IngredientList ingredients={activeStep.ingredients} />
+                  <IngredientList
+                    ingredients={activeStep.ingredients}
+                    modifications={modification}
+                    removeAction={this.removeIngredient}
+                    restoreAction={this.restoreIngredient}
+                  />
                 </div>
               )}
 

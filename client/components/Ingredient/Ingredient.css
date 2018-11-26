@@ -10,8 +10,19 @@
   cursor: pointer;
   transition: all ease-out 0.3s;
 
-  & > span {
+  & > div,
+  & > fieldset {
     flex-grow: 1;
+  }
+
+  & .ingredientText {
+    & > * + * {
+      margin-left: 0.25em;
+    }
+
+    & .separator {
+      margin: 0;
+    }
   }
 
   & > button {

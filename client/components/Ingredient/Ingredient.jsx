@@ -1,53 +1,69 @@
 import React from 'react';
 import css from './Ingredient.css';
-import { MdClear } from 'react-icons/md';
+import { MdClear, MdRefresh, MdCheck } from 'react-icons/md';
 
-const getIngredientValue = (ingredient, fieldName) => {
-  const { modification } = this.state;
-  const mod = modification.alteredIngredients.find(
-    mod => mod.ingredientId === ingredient._id && mod.field === fieldName
-  );
-  return mod ? mod.value : ingredient[fieldName];
-};
+const ingredientFields = ['quantity', 'unit', 'name', 'processing'];
 
-const renderIngredientWithMods = ingredient => {
-  const { modification } = this.state;
-  const mods = {};
-  modification.alteredIngredients
-    .filter(mod => mod.ingredientId === ingredient._id)
-    .forEach(mod => {
-      mods[mod.field] = mod.value;
-    });
+// const getIngredientValue = (ingredient, fieldName) => {
+//   const { modification } = this.state;
+//   const mod = modification.alteredIngredients.find(
+//     mod => mod.ingredientId === ingredient._id && mod.field === fieldName
+//   );
+//   return mod ? mod.value : ingredient[fieldName];
+// };
 
+const renderIngredientWithMods = (ingredient, modifications) => {
   const formatted = [];
-  const fields = ['quantity', 'unit', 'name', 'processing'];
-  fields.forEach((fieldName, i) => {
-    const separator =
-      ingredient[fieldName] && 'processing' === fieldName ? ', ' : '';
-    if (mods.hasOwnProperty(fieldName)) {
-      formatted.push(<del key={'del' + i}>{ingredient[fieldName]}</del>);
+
+  ingredientFields.forEach((fieldName, i) => {
+    if (
+      'processing' === fieldName &&
+      (modifications.hasOwnProperty(fieldName) || ingredient[fieldName])
+    ) {
       formatted.push(
-        <ins key={'ins' + i}>
-          {separator}
-          {mods[fieldName]}
-        </ins>
-      );
-    } else {
-      formatted.push(
-        <span key={i}>
-          {separator}
-          {ingredient[fieldName]}
+        <span className={css.separator} key={'separator' + i}>
+          ,
         </span>
       );
     }
-  });
 
+    if (modifications.hasOwnProperty(fieldName)) {
+      if (ingredient[fieldName])
+        formatted.push(<del key={'del' + i}>{ingredient[fieldName]}</del>);
+
+      formatted.push(<ins key={'ins' + i}>{modifications[fieldName]}</ins>);
+    } else if (ingredient[fieldName]) {
+      formatted.push(<span key={i}>{ingredient[fieldName]}</span>);
+    }
+  });
   return formatted;
 };
 
-export default ({ ingredient }) => (
+const renderRemovedIngredient = ingredient => {
+  const removedIngredient = [];
+
+  ingredientFields.forEach(fieldName => {
+    if (ingredient[fieldName])
+      removedIngredient.push(
+        'name' === fieldName && ingredient['processing']
+          ? ingredient[fieldName] + ','
+          : ingredient[fieldName]
+      );
+  });
+
+  return <del>{removedIngredient.join(' ')}</del>;
+};
+
+export default ({
+  ingredient,
+  editing,
+  removed,
+  modifications,
+  removeAction,
+  restoreAction
+}) => (
   <li className={css.ingredient}>
-    {/* {editing ? (
+    {editing ? (
       <fieldset>
         <input
           name="quantity"
@@ -77,16 +93,33 @@ export default ({ ingredient }) => (
         />
       </fieldset>
     ) : (
-      <span>{this.renderIngredientWithMods(ingredient)}</span>
-    )} */}
+      <div className={css.ingredientText}>
+        {removed
+          ? renderRemovedIngredient(ingredient)
+          : renderIngredientWithMods(ingredient, modifications)}
+      </div>
+    )}
 
-    <span>
-      {ingredient.quantity} {ingredient.unit} {ingredient.name}{' '}
-      {ingredient.processing}
-    </span>
+    {removed && !editing ? (
+      <button
+        data-test-btn-state="restore"
+        onClick={() => restoreAction(ingredient)}
+      >
+        <MdRefresh />
+      </button>
+    ) : (
+      <button
+        data-test-btn-state="remove"
+        onClick={() => removeAction(ingredient)}
+      >
+        <MdClear />
+      </button>
+    )}
 
-    <button>
-      <MdClear />
-    </button>
+    {editing && (
+      <button datatest-btn-state="save">
+        <MdCheck />
+      </button>
+    )}
   </li>
 );
