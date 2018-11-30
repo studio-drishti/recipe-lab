@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-
 const next = require('next');
 const nextConfig = require('../next.config.js');
 const nextAuth = require('next-auth');
@@ -20,19 +19,6 @@ const {
   MONGO_PORT,
   MONGO_DATABASE_NAME
 } = process.env;
-
-// process.on('uncaughtException', function(err) {
-//   console.error('Uncaught Exception: ', err);
-// });
-
-// process.on('unhandledRejection', (reason, p) => {
-//   console.error('Unhandled Rejection: Promise:', p, 'Reason:', reason);
-// });
-
-// Default when run with `npm start` is 'production' and default port is '80'
-// `npm run dev` defaults mode to 'development' & port to '3000'
-// process.env.NODE_ENV = process.env.NODE_ENV || 'production';
-// process.env.PORT = process.env.PORT || 80;
 
 // Initialize the Next.js app
 const nextApp = next({
