@@ -13,7 +13,8 @@ mongoose
   .connect(
     `mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@${MONGO_HOSTNAME}:${MONGO_PORT}`,
     {
-      dbName: MONGO_DATABASE_NAME
+      dbName: MONGO_DATABASE_NAME,
+      useNewUrlParser: true
     }
   )
   .then(() => {

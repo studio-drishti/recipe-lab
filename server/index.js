@@ -53,9 +53,9 @@ module.exports = nextApp
       }
     );
   })
-  .then(() => {
+  .then((mongoose) => {
     // Load configuration and return config object
-    return nextAuthConfig();
+    return nextAuthConfig(mongoose);
   })
   .then(nextAuthOptions => {
     // Don't pass a port to NextAuth so we can use custom express routes
@@ -76,10 +76,6 @@ module.exports = nextApp
       return nextRequestHandler(req, res);
     });
 
-    // expressApp.listen(process.env.PORT, err => {
-    //   if (err) throw err;
-    //   console.info(`🍽  Ready on http://localhost:${process.env.PORT}`);
-    // });
     return expressApp;
   })
   .catch(ex => {

@@ -22,6 +22,10 @@ COPY package.json package-lock.json* ./
 RUN npm install --no-optional && npm cache clean --force
 ENV PATH /opt/node_modules/.bin:$PATH
 
+# next.js depends on this cache directory for building the app
+RUN mkdir -p /opt/app/node_modules/.cache
+RUN chown node:node /opt/app/node_modules/.cache
+
 # check every 30s to ensure this service returns HTTP 200
 HEALTHCHECK --interval=30s CMD node server/healthcheck.js
 
