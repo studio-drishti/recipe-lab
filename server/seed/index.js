@@ -11,7 +11,10 @@ const {
 
 mongoose
   .connect(
-    `mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@${MONGO_HOSTNAME}:${MONGO_PORT}/${MONGO_DATABASE_NAME}`
+    `mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@${MONGO_HOSTNAME}:${MONGO_PORT}`,
+    {
+      dbName: MONGO_DATABASE_NAME
+    }
   )
   .then(() => {
     return db.Recipe.deleteMany({}).then(() => db.User.deleteMany({}));

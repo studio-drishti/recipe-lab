@@ -1,5 +1,4 @@
 #!/usr/bin/env node
-console.log('ruuuuuuuning');
 const app = require('../server');
 // var express = require('express');
 

@@ -46,8 +46,9 @@ module.exports = nextApp
   .then(() => {
     // Ensure that we are connected to mongo
     return mongoose.connect(
-      `mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@${MONGO_HOSTNAME}:${MONGO_PORT}/${MONGO_DATABASE_NAME}`,
+      `mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@${MONGO_HOSTNAME}:${MONGO_PORT}`,
       {
+        dbName: MONGO_DATABASE_NAME,
         useNewUrlParser: true
       }
     );
