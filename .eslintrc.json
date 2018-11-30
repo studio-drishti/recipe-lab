@@ -19,7 +19,7 @@
   },
   "settings": {
     "react": {
-      "version": "16.6.0"
+      "version": "16.6.3"
     }
   },
   "rules": {
@@ -50,6 +50,13 @@
       "rules": {
         "node/no-unsupported-features/es-syntax": "off",
         "react/display-name": "off"
+      }
+    },
+    {
+      "files": ["bin/**/*.js", "server/**/*.js"],
+      "rules": {
+        "no-console": 0,
+        "no-process-exit": 0
       }
     }
   ]

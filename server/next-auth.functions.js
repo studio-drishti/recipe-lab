@@ -44,7 +44,6 @@
 // require('dotenv').load()
 
 const User = require('./models/User');
-const logger = require('./logger');
 // Use Node Mailer for email sign in
 const nodemailer = require('nodemailer');
 const nodemailerSmtpTransport = require('nodemailer-smtp-transport');
@@ -192,12 +191,12 @@ module.exports = () => {
         },
         err => {
           if (err) {
-            logger.error('Error sending email to ' + email, err);
+            console.error('Error sending email to ' + email, err);
           }
         }
       );
       if (process.env.NODE_ENV === 'development') {
-        logger.info('Generated sign in link ' + url + ' for ' + email);
+        console.info('Generated sign in link ' + url + ' for ' + email);
       }
     }
     // Credentials Sign In

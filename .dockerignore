@@ -1,3 +1,5 @@
 .git
+*Dockerfile*
+*docker-compose*
 .next
 node_modules

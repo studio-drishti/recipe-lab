@@ -1,12 +1,18 @@
 const mongoose = require('mongoose');
-const logger = require('../logger');
 const db = require('../models');
 
-process.env.MONGO_URI =
-  process.env.MONGO_URI || 'mongodb://localhost:27017/schooled-lunch';
+const {
+  MONGO_USERNAME,
+  MONGO_PASSWORD,
+  MONGO_HOSTNAME,
+  MONGO_PORT,
+  MONGO_DATABASE_NAME
+} = process.env;
 
 mongoose
-  .connect(process.env.MONGO_URI)
+  .connect(
+    `mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@${MONGO_HOSTNAME}:${MONGO_PORT}/${MONGO_DATABASE_NAME}`
+  )
   .then(() => {
     return db.Recipe.deleteMany({}).then(() => db.User.deleteMany({}));
   })
@@ -26,7 +32,7 @@ mongoose
   })
   .then(users => {
     users.forEach(user => {
-      logger.info('Created User: ', user.name);
+      console.info('Created User: ', user.name);
     });
 
     const marinara = {
@@ -195,10 +201,10 @@ mongoose
     });
   })
   .then(recipe => {
-    logger.info('Created Recipe: ', recipe.title);
+    console.info('Created Recipe: ', recipe.title);
     mongoose.connection.close();
   })
   .catch(ex => {
-    logger.error(ex.stack);
+    console.error(ex.stack);
     throw "Couldn't create recipe";
   });
