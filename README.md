@@ -64,25 +64,12 @@ To execute the unit-tests, you would:
 
 ## Database
 
-To seed the database:
-`docker-compose run --rm node npm run seed`
+To seed the database while docker is not running:
 
-Use when server is running to view data:
-`docker-compose exec mongo mongo`
+- Run `docker-compose run --rm node npm run seed` while docker is not running.
+- Or run `docker-compose exec node npm run seed` while docker is running
 
 ## Editor Configuration
-
-Recommended VSCode project settings. Copy and paste the following json to `.vscode/settings.json`
-
-```json
-{
-  "css.validate": false,
-  "editor.formatOnSave": true,
-  "javascript.format.enable": false,
-  "prettier.eslintIntegration": true,
-  "prettier.stylelintIntegration": true
-}
-```
 
 Recommended VSCode extensions:
 

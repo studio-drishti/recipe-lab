@@ -39,7 +39,7 @@ module.exports = nextApp
       }
     );
   })
-  .then((mongoose) => {
+  .then(mongoose => {
     // Load configuration and return config object
     return nextAuthConfig(mongoose);
   })

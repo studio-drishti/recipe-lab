@@ -12,7 +12,7 @@ const PORT = process.env.PORT || 8080;
 //   console.log(`Webserver is ready and listening on port ${PORT}`);
 // });
 
-app.then( expressApp => {
+app.then(expressApp => {
   const server = expressApp.listen(process.env.PORT, err => {
     if (err) throw err;
     if (process.env.NODE_ENV === 'development') {

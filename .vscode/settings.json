@@ -1,0 +1,9 @@
+{
+  "css.validate": false,
+  "editor.formatOnSave": true,
+  "javascript.format.enable": false,
+  "prettier.eslintIntegration": true,
+  "prettier.stylelintIntegration": true,
+  "editor.formatOnPaste": true,
+  "html.format.enable": false
+}
