@@ -38,7 +38,8 @@ class Recipe extends Component {
       additionalSteps: [],
       additionalIngredients: []
     },
-    editing: false
+    editing: false,
+    editingId: null
   };
 
   componentDidMount() {
@@ -78,6 +79,10 @@ class Recipe extends Component {
     } else {
       this.setState({ editing: false });
     }
+  };
+
+  setEditingId = id => {
+    this.setState({ editingId: id });
   };
 
   nextStep = () => {
@@ -257,7 +262,8 @@ class Recipe extends Component {
       activeItem,
       activeStep,
       editing,
-      modification
+      modification,
+      editingId
     } = this.state;
 
     const swiperParams = {
@@ -383,9 +389,11 @@ class Recipe extends Component {
                   <h3>Ingredients Used</h3>
                   <IngredientList
                     ingredients={activeStep.ingredients}
-                    modifications={modification}
+                    modification={modification}
                     removeAction={this.removeIngredient}
                     restoreAction={this.restoreIngredient}
+                    editingId={editingId}
+                    setEditingId={this.setEditingId}
                   />
                 </div>
               )}

@@ -18,20 +18,23 @@ const getRemovedState = (ingredient, modifications) => {
 
 export default ({
   ingredients,
-  modifications,
+  modification,
   removeAction,
-  restoreAction
+  restoreAction,
+  setEditingId,
+  editingId
 }) => (
   <ul className={css.ingredients}>
     {ingredients.map((ingredient, i) => (
       <Ingredient
         key={i}
         ingredient={ingredient}
-        modifications={getIngredientMods(ingredient, modifications)}
-        removed={getRemovedState(ingredient, modifications)}
-        editing={false}
+        ingredientMods={getIngredientMods(ingredient, modification)}
+        removed={getRemovedState(ingredient, modification)}
+        editing={editingId === ingredient._id}
         removeAction={removeAction}
         restoreAction={restoreAction}
+        setEditingId={setEditingId}
       />
     ))}
   </ul>

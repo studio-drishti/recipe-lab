@@ -4,21 +4,20 @@ import { MdClear, MdRefresh, MdCheck } from 'react-icons/md';
 
 const ingredientFields = ['quantity', 'unit', 'name', 'processing'];
 
-// const getIngredientValue = (ingredient, fieldName) => {
-//   const { modification } = this.state;
-//   const mod = modification.alteredIngredients.find(
-//     mod => mod.ingredientId === ingredient._id && mod.field === fieldName
-//   );
-//   return mod ? mod.value : ingredient[fieldName];
-// };
+const getIngredientValue = (fieldName, ingredient, ingredientMods) => {
+  if (ingredientMods.hasOwnProperty(fieldName))
+    return ingredientMods[fieldName];
 
-const renderIngredientWithMods = (ingredient, modifications) => {
+  return ingredient[fieldName];
+};
+
+const renderIngredientWithMods = (ingredient, ingredientMods) => {
   const formatted = [];
 
   ingredientFields.forEach((fieldName, i) => {
     if (
       'processing' === fieldName &&
-      (modifications.hasOwnProperty(fieldName) || ingredient[fieldName])
+      (ingredientMods.hasOwnProperty(fieldName) || ingredient[fieldName])
     ) {
       formatted.push(
         <span className={css.separator} key={'separator' + i}>
@@ -27,11 +26,11 @@ const renderIngredientWithMods = (ingredient, modifications) => {
       );
     }
 
-    if (modifications.hasOwnProperty(fieldName)) {
+    if (ingredientMods.hasOwnProperty(fieldName)) {
       if (ingredient[fieldName])
         formatted.push(<del key={'del' + i}>{ingredient[fieldName]}</del>);
 
-      formatted.push(<ins key={'ins' + i}>{modifications[fieldName]}</ins>);
+      formatted.push(<ins key={'ins' + i}>{ingredientMods[fieldName]}</ins>);
     } else if (ingredient[fieldName]) {
       formatted.push(<span key={i}>{ingredient[fieldName]}</span>);
     }
@@ -58,63 +57,68 @@ export default ({
   ingredient,
   editing,
   removed,
-  modifications,
+  ingredientMods,
   removeAction,
-  restoreAction
+  restoreAction,
+  setEditingId
 }) => (
-  <li className={css.ingredient}>
+  <li
+    className={css.ingredient}
+    data-editing={editing}
+    onClick={() => setEditingId(ingredient._id)}
+  >
     {editing ? (
       <fieldset>
         <input
           name="quantity"
-          value={this.getIngredientValue(ingredient, 'quantity')}
+          value={getIngredientValue('quantity', ingredient, ingredientMods)}
           placeholder={ingredient.quantity ? ingredient.quantity : 'Qty'}
-          onChange={this.handleIngredientChange.bind(this, i)}
         />
         <input
           name="unit"
-          value={this.getIngredientValue(ingredient, 'unit')}
+          value={getIngredientValue('unit', ingredient, ingredientMods)}
           placeholder={ingredient.unit ? ingredient.unit : 'Unit'}
-          onChange={this.handleIngredientChange.bind(this, i)}
         />
         <input
           name="name"
-          value={this.getIngredientValue(ingredient, 'name')}
+          value={getIngredientValue('name', ingredient, ingredientMods)}
           placeholder={ingredient.name ? ingredient.name : 'Name'}
-          onChange={this.handleIngredientChange.bind(this, i)}
         />
         <input
           name="processing"
-          value={this.getIngredientValue(ingredient, 'processing')}
+          value={getIngredientValue('processing', ingredient, ingredientMods)}
           placeholder={
             ingredient.processing ? ingredient.processing : 'Process'
           }
-          onChange={this.handleIngredientChange.bind(this, i)}
         />
       </fieldset>
     ) : (
       <div className={css.ingredientText}>
         {removed
           ? renderRemovedIngredient(ingredient)
-          : renderIngredientWithMods(ingredient, modifications)}
+          : renderIngredientWithMods(ingredient, ingredientMods)}
       </div>
     )}
 
-    {removed && !editing ? (
-      <button
-        data-test-btn-state="restore"
-        onClick={() => restoreAction(ingredient)}
-      >
-        <MdRefresh />
-      </button>
-    ) : (
-      <button
-        data-test-btn-state="remove"
-        onClick={() => removeAction(ingredient)}
-      >
-        <MdClear />
-      </button>
-    )}
+    {removed &&
+      !editing && (
+        <button
+          data-test-btn-state="restore"
+          onClick={() => restoreAction(ingredient)}
+        >
+          <MdRefresh />
+        </button>
+      )}
+
+    {!removed &&
+      !editing && (
+        <button
+          data-test-btn-state="remove"
+          onClick={() => removeAction(ingredient)}
+        >
+          <MdClear />
+        </button>
+      )}
 
     {editing && (
       <button datatest-btn-state="save">
