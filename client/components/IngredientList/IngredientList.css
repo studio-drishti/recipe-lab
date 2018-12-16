@@ -14,4 +14,12 @@
   & > li:nth-child(even)[data-editing='true'] {
     margin-left: calc(-100% - 1rem);
   }
+
+  &[data-editing='true'] {
+    & > li[data-editing='false'] {
+      opacity: 0.5;
+      pointer-events: none;
+      filter: blur(0.05em);
+    }
+  }
 }

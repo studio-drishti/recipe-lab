@@ -1,15 +1,9 @@
 import React from 'react';
+import { Component } from 'react';
 import css from './Ingredient.css';
 import { MdClear, MdRefresh, MdCheck } from 'react-icons/md';
 
 const ingredientFields = ['quantity', 'unit', 'name', 'processing'];
-
-const getIngredientValue = (fieldName, ingredient, ingredientMods) => {
-  if (ingredientMods.hasOwnProperty(fieldName))
-    return ingredientMods[fieldName];
-
-  return ingredient[fieldName];
-};
 
 const renderIngredientWithMods = (ingredient, ingredientMods) => {
   const formatted = [];
@@ -53,77 +47,99 @@ const renderRemovedIngredient = ingredient => {
   return <del>{removedIngredient.join(' ')}</del>;
 };
 
-export default ({
-  ingredient,
-  editing,
-  removed,
-  ingredientMods,
-  removeAction,
-  restoreAction,
-  setEditingId
-}) => (
-  <li
-    className={css.ingredient}
-    data-editing={editing}
-    onClick={() => setEditingId(ingredient._id)}
-  >
-    {editing ? (
-      <fieldset>
-        <input
-          name="quantity"
-          value={getIngredientValue('quantity', ingredient, ingredientMods)}
-          placeholder={ingredient.quantity ? ingredient.quantity : 'Qty'}
-        />
-        <input
-          name="unit"
-          value={getIngredientValue('unit', ingredient, ingredientMods)}
-          placeholder={ingredient.unit ? ingredient.unit : 'Unit'}
-        />
-        <input
-          name="name"
-          value={getIngredientValue('name', ingredient, ingredientMods)}
-          placeholder={ingredient.name ? ingredient.name : 'Name'}
-        />
-        <input
-          name="processing"
-          value={getIngredientValue('processing', ingredient, ingredientMods)}
-          placeholder={
-            ingredient.processing ? ingredient.processing : 'Process'
-          }
-        />
-      </fieldset>
-    ) : (
-      <div className={css.ingredientText}>
-        {removed
-          ? renderRemovedIngredient(ingredient)
-          : renderIngredientWithMods(ingredient, ingredientMods)}
-      </div>
-    )}
+class Ingredient extends Component {
+  getIngredientValue = fieldName => {
+    const { ingredient, ingredientMods } = this.props;
 
-    {removed &&
-      !editing && (
-        <button
-          data-test-btn-state="restore"
-          onClick={() => restoreAction(ingredient)}
-        >
-          <MdRefresh />
-        </button>
-      )}
+    if (ingredientMods.hasOwnProperty(fieldName))
+      return ingredientMods[fieldName];
 
-    {!removed &&
-      !editing && (
-        <button
-          data-test-btn-state="remove"
-          onClick={() => removeAction(ingredient)}
-        >
-          <MdClear />
-        </button>
-      )}
+    return ingredient[fieldName];
+  };
 
-    {editing && (
-      <button datatest-btn-state="save">
-        <MdCheck />
-      </button>
-    )}
-  </li>
-);
+  handleSave = e => {
+    e.stopPropagation();
+    // TODO: actually save the changes??
+    this.props.setEditingId(null);
+  };
+
+  handleSelect = e => {
+    e.stopPropagation();
+    this.props.setEditingId(this.props.ingredient._id);
+  };
+
+  handleRemove = e => {
+    e.stopPropagation();
+    this.props.removeAction(this.props.ingredient);
+  };
+
+  handleRestore = e => {
+    e.stopPropagation();
+    this.props.restoreAction(this.props.ingredient);
+  };
+
+  render() {
+    const { ingredient, editing, removed, ingredientMods } = this.props;
+
+    return (
+      <li
+        className={css.ingredient}
+        data-editing={editing}
+        onClick={this.handleSelect}
+      >
+        {editing ? (
+          <fieldset>
+            <input
+              name="quantity"
+              value={this.getIngredientValue('quantity')}
+              placeholder={ingredient.quantity ? ingredient.quantity : 'Qty'}
+            />
+            <input
+              name="unit"
+              value={this.getIngredientValue('unit')}
+              placeholder={ingredient.unit ? ingredient.unit : 'Unit'}
+            />
+            <input
+              name="name"
+              value={this.getIngredientValue('name')}
+              placeholder={ingredient.name ? ingredient.name : 'Name'}
+            />
+            <input
+              name="processing"
+              value={this.getIngredientValue('processing')}
+              placeholder={
+                ingredient.processing ? ingredient.processing : 'Process'
+              }
+            />
+          </fieldset>
+        ) : (
+          <div className={css.ingredientText}>
+            {removed
+              ? renderRemovedIngredient(ingredient)
+              : renderIngredientWithMods(ingredient, ingredientMods)}
+          </div>
+        )}
+
+        {removed && !editing && (
+          <button data-test-btn-state="restore" onClick={this.handleRestore}>
+            <MdRefresh />
+          </button>
+        )}
+
+        {!removed && !editing && (
+          <button data-test-btn-state="remove" onClick={this.handleRemove}>
+            <MdClear />
+          </button>
+        )}
+
+        {editing && (
+          <button data-test-btn-state="save" onClick={this.handleSave}>
+            <MdCheck />
+          </button>
+        )}
+      </li>
+    );
+  }
+}
+
+export default Ingredient;

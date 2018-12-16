@@ -16,6 +16,12 @@ const getRemovedState = (ingredient, modifications) => {
   return modifications.removedIngredients.includes(ingredient._id);
 };
 
+const getEditingState = (editingId, ingredients) => {
+  return (
+    ingredients.find(ingredient => ingredient._id === editingId) !== undefined
+  );
+};
+
 export default ({
   ingredients,
   modification,
@@ -24,7 +30,10 @@ export default ({
   setEditingId,
   editingId
 }) => (
-  <ul className={css.ingredients}>
+  <ul
+    className={css.ingredients}
+    data-editing={getEditingState(editingId, ingredients)}
+  >
     {ingredients.map((ingredient, i) => (
       <Ingredient
         key={i}
