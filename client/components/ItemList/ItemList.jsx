@@ -3,7 +3,7 @@ import { Droppable } from 'react-beautiful-dnd';
 
 import css from './ItemList.css';
 
-export default ({ children, recipeId }) => (
+const ItemList = ({ children, recipeId }) => (
   <Droppable type="ITEM" droppableId={recipeId}>
     {provided => (
       <div
@@ -17,3 +17,6 @@ export default ({ children, recipeId }) => (
     )}
   </Droppable>
 );
+
+ItemList.displayName = 'ItemList';
+export default ItemList;

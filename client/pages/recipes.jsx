@@ -33,4 +33,5 @@ Page.propTypes = {
   recipes: PropTypes.object
 };
 
+Page.displayName = 'RecipesPage';
 export default Page;

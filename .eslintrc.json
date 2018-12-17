@@ -48,8 +48,7 @@
         "browser": true
       },
       "rules": {
-        "node/no-unsupported-features/es-syntax": "off",
-        "react/display-name": "off"
+        "node/no-unsupported-features/es-syntax": "off"
       }
     },
     {

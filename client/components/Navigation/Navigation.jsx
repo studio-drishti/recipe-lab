@@ -2,7 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 import css from './Navigation.css';
 
-export default () => (
+const Navigation = () => (
   <nav className={css.nav}>
     <Link href="/">
       <a className={css.logo}>Schooled Lunch</a>
@@ -20,3 +20,6 @@ export default () => (
     </div>
   </nav>
 );
+
+Navigation.displayName = 'Navigation';
+export default Navigation;

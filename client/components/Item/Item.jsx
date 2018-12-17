@@ -4,7 +4,7 @@ import { MdDragHandle } from 'react-icons/md';
 
 import css from './Item.css';
 
-export default ({ children, item, index }) => (
+const Item = ({ children, item, index }) => (
   <Draggable type="ITEM" draggableId={item._id} index={index}>
     {provided => (
       <div
@@ -25,3 +25,6 @@ export default ({ children, item, index }) => (
     )}
   </Draggable>
 );
+
+Item.displayName = 'Item';
+export default Item;

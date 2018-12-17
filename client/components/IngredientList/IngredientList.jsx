@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import css from './IngredientList.css';
 import Ingredient from '../Ingredient';
 
@@ -22,7 +23,7 @@ const getEditingState = (editingId, ingredients) => {
   );
 };
 
-export default ({
+const IngredientList = ({
   ingredients,
   modification,
   removeAction,
@@ -48,3 +49,15 @@ export default ({
     ))}
   </ul>
 );
+
+IngredientList.propTypes = {
+  ingredients: PropTypes.array,
+  modification: PropTypes.object,
+  removeAction: PropTypes.func,
+  restoreAction: PropTypes.func,
+  setEditingId: PropTypes.func,
+  editingId: PropTypes.string
+};
+
+IngredientList.displayName = 'IngredientList';
+export default IngredientList;

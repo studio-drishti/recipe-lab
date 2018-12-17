@@ -1,8 +1,11 @@
 import React from 'react';
 import Layout from '../components/Layout';
 
-export default () => (
+const AboutPage = () => (
   <Layout>
     <h1>About</h1>
   </Layout>
 );
+
+AboutPage.displayName = 'AboutPage';
+export default AboutPage;

@@ -8,87 +8,88 @@ import React from 'react';
 
 import Ingredient from 'schooled-lunch/client/components/Ingredient';
 
-describe('Displaying ingredient', () => {
-  test('ingredient renders with all possible fields', () => {
-    const props = {
+const setup = propOverrides => {
+  const props = Object.assign(
+    {
       ingredient: {
         quantity: 1,
         unit: 'tbsp',
         name: 'oil',
         processing: 'Fresh pressed!!!!'
       },
-      modifications: {},
-      editing: false
-    };
+      ingredientMods: {},
+      editing: false,
+      removed: false,
+      removeAction: jest.fn(),
+      restoreAction: jest.fn(),
+      setEditingId: jest.fn()
+    },
+    propOverrides
+  );
 
-    const wrapper = shallow(<Ingredient {...props} />);
+  const wrapper = shallow(<Ingredient {...props} />);
+
+  return {
+    props,
+    wrapper,
+    button: wrapper.find('button'),
+    container: wrapper.find('li')
+  };
+};
+
+describe('Displaying ingredient', () => {
+  test('ingredient renders with all possible fields', () => {
+    const { wrapper } = setup();
     expect(wrapper.text()).toContain('1tbspoil,Fresh pressed!!!!');
-    expect(wrapper.exists('[data-test-btn-state="remove"]'));
   });
 
-  test('Processing does not display if no value is provided', () => {
-    const props = {
+  test('Comma does not render if no processing', () => {
+    const { wrapper } = setup({
       ingredient: {
         quantity: 14.3,
         unit: 'cups',
         name: 'OctopieMen'
-      },
-      modifications: {},
-      editing: false
-    };
-
-    const wrapper = shallow(<Ingredient {...props} />);
+      }
+    });
     expect(wrapper.text()).toContain('14.3cupsOctopieMen');
   });
+});
 
-  test('Unit does not display if no value is provided', () => {
-    const props = {
-      ingredient: {
-        quantity: 1000,
-        name: 'OctopieMen',
-        processing: 'Dancing'
-      },
-      modifications: {},
-      editing: false
-    };
+describe('Deleting and restoring ingredients', () => {
+  test('Clicking delete calls the remove action', () => {
+    const { props, button } = setup();
 
-    const wrapper = shallow(<Ingredient {...props} />);
-    expect(wrapper.text()).toContain('1000OctopieMen,Dancing');
+    expect(button.prop('aria-label')).toContain('remove');
+
+    button.simulate('click', { stopPropagation() {} });
+
+    expect(props.removeAction).toHaveBeenCalled();
   });
 
-  test('Deleting an ingredient causes it to be restorable', () => {
-    const props = {
-      ingredient: {
-        quantity: 1000,
-        name: 'OctopieMen',
-        processing: 'Dancing'
-      },
-      modifications: {},
-      editing: false,
-      removed: true
-    };
+  test('Clicking restore calls the restore action', () => {
+    const { props, button } = setup({ removed: true });
 
-    const wrapper = shallow(<Ingredient {...props} />);
-    expect(wrapper.find('del').text()).toContain('1000 OctopieMen, Dancing');
-    expect(wrapper.exists('[data-test-btn-state="restore"]'));
-    // click on trash button
-    // expect context button to be restore
-    // expect ingredient to be crossed out
+    expect(button.prop('aria-label')).toContain('restore');
+
+    button.simulate('click', { stopPropagation() {} });
+
+    expect(props.restoreAction).toHaveBeenCalled();
+  });
+});
+
+describe('Editing an ingredient', () => {
+  test('Sets the editing id on click', () => {
+    const { props, container } = setup();
+
+    container.simulate('click', { stopPropagation() {} });
+    expect(props.setEditingId).toHaveBeenCalled();
   });
 
-  // test('Displays as form inputs when editing is enabled', () => {
-  //   const props = {
-  //     quantity: 1000,
-  //     name: 'OctopieMen',
-  //     processing: 'Dancing',
-  //     editing: true
-  //   };
-
-  //   const wrapper = shallow(<Ingredient {...props} />);
-  //   // expect(wrapper.text()).toEqual('1000 OctopieMen Dancing');
-  //   // expect container to have inputs
-  //   // expect context sensitive btn to be "save"
-  // });
+  test('Displays as form inputs when editing', () => {
+    const { button, wrapper } = setup({ editing: true });
+    expect(button.prop('aria-label')).toContain('save');
+    expect(wrapper.exists('input'));
+  });
 
   // it requires quantity and name
 });

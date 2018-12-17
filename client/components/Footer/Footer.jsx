@@ -1,7 +1,7 @@
 import React from 'react';
 import css from './Footer.css';
 
-export default () => (
+const Footer = () => (
   <footer className={css.footer}>
     <div className={css.copyright}>
       Copyright &copy; {new Date().getFullYear()} Schooled Lunch
@@ -12,3 +12,6 @@ export default () => (
     </div>
   </footer>
 );
+
+Footer.displayName = 'Footer';
+export default Footer;

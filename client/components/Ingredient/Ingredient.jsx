@@ -1,53 +1,12 @@
 import React from 'react';
 import { Component } from 'react';
+import PropTypes from 'prop-types';
 import css from './Ingredient.css';
 import { MdClear, MdRefresh, MdCheck } from 'react-icons/md';
 
 const ingredientFields = ['quantity', 'unit', 'name', 'processing'];
 
-const renderIngredientWithMods = (ingredient, ingredientMods) => {
-  const formatted = [];
-
-  ingredientFields.forEach((fieldName, i) => {
-    if (
-      'processing' === fieldName &&
-      (ingredientMods.hasOwnProperty(fieldName) || ingredient[fieldName])
-    ) {
-      formatted.push(
-        <span className={css.separator} key={'separator' + i}>
-          ,
-        </span>
-      );
-    }
-
-    if (ingredientMods.hasOwnProperty(fieldName)) {
-      if (ingredient[fieldName])
-        formatted.push(<del key={'del' + i}>{ingredient[fieldName]}</del>);
-
-      formatted.push(<ins key={'ins' + i}>{ingredientMods[fieldName]}</ins>);
-    } else if (ingredient[fieldName]) {
-      formatted.push(<span key={i}>{ingredient[fieldName]}</span>);
-    }
-  });
-  return formatted;
-};
-
-const renderRemovedIngredient = ingredient => {
-  const removedIngredient = [];
-
-  ingredientFields.forEach(fieldName => {
-    if (ingredient[fieldName])
-      removedIngredient.push(
-        'name' === fieldName && ingredient['processing']
-          ? ingredient[fieldName] + ','
-          : ingredient[fieldName]
-      );
-  });
-
-  return <del>{removedIngredient.join(' ')}</del>;
-};
-
-class Ingredient extends Component {
+export default class Ingredient extends Component {
   getIngredientValue = fieldName => {
     const { ingredient, ingredientMods } = this.props;
 
@@ -55,6 +14,50 @@ class Ingredient extends Component {
       return ingredientMods[fieldName];
 
     return ingredient[fieldName];
+  };
+
+  renderRemovedIngredient = () => {
+    const { ingredient } = this.props;
+    const removedIngredient = [];
+
+    ingredientFields.forEach(fieldName => {
+      if (ingredient[fieldName])
+        removedIngredient.push(
+          'name' === fieldName && ingredient['processing']
+            ? ingredient[fieldName] + ','
+            : ingredient[fieldName]
+        );
+    });
+
+    return <del>{removedIngredient.join(' ')}</del>;
+  };
+
+  renderIngredientWithMods = () => {
+    const { ingredient, ingredientMods } = this.props;
+    const formatted = [];
+
+    ingredientFields.forEach((fieldName, i) => {
+      if (
+        'processing' === fieldName &&
+        (ingredientMods.hasOwnProperty(fieldName) || ingredient[fieldName])
+      ) {
+        formatted.push(
+          <span className={css.separator} key={'separator_' + i}>
+            ,
+          </span>
+        );
+      }
+
+      if (ingredientMods.hasOwnProperty(fieldName)) {
+        if (ingredient[fieldName])
+          formatted.push(<del key={'del' + i}>{ingredient[fieldName]}</del>);
+
+        formatted.push(<ins key={'ins' + i}>{ingredientMods[fieldName]}</ins>);
+      } else if (ingredient[fieldName]) {
+        formatted.push(<span key={i}>{ingredient[fieldName]}</span>);
+      }
+    });
+    return formatted;
   };
 
   handleSave = e => {
@@ -79,7 +82,7 @@ class Ingredient extends Component {
   };
 
   render() {
-    const { ingredient, editing, removed, ingredientMods } = this.props;
+    const { ingredient, editing, removed } = this.props;
 
     return (
       <li
@@ -115,25 +118,25 @@ class Ingredient extends Component {
         ) : (
           <div className={css.ingredientText}>
             {removed
-              ? renderRemovedIngredient(ingredient)
-              : renderIngredientWithMods(ingredient, ingredientMods)}
+              ? this.renderRemovedIngredient()
+              : this.renderIngredientWithMods()}
           </div>
         )}
 
         {removed && !editing && (
-          <button data-test-btn-state="restore" onClick={this.handleRestore}>
+          <button aria-label="restore ingredient" onClick={this.handleRestore}>
             <MdRefresh />
           </button>
         )}
 
         {!removed && !editing && (
-          <button data-test-btn-state="remove" onClick={this.handleRemove}>
+          <button aria-label="remove ingredient" onClick={this.handleRemove}>
             <MdClear />
           </button>
         )}
 
         {editing && (
-          <button data-test-btn-state="save" onClick={this.handleSave}>
+          <button aria-label="save modifications" onClick={this.handleSave}>
             <MdCheck />
           </button>
         )}
@@ -142,4 +145,14 @@ class Ingredient extends Component {
   }
 }
 
-export default Ingredient;
+Ingredient.propTypes = {
+  ingredient: PropTypes.object.isRequired,
+  ingredientMods: PropTypes.object,
+  editing: PropTypes.bool,
+  removed: PropTypes.bool,
+  removeAction: PropTypes.func,
+  restoreAction: PropTypes.func,
+  setEditingId: PropTypes.func
+};
+
+Ingredient.displayName = 'Ingredient';

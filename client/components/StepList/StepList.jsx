@@ -3,7 +3,7 @@ import { Droppable } from 'react-beautiful-dnd';
 
 import css from './StepList.css';
 
-export default ({ children, itemId }) => (
+const StepList = ({ children, itemId }) => (
   <Droppable type={`STEP-${itemId}`} droppableId={itemId}>
     {provided => (
       <ol
@@ -17,3 +17,6 @@ export default ({ children, itemId }) => (
     )}
   </Droppable>
 );
+
+StepList.displayName = 'StepList';
+export default StepList;
