@@ -28,6 +28,7 @@ const IngredientList = ({
   modification,
   removeAction,
   restoreAction,
+  handleIngredientChange,
   setEditingId,
   editingId
 }) => (
@@ -44,6 +45,7 @@ const IngredientList = ({
         editing={editingId === ingredient._id}
         removeAction={removeAction}
         restoreAction={restoreAction}
+        handleIngredientChange={handleIngredientChange}
         setEditingId={setEditingId}
       />
     ))}
@@ -55,6 +57,7 @@ IngredientList.propTypes = {
   modification: PropTypes.object,
   removeAction: PropTypes.func,
   restoreAction: PropTypes.func,
+  handleIngredientChange: PropTypes.func,
   setEditingId: PropTypes.func,
   editingId: PropTypes.string
 };

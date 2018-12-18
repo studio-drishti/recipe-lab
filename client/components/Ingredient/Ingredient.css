@@ -31,12 +31,8 @@
   }
 
   & .ingredientText {
-    & > * + * {
+    & > * + :not(.comma) {
       margin-left: 0.25em;
-    }
-
-    & .separator {
-      margin: 0;
     }
   }
 

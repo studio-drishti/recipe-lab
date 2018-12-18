@@ -134,14 +134,14 @@ class Recipe extends Component {
     this.setState({ modification });
   };
 
-  handleIngredientChange = (index, e) => {
+  handleIngredientChange = e => {
     const { name, value } = e.target;
-    const { activeStep, modification } = this.state;
+    const { modification, editingId } = this.state;
 
     modification.alteredIngredients = updateOrInsertInArray(
       modification.alteredIngredients,
       {
-        ingredientId: activeStep.ingredients[index]._id,
+        ingredientId: editingId,
         field: name,
         value: value
       },
@@ -392,6 +392,7 @@ class Recipe extends Component {
                     modification={modification}
                     removeAction={this.removeIngredient}
                     restoreAction={this.restoreIngredient}
+                    handleIngredientChange={this.handleIngredientChange}
                     editingId={editingId}
                     setEditingId={this.setEditingId}
                   />

@@ -2,6 +2,7 @@ import React from 'react';
 import { Component } from 'react';
 import PropTypes from 'prop-types';
 import css from './Ingredient.css';
+import DiffMatchPatch from 'diff-match-patch';
 import { MdClear, MdRefresh, MdCheck } from 'react-icons/md';
 
 const ingredientFields = ['quantity', 'unit', 'name', 'processing'];
@@ -34,30 +35,67 @@ export default class Ingredient extends Component {
 
   renderIngredientWithMods = () => {
     const { ingredient, ingredientMods } = this.props;
-    const formatted = [];
 
-    ingredientFields.forEach((fieldName, i) => {
-      if (
-        'processing' === fieldName &&
-        (ingredientMods.hasOwnProperty(fieldName) || ingredient[fieldName])
-      ) {
-        formatted.push(
-          <span className={css.separator} key={'separator_' + i}>
-            ,
-          </span>
-        );
-      }
+    const original = ingredientFields
+      .reduce((result, fieldName) => {
+        const separator =
+          fieldName === 'name' && ingredient['processing'] ? ',' : '';
 
-      if (ingredientMods.hasOwnProperty(fieldName)) {
         if (ingredient[fieldName])
-          formatted.push(<del key={'del' + i}>{ingredient[fieldName]}</del>);
+          result.push(ingredient[fieldName] + separator);
 
-        formatted.push(<ins key={'ins' + i}>{ingredientMods[fieldName]}</ins>);
-      } else if (ingredient[fieldName]) {
-        formatted.push(<span key={i}>{ingredient[fieldName]}</span>);
+        return result;
+      }, [])
+      .join(' ');
+
+    if (!ingredientMods) return <span>{original}</span>;
+
+    const modified = ingredientFields
+      .reduce((result, fieldName) => {
+        const separator =
+          fieldName === 'name' &&
+          ((ingredientMods.hasOwnProperty('processing') &&
+            ingredientMods['processing']) ||
+            ingredient['processing'])
+            ? ','
+            : '';
+        if (ingredientMods.hasOwnProperty(fieldName)) {
+          result.push(ingredientMods[fieldName] + separator);
+        } else if (ingredient[fieldName]) {
+          result.push(ingredient[fieldName] + separator);
+        }
+        return result;
+      }, [])
+      .join(' ');
+
+    const dmp = new DiffMatchPatch();
+    const diff = dmp.diff_main(original, modified);
+    dmp.diff_cleanupSemantic(diff);
+
+    return diff.map((match, i) => {
+      const text = match[1].trim();
+      const comma = text.startsWith(',');
+      switch (match[0]) {
+        case 1:
+          return (
+            <ins className={comma && css.comma} key={i}>
+              {text}
+            </ins>
+          );
+        case -1:
+          return (
+            <del className={comma && css.comma} key={i}>
+              {text}
+            </del>
+          );
+        default:
+          return (
+            <span className={comma && css.comma} key={i}>
+              {text}
+            </span>
+          );
       }
     });
-    return formatted;
   };
 
   handleSave = e => {
@@ -82,7 +120,7 @@ export default class Ingredient extends Component {
   };
 
   render() {
-    const { ingredient, editing, removed } = this.props;
+    const { ingredient, editing, removed, handleIngredientChange } = this.props;
 
     return (
       <li
@@ -96,16 +134,19 @@ export default class Ingredient extends Component {
               name="quantity"
               value={this.getIngredientValue('quantity')}
               placeholder={ingredient.quantity ? ingredient.quantity : 'Qty'}
+              onChange={handleIngredientChange}
             />
             <input
               name="unit"
               value={this.getIngredientValue('unit')}
               placeholder={ingredient.unit ? ingredient.unit : 'Unit'}
+              onChange={handleIngredientChange}
             />
             <input
               name="name"
               value={this.getIngredientValue('name')}
               placeholder={ingredient.name ? ingredient.name : 'Name'}
+              onChange={handleIngredientChange}
             />
             <input
               name="processing"
@@ -113,6 +154,7 @@ export default class Ingredient extends Component {
               placeholder={
                 ingredient.processing ? ingredient.processing : 'Process'
               }
+              onChange={handleIngredientChange}
             />
           </fieldset>
         ) : (
@@ -152,6 +194,7 @@ Ingredient.propTypes = {
   removed: PropTypes.bool,
   removeAction: PropTypes.func,
   restoreAction: PropTypes.func,
+  handleIngredientChange: PropTypes.func,
   setEditingId: PropTypes.func
 };
 
