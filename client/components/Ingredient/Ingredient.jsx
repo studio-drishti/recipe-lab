@@ -78,19 +78,19 @@ export default class Ingredient extends Component {
       switch (match[0]) {
         case 1:
           return (
-            <ins className={comma && css.comma} key={i}>
+            <ins className={comma ? css.comma : undefined} key={i}>
               {text}
             </ins>
           );
         case -1:
           return (
-            <del className={comma && css.comma} key={i}>
+            <del className={comma ? css.comma : undefined} key={i}>
               {text}
             </del>
           );
         default:
           return (
-            <span className={comma && css.comma} key={i}>
+            <span className={comma ? css.comma : undefined} key={i}>
               {text}
             </span>
           );
