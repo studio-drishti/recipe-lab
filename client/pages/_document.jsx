@@ -5,8 +5,17 @@ You have to include it into the page using either next/head or a custom _documen
 */
 import React from 'react';
 import Document, { Head, Main, NextScript } from 'next/document';
+import { resetServerContext } from 'react-beautiful-dnd';
 
 export default class MyDocument extends Document {
+  static async getInitialProps(ctx) {
+    // Ensures that drag-n-drop context does not persist over server renders
+    // https://github.com/atlassian/react-beautiful-dnd#resetservercontext
+    resetServerContext();
+    const initialProps = await Document.getInitialProps(ctx);
+    return { ...initialProps };
+  }
+
   render() {
     return (
       <html>
