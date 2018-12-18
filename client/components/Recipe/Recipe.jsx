@@ -1,5 +1,6 @@
 import React from 'react';
 import { Component } from 'react';
+import PropTypes from 'prop-types';
 import Textarea from 'react-textarea-autosize';
 import Swiper from 'react-id-swiper';
 import DiffMatchPatch from 'diff-match-patch';
@@ -20,7 +21,7 @@ import ItemList from '../ItemList';
 import Item from '../Item';
 import IngredientList from '../IngredientList';
 
-class Recipe extends Component {
+export default class Recipe extends Component {
   state = {
     activeItem: this.props.recipe.items[0],
     activeStep: this.props.recipe.items[0].steps[0],
@@ -418,4 +419,7 @@ class Recipe extends Component {
   }
 }
 
-export default Recipe;
+Recipe.displayName = 'Recipe';
+Recipe.propTypes = {
+  recipe: PropTypes.object
+};
