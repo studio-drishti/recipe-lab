@@ -30,7 +30,7 @@ Page.getInitialProps = async function() {
 };
 
 Page.propTypes = {
-  recipes: PropTypes.object
+  recipes: PropTypes.array
 };
 
 Page.displayName = 'RecipesPage';
