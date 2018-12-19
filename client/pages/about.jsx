@@ -1,11 +1,14 @@
-import React from 'react';
+import React, { Component } from 'react';
 import Layout from '../components/Layout';
 
-const AboutPage = () => (
-  <Layout>
-    <h1>About</h1>
-  </Layout>
-);
+export default class AboutPage extends Component {
+  static displayName = 'AboutPage';
 
-AboutPage.displayName = 'AboutPage';
-export default AboutPage;
+  render() {
+    return (
+      <Layout>
+        <h1>About</h1>
+      </Layout>
+    );
+  }
+}
