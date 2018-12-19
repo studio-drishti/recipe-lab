@@ -40,7 +40,7 @@ const setup = propOverrides => {
 describe('Displaying ingredient', () => {
   test('ingredient renders with all possible fields', () => {
     const { wrapper } = setup();
-    expect(wrapper.text()).toContain('1tbspoil,Fresh pressed!!!!');
+    expect(wrapper.text()).toContain('1 tbsp oil, Fresh pressed!!!!');
   });
 
   test('Comma does not render if no processing', () => {
@@ -51,7 +51,7 @@ describe('Displaying ingredient', () => {
         name: 'OctopieMen'
       }
     });
-    expect(wrapper.text()).toContain('14.3cupsOctopieMen');
+    expect(wrapper.text()).toContain('14.3 cups OctopieMen');
   });
 });
 
