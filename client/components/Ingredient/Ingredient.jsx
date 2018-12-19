@@ -5,9 +5,22 @@ import css from './Ingredient.css';
 import DiffMatchPatch from 'diff-match-patch';
 import { MdClear, MdRefresh, MdCheck } from 'react-icons/md';
 
-const ingredientFields = ['quantity', 'unit', 'name', 'processing'];
-
 export default class Ingredient extends Component {
+  static displayName = 'Ingredient';
+
+  static propTypes = {
+    ingredient: PropTypes.object.isRequired,
+    ingredientMods: PropTypes.object,
+    editing: PropTypes.bool,
+    removed: PropTypes.bool,
+    removeAction: PropTypes.func,
+    restoreAction: PropTypes.func,
+    handleIngredientChange: PropTypes.func,
+    setEditingId: PropTypes.func
+  };
+
+  ingredientFields = ['quantity', 'unit', 'name', 'processing'];
+
   getIngredientValue = fieldName => {
     const { ingredient, ingredientMods } = this.props;
 
@@ -21,7 +34,7 @@ export default class Ingredient extends Component {
     const { ingredient } = this.props;
     const removedIngredient = [];
 
-    ingredientFields.forEach(fieldName => {
+    this.ingredientFields.forEach(fieldName => {
       if (ingredient[fieldName])
         removedIngredient.push(
           'name' === fieldName && ingredient['processing']
@@ -36,7 +49,7 @@ export default class Ingredient extends Component {
   renderIngredientWithMods = () => {
     const { ingredient, ingredientMods } = this.props;
 
-    const original = ingredientFields
+    const original = this.ingredientFields
       .reduce((result, fieldName) => {
         const separator =
           fieldName === 'name' && ingredient['processing'] ? ',' : '';
@@ -50,7 +63,7 @@ export default class Ingredient extends Component {
 
     if (!ingredientMods) return <span>{original}</span>;
 
-    const modified = ingredientFields
+    const modified = this.ingredientFields
       .reduce((result, fieldName) => {
         const separator =
           fieldName === 'name' &&
@@ -186,16 +199,3 @@ export default class Ingredient extends Component {
     );
   }
 }
-
-Ingredient.propTypes = {
-  ingredient: PropTypes.object.isRequired,
-  ingredientMods: PropTypes.object,
-  editing: PropTypes.bool,
-  removed: PropTypes.bool,
-  removeAction: PropTypes.func,
-  restoreAction: PropTypes.func,
-  handleIngredientChange: PropTypes.func,
-  setEditingId: PropTypes.func
-};
-
-Ingredient.displayName = 'Ingredient';

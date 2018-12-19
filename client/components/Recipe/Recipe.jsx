@@ -22,6 +22,12 @@ import Item from '../Item';
 import IngredientList from '../IngredientList';
 
 export default class Recipe extends Component {
+  static displayName = 'Recipe';
+
+  static propTypes = {
+    recipe: PropTypes.object
+  };
+
   state = {
     activeItem: this.props.recipe.items[0],
     activeStep: this.props.recipe.items[0].steps[0],
@@ -418,8 +424,3 @@ export default class Recipe extends Component {
     );
   }
 }
-
-Recipe.displayName = 'Recipe';
-Recipe.propTypes = {
-  recipe: PropTypes.object
-};

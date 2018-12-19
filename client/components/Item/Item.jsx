@@ -6,6 +6,14 @@ import { MdDragHandle } from 'react-icons/md';
 import css from './Item.css';
 
 export default class Item extends PureComponent {
+  static displayName = 'Item';
+
+  static propTypes = {
+    children: PropTypes.node,
+    index: PropTypes.number,
+    item: PropTypes.object
+  };
+
   render() {
     const { children, item, index } = this.props;
     return (
@@ -31,10 +39,3 @@ export default class Item extends PureComponent {
     );
   }
 }
-
-Item.displayName = 'Item';
-Item.propTypes = {
-  children: PropTypes.node,
-  index: PropTypes.number,
-  item: PropTypes.object
-};

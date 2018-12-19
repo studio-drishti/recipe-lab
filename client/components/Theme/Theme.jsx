@@ -1,11 +1,14 @@
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import React from 'react';
 import './Theme.css';
 
-const Theme = ({ children }) => <div>{children}</div>;
+export default class Theme extends Component {
+  static propTypes = {
+    children: PropTypes.element
+  };
 
-Theme.propTypes = {
-  children: PropTypes.element
-};
-
-export default Theme;
+  render() {
+    const { children } = this.props;
+    return <div>{children}</div>;
+  }
+}

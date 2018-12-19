@@ -1,22 +1,27 @@
-import React from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Navigation from '../Navigation';
 import Footer from '../Footer';
 import css from './Layout.css';
 
-const Layout = ({ children }) => (
-  <div className={css.container}>
-    <Navigation />
-    {children}
-    <Footer />
-  </div>
-);
+export default class Layout extends Component {
+  static displayName = 'Layout';
 
-Layout.propTypes = {
-  children: PropTypes.oneOfType([
-    PropTypes.arrayOf(PropTypes.node),
-    PropTypes.node
-  ])
-};
+  static propTypes = {
+    children: PropTypes.oneOfType([
+      PropTypes.arrayOf(PropTypes.node),
+      PropTypes.node
+    ])
+  };
 
-export default Layout;
+  render() {
+    const { children } = this.props;
+    return (
+      <div className={css.container}>
+        <Navigation />
+        {children}
+        <Footer />
+      </div>
+    );
+  }
+}

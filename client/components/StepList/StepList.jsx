@@ -6,6 +6,16 @@ import { Droppable } from 'react-beautiful-dnd';
 import css from './StepList.css';
 
 export default class StepList extends Component {
+  static displayName = 'StepList';
+
+  static propTypes = {
+    children: PropTypes.oneOfType([
+      PropTypes.arrayOf(PropTypes.node),
+      PropTypes.node
+    ]),
+    itemId: PropTypes.string
+  };
+
   render() {
     const { children, itemId } = this.props;
     return (
@@ -24,13 +34,3 @@ export default class StepList extends Component {
     );
   }
 }
-
-StepList.displayName = 'StepList';
-
-StepList.propTypes = {
-  children: PropTypes.oneOfType([
-    PropTypes.arrayOf(PropTypes.node),
-    PropTypes.node
-  ]),
-  itemId: PropTypes.string
-};

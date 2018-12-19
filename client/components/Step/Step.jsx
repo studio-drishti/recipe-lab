@@ -5,6 +5,17 @@ import { Draggable } from 'react-beautiful-dnd';
 import css from './Step.css';
 
 export default class Step extends PureComponent {
+  static displayName = 'Step';
+
+  static propTypes = {
+    index: PropTypes.number,
+    itemId: PropTypes.string,
+    stepId: PropTypes.string,
+    isActive: PropTypes.bool,
+    content: PropTypes.string,
+    clickHandler: PropTypes.func
+  };
+
   render() {
     const {
       index,
@@ -35,14 +46,3 @@ export default class Step extends PureComponent {
     );
   }
 }
-
-Step.displayName = 'Step';
-
-Step.propTypes = {
-  index: PropTypes.number,
-  itemId: PropTypes.string,
-  stepId: PropTypes.string,
-  isActive: PropTypes.bool,
-  content: PropTypes.string,
-  clickHandler: PropTypes.func
-};

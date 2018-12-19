@@ -5,6 +5,16 @@ import { Droppable } from 'react-beautiful-dnd';
 import css from './ItemList.css';
 
 export default class ItemList extends Component {
+  static displayName = 'ItemList';
+
+  static propTypes = {
+    children: PropTypes.oneOfType([
+      PropTypes.arrayOf(PropTypes.node),
+      PropTypes.node
+    ]),
+    recipeId: PropTypes.string
+  };
+
   render() {
     const { children, recipeId } = this.props;
     return (
@@ -23,12 +33,3 @@ export default class ItemList extends Component {
     );
   }
 }
-
-ItemList.displayName = 'ItemList';
-ItemList.propTypes = {
-  children: PropTypes.oneOfType([
-    PropTypes.arrayOf(PropTypes.node),
-    PropTypes.node
-  ]),
-  recipeId: PropTypes.string
-};
