@@ -30,12 +30,6 @@
     }
   }
 
-  & .ingredientText {
-    & > * + :not(.comma) {
-      margin-left: 0.25em;
-    }
-  }
-
   & > button {
     flex-shrink: 1;
     background: none;

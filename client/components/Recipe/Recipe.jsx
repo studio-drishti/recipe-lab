@@ -3,7 +3,6 @@ import { Component } from 'react';
 import PropTypes from 'prop-types';
 import Textarea from 'react-textarea-autosize';
 import Swiper from 'react-id-swiper';
-import DiffMatchPatch from 'diff-match-patch';
 import { DragDropContext } from 'react-beautiful-dnd';
 import { MdEdit, MdNavigateBefore, MdNavigateNext } from 'react-icons/md';
 
@@ -20,6 +19,7 @@ import Step from '../Step';
 import ItemList from '../ItemList';
 import Item from '../Item';
 import IngredientList from '../IngredientList';
+import DiffText from '../DiffText';
 
 export default class Recipe extends Component {
   static displayName = 'Recipe';
@@ -181,19 +181,7 @@ export default class Recipe extends Component {
       mod => mod.stepId === step._id && mod.field === 'directions'
     );
     if (mod) {
-      const dmp = new DiffMatchPatch();
-      const diff = dmp.diff_main(step.directions, mod.value);
-      dmp.diff_cleanupSemantic(diff);
-      return diff.map((match, i) => {
-        switch (match[0]) {
-          case 1:
-            return <ins key={i}>{match[1]}</ins>;
-          case -1:
-            return <del key={i}>{match[1]}</del>;
-          default:
-            return <span key={i}>{match[1]}</span>;
-        }
-      });
+      return <DiffText original={step.directions} modified={mod.value} />;
     }
     return step.directions;
   };

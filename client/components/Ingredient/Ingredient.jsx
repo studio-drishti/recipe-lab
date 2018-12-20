@@ -1,9 +1,9 @@
-import React from 'react';
-import { Component } from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import css from './Ingredient.css';
-import DiffMatchPatch from 'diff-match-patch';
 import { MdClear, MdRefresh, MdCheck } from 'react-icons/md';
+
+import css from './Ingredient.css';
+import DiffText from '../DiffText';
 
 export default class Ingredient extends Component {
   static displayName = 'Ingredient';
@@ -61,7 +61,8 @@ export default class Ingredient extends Component {
       }, [])
       .join(' ');
 
-    if (!ingredientMods) return <span>{original}</span>;
+    if (Object.keys(ingredientMods).length === 0)
+      return <span>{original}</span>;
 
     const modified = this.ingredientFields
       .reduce((result, fieldName) => {
@@ -81,34 +82,7 @@ export default class Ingredient extends Component {
       }, [])
       .join(' ');
 
-    const dmp = new DiffMatchPatch();
-    const diff = dmp.diff_main(original, modified);
-    dmp.diff_cleanupSemantic(diff);
-
-    return diff.map((match, i) => {
-      const text = match[1].trim();
-      const comma = text.startsWith(',');
-      switch (match[0]) {
-        case 1:
-          return (
-            <ins className={comma ? css.comma : undefined} key={i}>
-              {text}
-            </ins>
-          );
-        case -1:
-          return (
-            <del className={comma ? css.comma : undefined} key={i}>
-              {text}
-            </del>
-          );
-        default:
-          return (
-            <span className={comma ? css.comma : undefined} key={i}>
-              {text}
-            </span>
-          );
-      }
-    });
+    return <DiffText original={original} modified={modified} />;
   };
 
   handleSave = e => {
