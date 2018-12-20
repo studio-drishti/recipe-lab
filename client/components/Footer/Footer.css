@@ -2,10 +2,10 @@
 
 .footer {
   padding: 1rem 0;
-  border-top: 1px solid var(--color-light-gray);
+  border-top: 1px solid var(--color-medium-gray);
   width: 100%;
   margin-bottom: 1rem;
-  color: var(--color-light-gray);
+  color: var(--color-dark-gray);
   display: grid;
   grid-template-columns: 1fr 1fr;
   font-size: smaller;
