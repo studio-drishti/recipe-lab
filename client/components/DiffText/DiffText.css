@@ -1,10 +1,6 @@
 @import '../../config/defaults.css';
 
 .diffText {
-  & > * + :not(.punc) {
-    margin-left: 0.25em;
-  }
-
   & > del {
     opacity: 0.5;
   }

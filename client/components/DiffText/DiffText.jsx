@@ -18,42 +18,34 @@ export default class DiffText extends PureComponent {
     dmp.diff_cleanupSemantic(diff);
     return (
       <span aria-label={modified} className={css.diffText}>
-        {diff.map((match, i) => {
+        {diff.reduce((result, match, i) => {
           const text = match[1].trim();
           const hasPunctuation = text.match(/^[.,:;!?]/);
+          if (!hasPunctuation && i > 0) result.push(' ');
           switch (match[0]) {
             case 1:
-              return (
-                <ins
-                  aria-hidden="true"
-                  className={hasPunctuation ? css.punc : undefined}
-                  key={i}
-                >
+              result.push(
+                <ins aria-hidden="true" key={i}>
                   {text}
                 </ins>
               );
+              break;
             case -1:
-              return (
-                <del
-                  aria-hidden="true"
-                  className={hasPunctuation ? css.punc : undefined}
-                  key={i}
-                >
+              result.push(
+                <del aria-hidden="true" key={i}>
                   {text}
                 </del>
               );
+              break;
             default:
-              return (
-                <span
-                  aria-hidden="true"
-                  className={hasPunctuation ? css.punc : undefined}
-                  key={i}
-                >
+              result.push(
+                <span aria-hidden="true" key={i}>
                   {text}
                 </span>
               );
           }
-        })}
+          return result;
+        }, [])}
       </span>
     );
   }

@@ -12,7 +12,7 @@ export default class Step extends PureComponent {
     itemId: PropTypes.string,
     stepId: PropTypes.string,
     isActive: PropTypes.bool,
-    content: PropTypes.string,
+    content: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
     clickHandler: PropTypes.func
   };
 

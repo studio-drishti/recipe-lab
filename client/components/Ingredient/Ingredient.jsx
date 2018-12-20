@@ -87,7 +87,6 @@ export default class Ingredient extends Component {
 
   handleSave = e => {
     e.stopPropagation();
-    // TODO: actually save the changes??
     this.props.setEditingId(null);
   };
 
@@ -152,23 +151,28 @@ export default class Ingredient extends Component {
           </div>
         )}
 
-        {removed && !editing && (
-          <button aria-label="restore ingredient" onClick={this.handleRestore}>
-            <MdRefresh />
-          </button>
-        )}
+        <div className={css.buttons}>
+          {removed && !editing && (
+            <button
+              aria-label="restore ingredient"
+              onClick={this.handleRestore}
+            >
+              <MdRefresh />
+            </button>
+          )}
 
-        {!removed && !editing && (
-          <button aria-label="remove ingredient" onClick={this.handleRemove}>
-            <MdClear />
-          </button>
-        )}
+          {!removed && !editing && (
+            <button aria-label="remove ingredient" onClick={this.handleRemove}>
+              <MdClear />
+            </button>
+          )}
 
-        {editing && (
-          <button aria-label="save modifications" onClick={this.handleSave}>
-            <MdCheck />
-          </button>
-        )}
+          {editing && (
+            <button aria-label="save modifications" onClick={this.handleSave}>
+              <MdCheck />
+            </button>
+          )}
+        </div>
       </li>
     );
   }
