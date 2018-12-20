@@ -1,0 +1,30 @@
+@import '../../config/defaults.css';
+
+.ingredients {
+  padding: 0;
+  list-style: none;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-column-gap: 1rem;
+  grid-row-gap: 0.5rem;
+  margin-bottom: 2rem;
+
+  & > li {
+    padding-left: 2em;
+    position: relative;
+
+    & span > * + * {
+      margin-left: 0.25em;
+    }
+
+    &::before {
+      content: '';
+      height: 1px;
+      width: 1em;
+      background: var(--color-dark-gray);
+      position: absolute;
+      top: 0.75em;
+      left: 0;
+    }
+  }
+}

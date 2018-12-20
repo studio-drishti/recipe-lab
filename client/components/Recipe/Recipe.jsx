@@ -7,10 +7,6 @@ import { DragDropContext } from 'react-beautiful-dnd';
 import { MdEdit, MdNavigateBefore, MdNavigateNext } from 'react-icons/md';
 
 import css from './Recipe.css';
-import {
-  stepsToIngredientTotals,
-  formatIngredientTotal
-} from '../../util/recipeTools';
 import reorder from '../../util/reorder';
 import { updateOrInsertInArray } from '../../util/arrayTools';
 
@@ -19,6 +15,7 @@ import Step from '../Step';
 import ItemList from '../ItemList';
 import Item from '../Item';
 import IngredientList from '../IngredientList';
+import IngredientTotals from '../IngredientTotals';
 import DiffText from '../DiffText';
 
 export default class Recipe extends Component {
@@ -292,11 +289,7 @@ export default class Recipe extends Component {
           {recipe.items.map(item => (
             <div key={item._id}>
               <h3>Ingredients for {item.name}</h3>
-              <ul className={css.ingredients}>
-                {stepsToIngredientTotals(item.steps).map((ingredient, i) => (
-                  <li key={i}>{formatIngredientTotal(ingredient)}</li>
-                ))}
-              </ul>
+              <IngredientTotals steps={item.steps} />
             </div>
           ))}
 
