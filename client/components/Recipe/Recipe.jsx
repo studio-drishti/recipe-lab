@@ -290,7 +290,10 @@ export default class Recipe extends Component {
           {recipe.items.map(item => (
             <div key={item._id}>
               <h3>Ingredients for {item.name}</h3>
-              <IngredientTotals steps={item.steps} />
+              <IngredientTotals
+                steps={item.steps}
+                removedIngredients={modification.removedIngredients}
+              />
             </div>
           ))}
 

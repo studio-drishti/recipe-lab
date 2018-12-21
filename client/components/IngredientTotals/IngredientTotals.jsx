@@ -6,37 +6,44 @@ import { MEASURE_UNITS } from '../../config';
 
 export default class IngredientTotals extends PureComponent {
   static displayName = 'IngredientTotals';
+
   static propTypes = {
-    steps: PropTypes.arrayOf(PropTypes.object)
+    steps: PropTypes.arrayOf(PropTypes.object),
+    removedIngredients: PropTypes.array
+  };
+
+  static defaultProps = {
+    removedIngredients: []
   };
 
   getIngredientTotals = () => {
-    const { steps } = this.props;
+    const { steps, removedIngredients } = this.props;
     const totals = {};
-
     steps.forEach(step =>
-      step.ingredients.forEach(ingredient => {
-        if (totals.hasOwnProperty(ingredient.name)) {
-          totals[ingredient.name].divided = true;
-          if (
-            totals[ingredient.name].quantities.hasOwnProperty(ingredient.unit)
-          ) {
-            totals[ingredient.name].quantities[ingredient.unit] +=
-              ingredient.quantity;
-          } else {
-            totals[ingredient.name].quantities = Object.assign(
-              { [ingredient.unit]: ingredient.quantity },
-              totals[ingredient.name].quantities
-            );
-          }
-        } else {
-          totals[ingredient.name] = {
-            quantities: {
-              [ingredient.unit]: ingredient.quantity
+      step.ingredients
+        .filter(ingredient => !removedIngredients.includes(ingredient._id))
+        .forEach(ingredient => {
+          if (totals.hasOwnProperty(ingredient.name)) {
+            totals[ingredient.name].divided = true;
+            if (
+              totals[ingredient.name].quantities.hasOwnProperty(ingredient.unit)
+            ) {
+              totals[ingredient.name].quantities[ingredient.unit] +=
+                ingredient.quantity;
+            } else {
+              totals[ingredient.name].quantities = Object.assign(
+                { [ingredient.unit]: ingredient.quantity },
+                totals[ingredient.name].quantities
+              );
             }
-          };
-        }
-      })
+          } else {
+            totals[ingredient.name] = {
+              quantities: {
+                [ingredient.unit]: ingredient.quantity
+              }
+            };
+          }
+        })
     );
 
     return Object.entries(totals).map(([key, val]) => ({
