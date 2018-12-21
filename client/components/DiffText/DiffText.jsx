@@ -20,8 +20,7 @@ export default class DiffText extends PureComponent {
       <span aria-label={modified} className={css.diffText}>
         {diff.reduce((result, match, i) => {
           const text = match[1].trim();
-          const hasPunctuation = text.match(/^[.,:;!?]/);
-          if (!hasPunctuation && i > 0) result.push(' ');
+          if (match[1].startsWith(' ') && i > 0) result.push(' ');
           switch (match[0]) {
             case 1:
               result.push(
@@ -44,6 +43,7 @@ export default class DiffText extends PureComponent {
                 </span>
               );
           }
+          if (match[1].endsWith(' ')) result.push(' ');
           return result;
         }, [])}
       </span>
