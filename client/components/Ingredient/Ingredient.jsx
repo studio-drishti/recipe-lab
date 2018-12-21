@@ -10,7 +10,7 @@ export default class Ingredient extends Component {
 
   static propTypes = {
     ingredient: PropTypes.object.isRequired,
-    ingredientMods: PropTypes.object,
+    ingredientMods: PropTypes.arrayOf(PropTypes.object),
     editing: PropTypes.bool,
     removed: PropTypes.bool,
     removeAction: PropTypes.func,
@@ -19,13 +19,27 @@ export default class Ingredient extends Component {
     setEditingId: PropTypes.func
   };
 
+  static defaultProps = {
+    ingredientMods: [],
+    editing: false,
+    removed: false
+  };
+
   ingredientFields = ['quantity', 'unit', 'name', 'processing'];
 
-  getIngredientValue = fieldName => {
-    const { ingredient, ingredientMods } = this.props;
+  maybeGetIngredientModValue = fieldname => {
+    const { ingredientMods, ingredient } = this.props;
+    const mod = ingredientMods.find(
+      mod => mod.ingredientId === ingredient._id && mod.field === fieldname
+    );
+    return mod !== undefined ? mod.value : undefined;
+  };
 
-    if (ingredientMods.hasOwnProperty(fieldName))
-      return ingredientMods[fieldName];
+  getIngredientValue = fieldName => {
+    const { ingredient } = this.props;
+
+    const modValue = this.maybeGetIngredientModValue(fieldName);
+    if (modValue) return modValue;
 
     return ingredient[fieldName];
   };
@@ -61,20 +75,18 @@ export default class Ingredient extends Component {
       }, [])
       .join(' ');
 
-    if (Object.keys(ingredientMods).length === 0)
-      return <span>{original}</span>;
+    if (ingredientMods.length === 0) return <span>{original}</span>;
 
     const modified = this.ingredientFields
       .reduce((result, fieldName) => {
         const separator =
-          fieldName === 'name' &&
-          ((ingredientMods.hasOwnProperty('processing') &&
-            ingredientMods['processing']) ||
-            ingredient['processing'])
+          fieldName === 'name' && this.getIngredientValue('processing')
             ? ','
             : '';
-        if (ingredientMods.hasOwnProperty(fieldName)) {
-          result.push(ingredientMods[fieldName] + separator);
+
+        const modValue = this.maybeGetIngredientModValue(fieldName);
+        if (modValue !== undefined) {
+          result.push(modValue + separator);
         } else if (ingredient[fieldName]) {
           result.push(ingredient[fieldName] + separator);
         }

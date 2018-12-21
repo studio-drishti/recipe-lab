@@ -15,6 +15,7 @@ import Step from '../Step';
 import ItemList from '../ItemList';
 import Item from '../Item';
 import IngredientList from '../IngredientList';
+import Ingredient from '../Ingredient';
 import IngredientTotals from '../IngredientTotals';
 import DiffText from '../DiffText';
 
@@ -376,14 +377,28 @@ export default class Recipe extends Component {
                 <div>
                   <h3>Ingredients Used</h3>
                   <IngredientList
-                    ingredients={activeStep.ingredients}
-                    modification={modification}
-                    removeAction={this.removeIngredient}
-                    restoreAction={this.restoreIngredient}
-                    handleIngredientChange={this.handleIngredientChange}
-                    editingId={editingId}
-                    setEditingId={this.setEditingId}
-                  />
+                    editing={activeStep.ingredients.some(
+                      ingredient => ingredient._id === editingId
+                    )}
+                  >
+                    {activeStep.ingredients.map(ingredient => (
+                      <Ingredient
+                        key={ingredient._id}
+                        ingredient={ingredient}
+                        ingredientMods={modification.alteredIngredients.filter(
+                          mod => mod.ingredientId === ingredient._id
+                        )}
+                        removed={modification.removedIngredients.includes(
+                          ingredient._id
+                        )}
+                        editing={editingId === ingredient._id}
+                        removeAction={this.removeIngredient}
+                        restoreAction={this.restoreIngredient}
+                        handleIngredientChange={this.handleIngredientChange}
+                        setEditingId={this.setEditingId}
+                      />
+                    ))}
+                  </IngredientList>
                 </div>
               )}
 

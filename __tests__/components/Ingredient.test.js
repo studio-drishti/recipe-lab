@@ -17,9 +17,6 @@ const setup = propOverrides => {
         name: 'oil',
         processing: 'Fresh pressed!!!!'
       },
-      ingredientMods: {},
-      editing: false,
-      removed: false,
       removeAction: jest.fn(),
       restoreAction: jest.fn(),
       setEditingId: jest.fn()
