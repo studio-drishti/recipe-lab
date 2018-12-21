@@ -20,12 +20,13 @@ export default class IngredientTotals extends Component {
 
   getIngredientWithMods = ingredient => {
     const { alteredIngredients } = this.props;
+    const newIngredient = { ...ingredient };
     alteredIngredients
       .filter(mod => mod.ingredientId === ingredient._id)
       .forEach(mod => {
-        ingredient[mod.field] = mod.value;
+        newIngredient[mod.field] = mod.value;
       });
-    return ingredient;
+    return newIngredient;
   };
 
   getIngredientTotals = () => {
