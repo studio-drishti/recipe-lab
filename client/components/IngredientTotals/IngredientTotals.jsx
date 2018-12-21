@@ -1,19 +1,31 @@
-import React, { PureComponent } from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import css from './IngredientTotals.css';
 import { MEASURE_UNITS } from '../../config';
 
-export default class IngredientTotals extends PureComponent {
+export default class IngredientTotals extends Component {
   static displayName = 'IngredientTotals';
 
   static propTypes = {
     steps: PropTypes.arrayOf(PropTypes.object),
-    removedIngredients: PropTypes.array
+    removedIngredients: PropTypes.arrayOf(PropTypes.string),
+    alteredIngredients: PropTypes.arrayOf(PropTypes.object)
   };
 
   static defaultProps = {
-    removedIngredients: []
+    removedIngredients: [],
+    alteredIngredients: []
+  };
+
+  getIngredientWithMods = ingredient => {
+    const { alteredIngredients } = this.props;
+    alteredIngredients
+      .filter(mod => mod.ingredientId === ingredient._id)
+      .forEach(mod => {
+        ingredient[mod.field] = mod.value;
+      });
+    return ingredient;
   };
 
   getIngredientTotals = () => {
@@ -22,7 +34,8 @@ export default class IngredientTotals extends PureComponent {
     steps.forEach(step =>
       step.ingredients
         .filter(ingredient => !removedIngredients.includes(ingredient._id))
-        .forEach(ingredient => {
+        .forEach(unModifiedIngredient => {
+          const ingredient = this.getIngredientWithMods(unModifiedIngredient);
           if (totals.hasOwnProperty(ingredient.name)) {
             totals[ingredient.name].divided = true;
             if (

@@ -7,7 +7,7 @@ export default class IngredientList extends Component {
 
   static propTypes = {
     editing: PropTypes.bool,
-    children: PropTypes.oneOf([
+    children: PropTypes.oneOfType([
       PropTypes.arrayOf(PropTypes.node),
       PropTypes.node
     ])

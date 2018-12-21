@@ -293,6 +293,7 @@ export default class Recipe extends Component {
               <IngredientTotals
                 steps={item.steps}
                 removedIngredients={modification.removedIngredients}
+                alteredIngredients={modification.alteredIngredients}
               />
             </div>
           ))}
