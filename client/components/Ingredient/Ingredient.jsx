@@ -37,6 +37,10 @@ export default class Ingredient extends Component {
     }
   }
 
+  componentWillUnmount() {
+    document.removeEventListener('mousedown', this.handleClick);
+  }
+
   getIngredientValue = fieldName => {
     const { ingredient, ingredientMods } = this.props;
 
