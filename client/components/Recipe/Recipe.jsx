@@ -237,6 +237,11 @@ export default class Recipe extends Component {
       this.setState({ modification });
     }
 
+    // Clear any saved modifications for the deleted ingredient
+    modification.alteredIngredients = modification.alteredIngredients.filter(
+      mod => mod.ingredientId !== ingredient._id
+    );
+
     localStorage.setItem('modification', JSON.stringify(modification));
   };
 
