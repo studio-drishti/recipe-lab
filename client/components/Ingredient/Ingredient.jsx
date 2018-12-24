@@ -28,6 +28,13 @@ export default class Ingredient extends Component {
   ingredientFields = ['quantity', 'unit', 'name', 'processing'];
 
   ingredientRef = React.createRef();
+  quantityInputRef = React.createRef();
+
+  componentDidUpdate(prevProps) {
+    if (!prevProps.editing && this.props.editing) {
+      this.quantityInputRef.current.focus();
+    }
+  }
 
   getIngredientValue = fieldName => {
     const { ingredient, ingredientMods } = this.props;
@@ -133,6 +140,7 @@ export default class Ingredient extends Component {
           <fieldset>
             <input
               name="quantity"
+              ref={this.quantityInputRef}
               value={this.getIngredientValue('quantity')}
               placeholder={ingredient.quantity ? ingredient.quantity : 'Qty'}
               onChange={handleIngredientChange}
