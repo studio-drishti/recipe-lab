@@ -106,8 +106,9 @@ export default class Ingredient extends Component {
   };
 
   handleSave = e => {
-    e.stopPropagation();
+    e.preventDefault();
     this.deselect();
+    if (e.key === 'Enter') this.ingredientRef.current.focus();
   };
 
   handleSelect = e => {
@@ -116,9 +117,21 @@ export default class Ingredient extends Component {
     this.props.setEditingId(this.props.ingredient._id);
   };
 
+  handleKeybdSelect = e => {
+    if (e.key !== 'Enter') return;
+    this.handleSelect(e);
+  };
+
   handleRemove = e => {
     e.stopPropagation();
     this.props.removeAction(this.props.ingredient);
+  };
+
+  handleKeybdRemove = e => {
+    if (e.key !== 'Enter') return;
+    e.preventDefault();
+    this.handleRemove(e);
+    this.ingredientRef.current.focus();
   };
 
   handleRestore = e => {
@@ -126,76 +139,100 @@ export default class Ingredient extends Component {
     this.props.restoreAction(this.props.ingredient);
   };
 
+  handleKeybdRestore = e => {
+    if (e.key !== 'Enter') return;
+    e.preventDefault();
+    this.handleRestore(e);
+    this.ingredientRef.current.focus();
+  };
+
   render() {
-    const { ingredient, editing, removed, handleIngredientChange } = this.props;
+    const { editing, removed, handleIngredientChange } = this.props;
 
     return (
       <li
         className={css.ingredient}
         data-editing={editing}
         onClick={this.handleSelect}
+        onKeyPress={this.handleKeybdSelect}
         ref={this.ingredientRef}
+        tabIndex="0"
       >
-        {editing ? (
-          <fieldset>
-            <input
-              name="quantity"
-              ref={this.quantityInputRef}
-              value={this.getIngredientValue('quantity')}
-              placeholder={ingredient.quantity ? ingredient.quantity : 'Qty'}
-              onChange={handleIngredientChange}
-            />
-            <input
-              name="unit"
-              value={this.getIngredientValue('unit')}
-              placeholder={ingredient.unit ? ingredient.unit : 'Unit'}
-              onChange={handleIngredientChange}
-            />
-            <input
-              name="name"
-              value={this.getIngredientValue('name')}
-              placeholder={ingredient.name ? ingredient.name : 'Name'}
-              onChange={handleIngredientChange}
-            />
-            <input
-              name="processing"
-              value={this.getIngredientValue('processing')}
-              placeholder={
-                ingredient.processing ? ingredient.processing : 'Process'
-              }
-              onChange={handleIngredientChange}
-            />
-          </fieldset>
-        ) : (
-          <div className={css.ingredientText}>
-            {removed
-              ? this.renderRemovedIngredient()
-              : this.renderIngredientWithMods()}
+        <form onSubmit={this.handleSave}>
+          {editing ? (
+            <fieldset>
+              <input
+                type="text"
+                name="quantity"
+                title="Quantity"
+                ref={this.quantityInputRef}
+                value={this.getIngredientValue('quantity')}
+                placeholder={'Qty'}
+                onChange={handleIngredientChange}
+              />
+              {/* TODO: Refactor unit as dropdown */}
+              <input
+                type="text"
+                name="unit"
+                title="Unit"
+                value={this.getIngredientValue('unit')}
+                onChange={handleIngredientChange}
+              />
+              <input
+                type="text"
+                name="name"
+                title="Name"
+                value={this.getIngredientValue('name')}
+                placeholder={'Name'}
+                onChange={handleIngredientChange}
+              />
+              <input
+                type="text"
+                name="processing"
+                title="Process"
+                value={this.getIngredientValue('processing')}
+                placeholder={'Process'}
+                onChange={handleIngredientChange}
+              />
+            </fieldset>
+          ) : (
+            <div>
+              {removed
+                ? this.renderRemovedIngredient()
+                : this.renderIngredientWithMods()}
+            </div>
+          )}
+
+          <div className={css.buttons}>
+            {removed && !editing && (
+              <button
+                type="button"
+                aria-label="restore ingredient"
+                onClick={this.handleRestore}
+                onKeyDown={this.handleKeybdRestore}
+              >
+                <MdRefresh />
+              </button>
+            )}
+
+            {!removed && !editing && (
+              <button
+                type="button"
+                aria-label="remove ingredient"
+                onClick={this.handleRemove}
+                onKeyDown={this.handleKeybdRemove}
+              >
+                <MdClear />
+              </button>
+            )}
+
+            {editing && (
+              <button type="submit" aria-label="save modifications">
+                <MdCheck />
+              </button>
+            )}
           </div>
-        )}
-
-        <div className={css.buttons}>
-          {removed && !editing && (
-            <button
-              aria-label="restore ingredient"
-              onClick={this.handleRestore}
-            >
-              <MdRefresh />
-            </button>
-          )}
-
-          {!removed && !editing && (
-            <button aria-label="remove ingredient" onClick={this.handleRemove}>
-              <MdClear />
-            </button>
-          )}
-
-          {editing && (
-            <button aria-label="save modifications" onClick={this.handleSave}>
-              <MdCheck />
-            </button>
-          )}
-        </div>
+        </form>
       </li>
     );
   }

@@ -5,15 +5,19 @@
   padding: 0.5em;
   border: 0.01em solid transparent;
   border-radius: var(--default-border-radius);
-  display: grid;
-  grid-template-columns: auto auto;
-  grid-column-gap: 0.5em;
   cursor: pointer;
   transition: all ease-out 0.3s;
-  align-items: center;
+  outline: 0;
+
+  & form {
+    display: grid;
+    grid-template-columns: auto auto;
+    grid-column-gap: 0.5em;
+    align-items: center;
+  }
 
   & fieldset {
-    border: none;
+    border: 0;
     padding: 0;
     margin: 0;
     display: grid;
@@ -42,6 +46,8 @@
   }
 
   &[data-editing='false']:hover,
+  &[data-editing='false']:focus,
+  &[data-editing='false']:focus-within,
   &[data-editing='true'] {
     border: 0.01rem solid var(--color-medium-gray);
     box-shadow: 0 0.25rem 0.25rem -0.25rem rgba(0, 0, 0, 0.15);
