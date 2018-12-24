@@ -109,7 +109,7 @@ export default class Ingredient extends Component {
   handleSave = e => {
     e.preventDefault();
     this.deselect();
-    if (e.key === 'Enter') this.ingredientRef.current.focus();
+    this.ingredientRef.current.focus();
   };
 
   handleSelect = e => {

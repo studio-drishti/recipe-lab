@@ -54,14 +54,18 @@
   &[data-editing='false']:focus-within,
   &[data-editing='true'] {
     border: 0.01rem solid var(--color-medium-gray);
-    box-shadow: 0 0.25rem 0.25rem -0.25rem rgba(0, 0, 0, 0.15);
     transition: all ease-out 0.3s;
-    transform: translateY(-0.09em);
     z-index: 1;
 
     & button {
       opacity: 1;
       transition: opacity ease-out 0.3s;
     }
+  }
+
+  &[data-editing='false']:hover,
+  &[data-editing='true'] {
+    box-shadow: 0 0.25rem 0.25rem -0.25rem rgba(0, 0, 0, 0.15);
+    transform: translateY(-0.09em);
   }
 }
