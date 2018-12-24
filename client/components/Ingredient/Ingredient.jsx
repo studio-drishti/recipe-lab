@@ -29,21 +29,14 @@ export default class Ingredient extends Component {
 
   ingredientRef = React.createRef();
 
-  maybeGetIngredientModValue = fieldname => {
-    const { ingredientMods, ingredient } = this.props;
-    const mod = ingredientMods.find(
-      mod => mod.ingredientId === ingredient._id && mod.field === fieldname
-    );
-    return mod !== undefined ? mod.value : undefined;
-  };
-
   getIngredientValue = fieldName => {
-    const { ingredient } = this.props;
+    const { ingredient, ingredientMods } = this.props;
 
-    const modValue = this.maybeGetIngredientModValue(fieldName);
-    if (modValue) return modValue;
+    const mod = ingredientMods.find(
+      mod => mod.ingredientId === ingredient._id && mod.field === fieldName
+    );
 
-    return ingredient[fieldName];
+    return mod !== undefined ? mod.value : ingredient[fieldName];
   };
 
   renderRemovedIngredient = () => {
@@ -67,12 +60,11 @@ export default class Ingredient extends Component {
 
     const original = this.ingredientFields
       .reduce((result, fieldName) => {
-        const separator =
-          fieldName === 'name' && ingredient['processing'] ? ',' : '';
-
-        if (ingredient[fieldName])
-          result.push(ingredient[fieldName] + separator);
-
+        let value = ingredient[fieldName];
+        if (value) {
+          value += fieldName === 'name' && ingredient['processing'] ? ',' : '';
+          result.push(value);
+        }
         return result;
       }, [])
       .join(' ');
@@ -81,16 +73,13 @@ export default class Ingredient extends Component {
 
     const modified = this.ingredientFields
       .reduce((result, fieldName) => {
-        const separator =
-          fieldName === 'name' && this.getIngredientValue('processing')
-            ? ','
-            : '';
-
-        const modValue = this.maybeGetIngredientModValue(fieldName);
-        if (modValue !== undefined) {
-          result.push(modValue + separator);
-        } else if (ingredient[fieldName]) {
-          result.push(ingredient[fieldName] + separator);
+        let value = this.getIngredientValue(fieldName);
+        if (value) {
+          value +=
+            fieldName === 'name' && this.getIngredientValue('processing')
+              ? ','
+              : '';
+          result.push(value);
         }
         return result;
       }, [])
