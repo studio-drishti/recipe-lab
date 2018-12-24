@@ -1,0 +1,12 @@
+@import '../../config/defaults.css';
+
+.diffText {
+  & > del {
+    opacity: 0.5;
+  }
+
+  & > ins {
+    text-decoration: none;
+    border-bottom: 1px dotted var(--color-black);
+  }
+}

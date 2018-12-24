@@ -1,15 +1,12 @@
 import React from 'react';
 import { Component } from 'react';
+import PropTypes from 'prop-types';
 import Textarea from 'react-textarea-autosize';
 import Swiper from 'react-id-swiper';
-import DiffMatchPatch from 'diff-match-patch';
 import { DragDropContext } from 'react-beautiful-dnd';
+import { MdEdit, MdNavigateBefore, MdNavigateNext } from 'react-icons/md';
 
 import css from './Recipe.css';
-import {
-  stepsToIngredientTotals,
-  formatIngredientTotal
-} from '../../util/recipeTools';
 import reorder from '../../util/reorder';
 import { updateOrInsertInArray } from '../../util/arrayTools';
 
@@ -17,8 +14,18 @@ import StepList from '../StepList';
 import Step from '../Step';
 import ItemList from '../ItemList';
 import Item from '../Item';
+import IngredientList from '../IngredientList';
+import Ingredient from '../Ingredient';
+import IngredientTotals from '../IngredientTotals';
+import DiffText from '../DiffText';
 
-class Recipe extends Component {
+export default class Recipe extends Component {
+  static displayName = 'Recipe';
+
+  static propTypes = {
+    recipe: PropTypes.object
+  };
+
   state = {
     activeItem: this.props.recipe.items[0],
     activeStep: this.props.recipe.items[0].steps[0],
@@ -29,11 +36,15 @@ class Recipe extends Component {
       alteredItems: [],
       alteredSteps: [],
       alteredIngredients: [],
+      removedItems: [],
+      removedSteps: [],
+      removedIngredients: [],
       additionalItems: [],
       additionalSteps: [],
       additionalIngredients: []
     },
-    editing: false
+    editing: false,
+    editingId: null
   };
 
   componentDidMount() {
@@ -67,12 +78,24 @@ class Recipe extends Component {
     this.setState({ recipe, modification });
   }
 
+  // TODO: remove the toggle edit feature
   toggleEdit = () => {
     if (this.state.editing === false) {
       this.setState({ editing: true });
     } else {
       this.setState({ editing: false });
     }
+  };
+
+  setEditingId = id => {
+    this.setState({ editingId: id });
+  };
+
+  setActiveStep = (itemI, stepI) => {
+    this.setState({
+      activeItem: this.state.recipe.items[itemI],
+      activeStep: this.state.recipe.items[itemI].steps[stepI]
+    });
   };
 
   nextStep = () => {
@@ -124,25 +147,6 @@ class Recipe extends Component {
     this.setState({ modification });
   };
 
-  handleIngredientChange = (index, e) => {
-    const { name, value } = e.target;
-    const { activeStep, modification } = this.state;
-
-    modification.alteredIngredients = updateOrInsertInArray(
-      modification.alteredIngredients,
-      {
-        ingredientId: activeStep.ingredients[index]._id,
-        field: name,
-        value: value
-      },
-      'ingredientId',
-      'field'
-    );
-
-    localStorage.setItem('modification', JSON.stringify(modification));
-    this.setState({ modification });
-  };
-
   getStepDirectionsValue = step => {
     const { modification } = this.state;
     const mod = modification.alteredSteps.find(
@@ -151,75 +155,13 @@ class Recipe extends Component {
     return mod ? mod.value : step.directions;
   };
 
-  getIngredientValue = (ingredient, fieldName) => {
-    const { modification } = this.state;
-    const mod = modification.alteredIngredients.find(
-      mod => mod.ingredientId === ingredient._id && mod.field === fieldName
-    );
-    return mod ? mod.value : ingredient[fieldName];
-  };
-
-  renderIngredientWithMods = ingredient => {
-    const { modification } = this.state;
-    const mods = {};
-    modification.alteredIngredients
-      .filter(mod => mod.ingredientId === ingredient._id)
-      .forEach(mod => {
-        mods[mod.field] = mod.value;
-      });
-
-    const formatted = [];
-    const fields = ['quantity', 'unit', 'name', 'processing'];
-    fields.forEach((fieldName, i) => {
-      const separator =
-        ingredient[fieldName] && 'processing' === fieldName ? ', ' : '';
-      if (mods.hasOwnProperty(fieldName)) {
-        formatted.push(<del key={'del' + i}>{ingredient[fieldName]}</del>);
-        formatted.push(
-          <ins key={'ins' + i}>
-            {separator}
-            {mods[fieldName]}
-          </ins>
-        );
-      } else {
-        formatted.push(
-          <span key={i}>
-            {separator}
-            {ingredient[fieldName]}
-          </span>
-        );
-      }
-    });
-
-    return formatted;
-  };
-
-  setActiveStep = (itemI, stepI) => {
-    this.setState({
-      activeItem: this.state.recipe.items[itemI],
-      activeStep: this.state.recipe.items[itemI].steps[stepI]
-    });
-  };
-
   renderDirectionsWithMods = step => {
     const { modification } = this.state;
     const mod = modification.alteredSteps.find(
       mod => mod.stepId === step._id && mod.field === 'directions'
     );
     if (mod) {
-      const dmp = new DiffMatchPatch();
-      const diff = dmp.diff_main(step.directions, mod.value);
-      dmp.diff_cleanupSemantic(diff);
-      return diff.map((match, i) => {
-        switch (match[0]) {
-          case 1:
-            return <ins key={i}>{match[1]}</ins>;
-          case -1:
-            return <del key={i}>{match[1]}</del>;
-          default:
-            return <span key={i}>{match[1]}</span>;
-        }
-      });
+      return <DiffText original={step.directions} modified={mod.value} />;
     }
     return step.directions;
   };
@@ -269,8 +211,72 @@ class Recipe extends Component {
     this.setState({ recipe, modification });
   };
 
+  removeIngredient = ingredient => {
+    const { modification } = this.state;
+
+    if (!modification.removedIngredients.includes(ingredient._id)) {
+      modification.removedIngredients.push(ingredient._id);
+      this.setState({ modification });
+    }
+
+    // Clear any saved modifications for the deleted ingredient
+    modification.alteredIngredients = modification.alteredIngredients.filter(
+      mod => mod.ingredientId !== ingredient._id
+    );
+
+    localStorage.setItem('modification', JSON.stringify(modification));
+  };
+
+  restoreIngredient = ingredient => {
+    const { modification } = this.state;
+    const restoredIngredientIndex = modification.removedIngredients.indexOf(
+      ingredient._id
+    );
+
+    if (restoredIngredientIndex > -1) {
+      modification.removedIngredients.splice(restoredIngredientIndex, 1);
+      this.setState({ modification });
+    }
+
+    localStorage.setItem('modification', JSON.stringify(modification));
+  };
+
+  handleIngredientChange = e => {
+    const { name, value } = e.target;
+    const { modification, editingId } = this.state;
+
+    // If making modifications and item is deleted, undo the deletion
+    const restoredIngredientIndex = modification.removedIngredients.indexOf(
+      editingId
+    );
+    if (restoredIngredientIndex > -1) {
+      modification.removedIngredients.splice(restoredIngredientIndex, 1);
+    }
+
+    modification.alteredIngredients = updateOrInsertInArray(
+      modification.alteredIngredients,
+      {
+        ingredientId: editingId,
+        field: name,
+        value: value
+      },
+      'ingredientId',
+      'field'
+    );
+
+    localStorage.setItem('modification', JSON.stringify(modification));
+    this.setState({ modification });
+  };
+
   render() {
-    const { recipe, activeItem, activeStep, editing } = this.state;
+    const {
+      recipe,
+      activeItem,
+      activeStep,
+      editing,
+      modification,
+      editingId
+    } = this.state;
 
     const swiperParams = {
       pagination: {
@@ -303,11 +309,11 @@ class Recipe extends Component {
           {recipe.items.map(item => (
             <div key={item._id}>
               <h3>Ingredients for {item.name}</h3>
-              <ul className={css.ingredients}>
-                {stepsToIngredientTotals(item.steps).map((ingredient, i) => (
-                  <li key={i}>{formatIngredientTotal(ingredient)}</li>
-                ))}
-              </ul>
+              <IngredientTotals
+                steps={item.steps}
+                removedIngredients={modification.removedIngredients}
+                alteredIngredients={modification.alteredIngredients}
+              />
             </div>
           ))}
 
@@ -345,13 +351,13 @@ class Recipe extends Component {
                 </h6>
                 <div className={css.recipeActions}>
                   <button onClick={this.toggleEdit}>
-                    <i className="material-icons">edit</i>
+                    <MdEdit />
                   </button>
                   <button onClick={this.prevStep} disabled={!hasPrevStep}>
-                    <i className="material-icons">navigate_before</i>
+                    <MdNavigateBefore />
                   </button>
                   <button onClick={this.nextStep} disabled={!hasNextStep}>
-                    <i className="material-icons">navigate_next</i>
+                    <MdNavigateNext />
                   </button>
                 </div>
               </div>
@@ -393,82 +399,29 @@ class Recipe extends Component {
               {activeStep.ingredients.length > 0 && (
                 <div>
                   <h3>Ingredients Used</h3>
-                  <ul
-                    className={editing ? css.editIngredients : css.ingredients}
+                  <IngredientList
+                    editing={activeStep.ingredients.some(
+                      ingredient => ingredient._id === editingId
+                    )}
                   >
-                    {activeStep.ingredients.map((ingredient, i) => (
-                      <li key={ingredient._id}>
-                        {editing ? (
-                          <fieldset>
-                            <input
-                              name="quantity"
-                              value={this.getIngredientValue(
-                                ingredient,
-                                'quantity'
-                              )}
-                              placeholder={
-                                ingredient.quantity
-                                  ? ingredient.quantity
-                                  : 'Qty'
-                              }
-                              onChange={this.handleIngredientChange.bind(
-                                this,
-                                i
-                              )}
-                            />
-                            <input
-                              name="unit"
-                              value={this.getIngredientValue(
-                                ingredient,
-                                'unit'
-                              )}
-                              placeholder={
-                                ingredient.unit ? ingredient.unit : 'Unit'
-                              }
-                              onChange={this.handleIngredientChange.bind(
-                                this,
-                                i
-                              )}
-                            />
-                            <input
-                              name="name"
-                              value={this.getIngredientValue(
-                                ingredient,
-                                'name'
-                              )}
-                              placeholder={
-                                ingredient.name ? ingredient.name : 'Name'
-                              }
-                              onChange={this.handleIngredientChange.bind(
-                                this,
-                                i
-                              )}
-                            />
-                            <input
-                              name="processing"
-                              value={this.getIngredientValue(
-                                ingredient,
-                                'processing'
-                              )}
-                              placeholder={
-                                ingredient.processing
-                                  ? ingredient.processing
-                                  : 'Process'
-                              }
-                              onChange={this.handleIngredientChange.bind(
-                                this,
-                                i
-                              )}
-                            />
-                          </fieldset>
-                        ) : (
-                          <span>
-                            {this.renderIngredientWithMods(ingredient)}
-                          </span>
+                    {activeStep.ingredients.map(ingredient => (
+                      <Ingredient
+                        key={ingredient._id}
+                        ingredient={ingredient}
+                        ingredientMods={modification.alteredIngredients.filter(
+                          mod => mod.ingredientId === ingredient._id
                         )}
-                      </li>
+                        removed={modification.removedIngredients.includes(
+                          ingredient._id
+                        )}
+                        editing={editingId === ingredient._id}
+                        removeAction={this.removeIngredient}
+                        restoreAction={this.restoreIngredient}
+                        handleIngredientChange={this.handleIngredientChange}
+                        setEditingId={this.setEditingId}
+                      />
                     ))}
-                  </ul>
+                  </IngredientList>
                 </div>
               )}
 
@@ -490,5 +443,3 @@ class Recipe extends Component {
     );
   }
 }
-
-export default Recipe;

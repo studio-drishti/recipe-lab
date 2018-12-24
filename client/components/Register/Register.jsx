@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { Component } from 'react';
 import css from './Register.css';
-import { Component } from 'react';
 
-class Register extends Component {
+export default class Register extends Component {
+  static displayName = 'Register';
+
   state = {
     password: '',
     firstName: '',
@@ -64,5 +65,3 @@ class Register extends Component {
     );
   }
 }
-
-export default Register;

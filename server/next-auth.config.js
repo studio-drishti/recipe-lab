@@ -22,20 +22,15 @@ const nextAuthFunctions = require('./next-auth.functions');
 const expressSession = require('express-session');
 const MongoStore = require('connect-mongo')(expressSession);
 
-// If no store set, NextAuth defaults to using Express Sessions in-memory
-// session store (the fallback is intended as fallback for testing only).
-let sessionStore;
-if (process.env.MONGO_URI) {
-  sessionStore = new MongoStore({
-    url: process.env.MONGO_URI,
+module.exports = mongoose => {
+  const sessionStore = new MongoStore({
+    mongooseConnection: mongoose.connection,
     autoRemove: 'interval',
     autoRemoveInterval: 10, // Removes expired sessions every 10 minutes
     collection: 'sessions',
     stringify: false
   });
-}
 
-module.exports = () => {
   // We connect to the User DB before we define our functions.
   // next-auth.functions.js returns an async method that does that and returns
   // an object with the functions needed for authentication.
