@@ -78,6 +78,7 @@ export default class Recipe extends Component {
     this.setState({ recipe, modification });
   }
 
+  // TODO: remove the toggle edit feature
   toggleEdit = () => {
     if (this.state.editing === false) {
       this.setState({ editing: true });
@@ -88,6 +89,13 @@ export default class Recipe extends Component {
 
   setEditingId = id => {
     this.setState({ editingId: id });
+  };
+
+  setActiveStep = (itemI, stepI) => {
+    this.setState({
+      activeItem: this.state.recipe.items[itemI],
+      activeStep: this.state.recipe.items[itemI].steps[stepI]
+    });
   };
 
   nextStep = () => {
@@ -139,38 +147,12 @@ export default class Recipe extends Component {
     this.setState({ modification });
   };
 
-  handleIngredientChange = e => {
-    const { name, value } = e.target;
-    const { modification, editingId } = this.state;
-
-    modification.alteredIngredients = updateOrInsertInArray(
-      modification.alteredIngredients,
-      {
-        ingredientId: editingId,
-        field: name,
-        value: value
-      },
-      'ingredientId',
-      'field'
-    );
-
-    localStorage.setItem('modification', JSON.stringify(modification));
-    this.setState({ modification });
-  };
-
   getStepDirectionsValue = step => {
     const { modification } = this.state;
     const mod = modification.alteredSteps.find(
       mod => mod.stepId === step._id && mod.field === 'directions'
     );
     return mod ? mod.value : step.directions;
-  };
-
-  setActiveStep = (itemI, stepI) => {
-    this.setState({
-      activeItem: this.state.recipe.items[itemI],
-      activeStep: this.state.recipe.items[itemI].steps[stepI]
-    });
   };
 
   renderDirectionsWithMods = step => {
@@ -257,6 +239,33 @@ export default class Recipe extends Component {
     }
 
     localStorage.setItem('modification', JSON.stringify(modification));
+  };
+
+  handleIngredientChange = e => {
+    const { name, value } = e.target;
+    const { modification, editingId } = this.state;
+
+    // If making modifications and item is deleted, undo the deletion
+    const restoredIngredientIndex = modification.removedIngredients.indexOf(
+      editingId
+    );
+    if (restoredIngredientIndex > -1) {
+      modification.removedIngredients.splice(restoredIngredientIndex, 1);
+    }
+
+    modification.alteredIngredients = updateOrInsertInArray(
+      modification.alteredIngredients,
+      {
+        ingredientId: editingId,
+        field: name,
+        value: value
+      },
+      'ingredientId',
+      'field'
+    );
+
+    localStorage.setItem('modification', JSON.stringify(modification));
+    this.setState({ modification });
   };
 
   render() {
