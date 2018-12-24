@@ -17,6 +17,7 @@
     "test": "cross-env NODE_ENV=test PORT=8081 node --inspect=0.0.0.0:9230 /opt/node_modules/.bin/jest",
     "test-watch": "cross-env NODE_ENV=test PORT=8081 node --inspect=0.0.0.0:9230 /opt/node_modules/.bin/jest --runInBand --no-cache --watch",
     "test-wait-debuger": "cross-env NODE_ENV=test PORT=8081 node --inspect-brk=0.0.0.0:9230 /opt/node_modules/.bin/jest",
+    "test-cicd": "jest",
     "lint-css": "stylelint \"client/**/*.css\"",
     "lint-js": "eslint \"**/*.{js,jsx}\"",
     "prettier": "prettier --write \"**/*.{js,jsx,json,yml,xml,md,css}\"",

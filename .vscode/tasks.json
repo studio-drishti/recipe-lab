@@ -16,6 +16,28 @@
     },
     {
       // Execute command in docker
+      "label": "Docker npm lint-css",
+      "type": "shell",
+      "command": "docker-compose exec node npm run lint-css",
+      "group": "test",
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated"
+      }
+    },
+    {
+      // Execute command in docker
+      "label": "Docker npm lint-js",
+      "type": "shell",
+      "command": "docker-compose exec node npm run lint-js",
+      "group": "test",
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated"
+      }
+    },
+    {
+      // Execute command in docker
       "label": "Docker npm run test-watch",
       "type": "shell",
       "command": "docker-compose exec node npm run test-watch",

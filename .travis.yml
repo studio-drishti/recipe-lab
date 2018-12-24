@@ -6,6 +6,6 @@ install:
   - npm install
 
 script:
-  - npm run lint:js
-  - npm run lint:css
-  - npm run test
+  - npm run lint-js
+  - npm run lint-css
+  - npm run test-cicd
