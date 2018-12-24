@@ -4,6 +4,7 @@ import { MdClear, MdRefresh, MdCheck } from 'react-icons/md';
 
 import css from './Ingredient.css';
 import DiffText from '../DiffText';
+import { MEASURE_UNITS } from '../../config';
 
 export default class Ingredient extends Component {
   static displayName = 'Ingredient';
@@ -170,14 +171,20 @@ export default class Ingredient extends Component {
                 placeholder={'Qty'}
                 onChange={handleIngredientChange}
               />
-              {/* TODO: Refactor unit as dropdown */}
-              <input
+              <select
                 type="text"
                 name="unit"
                 title="Unit"
                 value={this.getIngredientValue('unit')}
                 onChange={handleIngredientChange}
-              />
+              >
+                <option value="">--</option>
+                {MEASURE_UNITS.map(unit => (
+                  <option key={unit} value={unit}>
+                    {unit}
+                  </option>
+                ))}
+              </select>
               <input
                 type="text"
                 name="name"
