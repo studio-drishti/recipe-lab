@@ -231,10 +231,13 @@ export default class Recipe extends Component {
 
   removeIngredient = ingredient => {
     const { modification } = this.state;
+
     if (!modification.removedIngredients.includes(ingredient._id)) {
       modification.removedIngredients.push(ingredient._id);
       this.setState({ modification });
     }
+
+    localStorage.setItem('modification', JSON.stringify(modification));
   };
 
   restoreIngredient = ingredient => {
@@ -247,6 +250,8 @@ export default class Recipe extends Component {
       modification.removedIngredients.splice(restoredIngredientIndex, 1);
       this.setState({ modification });
     }
+
+    localStorage.setItem('modification', JSON.stringify(modification));
   };
 
   render() {
