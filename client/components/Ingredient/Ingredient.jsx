@@ -27,6 +27,8 @@ export default class Ingredient extends Component {
 
   ingredientFields = ['quantity', 'unit', 'name', 'processing'];
 
+  ingredientRef = React.createRef();
+
   maybeGetIngredientModValue = fieldname => {
     const { ingredientMods, ingredient } = this.props;
     const mod = ingredientMods.find(
@@ -97,13 +99,24 @@ export default class Ingredient extends Component {
     return <DiffText original={original} modified={modified} />;
   };
 
+  deselect = () => {
+    this.props.setEditingId(null);
+    document.removeEventListener('mousedown', this.handleClick);
+  };
+
+  handleClick = e => {
+    if (this.ingredientRef.current.contains(e.target)) return;
+    this.deselect();
+  };
+
   handleSave = e => {
     e.stopPropagation();
-    this.props.setEditingId(null);
+    this.deselect();
   };
 
   handleSelect = e => {
     e.stopPropagation();
+    document.addEventListener('mousedown', this.handleClick);
     this.props.setEditingId(this.props.ingredient._id);
   };
 
@@ -125,6 +138,7 @@ export default class Ingredient extends Component {
         className={css.ingredient}
         data-editing={editing}
         onClick={this.handleSelect}
+        ref={this.ingredientRef}
       >
         {editing ? (
           <fieldset>
