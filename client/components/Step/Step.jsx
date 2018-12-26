@@ -14,7 +14,12 @@ export default class Step extends PureComponent {
     stepId: PropTypes.string,
     isActive: PropTypes.bool,
     children: PropTypes.node,
-    clickHandler: PropTypes.func
+    setActiveStep: PropTypes.func
+  };
+
+  editDirections = () => {
+    const { setActiveStep } = this.props;
+    setActiveStep();
   };
 
   render() {
@@ -24,7 +29,7 @@ export default class Step extends PureComponent {
       stepId,
       isActive,
       children,
-      clickHandler
+      setActiveStep
     } = this.props;
     return (
       <Draggable type={`STEP-${itemId}`} draggableId={stepId} index={index}>
@@ -38,14 +43,14 @@ export default class Step extends PureComponent {
             <div className={css.stepNum} {...provided.dragHandleProps}>
               <span>{index + 1}.</span>
             </div>
-            <div className={css.stepDirections} onClick={clickHandler}>
+            <div className={css.stepDirections} onClick={setActiveStep}>
               {children}
             </div>
             <div className={css.stepActions}>
               <button title="Remove step">
                 <MdClear />
               </button>
-              <button title="Edit directions">
+              <button title="Edit directions" onClick={this.editDirections}>
                 <MdEdit />
               </button>
             </div>

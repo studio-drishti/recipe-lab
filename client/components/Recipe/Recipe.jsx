@@ -1,10 +1,9 @@
 import React from 'react';
 import { Component } from 'react';
 import PropTypes from 'prop-types';
-import Textarea from 'react-textarea-autosize';
 import Swiper from 'react-id-swiper';
 import { DragDropContext } from 'react-beautiful-dnd';
-import { MdEdit, MdNavigateBefore, MdNavigateNext } from 'react-icons/md';
+import { MdNavigateBefore, MdNavigateNext } from 'react-icons/md';
 
 import css from './Recipe.css';
 import reorder from '../../util/reorder';
@@ -43,7 +42,6 @@ export default class Recipe extends Component {
       additionalSteps: [],
       additionalIngredients: []
     },
-    editing: false,
     editingId: null
   };
 
@@ -77,15 +75,6 @@ export default class Recipe extends Component {
 
     this.setState({ recipe, modification });
   }
-
-  // TODO: remove the toggle edit feature
-  toggleEdit = () => {
-    if (this.state.editing === false) {
-      this.setState({ editing: true });
-    } else {
-      this.setState({ editing: false });
-    }
-  };
 
   setEditingId = id => {
     this.setState({ editingId: id });
@@ -262,7 +251,6 @@ export default class Recipe extends Component {
       recipe,
       activeItem,
       activeStep,
-      editing,
       modification,
       editingId
     } = this.state;
@@ -321,7 +309,7 @@ export default class Recipe extends Component {
                           activeItem._id === item._id &&
                           activeStep._id === step._id
                         }
-                        clickHandler={() => this.setActiveStep(itemI, stepI)}
+                        setActiveStep={() => this.setActiveStep(itemI, stepI)}
                       >
                         <Directions
                           directions={step.directions}
@@ -343,13 +331,18 @@ export default class Recipe extends Component {
                   {activeItem.name} &gt; Step {activeStepIndex + 1}
                 </h6>
                 <div className={css.recipeActions}>
-                  <button onClick={this.toggleEdit}>
-                    <MdEdit />
-                  </button>
-                  <button onClick={this.prevStep} disabled={!hasPrevStep}>
+                  <button
+                    title="Previous step"
+                    onClick={this.prevStep}
+                    disabled={!hasPrevStep}
+                  >
                     <MdNavigateBefore />
                   </button>
-                  <button onClick={this.nextStep} disabled={!hasNextStep}>
+                  <button
+                    title="Next step"
+                    onClick={this.nextStep}
+                    disabled={!hasNextStep}
+                  >
                     <MdNavigateNext />
                   </button>
                 </div>
@@ -408,7 +401,7 @@ export default class Recipe extends Component {
                 </div>
               )}
 
-              <h3>Notes</h3>
+              {/* <h3>Notes</h3>
               {editing ? (
                 <Textarea
                   name="notes"
@@ -418,7 +411,7 @@ export default class Recipe extends Component {
                 />
               ) : (
                 <p>{activeStep.notes}</p>
-              )}
+              )} */}
             </div>
           </div>
         </aside>
