@@ -54,12 +54,12 @@
   &[data-editing='false']:focus-within,
   &[data-editing='true'] {
     border: 0.01rem solid var(--color-medium-gray);
-    transition: all ease-out 0.3s;
+    transition: all ease-out 0.2s;
     z-index: 1;
 
     & button {
       opacity: 1;
-      transition: opacity ease-out 0.3s;
+      transition: opacity ease-out 0.2s;
     }
   }
 

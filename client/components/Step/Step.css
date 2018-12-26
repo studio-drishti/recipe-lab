@@ -1,11 +1,15 @@
+@import '../../config/defaults.css';
+
 .step {
   display: grid;
   grid-template-columns: 1fr 11fr;
-  margin-bottom: 1rem;
+  margin-bottom: 0.5rem;
   transition: background linear 0.2s;
+  padding: 0.5rem;
+  border-radius: var(--border-radius-sm);
 
   &[data-active='true'] {
-    background: lightgoldenrodyellow;
+    background: var(--color-highlight);
   }
 
   & .stepNum {

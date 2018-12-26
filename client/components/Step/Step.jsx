@@ -12,7 +12,7 @@ export default class Step extends PureComponent {
     itemId: PropTypes.string,
     stepId: PropTypes.string,
     isActive: PropTypes.bool,
-    content: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
+    children: PropTypes.node,
     clickHandler: PropTypes.func
   };
 
@@ -22,7 +22,7 @@ export default class Step extends PureComponent {
       itemId,
       stepId,
       isActive,
-      content,
+      children,
       clickHandler
     } = this.props;
     return (
@@ -38,7 +38,7 @@ export default class Step extends PureComponent {
               <span>{index + 1}.</span>
             </div>
             <div className={css.stepDirections} onClick={clickHandler}>
-              {content}
+              {children}
             </div>
           </li>
         )}

@@ -14,14 +14,6 @@
     width: 100%;
   }
 
-  & textarea {
-    width: 100%;
-    height: auto;
-    line-height: inherit;
-    padding: 0.5rem;
-    resize: none;
-  }
-
   & .sticky {
     position: sticky;
     top: 2rem;
@@ -46,8 +38,7 @@
   flex: 0 0 auto;
   box-shadow: 0 0.1rem 0.7rem rgba(0, 0, 0, 0.15);
 
-  & h6,
-  & p {
+  & h6 {
     margin: 0;
   }
 }

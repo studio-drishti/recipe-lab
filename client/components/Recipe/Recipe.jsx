@@ -17,7 +17,7 @@ import Item from '../Item';
 import IngredientList from '../IngredientList';
 import Ingredient from '../Ingredient';
 import IngredientTotals from '../IngredientTotals';
-import DiffText from '../DiffText';
+import Directions from '../Directions';
 
 export default class Recipe extends Component {
   static displayName = 'Recipe';
@@ -147,25 +147,6 @@ export default class Recipe extends Component {
     this.setState({ modification });
   };
 
-  getStepDirectionsValue = step => {
-    const { modification } = this.state;
-    const mod = modification.alteredSteps.find(
-      mod => mod.stepId === step._id && mod.field === 'directions'
-    );
-    return mod ? mod.value : step.directions;
-  };
-
-  renderDirectionsWithMods = step => {
-    const { modification } = this.state;
-    const mod = modification.alteredSteps.find(
-      mod => mod.stepId === step._id && mod.field === 'directions'
-    );
-    if (mod) {
-      return <DiffText original={step.directions} modified={mod.value} />;
-    }
-    return step.directions;
-  };
-
   onDragEnd = result => {
     // dropped outside the list or dropped in place
     if (
@@ -268,6 +249,14 @@ export default class Recipe extends Component {
     this.setState({ modification });
   };
 
+  getStepMod = (step, fieldName) => {
+    const { modification } = this.state;
+    const mod = modification.alteredSteps.find(
+      mod => mod.stepId === step._id && mod.field === fieldName
+    );
+    return mod ? mod.value : undefined;
+  };
+
   render() {
     const {
       recipe,
@@ -333,8 +322,12 @@ export default class Recipe extends Component {
                           activeStep._id === step._id
                         }
                         clickHandler={() => this.setActiveStep(itemI, stepI)}
-                        content={this.renderDirectionsWithMods(step)}
-                      />
+                      >
+                        <Directions
+                          directions={step.directions}
+                          mod={this.getStepMod(step, 'directions')}
+                        />
+                      </Step>
                     ))}
                   </StepList>
                 </Item>
@@ -362,20 +355,10 @@ export default class Recipe extends Component {
                 </div>
               </div>
 
-              {editing ? (
-                <Textarea
-                  name="directions"
-                  value={this.getStepDirectionsValue(activeStep)}
-                  placeholder={
-                    activeStep.directions.length
-                      ? activeStep.directions
-                      : 'Directions'
-                  }
-                  onChange={this.handleStepChange}
-                />
-              ) : (
-                <p>{this.renderDirectionsWithMods(activeStep)}</p>
-              )}
+              <Directions
+                directions={activeStep.directions}
+                mod={this.getStepMod(activeStep, 'directions')}
+              />
             </header>
             <div className={css.recipeDetailContent}>
               <Swiper {...swiperParams}>
