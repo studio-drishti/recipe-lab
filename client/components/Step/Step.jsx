@@ -1,6 +1,7 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { Draggable } from 'react-beautiful-dnd';
+import { MdEdit, MdClear } from 'react-icons/md';
 
 import css from './Step.css';
 
@@ -39,6 +40,14 @@ export default class Step extends PureComponent {
             </div>
             <div className={css.stepDirections} onClick={clickHandler}>
               {children}
+            </div>
+            <div className={css.stepActions}>
+              <button title="Remove step">
+                <MdClear />
+              </button>
+              <button title="Edit directions">
+                <MdEdit />
+              </button>
             </div>
           </li>
         )}
