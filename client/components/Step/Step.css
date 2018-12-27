@@ -23,12 +23,17 @@
   }
 
   &:hover,
-  &.editing {
+  &.editing,
+  &.dragging {
     border: 1px solid var(--color-medium-gray);
 
     & .stepActions {
       opacity: 1;
     }
+  }
+
+  &.dragging .stepActions {
+    opacity: 0;
   }
 
   & .stepNum {

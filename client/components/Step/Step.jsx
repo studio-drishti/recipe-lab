@@ -65,13 +65,14 @@ export default class Step extends PureComponent {
     const { editing } = this.state;
     return (
       <Draggable type={`STEP-${itemId}`} draggableId={stepId} index={index}>
-        {provided => (
+        {(provided, snapshot) => (
           <li ref={provided.innerRef} {...provided.draggableProps}>
             <div
               ref={this.stepRef}
               className={classnames(css.step, {
                 [css.active]: isActive,
-                [css.editing]: editing
+                [css.editing]: editing,
+                [css.dragging]: snapshot.isDragging
               })}
             >
               <div className={css.stepNum} {...provided.dragHandleProps}>
