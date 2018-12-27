@@ -1,10 +1,5 @@
-//Editing
-//Deleting
-//restoring
-
 import { shallow } from 'enzyme';
 import React from 'react';
-// import renderer from 'react-test-renderer'
 
 import Ingredient from 'schooled-lunch/client/components/Ingredient';
 
