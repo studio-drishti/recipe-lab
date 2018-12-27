@@ -2,6 +2,7 @@ import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { Draggable } from 'react-beautiful-dnd';
 import { MdEdit, MdClear, MdCheck } from 'react-icons/md';
+import classnames from 'classnames';
 
 import css from './Step.css';
 
@@ -66,7 +67,13 @@ export default class Step extends PureComponent {
       <Draggable type={`STEP-${itemId}`} draggableId={stepId} index={index}>
         {provided => (
           <li ref={provided.innerRef} {...provided.draggableProps}>
-            <div ref={this.stepRef} className={css.step} data-active={isActive}>
+            <div
+              ref={this.stepRef}
+              className={classnames(css.step, {
+                [css.active]: isActive,
+                [css.editing]: editing
+              })}
+            >
               <div className={css.stepNum} {...provided.dragHandleProps}>
                 <span>{index + 1}.</span>
               </div>

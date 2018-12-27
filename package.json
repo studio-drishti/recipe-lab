@@ -26,6 +26,7 @@
   },
   "dependencies": {
     "@zeit/next-css": "1.0.1",
+    "classnames": "2.2.6",
     "connect-mongo": "2.0.3",
     "diff-match-patch": "1.0.4",
     "dotenv": "6.2.0",

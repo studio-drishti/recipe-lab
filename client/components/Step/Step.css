@@ -13,12 +13,17 @@
   border: 1px solid transparent;
   transition: all linear 0.2s;
 
-  &[data-active='true'] {
+  &.active {
     background: var(--color-highlight);
     border: 1px solid var(--color-highlight);
   }
 
-  &:hover {
+  &.editing {
+    padding-bottom: 2.25rem;
+  }
+
+  &:hover,
+  &.editing {
     border: 1px solid var(--color-medium-gray);
 
     & .stepActions {
