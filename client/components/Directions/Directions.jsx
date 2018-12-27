@@ -12,7 +12,8 @@ export default class Ingredient extends Component {
     directions: PropTypes.string,
     mod: PropTypes.string,
     editing: PropTypes.bool,
-    removed: PropTypes.bool
+    removed: PropTypes.bool,
+    handleStepChange: PropTypes.func
   };
 
   static defaultProps = {
@@ -36,7 +37,7 @@ export default class Ingredient extends Component {
   };
 
   render() {
-    const { editing, directions } = this.props;
+    const { editing, directions, handleStepChange } = this.props;
 
     return (
       <form className={css.directions}>
@@ -45,7 +46,7 @@ export default class Ingredient extends Component {
             name="directions"
             value={this.getDirectionsValue()}
             placeholder={directions.length ? directions : 'Directions'}
-            onChange={this.handleStepChange}
+            onChange={handleStepChange}
           />
         ) : (
           <p>{this.renderDirectionsWithMods()}</p>

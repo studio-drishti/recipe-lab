@@ -314,6 +314,7 @@ export default class Recipe extends Component {
                         <Directions
                           directions={step.directions}
                           mod={this.getStepMod(step, 'directions')}
+                          handleStepChange={this.handleStepChange}
                         />
                       </Step>
                     ))}
