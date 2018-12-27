@@ -22,6 +22,14 @@ export default class Ingredient extends Component {
     removed: false
   };
 
+  textareaRef = React.createRef();
+
+  componentDidUpdate(prevProps) {
+    if (!prevProps.editing && this.props.editing) {
+      this.textareaRef.current.focus();
+    }
+  }
+
   renderDirectionsWithMods = () => {
     const { mod, directions } = this.props;
     if (mod !== undefined) {
@@ -43,6 +51,7 @@ export default class Ingredient extends Component {
       <form className={css.directions}>
         {editing ? (
           <Textarea
+            inputRef={this.textareaRef}
             name="directions"
             value={this.getDirectionsValue()}
             placeholder={directions.length ? directions : 'Directions'}
