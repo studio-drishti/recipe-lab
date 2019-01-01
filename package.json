@@ -63,6 +63,7 @@
     "eslint-plugin-node": "8.0.0",
     "eslint-plugin-prettier": "3.0.0",
     "eslint-plugin-react": "7.11.1",
+    "identity-obj-proxy": "3.0.0",
     "jest": "23.6.0",
     "nodemon": "1.18.7",
     "postcss-calc": "7.0.1",

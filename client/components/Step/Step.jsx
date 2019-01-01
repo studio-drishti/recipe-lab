@@ -18,6 +18,10 @@ export default class Step extends PureComponent {
     setActiveStep: PropTypes.func
   };
 
+  static defaultProps = {
+    isActive: false
+  };
+
   state = {
     editing: false
   };
@@ -80,7 +84,7 @@ export default class Step extends PureComponent {
               </div>
 
               <div className={css.stepDirections} onClick={this.handleSelect}>
-                {React.cloneElement(child, { editing })}
+                {child && React.cloneElement(child, { editing })}
               </div>
 
               <div className={css.stepActions}>
