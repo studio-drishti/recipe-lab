@@ -3,4 +3,8 @@
   margin-bottom: 2rem;
   list-style: none;
   padding: 0;
+
+  &.draggingOver {
+    pointer-events: none;
+  }
 }

@@ -3,6 +3,7 @@
   --------- */
   --layout-width: rem-calc(1200px);
   --default-border-radius: rem-calc(5px);
+  --border-radius-sm: rem-calc(3px);
 
   /* Typography
   ------------- */
@@ -21,4 +22,5 @@
   --color-dark-gray: #b7c2ce;
   --color-black: #262626;
   --color-white: #fff;
+  --color-highlight: rgb(252, 251, 198);
 }

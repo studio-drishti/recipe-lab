@@ -1,0 +1,16 @@
+@import '../../config/defaults.css';
+
+.directions {
+  & p {
+    cursor: pointer;
+    margin: 0;
+  }
+
+  & textarea {
+    width: 100%;
+    height: auto;
+    line-height: inherit;
+    padding: 0.5rem;
+    resize: none;
+  }
+}
