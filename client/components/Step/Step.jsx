@@ -70,7 +70,11 @@ export default class Step extends PureComponent {
     return (
       <Draggable type={`STEP-${itemId}`} draggableId={stepId} index={index}>
         {(provided, snapshot) => (
-          <li ref={provided.innerRef} {...provided.draggableProps}>
+          <li
+            className={css.container}
+            ref={provided.innerRef}
+            {...provided.draggableProps}
+          >
             <div
               ref={this.stepRef}
               className={classnames(css.step, {

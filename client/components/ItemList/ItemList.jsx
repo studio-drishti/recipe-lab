@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Droppable } from 'react-beautiful-dnd';
+import classnames from 'classnames';
 
 import css from './ItemList.css';
 
@@ -19,9 +20,11 @@ export default class ItemList extends Component {
     const { children, recipeId } = this.props;
     return (
       <Droppable type="ITEM" droppableId={recipeId}>
-        {provided => (
+        {(provided, snapshot) => (
           <div
-            className={css.steps}
+            className={classnames(css.items, {
+              [css.draggingOver]: snapshot.isDraggingOver
+            })}
             ref={provided.innerRef}
             {...provided.droppableProps}
           >
