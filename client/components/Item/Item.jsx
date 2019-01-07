@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { Draggable } from 'react-beautiful-dnd';
-// import { MdDragHandle } from 'react-icons/md';
+import { MdDragHandle } from 'react-icons/md';
 import classnames from 'classnames';
 
 import css from './Item.css';
@@ -44,10 +44,14 @@ export default class Item extends PureComponent {
             <div
               onMouseOver={this.mouseEnter}
               onMouseLeave={this.mouseLeave}
-              className={css.dragHandle}
-              {...provided.dragHandleProps}
+              className={css.itemHeader}
             >
-              <h3>Directions for {item.name}</h3>
+              <div className={css.dragHandle} {...provided.dragHandleProps}>
+                <MdDragHandle />
+              </div>
+              <div>
+                <h3>Directions for {item.name}</h3>
+              </div>
             </div>
             {children}
           </div>
