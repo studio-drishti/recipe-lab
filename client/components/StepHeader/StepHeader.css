@@ -1,0 +1,64 @@
+@import '../../config/defaults.css';
+
+.stepHeader {
+  border: 1px solid var(--color-dark-gray);
+  padding: 1rem;
+  flex: 0 0 auto;
+  box-shadow: 0 0.1rem 0.7rem rgba(0, 0, 0, 0.15);
+  position: relative;
+  overflow: hidden;
+
+  &:hover,
+  &.editing {
+    & .stepActions {
+      opacity: 1;
+    }
+  }
+}
+
+.recipeDetailToolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+
+  & h6 {
+    margin: 0;
+  }
+}
+
+.recipeNav {
+  float: right;
+}
+
+.stepDirections {
+  cursor: pointer;
+  margin-bottom: 0.5rem;
+}
+
+.editActions {
+  font-size: 0.8em;
+
+  & svg {
+    vertical-align: middle;
+    margin-right: 0.15em;
+  }
+
+  & a {
+    text-decoration: none;
+    color: var(--color-black);
+    opacity: 0.5;
+    transition: all linear 0.2s;
+  }
+
+  & a:hover {
+    opacity: 1;
+  }
+
+  & a + a::before {
+    content: '|';
+    color: var(--color-medium-gray);
+    display: inline-block;
+    margin: 0 0.25em;
+  }
+}

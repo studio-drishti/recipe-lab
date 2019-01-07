@@ -3,7 +3,6 @@ import { Component } from 'react';
 import PropTypes from 'prop-types';
 import Swiper from 'react-id-swiper';
 import { DragDropContext } from 'react-beautiful-dnd';
-import { MdNavigateBefore, MdNavigateNext } from 'react-icons/md';
 
 import css from './Recipe.css';
 import reorder from '../../util/reorder';
@@ -16,6 +15,8 @@ import Item from '../Item';
 import IngredientList from '../IngredientList';
 import Ingredient from '../Ingredient';
 import IngredientTotals from '../IngredientTotals';
+import StepHeader from '../StepHeader';
+import RecipeNav from '../RecipeNav';
 import Directions from '../Directions';
 
 export default class Recipe extends Component {
@@ -85,37 +86,6 @@ export default class Recipe extends Component {
       activeItem: this.state.recipe.items[itemI],
       activeStep: this.state.recipe.items[itemI].steps[stepI]
     });
-  };
-
-  nextStep = () => {
-    let { activeItem, activeStep, recipe } = this.state;
-    const nextItemIndex =
-      recipe.items.findIndex(item => item._id === activeItem._id) + 1;
-    const nextStepIndex =
-      activeItem.steps.findIndex(step => step._id === activeStep._id) + 1;
-    if (nextStepIndex < activeItem.steps.length) {
-      activeStep = activeItem.steps[nextStepIndex];
-    } else if (nextItemIndex < recipe.items.length) {
-      activeItem = recipe.items[nextItemIndex];
-      activeStep = recipe.items[nextItemIndex].steps[0];
-    }
-    this.setState({ activeStep, activeItem });
-  };
-
-  prevStep = () => {
-    let { activeItem, activeStep, recipe } = this.state;
-    const prevItemIndex =
-      recipe.items.findIndex(item => item._id === activeItem._id) - 1;
-    const prevStepIndex =
-      activeItem.steps.findIndex(step => step._id === activeStep._id) - 1;
-    if (prevStepIndex >= 0) {
-      activeStep = activeItem.steps[prevStepIndex];
-    } else if (prevItemIndex >= 0) {
-      activeItem = recipe.items[prevItemIndex];
-      activeStep =
-        recipe.items[prevItemIndex].steps[activeItem.steps.length - 1];
-    }
-    this.setState({ activeStep, activeItem });
   };
 
   handleStepChange = e => {
@@ -246,6 +216,11 @@ export default class Recipe extends Component {
     return mod ? mod.value : undefined;
   };
 
+  getActiveStepNumber = () => {
+    const { activeItem, activeStep } = this.state;
+    return activeItem.steps.findIndex(step => step._id === activeStep._id) + 1;
+  };
+
   render() {
     const {
       recipe,
@@ -267,18 +242,6 @@ export default class Recipe extends Component {
       },
       spaceBetween: 20
     };
-
-    const activeItemIndex = recipe.items.findIndex(
-      item => item._id === activeItem._id
-    );
-    const activeStepIndex = activeItem.steps.findIndex(
-      step => step._id === activeStep._id
-    );
-    const hasPrevStep =
-      (activeItemIndex === 0 && activeStepIndex > 0) || activeItemIndex > 0;
-    const hasNextStep =
-      activeItemIndex < recipe.items.length - 1 ||
-      activeStepIndex < activeItem.steps.length - 1;
 
     return (
       <article className={css.recipe}>
@@ -326,34 +289,28 @@ export default class Recipe extends Component {
         </div>
         <aside className={css.recipeDetail}>
           <div className={css.sticky}>
-            <header className={css.recipeDetailHeader}>
-              <div className={css.recipeDetailToolbar}>
+            <StepHeader
+              activeStep={activeStep}
+              itemName={
                 <h6>
-                  {activeItem.name} &gt; Step {activeStepIndex + 1}
+                  {activeItem.name} &gt; Step {this.getActiveStepNumber()}
                 </h6>
-                <div className={css.recipeActions}>
-                  <button
-                    title="Previous step"
-                    onClick={this.prevStep}
-                    disabled={!hasPrevStep}
-                  >
-                    <MdNavigateBefore />
-                  </button>
-                  <button
-                    title="Next step"
-                    onClick={this.nextStep}
-                    disabled={!hasNextStep}
-                  >
-                    <MdNavigateNext />
-                  </button>
-                </div>
-              </div>
-
-              <Directions
-                directions={activeStep.directions}
-                mod={this.getStepMod(activeStep, 'directions')}
-              />
-            </header>
+              }
+              navigation={
+                <RecipeNav
+                  recipeItems={recipe.items}
+                  activeItem={activeItem}
+                  activeStep={activeStep}
+                  setActiveStep={this.setActiveStep}
+                />
+              }
+              directions={
+                <Directions
+                  directions={activeStep.directions}
+                  mod={this.getStepMod(activeStep, 'directions')}
+                />
+              }
+            />
             <div className={css.recipeDetailContent}>
               <Swiper {...swiperParams}>
                 <img
