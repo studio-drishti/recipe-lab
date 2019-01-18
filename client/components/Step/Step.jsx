@@ -98,9 +98,6 @@ export default class Step extends PureComponent {
               </div>
 
               <div className={css.stepActions}>
-                <button title="Remove step">
-                  <MdClear />
-                </button>
                 {editing ? (
                   <button
                     title="Save modifications"
@@ -109,9 +106,17 @@ export default class Step extends PureComponent {
                     <MdCheck />
                   </button>
                 ) : (
-                  <button title="Edit directions" onClick={this.enableEditing}>
-                    <MdEdit />
-                  </button>
+                  <>
+                    <button title="Remove step">
+                      <MdClear />
+                    </button>
+                    <button
+                      title="Edit directions"
+                      onClick={this.enableEditing}
+                    >
+                      <MdEdit />
+                    </button>
+                  </>
                 )}
               </div>
             </div>
