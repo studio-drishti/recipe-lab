@@ -12,6 +12,7 @@ import StepList from '../StepList';
 import Step from '../Step';
 import ItemList from '../ItemList';
 import Item from '../Item';
+import ItemName from '../ItemName';
 import IngredientList from '../IngredientList';
 import Ingredient from '../Ingredient';
 import IngredientTotals from '../IngredientTotals';
@@ -100,6 +101,25 @@ export default class Recipe extends Component {
         value: value
       },
       'stepId'
+    );
+
+    localStorage.setItem('modification', JSON.stringify(modification));
+    this.setState({ modification });
+  };
+
+  handleItemChange = (e, itemId) => {
+    const { name, value } = e.target;
+    const { activeItem, modification } = this.state;
+    const id = itemId !== undefined ? itemId : activeItem._id;
+
+    modification.alteredItems = updateOrInsertInArray(
+      modification.alteredItems,
+      {
+        itemId: id,
+        field: name,
+        value: value
+      },
+      'itemId'
     );
 
     localStorage.setItem('modification', JSON.stringify(modification));
@@ -216,6 +236,14 @@ export default class Recipe extends Component {
     return mod ? mod.value : undefined;
   };
 
+  getItemMod = (item, fieldName) => {
+    const { modification } = this.state;
+    const mod = modification.alteredItems.find(
+      mod => mod.itemId === item._id && mod.field === fieldName
+    );
+    return mod ? mod.value : undefined;
+  };
+
   getActiveStepNumber = () => {
     const { activeItem, activeStep } = this.state;
     return activeItem.steps.findIndex(step => step._id === activeStep._id) + 1;
@@ -260,7 +288,19 @@ export default class Recipe extends Component {
           <DragDropContext onDragEnd={this.onDragEnd}>
             <ItemList recipeId={recipe._id}>
               {recipe.items.map((item, itemI) => (
-                <Item key={item._id} item={item} index={itemI}>
+                <Item
+                  key={item._id}
+                  itemId={item._id}
+                  index={itemI}
+                  itemName={
+                    <ItemName
+                      item={item}
+                      prefix="Directions for"
+                      mod={this.getItemMod(item, 'name')}
+                      handleItemChange={this.handleItemChange}
+                    />
+                  }
+                >
                   <StepList itemId={item._id}>
                     {item.steps.map((step, stepI) => (
                       <Step
@@ -292,9 +332,13 @@ export default class Recipe extends Component {
             <StepHeader
               activeStep={activeStep}
               itemName={
-                <h6>
-                  {activeItem.name} &gt; Step {this.getActiveStepNumber()}
-                </h6>
+                <ItemName
+                  item={activeItem}
+                  autoFocus={false}
+                  suffix={`> Step ${this.getActiveStepNumber()}`}
+                  mod={this.getItemMod(activeItem, 'name')}
+                  handleItemChange={this.handleItemChange}
+                />
               }
               navigation={
                 <RecipeNav

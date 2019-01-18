@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { Draggable } from 'react-beautiful-dnd';
-import { MdDragHandle } from 'react-icons/md';
+import { MdDragHandle, MdEdit, MdClear, MdCheck } from 'react-icons/md';
 import classnames from 'classnames';
 
 import css from './Item.css';
@@ -12,11 +12,41 @@ export default class Item extends PureComponent {
   static propTypes = {
     children: PropTypes.node,
     index: PropTypes.number,
-    item: PropTypes.object
+    itemId: PropTypes.string,
+    handleItemChange: PropTypes.func,
+    itemName: PropTypes.node
   };
 
   state = {
-    hovering: false
+    hovering: false,
+    editing: false
+  };
+
+  itemRef = React.createRef();
+  inputRef = React.createRef();
+
+  componentWillUnmount() {
+    document.removeEventListener('mousedown', this.handleClick);
+  }
+
+  enableEditing = () => {
+    this.setState({ editing: true });
+    document.addEventListener('mousedown', this.handleClick);
+  };
+
+  disableEditing = () => {
+    this.setState({ editing: false });
+    document.removeEventListener('mousedown', this.handleClick);
+  };
+
+  handleSubmit = e => {
+    e.preventDefault();
+    this.disableEditing();
+  };
+
+  handleClick = e => {
+    if (this.itemRef.current.contains(e.target)) return;
+    this.disableEditing();
   };
 
   mouseEnter = () => {
@@ -28,14 +58,15 @@ export default class Item extends PureComponent {
   };
 
   render() {
-    const { children, item, index } = this.props;
-    const { hovering } = this.state;
+    const { children, itemId, index, itemName } = this.props;
+    const { hovering, editing } = this.state;
     return (
-      <Draggable type="ITEM" draggableId={item._id} index={index}>
+      <Draggable type="ITEM" draggableId={itemId} index={index}>
         {(provided, snapshot) => (
           <div
             className={classnames(css.item, {
               [css.hover]: hovering,
+              [css.editing]: editing,
               [css.dragging]: snapshot.isDragging
             })}
             ref={provided.innerRef}
@@ -44,13 +75,42 @@ export default class Item extends PureComponent {
             <div
               onMouseOver={this.mouseEnter}
               onMouseLeave={this.mouseLeave}
-              className={css.itemHeader}
+              className={css.itemHeaderWrap}
+              ref={this.itemRef}
             >
               <div className={css.dragHandle} {...provided.dragHandleProps}>
                 <MdDragHandle />
               </div>
-              <div>
-                <h3>Directions for {item.name}</h3>
+              <div className={css.itemHeader}>
+                <div className={css.itemName} onClick={this.enableEditing}>
+                  {itemName &&
+                    React.cloneElement(itemName, {
+                      editing,
+                      innerRef: this.inputRef
+                    })}
+                </div>
+                <div className={css.itemActions}>
+                  {editing ? (
+                    <button
+                      title="Save modifications"
+                      onClick={this.disableEditing}
+                    >
+                      <MdCheck />
+                    </button>
+                  ) : (
+                    <>
+                      <button title="Remove item">
+                        <MdClear />
+                      </button>
+                      <button
+                        title="Edit item name"
+                        onClick={this.enableEditing}
+                      >
+                        <MdEdit />
+                      </button>
+                    </>
+                  )}
+                </div>
               </div>
             </div>
             {children}

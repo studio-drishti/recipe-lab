@@ -7,14 +7,29 @@
   border-radius: var(--border-radius-sm);
   transition: border linear 0.2s;
 
+  & .itemActions {
+    opacity: 0;
+    transition: all linear 0.2s;
+  }
+
+  &.hover:not(.dragging) .itemActions,
+  &.editing .itemActions {
+    opacity: 1;
+  }
+
   &.hover,
-  &.dragging {
+  &.dragging,
+  &.editing {
     border: 1px solid var(--color-medium-gray);
   }
 
   &.hover .dragHandle,
   &.dragging .dragHandle {
     color: var(--color-dark-gray);
+  }
+
+  &:not(.editing) .itemName {
+    cursor: pointer;
   }
 }
 
@@ -24,7 +39,7 @@
   transition: all linear 0.2s;
 }
 
-.itemHeader {
+.itemHeaderWrap {
   display: grid;
   grid-template-columns: 1fr 11fr;
   padding: 0.5rem;
@@ -32,5 +47,21 @@
 
   & h3 {
     margin: 0;
+  }
+}
+
+.itemHeader {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-column-gap: 0.5rem;
+
+  & button {
+    border: 1px solid var(--color-medium-gray);
+    padding: 0.25rem;
+    background: white;
+
+    & + button {
+      border-left: 0;
+    }
   }
 }

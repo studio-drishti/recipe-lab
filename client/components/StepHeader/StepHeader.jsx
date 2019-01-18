@@ -61,7 +61,7 @@ export default class Step extends PureComponent {
         })}
       >
         <div className={css.recipeDetailToolbar}>
-          {itemName}
+          {itemName && React.cloneElement(itemName, { editing })}
           <div className={css.recipeNav}>{navigation}</div>
         </div>
         <div className={css.stepDirections} onClick={this.enableEditing}>
