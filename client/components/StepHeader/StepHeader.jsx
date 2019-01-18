@@ -21,6 +21,8 @@ export default class Step extends PureComponent {
   };
 
   stepRef = React.createRef();
+  nameInputRef = React.createRef();
+  directionsInputRef = React.createRef();
 
   componentDidUpdate(prevProps) {
     if (
@@ -38,6 +40,16 @@ export default class Step extends PureComponent {
   enableEditing = () => {
     this.setState({ editing: true });
     document.addEventListener('mousedown', this.handleClick);
+  };
+
+  enableEditingDirections = async () => {
+    await this.enableEditing();
+    this.directionsInputRef.current.focus();
+  };
+
+  enableEditingItemName = async () => {
+    await this.enableEditing();
+    this.nameInputRef.current.focus();
   };
 
   disableEditing = () => {
@@ -61,18 +73,31 @@ export default class Step extends PureComponent {
         })}
       >
         <div className={css.recipeDetailToolbar}>
-          {itemName && React.cloneElement(itemName, { editing })}
+          <div className={css.itemName} onClick={this.enableEditingItemName}>
+            {itemName &&
+              React.cloneElement(itemName, {
+                editing,
+                inputRef: this.nameInputRef
+              })}
+          </div>
           <div className={css.recipeNav}>{navigation}</div>
         </div>
-        <div className={css.stepDirections} onClick={this.enableEditing}>
-          {directions && React.cloneElement(directions, { editing })}
+        <div
+          className={css.stepDirections}
+          onClick={this.enableEditingDirections}
+        >
+          {directions &&
+            React.cloneElement(directions, {
+              editing,
+              inputRef: this.directionsInputRef
+            })}
         </div>
         <div className={css.editActions}>
           {!editing && (
             <a
               href="javascript:void(0)"
               className={css.editBtn}
-              onClick={this.enableEditing}
+              onClick={this.enableEditingDirections}
             >
               <MdEdit />
               edit step

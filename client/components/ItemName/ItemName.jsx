@@ -13,8 +13,9 @@ export default class Ingredient extends Component {
     editing: PropTypes.bool,
     removed: PropTypes.bool,
     handleItemChange: PropTypes.func,
-    innerRef: PropTypes.object,
-    autoFocus: PropTypes.bool,
+    inputRef: PropTypes.shape({
+      current: PropTypes.any
+    }),
     prefix: PropTypes.string,
     suffix: PropTypes.string
   };
@@ -22,20 +23,8 @@ export default class Ingredient extends Component {
   static defaultProps = {
     mod: undefined,
     editing: false,
-    removed: false,
-    autoFocus: true
+    removed: false
   };
-
-  componentDidUpdate(prevProps) {
-    if (
-      this.props.autoFocus &&
-      this.props.innerRef &&
-      !prevProps.editing &&
-      this.props.editing
-    ) {
-      this.props.innerRef.current.focus();
-    }
-  }
 
   renderNameWithMods = () => {
     const { mod, item } = this.props;
@@ -56,7 +45,7 @@ export default class Ingredient extends Component {
       editing,
       item,
       handleItemChange,
-      innerRef,
+      inputRef,
       prefix,
       suffix
     } = this.props;
@@ -68,7 +57,7 @@ export default class Ingredient extends Component {
             type="text"
             name="name"
             value={this.getNameValue()}
-            ref={innerRef}
+            ref={inputRef}
             placeholder="Item name"
             onChange={e => handleItemChange(e, item._id)}
           />

@@ -27,6 +27,7 @@ export default class Step extends PureComponent {
   };
 
   stepRef = React.createRef();
+  inputRef = React.createRef();
 
   componentDidUpdate(prevProps) {
     if (prevProps.isActive && !this.props.isActive && this.state.editing) {
@@ -38,10 +39,11 @@ export default class Step extends PureComponent {
     document.removeEventListener('mousedown', this.handleClick);
   }
 
-  enableEditing = () => {
+  enableEditing = async () => {
     const { setActiveStep, isActive } = this.props;
     if (!isActive) setActiveStep();
-    this.setState({ editing: true });
+    await this.setState({ editing: true });
+    this.inputRef.current.focus();
     document.addEventListener('mousedown', this.handleClick);
   };
 
@@ -88,7 +90,11 @@ export default class Step extends PureComponent {
               </div>
 
               <div className={css.stepDirections} onClick={this.handleSelect}>
-                {child && React.cloneElement(child, { editing })}
+                {child &&
+                  React.cloneElement(child, {
+                    editing,
+                    inputRef: this.inputRef
+                  })}
               </div>
 
               <div className={css.stepActions}>

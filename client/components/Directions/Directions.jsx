@@ -13,7 +13,10 @@ export default class Ingredient extends Component {
     mod: PropTypes.string,
     editing: PropTypes.bool,
     removed: PropTypes.bool,
-    handleStepChange: PropTypes.func
+    handleStepChange: PropTypes.func,
+    inputRef: PropTypes.shape({
+      current: PropTypes.any
+    })
   };
 
   static defaultProps = {
@@ -21,14 +24,6 @@ export default class Ingredient extends Component {
     editing: false,
     removed: false
   };
-
-  textareaRef = React.createRef();
-
-  componentDidUpdate(prevProps) {
-    if (!prevProps.editing && this.props.editing) {
-      this.textareaRef.current.focus();
-    }
-  }
 
   renderDirectionsWithMods = () => {
     const { mod, directions } = this.props;
@@ -45,13 +40,13 @@ export default class Ingredient extends Component {
   };
 
   render() {
-    const { editing, directions, handleStepChange } = this.props;
+    const { editing, directions, handleStepChange, inputRef } = this.props;
 
     return (
       <form className={css.directions}>
         {editing ? (
           <Textarea
-            inputRef={this.textareaRef}
+            inputRef={inputRef}
             name="directions"
             value={this.getDirectionsValue()}
             placeholder={directions.length ? directions : 'Directions'}

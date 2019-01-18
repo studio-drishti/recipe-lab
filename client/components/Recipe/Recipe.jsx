@@ -334,7 +334,6 @@ export default class Recipe extends Component {
               itemName={
                 <ItemName
                   item={activeItem}
-                  autoFocus={false}
                   suffix={`> Step ${this.getActiveStepNumber()}`}
                   mod={this.getItemMod(activeItem, 'name')}
                   handleItemChange={this.handleItemChange}

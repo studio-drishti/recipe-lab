@@ -29,8 +29,9 @@ export default class Item extends PureComponent {
     document.removeEventListener('mousedown', this.handleClick);
   }
 
-  enableEditing = () => {
-    this.setState({ editing: true });
+  enableEditing = async () => {
+    await this.setState({ editing: true });
+    this.inputRef.current.focus();
     document.addEventListener('mousedown', this.handleClick);
   };
 
@@ -86,7 +87,7 @@ export default class Item extends PureComponent {
                   {itemName &&
                     React.cloneElement(itemName, {
                       editing,
-                      innerRef: this.inputRef
+                      inputRef: this.inputRef
                     })}
                 </div>
                 <div className={css.itemActions}>
