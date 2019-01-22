@@ -100,7 +100,8 @@ export default class Recipe extends Component {
         field: name,
         value: value
       },
-      'stepId'
+      'stepId',
+      'field'
     );
 
     localStorage.setItem('modification', JSON.stringify(modification));
@@ -119,7 +120,8 @@ export default class Recipe extends Component {
         field: name,
         value: value
       },
-      'itemId'
+      'itemId',
+      'field'
     );
 
     localStorage.setItem('modification', JSON.stringify(modification));
