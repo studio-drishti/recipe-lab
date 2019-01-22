@@ -244,6 +244,11 @@ export default class Recipe extends Component {
     return mod ? mod.value : undefined;
   };
 
+  getItemValue = (item, fieldName) => {
+    const mod = this.getItemMod(item, fieldName);
+    return mod !== undefined ? mod : item[fieldName];
+  };
+
   getActiveStepNumber = () => {
     const { activeItem, activeStep } = this.state;
     return activeItem.steps.findIndex(step => step._id === activeStep._id) + 1;
@@ -276,7 +281,7 @@ export default class Recipe extends Component {
         <div className={css.recipeMain}>
           {recipe.items.map(item => (
             <div key={item._id}>
-              <h3>Ingredients for {item.name}</h3>
+              <h3>Ingredients for {this.getItemValue(item, 'name')}</h3>
               <IngredientTotals
                 steps={item.steps}
                 removedIngredients={modification.removedIngredients}
