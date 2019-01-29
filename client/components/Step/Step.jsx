@@ -107,14 +107,11 @@ export default class Step extends PureComponent {
                   </button>
                 ) : (
                   <>
+                    <button title="Edit step" onClick={this.enableEditing}>
+                      <MdEdit />
+                    </button>
                     <button title="Remove step">
                       <MdClear />
-                    </button>
-                    <button
-                      title="Edit directions"
-                      onClick={this.enableEditing}
-                    >
-                      <MdEdit />
                     </button>
                   </>
                 )}

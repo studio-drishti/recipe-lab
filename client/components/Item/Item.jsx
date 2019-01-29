@@ -100,14 +100,14 @@ export default class Item extends PureComponent {
                     </button>
                   ) : (
                     <>
-                      <button title="Remove item">
-                        <MdClear />
-                      </button>
                       <button
                         title="Edit item name"
                         onClick={this.enableEditing}
                       >
                         <MdEdit />
+                      </button>
+                      <button title="Remove item">
+                        <MdClear />
                       </button>
                     </>
                   )}
