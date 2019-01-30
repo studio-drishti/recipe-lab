@@ -49,6 +49,11 @@ beforeEach(() => {
               ]
             }
           ]
+        },
+        {
+          _id: generateId(),
+          name: 'Sauce',
+          steps: []
         }
       ]
     }
@@ -113,5 +118,24 @@ describe('It saves removals', () => {
         removals: expect.arrayContaining([props.recipe.items[0]._id])
       })
     );
+  });
+});
+
+describe('It saves sorting', () => {
+  test('saves sorting to localstorage', () => {
+    const wrapper = shallow(<Recipe {...props} />);
+    const instance = wrapper.instance();
+    const ogLastItemId = props.recipe.items[props.recipe.items.length - 1]._id;
+
+    instance.saveSorting(
+      props.recipe._id,
+      props.recipe.items,
+      props.recipe.items.length - 1,
+      0
+    );
+    expect(localStorage.setItem).toHaveBeenCalled();
+    expect(
+      JSON.parse(localStorage.__STORE__[localStoreId]).sortings[0].order[0]
+    ).toEqual(ogLastItemId);
   });
 });

@@ -37,25 +37,23 @@ export default class Recipe extends Component {
   };
 
   state = {
+    recipe: this.props.recipe,
     activeItem: this.props.recipe.items[0],
     activeStep: this.props.recipe.items[0].steps[0],
     activeIngredient: null,
-    recipe: this.props.recipe,
     localStoreId: `MOD-${this.props.recipe._id}`,
     modification: {
-      sortItems: [],
-      sortSteps: [],
+      sortings: [],
       alterations: [],
       removals: [],
       additionalItems: [],
       additionalSteps: [],
       additionalIngredients: []
-    },
-    editingId: null
+    }
   };
 
   componentDidMount() {
-    const { recipe, localStoreId } = this.state;
+    const { localStoreId } = this.state;
     let { modification } = this.state;
 
     if (localStorage.getItem(localStoreId)) {
@@ -65,24 +63,7 @@ export default class Recipe extends Component {
       );
     }
 
-    // Apply any step sorting modifications
-    modification.sortSteps.forEach(mod => {
-      const itemIndex = recipe.items.findIndex(item => item._id === mod.itemId);
-      recipe.items[itemIndex].steps = recipe.items[itemIndex].steps.sort(
-        (a, b) => mod.steps.indexOf(a._id) > mod.steps.indexOf(b._id)
-      );
-    });
-
-    // Apply item sort mofidification if any exists
-    if (modification.sortItems.length) {
-      recipe.items = recipe.items.sort(
-        (a, b) =>
-          modification.sortItems.indexOf(a._id) >
-          modification.sortItems.indexOf(b._id)
-      );
-    }
-
-    this.setState({ recipe, modification });
+    this.setState({ modification });
   }
 
   setActiveStep = (itemI, stepI) => {
@@ -189,49 +170,60 @@ export default class Recipe extends Component {
     this.undoRemoval(ingredient);
   };
 
+  saveSorting = (parentId, arr, sourceI, destinationI) => {
+    const { modification, localStoreId } = this.state;
+    // Save changes to local storage and update state
+
+    modification.sortings = updateOrInsertInArray(
+      modification.sortings,
+      {
+        parentId: parentId,
+        order: reorder(arr, sourceI, destinationI).map(child => child._id)
+      },
+      'parentId'
+    );
+
+    localStorage.setItem(localStoreId, JSON.stringify(modification));
+    this.setState({ modification });
+  };
+
   onDragEnd = result => {
     // dropped outside the list or dropped in place
-    if (
-      !result.destination ||
-      result.destination.index === result.source.index
-    ) {
+    if (!result.destination || result.destination.index === result.source.index)
       return;
-    }
 
-    const { modification, recipe } = this.state;
+    const { recipe } = this.state;
 
-    // Handle onDragEnd for steps
     if (result.type.startsWith('STEP')) {
       const itemId = result.destination.droppableId;
-      const itemIndex = recipe.items.findIndex(item => item._id === itemId);
-      // Reorder the dropped step in the recipe item array
-      recipe.items[itemIndex].steps = reorder(
-        recipe.items[itemIndex].steps,
+      const item = recipe.items.find(item => item._id === itemId);
+      this.saveSorting(
+        itemId,
+        item.steps,
         result.source.index,
         result.destination.index
       );
-      // Update or insert the step sort modification
-      modification.sortSteps = updateOrInsertInArray(
-        modification.sortSteps,
-        {
-          itemId: itemId,
-          steps: recipe.items[itemIndex].steps.map(step => step._id)
-        },
-        'itemId'
-      );
     } else if (result.type.startsWith('ITEM')) {
-      // Reorder the dropped item in the recipe item array
-      recipe.items = reorder(
+      this.saveSorting(
+        recipe._id,
         recipe.items,
         result.source.index,
         result.destination.index
       );
-      modification.sortItems = recipe.items.map(item => item._id);
     }
+  };
 
-    // Save changes to local storage and update state
-    localStorage.setItem('modification', JSON.stringify(modification));
-    this.setState({ recipe, modification });
+  getSorted = (parentId, arr) => {
+    const { modification } = this.state;
+    const sortMod = modification.sortings.find(
+      mod => mod.parentId === parentId
+    );
+
+    if (sortMod === undefined) return arr;
+
+    return arr.sort(
+      (a, b) => sortMod.order.indexOf(a._id) > sortMod.order.indexOf(b._id)
+    );
   };
 
   getAlteration = (source, fieldName) => {
@@ -277,7 +269,7 @@ export default class Recipe extends Component {
     return (
       <article className={css.recipe}>
         <div className={css.recipeMain}>
-          {recipe.items.map(item => (
+          {this.getSorted(recipe._id, recipe.items).map(item => (
             <div key={item._id}>
               <h3>Ingredients for {this.getItemValue(item, 'name')}</h3>
               <IngredientTotals
@@ -290,7 +282,7 @@ export default class Recipe extends Component {
 
           <DragDropContext onDragEnd={this.onDragEnd}>
             <ItemList recipeId={recipe._id}>
-              {recipe.items.map((item, itemI) => (
+              {this.getSorted(recipe._id, recipe.items).map((item, itemI) => (
                 <Item
                   key={item._id}
                   itemId={item._id}
@@ -305,7 +297,7 @@ export default class Recipe extends Component {
                   }
                 >
                   <StepList itemId={item._id}>
-                    {item.steps.map((step, stepI) => (
+                    {this.getSorted(item._id, item.steps).map((step, stepI) => (
                       <Step
                         key={step._id}
                         index={stepI}
