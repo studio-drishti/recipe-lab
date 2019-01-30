@@ -9,12 +9,12 @@ export default class IngredientTotals extends Component {
 
   static propTypes = {
     steps: PropTypes.arrayOf(PropTypes.object),
-    removedIngredients: PropTypes.arrayOf(PropTypes.string),
+    removals: PropTypes.arrayOf(PropTypes.string),
     alterations: PropTypes.arrayOf(PropTypes.object)
   };
 
   static defaultProps = {
-    removedIngredients: [],
+    removals: [],
     alterations: []
   };
 
@@ -30,11 +30,11 @@ export default class IngredientTotals extends Component {
   };
 
   getIngredientTotals = () => {
-    const { steps, removedIngredients } = this.props;
+    const { steps, removals } = this.props;
     const totals = {};
     steps.forEach(step =>
       step.ingredients
-        .filter(ingredient => !removedIngredients.includes(ingredient._id))
+        .filter(ingredient => !removals.includes(ingredient._id))
         .forEach(unModifiedIngredient => {
           const ingredient = this.getIngredientWithMods(unModifiedIngredient);
           if (totals.hasOwnProperty(ingredient.name)) {

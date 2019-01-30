@@ -4,7 +4,7 @@ import React from 'react';
 import Recipe from 'schooled-lunch/client/components/Recipe';
 import generateId from 'schooled-lunch/client/util/generateId';
 
-let props;
+let props, localStoreId;
 
 beforeEach(() => {
   props = {
@@ -53,6 +53,7 @@ beforeEach(() => {
       ]
     }
   };
+  localStoreId = `MOD-${props.recipe._id}`;
   localStorage.clear();
   localStorage.setItem.mockClear();
 });
@@ -63,9 +64,7 @@ describe('It saves alterations', () => {
     const instance = wrapper.instance();
     instance.saveAlteration(props.recipe, 'title', 'Milk Steak');
     expect(localStorage.setItem).toHaveBeenCalled();
-    expect(
-      JSON.parse(localStorage.__STORE__[`MOD-${props.recipe._id}`])
-    ).toEqual(
+    expect(JSON.parse(localStorage.__STORE__[localStoreId])).toEqual(
       expect.objectContaining({
         alterations: expect.arrayContaining([
           expect.objectContaining({
@@ -92,12 +91,27 @@ describe('It saves alterations', () => {
 
     instance.saveAlteration(props.recipe, 'title', 'Milk Steak');
     expect(
-      JSON.parse(localStorage.__STORE__[`MOD-${props.recipe._id}`]).alterations
+      JSON.parse(localStorage.__STORE__[localStoreId]).alterations
     ).toHaveLength(1);
 
     instance.saveAlteration(props.recipe, 'title', originalTitle);
     expect(
-      JSON.parse(localStorage.__STORE__[`MOD-${props.recipe._id}`]).alterations
+      JSON.parse(localStorage.__STORE__[localStoreId]).alterations
     ).toHaveLength(0);
+  });
+});
+
+describe('It saves removals', () => {
+  test('saves removal to localstorage', () => {
+    const wrapper = shallow(<Recipe {...props} />);
+    const instance = wrapper.instance();
+
+    instance.saveRemoval(props.recipe.items[0]);
+    expect(localStorage.setItem).toHaveBeenCalled();
+    expect(JSON.parse(localStorage.__STORE__[localStoreId])).toEqual(
+      expect.objectContaining({
+        removals: expect.arrayContaining([props.recipe.items[0]._id])
+      })
+    );
   });
 });

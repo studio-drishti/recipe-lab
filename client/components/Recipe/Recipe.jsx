@@ -41,13 +41,12 @@ export default class Recipe extends Component {
     activeStep: this.props.recipe.items[0].steps[0],
     activeIngredient: null,
     recipe: this.props.recipe,
+    localStoreId: `MOD-${this.props.recipe._id}`,
     modification: {
       sortItems: [],
       sortSteps: [],
       alterations: [],
-      removedItems: [],
-      removedSteps: [],
-      removedIngredients: [],
+      removals: [],
       additionalItems: [],
       additionalSteps: [],
       additionalIngredients: []
@@ -56,13 +55,13 @@ export default class Recipe extends Component {
   };
 
   componentDidMount() {
-    const { recipe } = this.state;
+    const { recipe, localStoreId } = this.state;
     let { modification } = this.state;
 
-    if (localStorage.getItem(`MOD-${recipe._id}`)) {
+    if (localStorage.getItem(localStoreId)) {
       modification = Object.assign(
         modification,
-        JSON.parse(localStorage.getItem(`MOD-${recipe._id}`))
+        JSON.parse(localStorage.getItem(localStoreId))
       );
     }
 
@@ -98,7 +97,7 @@ export default class Recipe extends Component {
   };
 
   saveAlteration = (source, field, value) => {
-    const { modification, recipe } = this.state;
+    const { modification, localStoreId } = this.state;
     const alterationIndex = modification.alterations.findIndex(
       item => item.field === field && item.sourceId === source._id
     );
@@ -131,7 +130,7 @@ export default class Recipe extends Component {
     //   modification.removedIngredients.splice(restoredIngredientIndex, 1);
     // }
 
-    localStorage.setItem(`MOD-${recipe._id}`, JSON.stringify(modification));
+    localStorage.setItem(localStoreId, JSON.stringify(modification));
     this.setState({ modification });
   };
 
@@ -152,6 +151,42 @@ export default class Recipe extends Component {
     const { name, value } = e.target;
     const { activeIngredient } = this.state;
     this.saveAlteration(activeIngredient, name, value);
+  };
+
+  saveRemoval = source => {
+    const { modification, localStoreId } = this.state;
+
+    if (modification.removals.includes(source._id)) return;
+
+    modification.removals.push(source._id);
+
+    // Clear any saved alterations for the deleted ingredient
+    modification.alterations = modification.alterations.filter(
+      mod => mod.sourceId !== source._id
+    );
+
+    this.setState({ modification });
+    localStorage.setItem(localStoreId, JSON.stringify(modification));
+  };
+
+  undoRemoval = source => {
+    const { modification, localStoreId } = this.state;
+    const removalIndex = modification.removals.indexOf(source._id);
+
+    if (removalIndex === -1) return;
+
+    modification.removals.splice(removalIndex, 1);
+
+    this.setState({ modification });
+    localStorage.setItem(localStoreId, JSON.stringify(modification));
+  };
+
+  removeIngredient = ingredient => {
+    this.saveRemoval(ingredient);
+  };
+
+  restoreIngredient = ingredient => {
+    this.undoRemoval(ingredient);
   };
 
   onDragEnd = result => {
@@ -197,36 +232,6 @@ export default class Recipe extends Component {
     // Save changes to local storage and update state
     localStorage.setItem('modification', JSON.stringify(modification));
     this.setState({ recipe, modification });
-  };
-
-  removeIngredient = ingredient => {
-    const { modification } = this.state;
-
-    if (!modification.removedIngredients.includes(ingredient._id)) {
-      modification.removedIngredients.push(ingredient._id);
-      this.setState({ modification });
-    }
-
-    // Clear any saved modifications for the deleted ingredient
-    modification.alterations = modification.alterations.filter(
-      mod => mod.sourceId !== ingredient._id
-    );
-
-    localStorage.setItem('modification', JSON.stringify(modification));
-  };
-
-  restoreIngredient = ingredient => {
-    const { modification } = this.state;
-    const restoredIngredientIndex = modification.removedIngredients.indexOf(
-      ingredient._id
-    );
-
-    if (restoredIngredientIndex > -1) {
-      modification.removedIngredients.splice(restoredIngredientIndex, 1);
-      this.setState({ modification });
-    }
-
-    localStorage.setItem('modification', JSON.stringify(modification));
   };
 
   getAlteration = (source, fieldName) => {
@@ -277,7 +282,7 @@ export default class Recipe extends Component {
               <h3>Ingredients for {this.getItemValue(item, 'name')}</h3>
               <IngredientTotals
                 steps={item.steps}
-                removedIngredients={modification.removedIngredients}
+                removals={modification.removals}
                 alterations={modification.alterations}
               />
             </div>
@@ -389,9 +394,7 @@ export default class Recipe extends Component {
                         ingredientMods={modification.alterations.filter(
                           mod => mod.sourceId === ingredient._id
                         )}
-                        removed={modification.removedIngredients.includes(
-                          ingredient._id
-                        )}
+                        removed={modification.removals.includes(ingredient._id)}
                         editing={
                           activeIngredient !== null &&
                           activeIngredient._id === ingredient._id

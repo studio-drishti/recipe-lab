@@ -78,7 +78,7 @@ describe('Calculating ingredient totals', () => {
   });
 
   test('does not calculate removed ingredients', () => {
-    props.removedIngredients = [props.steps[0].ingredients[0]._id];
+    props.removals = [props.steps[0].ingredients[0]._id];
     const wrapper = shallow(<IngredientTotals {...props} />);
     expect(wrapper.instance().getIngredientTotals()).toEqual(
       expect.arrayContaining([
