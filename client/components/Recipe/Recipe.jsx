@@ -172,7 +172,6 @@ export default class Recipe extends Component {
 
   saveSorting = (parentId, arr, sourceI, destinationI) => {
     const { modification, localStoreId } = this.state;
-    // Save changes to local storage and update state
 
     modification.sortings = updateOrInsertInArray(
       modification.sortings,
