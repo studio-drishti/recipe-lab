@@ -14,7 +14,7 @@ const setup = propOverrides => {
       },
       removeAction: jest.fn(),
       restoreAction: jest.fn(),
-      setEditingId: jest.fn()
+      setActiveIngredient: jest.fn()
     },
     propOverrides
   );
@@ -74,7 +74,7 @@ describe('Editing an ingredient', () => {
     const { props, container } = setup();
 
     container.simulate('click', { stopPropagation() {} });
-    expect(props.setEditingId).toHaveBeenCalled();
+    expect(props.setActiveIngredient).toHaveBeenCalled();
   });
 
   test('Displays as form inputs when editing', () => {

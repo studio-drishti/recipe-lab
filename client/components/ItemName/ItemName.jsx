@@ -59,7 +59,7 @@ export default class Ingredient extends Component {
             value={this.getNameValue()}
             ref={inputRef}
             placeholder="Item name"
-            onChange={e => handleItemChange(e, item._id)}
+            onChange={e => handleItemChange(e, item)}
           />
         ) : (
           <h3>

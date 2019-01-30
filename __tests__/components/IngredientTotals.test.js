@@ -98,17 +98,17 @@ describe('Calculating ingredient totals', () => {
   test('rewrites modified ingredients', () => {
     props.alteredIngredients = [
       {
-        ingredientId: props.steps[0].ingredients[0]._id,
+        sourceId: props.steps[0].ingredients[0]._id,
         field: 'name',
         value: 'whiskey'
       },
       {
-        ingredientId: props.steps[0].ingredients[0]._id,
+        sourceId: props.steps[0].ingredients[0]._id,
         field: 'quantity',
         value: 2
       },
       {
-        ingredientId: props.steps[0].ingredients[0]._id,
+        sourceId: props.steps[0].ingredients[0]._id,
         field: 'unit',
         value: 'gal'
       }

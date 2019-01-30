@@ -24,19 +24,27 @@ export default class Recipe extends Component {
   static displayName = 'Recipe';
 
   static propTypes = {
-    recipe: PropTypes.object
+    recipe: PropTypes.shape({
+      _id: PropTypes.string,
+      title: PropTypes.string,
+      author: PropTypes.object,
+      time: PropTypes.string,
+      skill: PropTypes.string,
+      description: PropTypes.string,
+      course: PropTypes.string,
+      items: PropTypes.arrayOf(PropTypes.object)
+    })
   };
 
   state = {
     activeItem: this.props.recipe.items[0],
     activeStep: this.props.recipe.items[0].steps[0],
+    activeIngredient: null,
     recipe: this.props.recipe,
     modification: {
       sortItems: [],
       sortSteps: [],
-      alteredItems: [],
-      alteredSteps: [],
-      alteredIngredients: [],
+      alterations: [],
       removedItems: [],
       removedSteps: [],
       removedIngredients: [],
@@ -51,10 +59,10 @@ export default class Recipe extends Component {
     const { recipe } = this.state;
     let { modification } = this.state;
 
-    if (localStorage.getItem('modification')) {
+    if (localStorage.getItem(`MOD-${recipe._id}`)) {
       modification = Object.assign(
         modification,
-        JSON.parse(localStorage.getItem('modification'))
+        JSON.parse(localStorage.getItem(`MOD-${recipe._id}`))
       );
     }
 
@@ -78,10 +86,6 @@ export default class Recipe extends Component {
     this.setState({ recipe, modification });
   }
 
-  setEditingId = id => {
-    this.setState({ editingId: id });
-  };
-
   setActiveStep = (itemI, stepI) => {
     this.setState({
       activeItem: this.state.recipe.items[itemI],
@@ -89,43 +93,58 @@ export default class Recipe extends Component {
     });
   };
 
-  handleStepChange = e => {
-    const { name, value } = e.target;
-    const { activeStep, modification } = this.state;
-
-    modification.alteredSteps = updateOrInsertInArray(
-      modification.alteredSteps,
-      {
-        stepId: activeStep._id,
-        field: name,
-        value: value
-      },
-      'stepId',
-      'field'
-    );
-
-    localStorage.setItem('modification', JSON.stringify(modification));
-    this.setState({ modification });
+  setActiveIngredient = ingredient => {
+    this.setState({ activeIngredient: ingredient });
   };
 
-  handleItemChange = (e, itemId) => {
-    const { name, value } = e.target;
-    const { activeItem, modification } = this.state;
-    const id = itemId !== undefined ? itemId : activeItem._id;
-
-    modification.alteredItems = updateOrInsertInArray(
-      modification.alteredItems,
+  saveAlteration = (source, field, value) => {
+    const { modification, recipe } = this.state;
+    modification.alterations = updateOrInsertInArray(
+      modification.alterations,
       {
-        itemId: id,
-        field: name,
-        value: value
+        sourceId: source._id,
+        field,
+        value
       },
-      'itemId',
+      'sourceId',
       'field'
     );
 
-    localStorage.setItem('modification', JSON.stringify(modification));
+    localStorage.setItem(`MOD-${recipe._id}`, JSON.stringify(modification));
+
     this.setState({ modification });
+
+    // check if alteration is the same as original
+    // if (origin[field] === value) {
+    //   // remove
+    // }
+
+    // If making modifications and item is deleted, undo the deletion
+    // const restoredIngredientIndex = modification.removedIngredients.indexOf(
+    //   editingId
+    // );
+    // if (restoredIngredientIndex > -1) {
+    //   modification.removedIngredients.splice(restoredIngredientIndex, 1);
+    // }
+  };
+
+  handleItemChange = (e, item) => {
+    const { name, value } = e.target;
+    const { activeItem } = this.state;
+    const source = item !== undefined ? item : activeItem;
+    this.saveAlteration(source, name, value);
+  };
+
+  handleStepChange = e => {
+    const { name, value } = e.target;
+    const { activeStep } = this.state;
+    this.saveAlteration(activeStep, name, value);
+  };
+
+  handleIngredientChange = e => {
+    const { name, value } = e.target;
+    const { activeIngredient } = this.state;
+    this.saveAlteration(activeIngredient, name, value);
   };
 
   onDragEnd = result => {
@@ -182,8 +201,8 @@ export default class Recipe extends Component {
     }
 
     // Clear any saved modifications for the deleted ingredient
-    modification.alteredIngredients = modification.alteredIngredients.filter(
-      mod => mod.ingredientId !== ingredient._id
+    modification.alterations = modification.alterations.filter(
+      mod => mod.sourceId !== ingredient._id
     );
 
     localStorage.setItem('modification', JSON.stringify(modification));
@@ -203,51 +222,16 @@ export default class Recipe extends Component {
     localStorage.setItem('modification', JSON.stringify(modification));
   };
 
-  handleIngredientChange = e => {
-    const { name, value } = e.target;
-    const { modification, editingId } = this.state;
-
-    // If making modifications and item is deleted, undo the deletion
-    const restoredIngredientIndex = modification.removedIngredients.indexOf(
-      editingId
-    );
-    if (restoredIngredientIndex > -1) {
-      modification.removedIngredients.splice(restoredIngredientIndex, 1);
-    }
-
-    modification.alteredIngredients = updateOrInsertInArray(
-      modification.alteredIngredients,
-      {
-        ingredientId: editingId,
-        field: name,
-        value: value
-      },
-      'ingredientId',
-      'field'
-    );
-
-    localStorage.setItem('modification', JSON.stringify(modification));
-    this.setState({ modification });
-  };
-
-  getStepMod = (step, fieldName) => {
+  getAlteration = (source, fieldName) => {
     const { modification } = this.state;
-    const mod = modification.alteredSteps.find(
-      mod => mod.stepId === step._id && mod.field === fieldName
-    );
-    return mod ? mod.value : undefined;
-  };
-
-  getItemMod = (item, fieldName) => {
-    const { modification } = this.state;
-    const mod = modification.alteredItems.find(
-      mod => mod.itemId === item._id && mod.field === fieldName
+    const mod = modification.alterations.find(
+      mod => mod.sourceId === source._id && mod.field === fieldName
     );
     return mod ? mod.value : undefined;
   };
 
   getItemValue = (item, fieldName) => {
-    const mod = this.getItemMod(item, fieldName);
+    const mod = this.getAlteration(item, fieldName);
     return mod !== undefined ? mod : item[fieldName];
   };
 
@@ -261,8 +245,8 @@ export default class Recipe extends Component {
       recipe,
       activeItem,
       activeStep,
-      modification,
-      editingId
+      activeIngredient,
+      modification
     } = this.state;
 
     const swiperParams = {
@@ -287,7 +271,7 @@ export default class Recipe extends Component {
               <IngredientTotals
                 steps={item.steps}
                 removedIngredients={modification.removedIngredients}
-                alteredIngredients={modification.alteredIngredients}
+                alterations={modification.alterations}
               />
             </div>
           ))}
@@ -303,7 +287,7 @@ export default class Recipe extends Component {
                     <ItemName
                       item={item}
                       prefix="Directions for"
-                      mod={this.getItemMod(item, 'name')}
+                      mod={this.getAlteration(item, 'name')}
                       handleItemChange={this.handleItemChange}
                     />
                   }
@@ -323,7 +307,7 @@ export default class Recipe extends Component {
                       >
                         <Directions
                           directions={step.directions}
-                          mod={this.getStepMod(step, 'directions')}
+                          mod={this.getAlteration(step, 'directions')}
                           handleStepChange={this.handleStepChange}
                         />
                       </Step>
@@ -342,7 +326,7 @@ export default class Recipe extends Component {
                 <ItemName
                   item={activeItem}
                   suffix={`> Step ${this.getActiveStepNumber()}`}
-                  mod={this.getItemMod(activeItem, 'name')}
+                  mod={this.getAlteration(activeItem, 'name')}
                   handleItemChange={this.handleItemChange}
                 />
               }
@@ -357,7 +341,7 @@ export default class Recipe extends Component {
               directions={
                 <Directions
                   directions={activeStep.directions}
-                  mod={this.getStepMod(activeStep, 'directions')}
+                  mod={this.getAlteration(activeStep, 'directions')}
                 />
               }
             />
@@ -384,25 +368,31 @@ export default class Recipe extends Component {
                 <div>
                   <h3>Ingredients Used</h3>
                   <IngredientList
-                    editing={activeStep.ingredients.some(
-                      ingredient => ingredient._id === editingId
-                    )}
+                    editing={
+                      activeIngredient !== null &&
+                      activeStep.ingredients.some(
+                        ingredient => ingredient._id === activeIngredient._id
+                      )
+                    }
                   >
                     {activeStep.ingredients.map(ingredient => (
                       <Ingredient
                         key={ingredient._id}
                         ingredient={ingredient}
-                        ingredientMods={modification.alteredIngredients.filter(
-                          mod => mod.ingredientId === ingredient._id
+                        ingredientMods={modification.alterations.filter(
+                          mod => mod.sourceId === ingredient._id
                         )}
                         removed={modification.removedIngredients.includes(
                           ingredient._id
                         )}
-                        editing={editingId === ingredient._id}
+                        editing={
+                          activeIngredient !== null &&
+                          activeIngredient._id === ingredient._id
+                        }
                         removeAction={this.removeIngredient}
                         restoreAction={this.restoreIngredient}
                         handleIngredientChange={this.handleIngredientChange}
-                        setEditingId={this.setEditingId}
+                        setActiveIngredient={this.setActiveIngredient}
                       />
                     ))}
                   </IngredientList>

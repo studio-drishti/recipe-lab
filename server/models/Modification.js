@@ -45,11 +45,22 @@ const ModificationSchema = new Schema({
       steps: [Schema.Types.ObjectId]
     }
   ],
-  alteredSteps: [
+  sortings: [
     {
-      stepId: Schema.Types.ObjectId,
+      sourceId: Schema.Types.ObjectId,
+      order: [Schema.Types.ObjectId]
+    }
+  ],
+  alterations: [
+    {
+      sourceId: Schema.Types.ObjectId,
       field: String,
       value: String
+    }
+  ],
+  removals: [
+    {
+      sourceId: Schema.Types.ObjectId
     }
   ],
   additionalItems: [AdditionalItemSchema],
