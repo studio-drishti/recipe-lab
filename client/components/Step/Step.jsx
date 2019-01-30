@@ -43,7 +43,7 @@ export default class Step extends PureComponent {
     const { setActiveStep, isActive } = this.props;
     if (!isActive) setActiveStep();
     await this.setState({ editing: true });
-    this.inputRef.current.focus();
+    if (this.inputRef.current) this.inputRef.current.focus();
     document.addEventListener('mousedown', this.handleClick);
   };
 

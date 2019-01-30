@@ -44,12 +44,13 @@ export default class Step extends PureComponent {
 
   enableEditingDirections = async () => {
     await this.enableEditing();
-    this.directionsInputRef.current.focus();
+    if (this.directionsInputRef.current)
+      this.directionsInputRef.current.focus();
   };
 
   enableEditingItemName = async () => {
     await this.enableEditing();
-    this.nameInputRef.current.focus();
+    if (this.nameInputRef.current) this.nameInputRef.current.focus();
   };
 
   disableEditing = () => {

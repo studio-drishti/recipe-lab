@@ -96,7 +96,7 @@ describe('Calculating ingredient totals', () => {
   });
 
   test('rewrites modified ingredients', () => {
-    props.alteredIngredients = [
+    props.alterations = [
       {
         sourceId: props.steps[0].ingredients[0]._id,
         field: 'name',
