@@ -99,33 +99,40 @@ export default class Recipe extends Component {
 
   saveAlteration = (source, field, value) => {
     const { modification, recipe } = this.state;
-    modification.alterations = updateOrInsertInArray(
-      modification.alterations,
-      {
-        sourceId: source._id,
-        field,
-        value
-      },
-      'sourceId',
-      'field'
+    const alterationIndex = modification.alterations.findIndex(
+      item => item.field === field && item.sourceId === source._id
     );
+    const alterationExists = alterationIndex > -1;
 
-    localStorage.setItem(`MOD-${recipe._id}`, JSON.stringify(modification));
+    if (!alterationExists && source[field] === value) return;
 
-    this.setState({ modification });
+    const alteration = {
+      sourceId: source._id,
+      field,
+      value
+    };
 
-    // check if alteration is the same as original
-    // if (origin[field] === value) {
-    //   // remove
-    // }
+    if (alterationExists && source[field] === value) {
+      // Remove exisitng alteration if the new value is the same as the source
+      modification.alterations.splice(alterationIndex, 1);
+    } else if (alterationExists) {
+      // Update existing alteration
+      modification.alterations[alterationIndex] = alteration;
+    } else {
+      // Add new alteration
+      modification.alterations.push(alteration);
+    }
 
-    // If making modifications and item is deleted, undo the deletion
+    // TODO: If making modifications and source was deleted, undo the deletion
     // const restoredIngredientIndex = modification.removedIngredients.indexOf(
     //   editingId
     // );
     // if (restoredIngredientIndex > -1) {
     //   modification.removedIngredients.splice(restoredIngredientIndex, 1);
     // }
+
+    localStorage.setItem(`MOD-${recipe._id}`, JSON.stringify(modification));
+    this.setState({ modification });
   };
 
   handleItemChange = (e, item) => {

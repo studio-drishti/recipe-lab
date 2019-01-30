@@ -53,13 +53,15 @@ beforeEach(() => {
       ]
     }
   };
+  localStorage.clear();
+  localStorage.setItem.mockClear();
 });
 
 describe('It saves alterations', () => {
   test('saves an alteration to localstorage', () => {
     const wrapper = shallow(<Recipe {...props} />);
     const instance = wrapper.instance();
-    instance.saveAlteration(props.recipe, 'title', 'Cheese Steak');
+    instance.saveAlteration(props.recipe, 'title', 'Milk Steak');
     expect(localStorage.setItem).toHaveBeenCalled();
     expect(
       JSON.parse(localStorage.__STORE__[`MOD-${props.recipe._id}`])
@@ -69,10 +71,33 @@ describe('It saves alterations', () => {
           expect.objectContaining({
             sourceId: props.recipe._id,
             field: 'title',
-            value: 'Cheese Steak'
+            value: 'Milk Steak'
           })
         ])
       })
     );
+  });
+
+  test('does not save alterations that are same as source', () => {
+    const wrapper = shallow(<Recipe {...props} />);
+    const instance = wrapper.instance();
+    instance.saveAlteration(props.recipe, 'title', props.recipe.title);
+    expect(localStorage.setItem).toHaveBeenCalledTimes(0);
+  });
+
+  test('removes an alteration if updated value is same as source', () => {
+    const wrapper = shallow(<Recipe {...props} />);
+    const instance = wrapper.instance();
+    const originalTitle = String(props.recipe.title);
+
+    instance.saveAlteration(props.recipe, 'title', 'Milk Steak');
+    expect(
+      JSON.parse(localStorage.__STORE__[`MOD-${props.recipe._id}`]).alterations
+    ).toHaveLength(1);
+
+    instance.saveAlteration(props.recipe, 'title', originalTitle);
+    expect(
+      JSON.parse(localStorage.__STORE__[`MOD-${props.recipe._id}`]).alterations
+    ).toHaveLength(0);
   });
 });
