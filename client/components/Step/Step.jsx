@@ -15,7 +15,7 @@ export default class Step extends PureComponent {
     stepId: PropTypes.string,
     isActive: PropTypes.bool,
     children: PropTypes.node,
-    setActiveStep: PropTypes.func
+    activateStep: PropTypes.func
   };
 
   static defaultProps = {
@@ -40,8 +40,8 @@ export default class Step extends PureComponent {
   }
 
   enableEditing = async () => {
-    const { setActiveStep, isActive } = this.props;
-    if (!isActive) setActiveStep();
+    const { activateStep, isActive } = this.props;
+    if (!isActive) activateStep();
     await this.setState({ editing: true });
     if (this.inputRef.current) this.inputRef.current.focus();
     document.addEventListener('mousedown', this.handleClick);
@@ -58,11 +58,11 @@ export default class Step extends PureComponent {
   };
 
   handleSelect = () => {
-    const { setActiveStep, isActive } = this.props;
+    const { activateStep, isActive } = this.props;
     if (isActive && !this.state.editing) {
       this.enableEditing();
     } else if (!isActive) {
-      setActiveStep();
+      activateStep();
     }
   };
 

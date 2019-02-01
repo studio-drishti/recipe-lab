@@ -125,17 +125,28 @@ describe('It saves sorting', () => {
   test('saves sorting to localstorage', () => {
     const wrapper = shallow(<Recipe {...props} />);
     const instance = wrapper.instance();
-    const ogLastItemId = props.recipe.items[props.recipe.items.length - 1]._id;
+    const { recipe } = instance.state;
 
-    instance.saveSorting(
-      props.recipe._id,
-      props.recipe.items,
-      props.recipe.items.length - 1,
-      0
-    );
+    instance.saveSorting(recipe._id, recipe.items, recipe.items.length - 1, 0);
     expect(localStorage.setItem).toHaveBeenCalled();
     expect(
       JSON.parse(localStorage.__STORE__[localStoreId]).sortings[0].order[0]
-    ).toEqual(ogLastItemId);
+    ).toEqual(recipe.items[recipe.items.length - 1]._id);
+  });
+
+  test('removes sorting mod if same as source', () => {
+    const wrapper = shallow(<Recipe {...props} />);
+    const instance = wrapper.instance();
+    const { recipe } = instance.state;
+
+    instance.saveSorting(recipe._id, recipe.items, recipe.items.length - 1, 0);
+    expect(
+      JSON.parse(localStorage.__STORE__[localStoreId]).sortings
+    ).toHaveLength(1);
+
+    instance.saveSorting(recipe._id, recipe.items, 0, recipe.items.length - 1);
+    expect(
+      JSON.parse(localStorage.__STORE__[localStoreId]).sortings
+    ).toHaveLength(0);
   });
 });

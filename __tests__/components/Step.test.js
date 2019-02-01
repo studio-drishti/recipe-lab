@@ -31,7 +31,7 @@ beforeEach(() => {
     index: 0,
     itemId: generateId(),
     stepId: generateId(),
-    setActiveStep: jest.fn()
+    activateStep: jest.fn()
   };
 });
 
@@ -39,21 +39,21 @@ describe('Displaying ingredient steps', () => {
   test('clicking on directions selects the step', () => {
     const { wrapper } = setup(props);
     wrapper.find('.stepDirections').simulate('click');
-    expect(props.setActiveStep).toBeCalled();
+    expect(props.activateStep).toBeCalled();
   });
 
   test('clicking on selected step enables editing', () => {
     props.isActive = true;
     const { wrapper, instance } = setup(props);
     wrapper.find('.stepDirections').simulate('click');
-    expect(props.setActiveStep).toHaveBeenCalledTimes(0);
+    expect(props.activateStep).toHaveBeenCalledTimes(0);
     expect(instance.state.editing).toEqual(true);
   });
 
   test('clicking on edit button both selects and enables editing', () => {
     const { wrapper, instance } = setup(props);
     wrapper.find('button[title^="Edit"]').simulate('click');
-    expect(props.setActiveStep).toBeCalled();
+    expect(props.activateStep).toBeCalled();
     expect(instance.state.editing).toEqual(true);
   });
 });

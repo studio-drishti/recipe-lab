@@ -24,13 +24,18 @@ export default class Ingredient extends Component {
     let stepIndex = activeItem.steps.findIndex(
       step => step._id === activeStep._id
     );
+
     if (stepIndex + 1 < activeItem.steps.length) {
       stepIndex++;
     } else if (itemIndex + 1 < recipeItems.length) {
       itemIndex++;
       stepIndex = 0;
     }
-    setActiveStep(itemIndex, stepIndex);
+
+    setActiveStep(
+      recipeItems[itemIndex],
+      recipeItems[itemIndex].steps[stepIndex]
+    );
   };
 
   prevStep = () => {
@@ -45,7 +50,11 @@ export default class Ingredient extends Component {
       itemIndex--;
       stepIndex = recipeItems[itemIndex].steps.length - 1;
     }
-    setActiveStep(itemIndex, stepIndex);
+
+    setActiveStep(
+      recipeItems[itemIndex],
+      recipeItems[itemIndex].steps[stepIndex]
+    );
   };
 
   render() {
@@ -66,6 +75,7 @@ export default class Ingredient extends Component {
     return (
       <nav className={css.nav}>
         <button
+          className={css.prev}
           title="Previous step"
           onClick={this.prevStep}
           disabled={!hasPrevStep}
@@ -73,6 +83,7 @@ export default class Ingredient extends Component {
           <MdNavigateBefore />
         </button>
         <button
+          className={css.next}
           title="Next step"
           onClick={this.nextStep}
           disabled={!hasNextStep}
