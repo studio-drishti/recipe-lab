@@ -105,13 +105,11 @@ export default class Recipe extends Component {
       modification.alterations.push(alteration);
     }
 
-    // TODO: If making modifications and source was deleted, undo the deletion
-    // const restoredIngredientIndex = modification.removedIngredients.indexOf(
-    //   editingId
-    // );
-    // if (restoredIngredientIndex > -1) {
-    //   modification.removedIngredients.splice(restoredIngredientIndex, 1);
-    // }
+    // If making modifications and source was deleted, undo the deletion
+    const removalIndex = modification.removals.indexOf(source._id);
+    if (removalIndex > -1) {
+      modification.removals.splice(removalIndex, 1);
+    }
 
     localStorage.setItem(localStoreId, JSON.stringify(modification));
     this.setState({ modification });
