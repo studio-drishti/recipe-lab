@@ -14,8 +14,8 @@ export default class Ingredient extends Component {
     ingredientMods: PropTypes.arrayOf(PropTypes.object),
     editing: PropTypes.bool,
     removed: PropTypes.bool,
-    removeAction: PropTypes.func,
-    restoreAction: PropTypes.func,
+    removeIngredient: PropTypes.func,
+    restoreIngredient: PropTypes.func,
     handleIngredientChange: PropTypes.func,
     setActiveIngredient: PropTypes.func
   };
@@ -129,7 +129,7 @@ export default class Ingredient extends Component {
 
   handleRemove = e => {
     e.stopPropagation();
-    this.props.removeAction(this.props.ingredient);
+    this.props.removeIngredient();
   };
 
   handleKeybdRemove = e => {
@@ -141,7 +141,7 @@ export default class Ingredient extends Component {
 
   handleRestore = e => {
     e.stopPropagation();
-    this.props.restoreAction(this.props.ingredient);
+    this.props.restoreIngredient();
   };
 
   handleKeybdRestore = e => {
@@ -151,8 +151,14 @@ export default class Ingredient extends Component {
     this.ingredientRef.current.focus();
   };
 
+  handleIngredientChange = e => {
+    const { removed, handleIngredientChange, restoreIngredient } = this.props;
+    if (removed) restoreIngredient();
+    handleIngredientChange(e);
+  };
+
   render() {
-    const { editing, removed, handleIngredientChange } = this.props;
+    const { editing, removed } = this.props;
 
     return (
       <li
@@ -173,14 +179,14 @@ export default class Ingredient extends Component {
                 ref={this.quantityInputRef}
                 value={this.getIngredientValue('quantity')}
                 placeholder={'Qty'}
-                onChange={handleIngredientChange}
+                onChange={this.handleIngredientChange}
               />
               <select
                 type="text"
                 name="unit"
                 title="Unit"
                 value={this.getIngredientValue('unit')}
-                onChange={handleIngredientChange}
+                onChange={this.handleIngredientChange}
               >
                 <option value="">--</option>
                 {MEASURE_UNITS.map(unit => (
@@ -195,7 +201,7 @@ export default class Ingredient extends Component {
                 title="Name"
                 value={this.getIngredientValue('name')}
                 placeholder={'Name'}
-                onChange={handleIngredientChange}
+                onChange={this.handleIngredientChange}
               />
               <input
                 type="text"
@@ -203,7 +209,7 @@ export default class Ingredient extends Component {
                 title="Process"
                 value={this.getIngredientValue('processing')}
                 placeholder={'Process'}
-                onChange={handleIngredientChange}
+                onChange={this.handleIngredientChange}
               />
             </fieldset>
           ) : (

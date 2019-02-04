@@ -76,7 +76,13 @@ export default class Step extends PureComponent {
   };
 
   render() {
-    const { itemName, directions, navigation, removed } = this.props;
+    const {
+      itemName,
+      directions,
+      navigation,
+      removed,
+      restoreStep
+    } = this.props;
     const { editing } = this.state;
     return (
       <header
@@ -103,6 +109,7 @@ export default class Step extends PureComponent {
             React.cloneElement(directions, {
               editing,
               removed,
+              restoreStep,
               inputRef: this.directionsInputRef
             })}
         </div>

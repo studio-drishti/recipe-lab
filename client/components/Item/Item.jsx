@@ -79,7 +79,14 @@ export default class Item extends PureComponent {
   };
 
   render() {
-    const { children, itemId, index, itemName, removed } = this.props;
+    const {
+      children,
+      itemId,
+      index,
+      itemName,
+      removed,
+      restoreItem
+    } = this.props;
     const { hovering, editing } = this.state;
     return (
       <Draggable type="ITEM" draggableId={itemId} index={index}>
@@ -108,6 +115,7 @@ export default class Item extends PureComponent {
                     React.cloneElement(itemName, {
                       editing,
                       removed,
+                      restoreItem,
                       inputRef: this.inputRef
                     })}
                 </div>

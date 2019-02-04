@@ -87,6 +87,7 @@ export default class Step extends PureComponent {
       stepId,
       isActive,
       removed,
+      restoreStep,
       children: child
     } = this.props;
     const { editing } = this.state;
@@ -115,6 +116,7 @@ export default class Step extends PureComponent {
                   React.cloneElement(child, {
                     editing,
                     removed,
+                    restoreStep,
                     inputRef: this.inputRef
                   })}
               </div>
