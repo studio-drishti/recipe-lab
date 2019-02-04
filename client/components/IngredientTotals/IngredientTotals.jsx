@@ -9,20 +9,20 @@ export default class IngredientTotals extends Component {
 
   static propTypes = {
     steps: PropTypes.arrayOf(PropTypes.object),
-    removedIngredients: PropTypes.arrayOf(PropTypes.string),
-    alteredIngredients: PropTypes.arrayOf(PropTypes.object)
+    removals: PropTypes.arrayOf(PropTypes.string),
+    alterations: PropTypes.arrayOf(PropTypes.object)
   };
 
   static defaultProps = {
-    removedIngredients: [],
-    alteredIngredients: []
+    removals: [],
+    alterations: []
   };
 
   getIngredientWithMods = ingredient => {
-    const { alteredIngredients } = this.props;
+    const { alterations } = this.props;
     const newIngredient = { ...ingredient };
-    alteredIngredients
-      .filter(mod => mod.ingredientId === ingredient._id)
+    alterations
+      .filter(mod => mod.sourceId === ingredient._id)
       .forEach(mod => {
         newIngredient[mod.field] = mod.value;
       });
@@ -30,11 +30,11 @@ export default class IngredientTotals extends Component {
   };
 
   getIngredientTotals = () => {
-    const { steps, removedIngredients } = this.props;
+    const { steps, removals } = this.props;
     const totals = {};
     steps.forEach(step =>
       step.ingredients
-        .filter(ingredient => !removedIngredients.includes(ingredient._id))
+        .filter(ingredient => !removals.includes(ingredient._id))
         .forEach(unModifiedIngredient => {
           const ingredient = this.getIngredientWithMods(unModifiedIngredient);
           if (totals.hasOwnProperty(ingredient.name)) {

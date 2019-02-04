@@ -36,20 +36,22 @@ const ModificationSchema = new Schema({
     ref: 'Recipe',
     required: true
   },
-  sortItems: [Schema.Types.ObjectId],
-  sortSteps: [
+  sortings: [
     {
-      itemId: {
-        type: Schema.Types.ObjectId
-      },
-      steps: [Schema.Types.ObjectId]
+      parentId: Schema.Types.ObjectId,
+      order: [Schema.Types.ObjectId]
     }
   ],
-  alteredSteps: [
+  alterations: [
     {
-      stepId: Schema.Types.ObjectId,
+      sourceId: Schema.Types.ObjectId,
       field: String,
       value: String
+    }
+  ],
+  removals: [
+    {
+      sourceId: Schema.Types.ObjectId
     }
   ],
   additionalItems: [AdditionalItemSchema],

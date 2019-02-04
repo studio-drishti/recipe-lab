@@ -1,3 +1,9 @@
 .items {
-  margin-bottom: 2rem;
+  & > *:last-child {
+    margin-bottom: 0;
+  }
+
+  &.draggingOver {
+    pointer-events: none;
+  }
 }

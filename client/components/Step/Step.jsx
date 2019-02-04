@@ -15,7 +15,11 @@ export default class Step extends PureComponent {
     stepId: PropTypes.string,
     isActive: PropTypes.bool,
     children: PropTypes.node,
-    setActiveStep: PropTypes.func
+    activateStep: PropTypes.func
+  };
+
+  static defaultProps = {
+    isActive: false
   };
 
   state = {
@@ -23,6 +27,7 @@ export default class Step extends PureComponent {
   };
 
   stepRef = React.createRef();
+  inputRef = React.createRef();
 
   componentDidUpdate(prevProps) {
     if (prevProps.isActive && !this.props.isActive && this.state.editing) {
@@ -34,10 +39,11 @@ export default class Step extends PureComponent {
     document.removeEventListener('mousedown', this.handleClick);
   }
 
-  enableEditing = () => {
-    const { setActiveStep, isActive } = this.props;
-    if (!isActive) setActiveStep();
-    this.setState({ editing: true });
+  enableEditing = async () => {
+    const { activateStep, isActive } = this.props;
+    if (!isActive) activateStep();
+    await this.setState({ editing: true });
+    if (this.inputRef.current) this.inputRef.current.focus();
     document.addEventListener('mousedown', this.handleClick);
   };
 
@@ -52,11 +58,11 @@ export default class Step extends PureComponent {
   };
 
   handleSelect = () => {
-    const { setActiveStep, isActive } = this.props;
+    const { activateStep, isActive } = this.props;
     if (isActive && !this.state.editing) {
       this.enableEditing();
     } else if (!isActive) {
-      setActiveStep();
+      activateStep();
     }
   };
 
@@ -66,7 +72,11 @@ export default class Step extends PureComponent {
     return (
       <Draggable type={`STEP-${itemId}`} draggableId={stepId} index={index}>
         {(provided, snapshot) => (
-          <li ref={provided.innerRef} {...provided.draggableProps}>
+          <li
+            className={css.container}
+            ref={provided.innerRef}
+            {...provided.draggableProps}
+          >
             <div
               ref={this.stepRef}
               className={classnames(css.step, {
@@ -80,13 +90,14 @@ export default class Step extends PureComponent {
               </div>
 
               <div className={css.stepDirections} onClick={this.handleSelect}>
-                {React.cloneElement(child, { editing })}
+                {child &&
+                  React.cloneElement(child, {
+                    editing,
+                    inputRef: this.inputRef
+                  })}
               </div>
 
               <div className={css.stepActions}>
-                <button title="Remove step">
-                  <MdClear />
-                </button>
                 {editing ? (
                   <button
                     title="Save modifications"
@@ -95,9 +106,14 @@ export default class Step extends PureComponent {
                     <MdCheck />
                   </button>
                 ) : (
-                  <button title="Edit directions" onClick={this.enableEditing}>
-                    <MdEdit />
-                  </button>
+                  <>
+                    <button title="Edit step" onClick={this.enableEditing}>
+                      <MdEdit />
+                    </button>
+                    <button title="Remove step">
+                      <MdClear />
+                    </button>
+                  </>
                 )}
               </div>
             </div>

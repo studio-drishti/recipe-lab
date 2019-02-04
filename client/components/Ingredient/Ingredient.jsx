@@ -17,7 +17,7 @@ export default class Ingredient extends Component {
     removeAction: PropTypes.func,
     restoreAction: PropTypes.func,
     handleIngredientChange: PropTypes.func,
-    setEditingId: PropTypes.func
+    setActiveIngredient: PropTypes.func
   };
 
   static defaultProps = {
@@ -45,7 +45,7 @@ export default class Ingredient extends Component {
     const { ingredient, ingredientMods } = this.props;
 
     const mod = ingredientMods.find(
-      mod => mod.ingredientId === ingredient._id && mod.field === fieldName
+      mod => mod.sourceId === ingredient._id && mod.field === fieldName
     );
 
     return mod !== undefined ? mod.value : ingredient[fieldName];
@@ -101,7 +101,7 @@ export default class Ingredient extends Component {
   };
 
   deselect = () => {
-    this.props.setEditingId(null);
+    this.props.setActiveIngredient(null);
     document.removeEventListener('mousedown', this.handleClick);
   };
 
@@ -119,7 +119,7 @@ export default class Ingredient extends Component {
   handleSelect = e => {
     e.stopPropagation();
     document.addEventListener('mousedown', this.handleClick);
-    this.props.setEditingId(this.props.ingredient._id);
+    this.props.setActiveIngredient(this.props.ingredient);
   };
 
   handleKeybdSelect = e => {

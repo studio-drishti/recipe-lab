@@ -1,7 +1,7 @@
 module.exports = {
-  setupFiles: ['<rootDir>/jest.setup.js'],
+  setupFiles: ['<rootDir>/jest.setup.js', 'jest-localstorage-mock'],
   testPathIgnorePatterns: ['<rootDir>/.next/', '<rootDir>/node_modules/'],
   moduleNameMapper: {
-    '\\.(css|sass)$': '<rootDir>/__mocks__/styleMock.js'
+    '\\.(css|scss|sass)$': 'identity-obj-proxy'
   }
 };

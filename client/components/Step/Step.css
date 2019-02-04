@@ -1,9 +1,12 @@
 @import '../../config/defaults.css';
 
+.container {
+  margin-bottom: 0.25rem;
+}
+
 .step {
   display: grid;
   grid-template-columns: 1fr 11fr;
-  margin-bottom: 0.5rem;
   transition: background linear 0.2s;
   padding: 0.5rem;
   border-radius: var(--border-radius-sm);
@@ -16,10 +19,6 @@
   &.active {
     background: var(--color-highlight);
     border: 1px solid var(--color-highlight);
-  }
-
-  &.editing {
-    padding-bottom: 2.25rem;
   }
 
   &:hover,
