@@ -43,6 +43,7 @@ export default class Ingredient extends Component {
   render() {
     const {
       editing,
+      removed,
       item,
       handleItemChange,
       inputRef,
@@ -52,7 +53,7 @@ export default class Ingredient extends Component {
 
     return (
       <form className={css.itemName}>
-        {editing ? (
+        {editing && (
           <input
             type="text"
             name="name"
@@ -61,7 +62,19 @@ export default class Ingredient extends Component {
             placeholder="Item name"
             onChange={e => handleItemChange(e, item)}
           />
-        ) : (
+        )}
+
+        {!editing && removed && (
+          <h3>
+            <del>
+              {prefix && prefix + ' '}
+              {item.name}
+              {suffix && ' ' + suffix}
+            </del>
+          </h3>
+        )}
+
+        {!editing && !removed && (
           <h3>
             {prefix && prefix + ' '}
             {this.renderNameWithMods()}

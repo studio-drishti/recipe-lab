@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import { MdEdit, MdClear, MdCheck } from 'react-icons/md';
+import { MdEdit, MdClear, MdCheck, MdRefresh } from 'react-icons/md';
 import classnames from 'classnames';
 
 import css from './StepHeader.css';
@@ -13,11 +13,15 @@ export default class Step extends PureComponent {
     itemName: PropTypes.node,
     directions: PropTypes.node,
     navigation: PropTypes.node,
-    children: PropTypes.node
+    children: PropTypes.node,
+    removed: PropTypes.bool,
+    removeStep: PropTypes.func,
+    restoreStep: PropTypes.func
   };
 
   state = {
-    editing: false
+    editing: false,
+    removed: false
   };
 
   stepRef = React.createRef();
@@ -63,8 +67,16 @@ export default class Step extends PureComponent {
     this.disableEditing();
   };
 
+  handleRemove = () => {
+    this.props.removeStep();
+  };
+
+  handleRestore = () => {
+    this.props.restoreStep();
+  };
+
   render() {
-    const { itemName, directions, navigation } = this.props;
+    const { itemName, directions, navigation, removed } = this.props;
     const { editing } = this.state;
     return (
       <header
@@ -90,25 +102,32 @@ export default class Step extends PureComponent {
           {directions &&
             React.cloneElement(directions, {
               editing,
+              removed,
               inputRef: this.directionsInputRef
             })}
         </div>
         <div className={css.editActions}>
-          {!editing && (
-            <a
-              href="javascript:void(0)"
-              className={css.editBtn}
-              onClick={this.enableEditingDirections}
-            >
-              <MdEdit />
-              edit step
-            </a>
+          {!editing && !removed && (
+            <>
+              <a
+                href="javascript:void(0)"
+                className={css.editBtn}
+                onClick={this.enableEditingDirections}
+              >
+                <MdEdit />
+                edit step
+              </a>
+              <a href="javascript:void(0)" onClick={this.handleRemove}>
+                <MdClear />
+                remove step
+              </a>
+            </>
           )}
 
-          {!editing && (
-            <a href="javascript:void(0)">
-              <MdClear />
-              remove step
+          {!editing && removed && (
+            <a href="javascript:void(0)" onClick={this.handleRestore}>
+              <MdRefresh />
+              restore step
             </a>
           )}
 

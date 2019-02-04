@@ -40,11 +40,17 @@ export default class Ingredient extends Component {
   };
 
   render() {
-    const { editing, directions, handleStepChange, inputRef } = this.props;
+    const {
+      editing,
+      removed,
+      directions,
+      handleStepChange,
+      inputRef
+    } = this.props;
 
     return (
       <form className={css.directions}>
-        {editing ? (
+        {editing && (
           <Textarea
             inputRef={inputRef}
             name="directions"
@@ -52,9 +58,11 @@ export default class Ingredient extends Component {
             placeholder={directions.length ? directions : 'Directions'}
             onChange={handleStepChange}
           />
-        ) : (
-          <p>{this.renderDirectionsWithMods()}</p>
         )}
+
+        {!editing && removed && <del>{directions}</del>}
+
+        {!editing && !removed && <p>{this.renderDirectionsWithMods()}</p>}
       </form>
     );
   }
