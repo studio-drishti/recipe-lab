@@ -1,7 +1,13 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { Draggable } from 'react-beautiful-dnd';
-import { MdDragHandle, MdEdit, MdClear, MdCheck } from 'react-icons/md';
+import {
+  MdDragHandle,
+  MdEdit,
+  MdClear,
+  MdCheck,
+  MdRefresh
+} from 'react-icons/md';
 import classnames from 'classnames';
 
 import css from './Item.css';
@@ -14,12 +20,16 @@ export default class Item extends PureComponent {
     index: PropTypes.number,
     itemId: PropTypes.string,
     handleItemChange: PropTypes.func,
-    itemName: PropTypes.node
+    itemName: PropTypes.node,
+    removed: PropTypes.bool,
+    removeItem: PropTypes.func,
+    resotreItem: PropTypes.func
   };
 
   state = {
     hovering: false,
-    editing: false
+    editing: false,
+    removed: false
   };
 
   itemRef = React.createRef();
@@ -58,8 +68,25 @@ export default class Item extends PureComponent {
     this.setState({ hovering: false });
   };
 
+  handleRemove = e => {
+    e.stopPropagation();
+    this.props.removeItem();
+  };
+
+  handleRestore = e => {
+    e.stopPropagation();
+    this.props.restoreItem();
+  };
+
   render() {
-    const { children, itemId, index, itemName } = this.props;
+    const {
+      children,
+      itemId,
+      index,
+      itemName,
+      removed,
+      restoreItem
+    } = this.props;
     const { hovering, editing } = this.state;
     return (
       <Draggable type="ITEM" draggableId={itemId} index={index}>
@@ -87,18 +114,28 @@ export default class Item extends PureComponent {
                   {itemName &&
                     React.cloneElement(itemName, {
                       editing,
+                      removed,
+                      restoreItem,
                       inputRef: this.inputRef
                     })}
                 </div>
                 <div className={css.itemActions}>
-                  {editing ? (
+                  {editing && (
                     <button
                       title="Save modifications"
                       onClick={this.disableEditing}
                     >
                       <MdCheck />
                     </button>
-                  ) : (
+                  )}
+
+                  {!editing && removed && (
+                    <button title="Restore item" onClick={this.handleRestore}>
+                      <MdRefresh />
+                    </button>
+                  )}
+
+                  {!editing && !removed && (
                     <>
                       <button
                         title="Edit item name"
@@ -106,7 +143,7 @@ export default class Item extends PureComponent {
                       >
                         <MdEdit />
                       </button>
-                      <button title="Remove item">
+                      <button title="Remove item" onClick={this.handleRemove}>
                         <MdClear />
                       </button>
                     </>

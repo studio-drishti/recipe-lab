@@ -12,8 +12,8 @@ const setup = propOverrides => {
         name: 'oil',
         processing: 'Fresh pressed!!!!'
       },
-      removeAction: jest.fn(),
-      restoreAction: jest.fn(),
+      removeIngredient: jest.fn(),
+      restoreIngredient: jest.fn(),
       setActiveIngredient: jest.fn()
     },
     propOverrides
@@ -55,7 +55,7 @@ describe('Deleting and restoring ingredients', () => {
 
     button.simulate('click', { stopPropagation() {} });
 
-    expect(props.removeAction).toHaveBeenCalled();
+    expect(props.removeIngredient).toHaveBeenCalled();
   });
 
   test('Clicking restore calls the restore action', () => {
@@ -65,7 +65,7 @@ describe('Deleting and restoring ingredients', () => {
 
     button.simulate('click', { stopPropagation() {} });
 
-    expect(props.restoreAction).toHaveBeenCalled();
+    expect(props.restoreIngredient).toHaveBeenCalled();
   });
 });
 

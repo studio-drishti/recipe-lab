@@ -14,6 +14,7 @@ export default class Ingredient extends Component {
     editing: PropTypes.bool,
     removed: PropTypes.bool,
     handleStepChange: PropTypes.func,
+    restoreStep: PropTypes.func,
     inputRef: PropTypes.shape({
       current: PropTypes.any
     })
@@ -39,22 +40,30 @@ export default class Ingredient extends Component {
     return mod !== undefined ? mod : directions;
   };
 
+  handleStepChange = e => {
+    const { removed, handleStepChange, restoreStep } = this.props;
+    if (removed) restoreStep();
+    handleStepChange(e);
+  };
+
   render() {
-    const { editing, directions, handleStepChange, inputRef } = this.props;
+    const { editing, removed, directions, inputRef } = this.props;
 
     return (
       <form className={css.directions}>
-        {editing ? (
+        {editing && (
           <Textarea
             inputRef={inputRef}
             name="directions"
             value={this.getDirectionsValue()}
             placeholder={directions.length ? directions : 'Directions'}
-            onChange={handleStepChange}
+            onChange={this.handleStepChange}
           />
-        ) : (
-          <p>{this.renderDirectionsWithMods()}</p>
         )}
+
+        {!editing && removed && <del>{directions}</del>}
+
+        {!editing && !removed && <p>{this.renderDirectionsWithMods()}</p>}
       </form>
     );
   }

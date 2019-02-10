@@ -13,6 +13,7 @@ export default class Ingredient extends Component {
     editing: PropTypes.bool,
     removed: PropTypes.bool,
     handleItemChange: PropTypes.func,
+    restoreItem: PropTypes.func,
     inputRef: PropTypes.shape({
       current: PropTypes.any
     }),
@@ -40,28 +41,39 @@ export default class Ingredient extends Component {
     return mod !== undefined ? mod : item.name;
   };
 
+  handleItemChange = e => {
+    const { removed, restoreItem, handleItemChange, item } = this.props;
+    if (removed) restoreItem();
+    handleItemChange(e, item);
+  };
+
   render() {
-    const {
-      editing,
-      item,
-      handleItemChange,
-      inputRef,
-      prefix,
-      suffix
-    } = this.props;
+    const { editing, removed, item, inputRef, prefix, suffix } = this.props;
 
     return (
       <form className={css.itemName}>
-        {editing ? (
+        {editing && (
           <input
             type="text"
             name="name"
             value={this.getNameValue()}
             ref={inputRef}
             placeholder="Item name"
-            onChange={e => handleItemChange(e, item)}
+            onChange={this.handleItemChange}
           />
-        ) : (
+        )}
+
+        {!editing && removed && (
+          <h3>
+            <del>
+              {prefix && prefix + ' '}
+              {item.name}
+              {suffix && ' ' + suffix}
+            </del>
+          </h3>
+        )}
+
+        {!editing && !removed && (
           <h3>
             {prefix && prefix + ' '}
             {this.renderNameWithMods()}

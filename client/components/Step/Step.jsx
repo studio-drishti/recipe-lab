@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { Draggable } from 'react-beautiful-dnd';
-import { MdEdit, MdClear, MdCheck } from 'react-icons/md';
+import { MdEdit, MdClear, MdCheck, MdRefresh } from 'react-icons/md';
 import classnames from 'classnames';
 
 import css from './Step.css';
@@ -15,11 +15,15 @@ export default class Step extends PureComponent {
     stepId: PropTypes.string,
     isActive: PropTypes.bool,
     children: PropTypes.node,
-    activateStep: PropTypes.func
+    activateStep: PropTypes.func,
+    removed: PropTypes.bool,
+    removeStep: PropTypes.func,
+    restoreStep: PropTypes.func
   };
 
   static defaultProps = {
-    isActive: false
+    isActive: false,
+    removed: false
   };
 
   state = {
@@ -66,8 +70,26 @@ export default class Step extends PureComponent {
     }
   };
 
+  handleRemove = e => {
+    e.stopPropagation();
+    this.props.removeStep();
+  };
+
+  handleRestore = e => {
+    e.stopPropagation();
+    this.props.restoreStep();
+  };
+
   render() {
-    const { index, itemId, stepId, isActive, children: child } = this.props;
+    const {
+      index,
+      itemId,
+      stepId,
+      isActive,
+      removed,
+      restoreStep,
+      children: child
+    } = this.props;
     const { editing } = this.state;
     return (
       <Draggable type={`STEP-${itemId}`} draggableId={stepId} index={index}>
@@ -93,27 +115,41 @@ export default class Step extends PureComponent {
                 {child &&
                   React.cloneElement(child, {
                     editing,
+                    removed,
+                    restoreStep,
                     inputRef: this.inputRef
                   })}
               </div>
 
               <div className={css.stepActions}>
-                {editing ? (
+                {removed && !editing && (
+                  <button
+                    type="button"
+                    title="restore step"
+                    onClick={this.handleRestore}
+                  >
+                    <MdRefresh />
+                  </button>
+                )}
+
+                {!removed && !editing && (
+                  <>
+                    <button title="Edit step" onClick={this.enableEditing}>
+                      <MdEdit />
+                    </button>
+                    <button title="Remove step" onClick={this.handleRemove}>
+                      <MdClear />
+                    </button>
+                  </>
+                )}
+
+                {editing && (
                   <button
                     title="Save modifications"
                     onClick={this.disableEditing}
                   >
                     <MdCheck />
                   </button>
-                ) : (
-                  <>
-                    <button title="Edit step" onClick={this.enableEditing}>
-                      <MdEdit />
-                    </button>
-                    <button title="Remove step">
-                      <MdClear />
-                    </button>
-                  </>
                 )}
               </div>
             </div>
