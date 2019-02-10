@@ -7,6 +7,7 @@ import { DragDropContext } from 'react-beautiful-dnd';
 import css from './Recipe.css';
 
 import reorder from '../../util/reorder';
+import generateId from '../../util/generateId';
 import areArraysEqual from '../../util/areArraysEqual';
 
 import StepList from '../StepList';
@@ -217,6 +218,22 @@ export default class Recipe extends Component {
     }
   };
 
+  createIngredient = stepId => {
+    const { modification } = this.state;
+
+    const newIngredient = {
+      _id: generateId(),
+      stepId,
+      quantity: '',
+      unit: '',
+      processing: ''
+    };
+
+    modification.additionalIngredients.push(newIngredient);
+
+    this.setState({ modification, activeIngredient: newIngredient });
+  };
+
   getSorted = (parentId, arr) => {
     const { modification } = this.state;
     const sortMod = modification.sortings.find(
@@ -257,8 +274,19 @@ export default class Recipe extends Component {
       modification
     } = this.state;
 
+    // TODO: Refactor as getMergedAndSorted function
+    // To be called when array is needed, not on component render.
     const recipeItems = this.getSorted(recipe._id, recipe.items).map(item => {
-      item.steps = this.getSorted(item._id, item.steps);
+      item.steps = this.getSorted(item._id, item.steps).map(step => {
+        // const additionalIngredients = modification.additionalIngredients.filter(
+        //   mod => mod.stepId === step._id
+        // );
+        // step.ingredients = this.getSorted(step._id, [
+        //   ...step.ingredients,
+        //   ...additionalIngredients
+        // ]);
+        return step;
+      });
       return item;
     });
 
@@ -399,6 +427,9 @@ export default class Recipe extends Component {
                 <div>
                   <h3>Ingredients Used</h3>
                   <IngredientList
+                    createIngredient={() =>
+                      this.createIngredient(activeStep._id)
+                    }
                     editing={
                       activeIngredient !== null &&
                       activeStep.ingredients.some(

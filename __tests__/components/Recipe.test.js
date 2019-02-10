@@ -150,3 +150,22 @@ describe('It saves sorting', () => {
     ).toHaveLength(0);
   });
 });
+
+describe('It creates ingredients', () => {
+  test('saves sorting to localstorage', () => {
+    const wrapper = shallow(<Recipe {...props} />);
+    const instance = wrapper.instance();
+    const { additionalIngredients } = instance.state.modification;
+
+    instance.createIngredient(props.recipe.items[0].steps[0]._id);
+
+    expect(additionalIngredients).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          _id: expect.any(String),
+          stepId: props.recipe.items[0].steps[0]._id
+        })
+      ])
+    );
+  });
+});
