@@ -155,15 +155,16 @@ describe('It creates ingredients', () => {
   test('saves sorting to localstorage', () => {
     const wrapper = shallow(<Recipe {...props} />);
     const instance = wrapper.instance();
-    const { addedIngredients } = instance.state.modification;
+    const { additions } = instance.state.modification;
 
     instance.createIngredient(props.recipe.items[0].steps[0]._id);
 
-    expect(addedIngredients).toEqual(
+    expect(additions).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
           _id: expect.any(String),
-          stepId: props.recipe.items[0].steps[0]._id
+          parentId: props.recipe.items[0].steps[0]._id,
+          kind: 'Ingredient'
         })
       ])
     );

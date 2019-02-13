@@ -48,9 +48,7 @@ export default class Recipe extends Component {
       sortings: [],
       alterations: [],
       removals: [],
-      addedItems: [],
-      addedSteps: [],
-      addedIngredients: []
+      additions: []
     }
   };
 
@@ -110,17 +108,25 @@ export default class Recipe extends Component {
     this.setState({ modification });
   };
 
-  saveAddedIngredient = (ingredient, field, value) => {
+  updateAddition = (source, field, value) => {
     const { modification } = this.state;
-    const addedIndex = modification.addedIngredients.findIndex(
-      mod => mod._id === ingredient._id
+
+    const index = modification.additions.findIndex(
+      addition => addition._id === source._id
     );
 
-    if (addedIndex === -1) return;
+    if (index === -1) return;
 
-    modification.addedIngredients[addedIndex][field] = value;
-
+    modification.additions[index][field] = value;
     this.setState({ modification });
+  };
+
+  saveOrUpdateField = (source, fieldName, value) => {
+    if (source.hasOwnProperty('kind')) {
+      this.updateAddition(source, fieldName, value);
+    } else {
+      this.saveAlteration(source, fieldName, value);
+    }
   };
 
   handleItemChange = (e, item) => {
@@ -139,11 +145,7 @@ export default class Recipe extends Component {
   handleIngredientChange = e => {
     const { name, value } = e.target;
     const { activeIngredient } = this.state;
-    if ('stepId' in activeIngredient) {
-      this.saveAddedIngredient(activeIngredient, name, value);
-    } else {
-      this.saveAlteration(activeIngredient, name, value);
-    }
+    this.saveOrUpdateField(activeIngredient, name, value);
   };
 
   saveRemoval = source => {
@@ -164,13 +166,13 @@ export default class Recipe extends Component {
 
   removeIngredient = ingredient => {
     const { modification } = this.state;
-    const addedIndex = modification.addedIngredients.findIndex(
+    const addedIndex = modification.additions.findIndex(
       addition => addition._id === ingredient._id
     );
     if (addedIndex === -1) {
       this.saveRemoval(ingredient);
     } else {
-      modification.addedIngredients.splice(addedIndex, 1);
+      modification.additions.splice(addedIndex, 1);
       this.setState({ modification });
     }
   };
@@ -251,20 +253,21 @@ export default class Recipe extends Component {
   createIngredient = async stepId => {
     const { modification } = this.state;
 
-    const newIngredient = {
+    const addition = {
       _id: generateId(),
-      stepId,
+      kind: 'Ingredient',
+      parentId: stepId,
       quantity: '',
       unit: '',
       name: '',
       processing: ''
     };
 
-    modification.addedIngredients.push(newIngredient);
+    modification.additions.push(addition);
 
     await this.setState({ modification });
     setTimeout(() => {
-      this.setState({ activeIngredient: newIngredient });
+      this.setState({ activeIngredient: addition });
     }, 200);
   };
 
@@ -283,16 +286,19 @@ export default class Recipe extends Component {
 
   getItems = () => {
     const { recipe, modification } = this.state;
-    const items = modification.addedItems.length
-      ? recipe.items.concat(modification.addedItems)
+    const addedItems = modification.additions.filter(
+      addition => addition.parentId === recipe._id
+    );
+    const items = addedItems.length
+      ? recipe.items.concat(addedItems)
       : recipe.items;
     return this.getSorted(recipe._id, items);
   };
 
   getSteps = item => {
     const { modification } = this.state;
-    const addedSteps = modification.addedSteps.filter(
-      mod => mod.itemId === item._id
+    const addedSteps = modification.additions.filter(
+      addition => addition.parentId === item._id
     );
     const steps = addedSteps.length
       ? item.steps.concat(addedSteps)
@@ -302,8 +308,8 @@ export default class Recipe extends Component {
 
   getIngredients = step => {
     const { modification } = this.state;
-    const addedIngredients = modification.addedIngredients.filter(
-      mod => mod.stepId === step._id
+    const addedIngredients = modification.additions.filter(
+      addition => addition.parentId === step._id
     );
     const ingredients = addedIngredients.length
       ? step.ingredients.concat(addedIngredients)

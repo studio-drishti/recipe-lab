@@ -15,10 +15,6 @@ const IngredientSchema = new Schema({
   },
   processing: {
     type: String
-  },
-  toTaste: {
-    type: Boolean,
-    default: false
   }
 });
 
