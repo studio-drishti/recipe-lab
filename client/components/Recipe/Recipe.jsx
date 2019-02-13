@@ -354,27 +354,29 @@ export default class Recipe extends Component {
     return (
       <article className={css.recipe}>
         <div className={css.recipeMain}>
-          {this.getItems()
-            .filter(item => !modification.removals.includes(item._id))
-            .map(item => (
-              <div key={item._id}>
-                <h3>Ingredients for {this.getItemValue(item, 'name')}</h3>
-                <IngredientTotals
-                  ingredients={this.getSteps(item)
-                    .filter(step => !modification.removals.includes(step._id))
-                    .reduce((result, step) => {
-                      return result.concat(
-                        this.getIngredients(step).filter(
-                          ingredient =>
-                            !modification.removals.includes(ingredient._id)
-                        )
-                      );
-                    }, [])}
-                  removals={modification.removals}
-                  alterations={modification.alterations}
-                />
-              </div>
-            ))}
+          <div className={css.ingredientTotals}>
+            {this.getItems()
+              .filter(item => !modification.removals.includes(item._id))
+              .map(item => (
+                <div key={item._id}>
+                  <h3>Ingredients for {this.getItemValue(item, 'name')}</h3>
+                  <IngredientTotals
+                    ingredients={this.getSteps(item)
+                      .filter(step => !modification.removals.includes(step._id))
+                      .reduce((result, step) => {
+                        return result.concat(
+                          this.getIngredients(step).filter(
+                            ingredient =>
+                              !modification.removals.includes(ingredient._id)
+                          )
+                        );
+                      }, [])}
+                    removals={modification.removals}
+                    alterations={modification.alterations}
+                  />
+                </div>
+              ))}
+          </div>
 
           <DragDropContext onDragEnd={this.onDragEnd}>
             <ItemList recipeId={recipe._id}>
