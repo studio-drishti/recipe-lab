@@ -4,6 +4,7 @@ import { MdEdit, MdClear, MdCheck, MdRefresh } from 'react-icons/md';
 import classnames from 'classnames';
 
 import css from './StepHeader.css';
+import TextButton from '../TextButton';
 
 export default class Step extends PureComponent {
   static displayName = 'Step';
@@ -116,33 +117,32 @@ export default class Step extends PureComponent {
         <div className={css.editActions}>
           {!editing && !removed && (
             <>
-              <a
-                href="javascript:void(0)"
+              <TextButton
                 className={css.editBtn}
                 onClick={this.enableEditingDirections}
               >
                 <MdEdit />
                 edit step
-              </a>
-              <a href="javascript:void(0)" onClick={this.handleRemove}>
+              </TextButton>
+              <TextButton onClick={this.handleRemove}>
                 <MdClear />
                 remove step
-              </a>
+              </TextButton>
             </>
           )}
 
           {!editing && removed && (
-            <a href="javascript:void(0)" onClick={this.handleRestore}>
+            <TextButton onClick={this.handleRestore}>
               <MdRefresh />
               restore step
-            </a>
+            </TextButton>
           )}
 
           {editing && (
-            <a href="javascript:void(0)" onClick={this.disableEditing}>
+            <TextButton onClick={this.disableEditing}>
               <MdCheck />
               save changes
-            </a>
+            </TextButton>
           )}
         </div>
       </header>

@@ -4,6 +4,7 @@ import { MdAdd } from 'react-icons/md';
 import classnames from 'classnames';
 
 import css from './IngredientList.css';
+import TextButton from '../TextButton';
 
 export default class IngredientList extends Component {
   static displayName = 'IngredientList';
@@ -32,9 +33,9 @@ export default class IngredientList extends Component {
         <div
           className={classnames(css.listActions, { [css.editing]: editing })}
         >
-          <a href="javascript:void(0)" onClick={this.handleCreate}>
+          <TextButton onClick={this.handleCreate}>
             <MdAdd /> add ingredient
-          </a>
+          </TextButton>
         </div>
       </>
     );

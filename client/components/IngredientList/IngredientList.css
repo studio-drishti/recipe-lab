@@ -25,28 +25,11 @@
 }
 
 .listActions {
-  font-size: 0.8em;
   transition: all linear 0.2s;
 
   &.editing {
     pointer-events: none;
     filter: blur(0.05em);
     opacity: 0.5;
-  }
-
-  & svg {
-    vertical-align: middle;
-    margin-right: 0.15em;
-  }
-
-  & a {
-    text-decoration: none;
-    color: var(--color-black);
-    opacity: 0.5;
-    transition: all linear 0.2s;
-  }
-
-  & a:hover {
-    opacity: 1;
   }
 }
