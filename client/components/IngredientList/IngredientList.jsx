@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { MdAdd } from 'react-icons/md';
+import classnames from 'classnames';
 
 import css from './IngredientList.css';
 
@@ -16,15 +17,22 @@ export default class IngredientList extends Component {
     ])
   };
 
+  handleCreate = () => {
+    const { editing, createIngredient } = this.props;
+    if (!editing) createIngredient();
+  };
+
   render() {
-    const { editing, children, createIngredient } = this.props;
+    const { editing, children } = this.props;
     return (
       <>
         <ul className={css.ingredients} data-editing={editing}>
           {children}
         </ul>
-        <div className={css.listActions}>
-          <a href="javascript:void(0)" onClick={createIngredient}>
+        <div
+          className={classnames(css.listActions, { [css.editing]: editing })}
+        >
+          <a href="javascript:void(0)" onClick={this.handleCreate}>
             <MdAdd /> add ingredient
           </a>
         </div>

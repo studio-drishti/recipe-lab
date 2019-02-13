@@ -8,13 +8,11 @@ export default class IngredientTotals extends Component {
   static displayName = 'IngredientTotals';
 
   static propTypes = {
-    steps: PropTypes.arrayOf(PropTypes.object),
-    removals: PropTypes.arrayOf(PropTypes.string),
+    ingredients: PropTypes.arrayOf(PropTypes.object),
     alterations: PropTypes.arrayOf(PropTypes.object)
   };
 
   static defaultProps = {
-    removals: [],
     alterations: []
   };
 
@@ -30,39 +28,31 @@ export default class IngredientTotals extends Component {
   };
 
   getIngredientTotals = () => {
-    const { steps, removals } = this.props;
+    const { ingredients } = this.props;
     const totals = {};
-    steps
-      .filter(step => !removals.includes(step._id))
-      .forEach(step =>
-        step.ingredients
-          .filter(ingredient => !removals.includes(ingredient._id))
-          .forEach(unModifiedIngredient => {
-            const ingredient = this.getIngredientWithMods(unModifiedIngredient);
-            if (totals.hasOwnProperty(ingredient.name)) {
-              totals[ingredient.name].divided = true;
-              if (
-                totals[ingredient.name].quantities.hasOwnProperty(
-                  ingredient.unit
-                )
-              ) {
-                totals[ingredient.name].quantities[ingredient.unit] +=
-                  ingredient.quantity;
-              } else {
-                totals[ingredient.name].quantities = Object.assign(
-                  { [ingredient.unit]: ingredient.quantity },
-                  totals[ingredient.name].quantities
-                );
-              }
-            } else {
-              totals[ingredient.name] = {
-                quantities: {
-                  [ingredient.unit]: ingredient.quantity
-                }
-              };
-            }
-          })
-      );
+    ingredients.forEach(unModifiedIngredient => {
+      const ingredient = this.getIngredientWithMods(unModifiedIngredient);
+      if (totals.hasOwnProperty(ingredient.name)) {
+        totals[ingredient.name].divided = true;
+        if (
+          totals[ingredient.name].quantities.hasOwnProperty(ingredient.unit)
+        ) {
+          totals[ingredient.name].quantities[ingredient.unit] +=
+            ingredient.quantity;
+        } else {
+          totals[ingredient.name].quantities = Object.assign(
+            { [ingredient.unit]: ingredient.quantity },
+            totals[ingredient.name].quantities
+          );
+        }
+      } else {
+        totals[ingredient.name] = {
+          quantities: {
+            [ingredient.unit]: ingredient.quantity
+          }
+        };
+      }
+    });
 
     return Object.entries(totals).map(([key, val]) => ({
       name: key,
@@ -93,10 +83,9 @@ export default class IngredientTotals extends Component {
   };
 
   render() {
-    const { steps } = this.props;
     return (
       <ul className={css.ingredients}>
-        {this.getIngredientTotals(steps).map((ingredient, i) => (
+        {this.getIngredientTotals().map((ingredient, i) => (
           <li key={i}>{this.formatIngredientTotal(ingredient)}</li>
         ))}
       </ul>

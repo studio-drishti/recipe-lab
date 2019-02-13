@@ -26,6 +26,13 @@
 
 .listActions {
   font-size: 0.8em;
+  transition: all linear 0.2s;
+
+  &.editing {
+    pointer-events: none;
+    filter: blur(0.05em);
+    opacity: 0.5;
+  }
 
   & svg {
     vertical-align: middle;

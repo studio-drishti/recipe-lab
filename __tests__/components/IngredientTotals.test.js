@@ -8,28 +8,18 @@ let props;
 
 beforeEach(() => {
   props = {
-    steps: [
+    ingredients: [
       {
         _id: generateId(),
-        ingredients: [
-          {
-            _id: generateId(),
-            name: 'wine',
-            quantity: 1,
-            unit: 'cup'
-          }
-        ]
+        name: 'wine',
+        quantity: 1,
+        unit: 'cup'
       },
       {
         _id: generateId(),
-        ingredients: [
-          {
-            _id: generateId(),
-            name: 'wine',
-            quantity: 1,
-            unit: 'cup'
-          }
-        ]
+        name: 'wine',
+        quantity: 1,
+        unit: 'cup'
       }
     ]
   };
@@ -56,7 +46,7 @@ describe('Calculating ingredient totals', () => {
   });
 
   test('sort cups before tbsp', () => {
-    props.steps[1].ingredients[0].unit = 'tbsp';
+    props.ingredients[1].unit = 'tbsp';
     const wrapper = shallow(<IngredientTotals {...props} />);
 
     expect(wrapper.instance().getIngredientTotals()).toEqual(
@@ -77,38 +67,20 @@ describe('Calculating ingredient totals', () => {
     );
   });
 
-  test('does not calculate removed ingredients', () => {
-    props.removals = [props.steps[0].ingredients[0]._id];
-    const wrapper = shallow(<IngredientTotals {...props} />);
-    expect(wrapper.instance().getIngredientTotals()).toEqual(
-      expect.arrayContaining([
-        expect.objectContaining({
-          name: 'wine',
-          quantities: [
-            {
-              unit: 'cup',
-              quantity: 1
-            }
-          ]
-        })
-      ])
-    );
-  });
-
   test('rewrites modified ingredients', () => {
     props.alterations = [
       {
-        sourceId: props.steps[0].ingredients[0]._id,
+        sourceId: props.ingredients[0]._id,
         field: 'name',
         value: 'whiskey'
       },
       {
-        sourceId: props.steps[0].ingredients[0]._id,
+        sourceId: props.ingredients[0]._id,
         field: 'quantity',
         value: 2
       },
       {
-        sourceId: props.steps[0].ingredients[0]._id,
+        sourceId: props.ingredients[0]._id,
         field: 'unit',
         value: 'gal'
       }

@@ -48,9 +48,9 @@ export default class Recipe extends Component {
       sortings: [],
       alterations: [],
       removals: [],
-      additionalItems: [],
-      additionalSteps: [],
-      additionalIngredients: []
+      addedItems: [],
+      addedSteps: [],
+      addedIngredients: []
     }
   };
 
@@ -110,6 +110,19 @@ export default class Recipe extends Component {
     this.setState({ modification });
   };
 
+  saveAddedIngredient = (ingredient, field, value) => {
+    const { modification } = this.state;
+    const addedIndex = modification.addedIngredients.findIndex(
+      mod => mod._id === ingredient._id
+    );
+
+    if (addedIndex === -1) return;
+
+    modification.addedIngredients[addedIndex][field] = value;
+
+    this.setState({ modification });
+  };
+
   handleItemChange = (e, item) => {
     const { name, value } = e.target;
     const { activeItem } = this.state;
@@ -126,7 +139,11 @@ export default class Recipe extends Component {
   handleIngredientChange = e => {
     const { name, value } = e.target;
     const { activeIngredient } = this.state;
-    this.saveAlteration(activeIngredient, name, value);
+    if ('stepId' in activeIngredient) {
+      this.saveAddedIngredient(activeIngredient, name, value);
+    } else {
+      this.saveAlteration(activeIngredient, name, value);
+    }
   };
 
   saveRemoval = source => {
@@ -143,6 +160,19 @@ export default class Recipe extends Component {
 
     this.setState({ modification });
     localStorage.setItem(localStoreId, JSON.stringify(modification));
+  };
+
+  removeIngredient = ingredient => {
+    const { modification } = this.state;
+    const addedIndex = modification.addedIngredients.findIndex(
+      addition => addition._id === ingredient._id
+    );
+    if (addedIndex === -1) {
+      this.saveRemoval(ingredient);
+    } else {
+      modification.addedIngredients.splice(addedIndex, 1);
+      this.setState({ modification });
+    }
   };
 
   undoRemoval = source => {
@@ -218,7 +248,7 @@ export default class Recipe extends Component {
     }
   };
 
-  createIngredient = stepId => {
+  createIngredient = async stepId => {
     const { modification } = this.state;
 
     const newIngredient = {
@@ -226,12 +256,16 @@ export default class Recipe extends Component {
       stepId,
       quantity: '',
       unit: '',
+      name: '',
       processing: ''
     };
 
-    modification.additionalIngredients.push(newIngredient);
+    modification.addedIngredients.push(newIngredient);
 
-    this.setState({ modification, activeIngredient: newIngredient });
+    await this.setState({ modification });
+    setTimeout(() => {
+      this.setState({ activeIngredient: newIngredient });
+    }, 200);
   };
 
   getSorted = (parentId, arr) => {
@@ -245,6 +279,36 @@ export default class Recipe extends Component {
     return [...arr].sort(
       (a, b) => sortMod.order.indexOf(a._id) > sortMod.order.indexOf(b._id)
     );
+  };
+
+  getItems = () => {
+    const { recipe, modification } = this.state;
+    const items = modification.addedItems.length
+      ? recipe.items.concat(modification.addedItems)
+      : recipe.items;
+    return this.getSorted(recipe._id, items);
+  };
+
+  getSteps = item => {
+    const { modification } = this.state;
+    const addedSteps = modification.addedSteps.filter(
+      mod => mod.itemId === item._id
+    );
+    const steps = addedSteps.length
+      ? item.steps.concat(addedSteps)
+      : item.steps;
+    return this.getSorted(item._id, steps);
+  };
+
+  getIngredients = step => {
+    const { modification } = this.state;
+    const addedIngredients = modification.addedIngredients.filter(
+      mod => mod.stepId === step._id
+    );
+    const ingredients = addedIngredients.length
+      ? step.ingredients.concat(addedIngredients)
+      : step.ingredients;
+    return this.getSorted(step._id, ingredients);
   };
 
   getAlteration = (source, fieldName) => {
@@ -274,22 +338,6 @@ export default class Recipe extends Component {
       modification
     } = this.state;
 
-    // TODO: Refactor as getMergedAndSorted function
-    // To be called when array is needed, not on component render.
-    const recipeItems = this.getSorted(recipe._id, recipe.items).map(item => {
-      item.steps = this.getSorted(item._id, item.steps).map(step => {
-        // const additionalIngredients = modification.additionalIngredients.filter(
-        //   mod => mod.stepId === step._id
-        // );
-        // step.ingredients = this.getSorted(step._id, [
-        //   ...step.ingredients,
-        //   ...additionalIngredients
-        // ]);
-        return step;
-      });
-      return item;
-    });
-
     const swiperParams = {
       pagination: {
         el: '.swiper-pagination',
@@ -306,13 +354,22 @@ export default class Recipe extends Component {
     return (
       <article className={css.recipe}>
         <div className={css.recipeMain}>
-          {recipeItems
+          {this.getItems()
             .filter(item => !modification.removals.includes(item._id))
             .map(item => (
               <div key={item._id}>
                 <h3>Ingredients for {this.getItemValue(item, 'name')}</h3>
                 <IngredientTotals
-                  steps={item.steps}
+                  ingredients={this.getSteps(item)
+                    .filter(step => !modification.removals.includes(step._id))
+                    .reduce((result, step) => {
+                      return result.concat(
+                        this.getIngredients(step).filter(
+                          ingredient =>
+                            !modification.removals.includes(ingredient._id)
+                        )
+                      );
+                    }, [])}
                   removals={modification.removals}
                   alterations={modification.alterations}
                 />
@@ -321,7 +378,7 @@ export default class Recipe extends Component {
 
           <DragDropContext onDragEnd={this.onDragEnd}>
             <ItemList recipeId={recipe._id}>
-              {recipeItems.map((item, itemI) => (
+              {this.getItems().map((item, itemI) => (
                 <Item
                   key={item._id}
                   itemId={item._id}
@@ -339,7 +396,7 @@ export default class Recipe extends Component {
                   }
                 >
                   <StepList itemId={item._id}>
-                    {item.steps.map((step, stepI) => (
+                    {this.getSteps(item).map((step, stepI) => (
                       <Step
                         key={step._id}
                         index={stepI}
@@ -390,7 +447,7 @@ export default class Recipe extends Component {
               }
               navigation={
                 <RecipeNav
-                  recipeItems={recipeItems}
+                  recipeItems={this.getItems()}
                   activeItem={activeItem}
                   activeStep={activeStep}
                   setActiveStep={this.setActiveStep}
@@ -423,7 +480,7 @@ export default class Recipe extends Component {
                 />
               </Swiper>
 
-              {activeStep.ingredients.length > 0 && (
+              {this.getIngredients(activeStep).length > 0 && (
                 <div>
                   <h3>Ingredients Used</h3>
                   <IngredientList
@@ -432,12 +489,12 @@ export default class Recipe extends Component {
                     }
                     editing={
                       activeIngredient !== null &&
-                      activeStep.ingredients.some(
+                      this.getIngredients(activeStep).some(
                         ingredient => ingredient._id === activeIngredient._id
                       )
                     }
                   >
-                    {activeStep.ingredients.map(ingredient => (
+                    {this.getIngredients(activeStep).map(ingredient => (
                       <Ingredient
                         key={ingredient._id}
                         ingredient={ingredient}
@@ -455,7 +512,9 @@ export default class Recipe extends Component {
                           activeIngredient !== null &&
                           activeIngredient._id === ingredient._id
                         }
-                        removeIngredient={() => this.saveRemoval(ingredient)}
+                        removeIngredient={() =>
+                          this.removeIngredient(ingredient)
+                        }
                         restoreIngredient={() =>
                           this.undoAnyRemovals(
                             activeItem,
