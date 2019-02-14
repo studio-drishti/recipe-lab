@@ -1,11 +1,15 @@
 @import '../../config/defaults.css';
 
-.item {
+.itemWrap {
   margin-bottom: 2rem;
+}
+
+.item {
   background: var(--color-white);
   border: 1px solid transparent;
   border-radius: var(--border-radius-sm);
   transition: border linear 0.2s;
+  margin-bottom: 1rem;
 
   & .itemActions {
     opacity: 0;
@@ -63,5 +67,15 @@
     & + button {
       border-left: 0;
     }
+  }
+}
+
+.itemActions {
+  transition: all linear 0.2s;
+
+  &.dragging,
+  &.editing {
+    opacity: 0;
+    pointer-events: none;
   }
 }

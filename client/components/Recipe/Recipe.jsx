@@ -122,7 +122,7 @@ export default class Recipe extends Component {
   };
 
   saveOrUpdateField = (source, fieldName, value) => {
-    if (source.hasOwnProperty('kind')) {
+    if ('kind' in source) {
       this.updateAddition(source, fieldName, value);
     } else {
       this.saveAlteration(source, fieldName, value);
@@ -139,7 +139,7 @@ export default class Recipe extends Component {
   handleStepChange = e => {
     const { name, value } = e.target;
     const { activeStep } = this.state;
-    this.saveAlteration(activeStep, name, value);
+    this.saveOrUpdateField(activeStep, name, value);
   };
 
   handleIngredientChange = e => {
@@ -151,6 +151,7 @@ export default class Recipe extends Component {
   saveRemoval = source => {
     const { modification, localStoreId } = this.state;
 
+    // source was already removed
     if (modification.removals.includes(source._id)) return;
 
     modification.removals.push(source._id);
@@ -164,16 +165,42 @@ export default class Recipe extends Component {
     localStorage.setItem(localStoreId, JSON.stringify(modification));
   };
 
-  removeIngredient = ingredient => {
+  deleteAdditions = (...sources) => {
     const { modification } = this.state;
-    const addedIndex = modification.additions.findIndex(
-      addition => addition._id === ingredient._id
-    );
-    if (addedIndex === -1) {
-      this.saveRemoval(ingredient);
+    sources.forEach(source => {
+      const index = modification.additions.findIndex(
+        addition => addition._id === source._id
+      );
+      modification.additions.splice(index, 1);
+    });
+    this.setState({ modification });
+  };
+
+  removeIngredient = ingredient => {
+    if ('kind' in ingredient) {
+      this.deleteAdditions(ingredient);
     } else {
-      modification.additions.splice(addedIndex, 1);
-      this.setState({ modification });
+      this.saveRemoval(ingredient);
+    }
+  };
+
+  removeStep = step => {
+    if ('kind' in step) {
+      this.deleteAdditions(step, ...this.getUnsortedIngredients(step));
+    } else {
+      this.saveRemoval(step);
+    }
+  };
+
+  removeItem = item => {
+    if ('kind' in item) {
+      const steps = this.getUnsortedSteps(item);
+      const ingredients = steps.reduce((result, step) => {
+        return result.push(...this.getUnsortedIngredients(step));
+      }, []);
+      this.deleteAdditions(item, ...steps, ...ingredients);
+    } else {
+      this.saveRemoval(step);
     }
   };
 
@@ -193,24 +220,26 @@ export default class Recipe extends Component {
     sources.forEach(source => this.undoRemoval(source));
   };
 
-  saveSorting = (parentId, arr, sourceI, destinationI) => {
+  saveSorting = (parentId, unsorted, sourceI, destinationI) => {
     const { modification, localStoreId } = this.state;
     const sortingIndex = modification.sortings.findIndex(
       sorting => sorting.parentId === parentId
     );
     const sortingExists = sortingIndex > -1;
-    const sortedArr = sortingExists ? this.getSorted(parentId, arr) : arr;
+    const sorted = sortingExists
+      ? this.getSorted(parentId, unsorted)
+      : unsorted;
 
     const sorting = {
-      parentId: parentId,
-      order: reorder(sortedArr, sourceI, destinationI).map(child => child._id)
+      parentId,
+      order: reorder(sorted, sourceI, destinationI).map(child => child._id)
     };
 
     if (
       sortingExists &&
-      areArraysEqual(sorting.order, arr.map(child => child._id))
+      areArraysEqual(sorting.order, unsorted.map(child => child._id))
     ) {
-      // Remove exisitng sorting if the new value is the same as the source
+      // Remove existing sorting if the new value is the same as the source
       modification.sortings.splice(sortingIndex, 1);
     } else if (sortingExists) {
       // Update existing sorting
@@ -231,23 +260,38 @@ export default class Recipe extends Component {
 
     const { recipe } = this.state;
 
-    if (result.type.startsWith('STEP')) {
+    if (result.type.startsWith('ITEM')) {
+      this.saveSorting(
+        recipe._id,
+        this.getUnsortedItems(),
+        result.source.index,
+        result.destination.index
+      );
+    } else if (result.type.startsWith('STEP')) {
       const itemId = result.destination.droppableId;
       const item = recipe.items.find(item => item._id === itemId);
       this.saveSorting(
         itemId,
-        item.steps,
-        result.source.index,
-        result.destination.index
-      );
-    } else if (result.type.startsWith('ITEM')) {
-      this.saveSorting(
-        recipe._id,
-        recipe.items,
+        this.getUnsortedSteps(item),
         result.source.index,
         result.destination.index
       );
     }
+  };
+
+  createStep = itemId => {
+    const { modification } = this.state;
+
+    const addition = {
+      _id: generateId(),
+      kind: 'Step',
+      parentId: itemId,
+      directions: '',
+      notes: ''
+    };
+
+    modification.additions.push(addition);
+    this.setState({ modification });
   };
 
   createIngredient = async stepId => {
@@ -284,7 +328,7 @@ export default class Recipe extends Component {
     );
   };
 
-  getItems = () => {
+  getItems = (sorted = true) => {
     const { recipe, modification } = this.state;
     const addedItems = modification.additions.filter(
       addition => addition.parentId === recipe._id
@@ -292,29 +336,37 @@ export default class Recipe extends Component {
     const items = addedItems.length
       ? recipe.items.concat(addedItems)
       : recipe.items;
-    return this.getSorted(recipe._id, items);
+    return sorted ? this.getSorted(recipe._id, items) : items;
   };
 
-  getSteps = item => {
+  getUnsortedItems = () => {
+    return this.getItems(false);
+  };
+
+  getSteps = (item, sorted = true) => {
     const { modification } = this.state;
-    const addedSteps = modification.additions.filter(
+    const steps = modification.additions.filter(
       addition => addition.parentId === item._id
     );
-    const steps = addedSteps.length
-      ? item.steps.concat(addedSteps)
-      : item.steps;
-    return this.getSorted(item._id, steps);
+    if ('steps' in item) steps.unshift(...item.steps);
+    return sorted ? this.getSorted(item._id, steps) : steps;
   };
 
-  getIngredients = step => {
+  getUnsortedSteps = item => {
+    return this.getSteps(item, false);
+  };
+
+  getIngredients = (step, sorted = true) => {
     const { modification } = this.state;
-    const addedIngredients = modification.additions.filter(
+    const ingredients = modification.additions.filter(
       addition => addition.parentId === step._id
     );
-    const ingredients = addedIngredients.length
-      ? step.ingredients.concat(addedIngredients)
-      : step.ingredients;
-    return this.getSorted(step._id, ingredients);
+    if ('ingredients' in step) ingredients.unshift(...step.ingredients);
+    return sorted ? this.getSorted(step._id, ingredients) : ingredients;
+  };
+
+  getUnsortedIngredients = step => {
+    return this.getIngredients(step, false);
   };
 
   getAlteration = (source, fieldName) => {
@@ -332,7 +384,10 @@ export default class Recipe extends Component {
 
   getActiveStepNumber = () => {
     const { activeItem, activeStep } = this.state;
-    return activeItem.steps.findIndex(step => step._id === activeStep._id) + 1;
+    return (
+      this.getSteps(activeItem).findIndex(step => step._id === activeStep._id) +
+      1
+    );
   };
 
   render() {
@@ -392,8 +447,9 @@ export default class Recipe extends Component {
                   itemId={item._id}
                   index={itemI}
                   removed={modification.removals.includes(item._id)}
-                  removeItem={() => this.saveRemoval(item)}
+                  removeItem={() => this.removeItem(item)}
                   restoreItem={() => this.undoRemoval(item)}
+                  createStep={() => this.createStep(item._id)}
                   itemName={
                     <ItemName
                       item={item}
@@ -418,7 +474,7 @@ export default class Recipe extends Component {
                           activeStep._id === step._id
                         }
                         activateStep={() => this.setActiveStep(item, step)}
-                        removeStep={() => this.saveRemoval(step)}
+                        removeStep={() => this.removeStep(step)}
                         restoreStep={() => this.undoAnyRemovals(item, step)}
                       >
                         <Directions
