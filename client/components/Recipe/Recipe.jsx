@@ -43,6 +43,7 @@ export default class Recipe extends Component {
     activeItem: this.props.recipe.items[0],
     activeStep: this.props.recipe.items[0].steps[0],
     activeIngredient: null,
+    autoFocusId: null,
     localStoreId: `MOD-${this.props.recipe._id}`,
     modification: {
       sortings: [],
@@ -200,7 +201,7 @@ export default class Recipe extends Component {
       }, []);
       this.deleteAdditions(item, ...steps, ...ingredients);
     } else {
-      this.saveRemoval(step);
+      this.saveRemoval(item);
     }
   };
 
@@ -291,7 +292,7 @@ export default class Recipe extends Component {
     };
 
     modification.additions.push(addition);
-    this.setState({ modification });
+    this.setState({ modification, autoFocusId: addition._id });
   };
 
   createIngredient = async stepId => {
@@ -396,6 +397,7 @@ export default class Recipe extends Component {
       activeItem,
       activeStep,
       activeIngredient,
+      autoFocusId,
       modification
     } = this.state;
 
@@ -473,6 +475,7 @@ export default class Recipe extends Component {
                           activeItem._id === item._id &&
                           activeStep._id === step._id
                         }
+                        focusOnMount={autoFocusId === step._id}
                         activateStep={() => this.setActiveStep(item, step)}
                         removeStep={() => this.removeStep(step)}
                         restoreStep={() => this.undoAnyRemovals(item, step)}
