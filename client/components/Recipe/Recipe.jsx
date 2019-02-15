@@ -110,7 +110,7 @@ export default class Recipe extends Component {
   };
 
   updateAddition = (source, field, value) => {
-    const { modification } = this.state;
+    const { modification, localStoreId } = this.state;
 
     const index = modification.additions.findIndex(
       addition => addition._id === source._id
@@ -119,6 +119,7 @@ export default class Recipe extends Component {
     if (index === -1) return;
 
     modification.additions[index][field] = value;
+    localStorage.setItem(localStoreId, JSON.stringify(modification));
     this.setState({ modification });
   };
 
@@ -281,7 +282,7 @@ export default class Recipe extends Component {
   };
 
   createStep = itemId => {
-    const { modification } = this.state;
+    const { modification, localStoreId } = this.state;
 
     const addition = {
       _id: generateId(),
@@ -292,11 +293,12 @@ export default class Recipe extends Component {
     };
 
     modification.additions.push(addition);
+    localStorage.setItem(localStoreId, JSON.stringify(modification));
     this.setState({ modification, autoFocusId: addition._id });
   };
 
   createIngredient = async stepId => {
-    const { modification } = this.state;
+    const { modification, localStoreId } = this.state;
 
     const addition = {
       _id: generateId(),
@@ -309,7 +311,7 @@ export default class Recipe extends Component {
     };
 
     modification.additions.push(addition);
-
+    localStorage.setItem(localStoreId, JSON.stringify(modification));
     await this.setState({ modification });
     setTimeout(() => {
       this.setState({ activeIngredient: addition });
@@ -324,9 +326,12 @@ export default class Recipe extends Component {
 
     if (sortMod === undefined) return arr;
 
-    return [...arr].sort(
-      (a, b) => sortMod.order.indexOf(a._id) > sortMod.order.indexOf(b._id)
-    );
+    return [...arr].sort((a, b) => {
+      const indexA = sortMod.order.indexOf(a._id);
+      const indexB = sortMod.order.indexOf(b._id);
+      if (indexB === -1) return 0;
+      return indexA > indexB;
+    });
   };
 
   getItems = (sorted = true) => {
