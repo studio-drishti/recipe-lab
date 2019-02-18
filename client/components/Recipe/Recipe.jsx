@@ -383,9 +383,9 @@ export default class Recipe extends Component {
     return mod ? mod.value : undefined;
   };
 
-  getItemValue = (item, fieldName) => {
-    const mod = this.getAlteration(item, fieldName);
-    return mod !== undefined ? mod : item[fieldName];
+  getFieldValue = (source, fieldName) => {
+    const mod = this.getAlteration(source, fieldName);
+    return mod !== undefined ? mod : source[fieldName];
   };
 
   getActiveStepNumber = () => {
@@ -427,7 +427,7 @@ export default class Recipe extends Component {
               .filter(item => !modification.removals.includes(item._id))
               .map(item => (
                 <div key={item._id}>
-                  <h3>Ingredients for {this.getItemValue(item, 'name')}</h3>
+                  <h3>Ingredients for {this.getFieldValue(item, 'name')}</h3>
                   <IngredientTotals
                     ingredients={this.getSteps(item)
                       .filter(step => !modification.removals.includes(step._id))
@@ -473,6 +473,7 @@ export default class Recipe extends Component {
                         index={stepI}
                         itemId={item._id}
                         stepId={step._id}
+                        directionsValue={this.getFieldValue(step, 'directions')}
                         removed={modification.removals.some(sourceId =>
                           [item._id, step._id].includes(sourceId)
                         )}
@@ -484,13 +485,14 @@ export default class Recipe extends Component {
                         activateStep={() => this.setActiveStep(item, step)}
                         removeStep={() => this.removeStep(step)}
                         restoreStep={() => this.undoAnyRemovals(item, step)}
-                      >
-                        <Directions
-                          directions={step.directions}
-                          mod={this.getAlteration(step, 'directions')}
-                          handleStepChange={this.handleStepChange}
-                        />
-                      </Step>
+                        directions={
+                          <Directions
+                            directions={step.directions}
+                            mod={this.getAlteration(step, 'directions')}
+                            handleStepChange={this.handleStepChange}
+                          />
+                        }
+                      />
                     ))}
                   </StepList>
                 </Item>

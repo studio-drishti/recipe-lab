@@ -56,7 +56,7 @@ export default class Ingredient extends Component {
             inputRef={inputRef}
             name="directions"
             value={this.getDirectionsValue()}
-            placeholder={directions.length ? directions : 'Directions'}
+            placeholder="Directions"
             onChange={this.handleStepChange}
           />
         )}
