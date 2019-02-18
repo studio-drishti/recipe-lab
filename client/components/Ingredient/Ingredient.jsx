@@ -112,6 +112,14 @@ export default class Ingredient extends Component {
 
   handleSave = e => {
     e.preventDefault();
+    if (
+      !this.getIngredientValue('quantity') &&
+      !this.getIngredientValue('unit') &&
+      !this.getIngredientValue('name') &&
+      !this.getIngredientValue('processing')
+    ) {
+      this.props.removeIngredient();
+    }
     this.deselect();
     this.ingredientRef.current.focus();
   };

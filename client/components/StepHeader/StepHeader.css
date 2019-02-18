@@ -41,25 +41,7 @@
 }
 
 .editActions {
-  font-size: 0.8em;
-
-  & svg {
-    vertical-align: middle;
-    margin-right: 0.15em;
-  }
-
-  & a {
-    text-decoration: none;
-    color: var(--color-black);
-    opacity: 0.5;
-    transition: all linear 0.2s;
-  }
-
-  & a:hover {
-    opacity: 1;
-  }
-
-  & a + a::before {
+  & button + button::before {
     content: '|';
     color: var(--color-medium-gray);
     display: inline-block;

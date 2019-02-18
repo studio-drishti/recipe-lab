@@ -17,13 +17,15 @@ export default class Step extends PureComponent {
     children: PropTypes.node,
     activateStep: PropTypes.func,
     removed: PropTypes.bool,
+    focusOnMount: PropTypes.bool,
     removeStep: PropTypes.func,
     restoreStep: PropTypes.func
   };
 
   static defaultProps = {
     isActive: false,
-    removed: false
+    removed: false,
+    focusOnMount: false
   };
 
   state = {
@@ -32,6 +34,10 @@ export default class Step extends PureComponent {
 
   stepRef = React.createRef();
   inputRef = React.createRef();
+
+  componentDidMount() {
+    if (this.props.focusOnMount) this.enableEditing();
+  }
 
   componentDidUpdate(prevProps) {
     if (prevProps.isActive && !this.props.isActive && this.state.editing) {

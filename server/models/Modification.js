@@ -1,36 +1,21 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-// const StepStringModSchema = new Schema({
-//   stepId: Schema.Types.ObjectId,
-//   field: 'directions|notes',
-//   value: String,
-// })
-
-const AdditionalItemSchema = new Schema({
-  // TODO: extend item schema
-});
-
-const AdditionalStepSchema = new Schema({
-  itemId: {
-    type: Schema.Types.ObjectId
+const AdditionSchema = new Schema(
+  {
+    parentId: Schema.Types.ObjectId
+  },
+  {
+    discriminatorKey: 'kind'
   }
-  // TODO: extend step schema
-});
-
-const AdditionalIngredientSchema = new Schema({
-  stepId: {
-    type: Schema.Types.ObjectId
-  }
-  // TODO: extend ingredient schema
-});
+);
 
 const ModificationSchema = new Schema({
-  // author: {
-  //   type: Schema.Types.ObjectId,
-  //   ref: 'User',
-  //   required: true,
-  // },
+  author: {
+    type: Schema.Types.ObjectId,
+    ref: 'User',
+    required: true
+  },
   recipe: {
     type: Schema.Types.ObjectId,
     ref: 'Recipe',
@@ -54,10 +39,53 @@ const ModificationSchema = new Schema({
       sourceId: Schema.Types.ObjectId
     }
   ],
-  additionalItems: [AdditionalItemSchema],
-  additionalSteps: [AdditionalStepSchema],
-  additionalIngredients: [AdditionalIngredientSchema]
+  additions: [AdditionSchema]
 });
+
+const additionArray = ModificationSchema.path('additions');
+
+additionArray.discriminator(
+  'Item',
+  new Schema({
+    name: {
+      type: String,
+      required: true
+    }
+  })
+);
+
+additionArray.discriminator(
+  'Step',
+  new Schema({
+    directions: {
+      type: String,
+      required: true
+    },
+    notes: {
+      type: String
+    }
+  })
+);
+
+additionArray.discriminator(
+  'Ingredient',
+  new Schema({
+    name: {
+      type: String,
+      required: true
+    },
+    quantity: {
+      type: Number,
+      required: true
+    },
+    unit: {
+      type: String
+    },
+    processing: {
+      type: String
+    }
+  })
+);
 
 const Modification = mongoose.model('Modification', ModificationSchema);
 

@@ -1,0 +1,22 @@
+@import '../../config/defaults.css';
+
+.textButton {
+  font-size: 0.8em;
+  text-decoration: none;
+  color: var(--color-black);
+  opacity: 0.5;
+  transition: all linear 0.2s;
+  background: none;
+  padding: 0;
+  border: 0;
+  vertical-align: middle;
+
+  & svg {
+    vertical-align: middle;
+    margin-right: 0.15em;
+  }
+
+  &:hover {
+    opacity: 1;
+  }
+}
