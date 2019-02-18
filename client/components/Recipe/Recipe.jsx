@@ -135,7 +135,7 @@ export default class Recipe extends Component {
     const { name, value } = e.target;
     const { activeItem } = this.state;
     const source = item !== undefined ? item : activeItem;
-    this.saveAlteration(source, name, value);
+    this.saveOrUpdateField(source, name, value);
   };
 
   handleStepChange = e => {
@@ -281,6 +281,21 @@ export default class Recipe extends Component {
     }
   };
 
+  createItem = () => {
+    const { recipe, modification, localStoreId } = this.state;
+
+    const addition = {
+      _id: generateId(),
+      kind: 'Item',
+      parentId: recipe._id,
+      name: ''
+    };
+
+    modification.additions.push(addition);
+    localStorage.setItem(localStoreId, JSON.stringify(modification));
+    this.setState({ modification, autoFocusId: addition._id });
+  };
+
   createStep = itemId => {
     const { modification, localStoreId } = this.state;
 
@@ -419,11 +434,13 @@ export default class Recipe extends Component {
       spaceBetween: 20
     };
 
+    const recipeItems = this.getItems();
+
     return (
       <article className={css.recipe}>
         <div className={css.recipeMain}>
           <div className={css.ingredientTotals}>
-            {this.getItems()
+            {recipeItems
               .filter(item => !modification.removals.includes(item._id))
               .map(item => (
                 <div key={item._id}>
@@ -448,15 +465,19 @@ export default class Recipe extends Component {
 
           <DragDropContext onDragEnd={this.onDragEnd}>
             <ItemList recipeId={recipe._id}>
-              {this.getItems().map((item, itemI) => (
+              {recipeItems.map((item, itemI) => (
                 <Item
                   key={item._id}
                   itemId={item._id}
                   index={itemI}
+                  isLast={itemI === recipeItems.length - 1}
+                  focusOnMount={autoFocusId === item._id}
                   removed={modification.removals.includes(item._id)}
                   removeItem={() => this.removeItem(item)}
                   restoreItem={() => this.undoRemoval(item)}
                   createStep={() => this.createStep(item._id)}
+                  createItem={this.createItem}
+                  itemNameValue={this.getFieldValue(item, 'name')}
                   itemName={
                     <ItemName
                       item={item}
@@ -521,7 +542,7 @@ export default class Recipe extends Component {
               }
               navigation={
                 <RecipeNav
-                  recipeItems={this.getItems()}
+                  recipeItems={recipeItems}
                   activeItem={activeItem}
                   activeStep={activeStep}
                   setActiveStep={this.setActiveStep}

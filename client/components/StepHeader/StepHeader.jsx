@@ -5,6 +5,7 @@ import classnames from 'classnames';
 
 import css from './StepHeader.css';
 import TextButton from '../TextButton';
+import TextButtonGroup from '../TextButtonGroup';
 
 export default class Step extends PureComponent {
   static displayName = 'Step';
@@ -114,7 +115,7 @@ export default class Step extends PureComponent {
               inputRef: this.directionsInputRef
             })}
         </div>
-        <div className={css.editActions}>
+        <TextButtonGroup className={css.editActions}>
           {!editing && !removed && (
             <>
               <TextButton
@@ -144,7 +145,7 @@ export default class Step extends PureComponent {
               save changes
             </TextButton>
           )}
-        </div>
+        </TextButtonGroup>
       </header>
     );
   }

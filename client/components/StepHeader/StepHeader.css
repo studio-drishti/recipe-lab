@@ -39,12 +39,3 @@
   cursor: pointer;
   margin-bottom: 0.5rem;
 }
-
-.editActions {
-  & button + button::before {
-    content: '|';
-    color: var(--color-medium-gray);
-    display: inline-block;
-    margin: 0 0.25em;
-  }
-}

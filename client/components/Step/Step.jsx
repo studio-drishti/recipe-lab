@@ -79,12 +79,8 @@ export default class Step extends PureComponent {
 
   handleSave = e => {
     e.stopPropagation();
-
-    const { directionsValue, removeStep } = this.props;
-    if (!directionsValue) {
-      removeStep();
-    }
     this.disableEditing();
+    if (!this.props.directionsValue) this.props.removeStep();
   };
 
   handleRemove = e => {
