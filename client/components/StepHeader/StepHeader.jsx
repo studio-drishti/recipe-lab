@@ -115,28 +115,30 @@ export default class Step extends PureComponent {
             })}
         </div>
         <div className={css.editActions}>
-          {!editing && !removed && (
-            <>
-              <TextButton
-                className={css.editBtn}
-                onClick={this.enableEditingDirections}
-              >
-                <MdEdit />
-                edit step
-              </TextButton>
-              <TextButton onClick={this.handleRemove}>
-                <MdClear />
-                remove step
-              </TextButton>
-            </>
-          )}
+          {!editing &&
+            !removed && (
+              <>
+                <TextButton
+                  className={css.editBtn}
+                  onClick={this.enableEditingDirections}
+                >
+                  <MdEdit />
+                  edit step
+                </TextButton>
+                <TextButton onClick={this.handleRemove}>
+                  <MdClear />
+                  remove step
+                </TextButton>
+              </>
+            )}
 
-          {!editing && removed && (
-            <TextButton onClick={this.handleRestore}>
-              <MdRefresh />
-              restore step
-            </TextButton>
-          )}
+          {!editing &&
+            removed && (
+              <TextButton onClick={this.handleRestore}>
+                <MdRefresh />
+                restore step
+              </TextButton>
+            )}
 
           {editing && (
             <TextButton onClick={this.disableEditing}>
