@@ -198,7 +198,9 @@ export default class Recipe extends Component {
     if ('kind' in item) {
       const steps = this.getUnsortedSteps(item);
       const ingredients = steps.reduce((result, step) => {
-        return result.push(...this.getUnsortedIngredients(step));
+        const stepIngredients = this.getUnsortedIngredients(step);
+        if (stepIngredients.length) result.push(...stepIngredients);
+        return result;
       }, []);
       this.deleteAdditions(item, ...steps, ...ingredients);
     } else {
