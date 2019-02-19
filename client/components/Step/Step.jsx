@@ -14,7 +14,8 @@ export default class Step extends PureComponent {
     itemId: PropTypes.string,
     stepId: PropTypes.string,
     isActive: PropTypes.bool,
-    children: PropTypes.node,
+    directions: PropTypes.node,
+    directionsValue: PropTypes.string,
     activateStep: PropTypes.func,
     removed: PropTypes.bool,
     focusOnMount: PropTypes.bool,
@@ -76,6 +77,12 @@ export default class Step extends PureComponent {
     }
   };
 
+  handleSave = e => {
+    e.stopPropagation();
+    this.disableEditing();
+    if (!this.props.directionsValue) this.props.removeStep();
+  };
+
   handleRemove = e => {
     e.stopPropagation();
     this.props.removeStep();
@@ -94,7 +101,7 @@ export default class Step extends PureComponent {
       isActive,
       removed,
       restoreStep,
-      children: child
+      directions
     } = this.props;
     const { editing } = this.state;
     return (
@@ -118,8 +125,8 @@ export default class Step extends PureComponent {
               </div>
 
               <div className={css.stepDirections} onClick={this.handleSelect}>
-                {child &&
-                  React.cloneElement(child, {
+                {directions &&
+                  React.cloneElement(directions, {
                     editing,
                     removed,
                     restoreStep,
@@ -150,10 +157,7 @@ export default class Step extends PureComponent {
                 )}
 
                 {editing && (
-                  <button
-                    title="Save modifications"
-                    onClick={this.disableEditing}
-                  >
+                  <button title="Save modifications" onClick={this.handleSave}>
                     <MdCheck />
                   </button>
                 )}

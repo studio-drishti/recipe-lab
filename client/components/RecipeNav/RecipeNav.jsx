@@ -9,6 +9,7 @@ export default class Ingredient extends Component {
 
   static propTypes = {
     recipeItems: PropTypes.arrayOf(PropTypes.object),
+    recipeSteps: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.object)),
     activeItem: PropTypes.object,
     activeStep: PropTypes.object,
     setActiveStep: PropTypes.func
@@ -19,58 +20,65 @@ export default class Ingredient extends Component {
   };
 
   nextStep = () => {
-    const { activeItem, activeStep, recipeItems, setActiveStep } = this.props;
+    const {
+      activeItem,
+      activeStep,
+      recipeItems,
+      recipeSteps,
+      setActiveStep
+    } = this.props;
     let itemIndex = recipeItems.findIndex(item => item._id === activeItem._id);
-    let stepIndex = activeItem.steps.findIndex(
+    let stepIndex = recipeSteps[itemIndex].findIndex(
       step => step._id === activeStep._id
     );
 
-    if (stepIndex + 1 < activeItem.steps.length) {
+    if (stepIndex + 1 < recipeSteps[itemIndex].length) {
       stepIndex++;
     } else if (itemIndex + 1 < recipeItems.length) {
       itemIndex++;
       stepIndex = 0;
     }
 
-    setActiveStep(
-      recipeItems[itemIndex],
-      recipeItems[itemIndex].steps[stepIndex]
-    );
+    setActiveStep(recipeItems[itemIndex], recipeSteps[itemIndex][stepIndex]);
   };
 
   prevStep = () => {
-    const { activeItem, activeStep, recipeItems, setActiveStep } = this.props;
+    const {
+      activeItem,
+      activeStep,
+      recipeItems,
+      recipeSteps,
+      setActiveStep
+    } = this.props;
     let itemIndex = recipeItems.findIndex(item => item._id === activeItem._id);
-    let stepIndex = activeItem.steps.findIndex(
+    let stepIndex = recipeSteps[itemIndex].findIndex(
       step => step._id === activeStep._id
     );
+
     if (stepIndex - 1 >= 0) {
       stepIndex--;
     } else if (itemIndex - 1 >= 0) {
       itemIndex--;
-      stepIndex = recipeItems[itemIndex].steps.length - 1;
+      stepIndex = recipeSteps[itemIndex].length - 1;
     }
 
-    setActiveStep(
-      recipeItems[itemIndex],
-      recipeItems[itemIndex].steps[stepIndex]
-    );
+    setActiveStep(recipeItems[itemIndex], recipeSteps[itemIndex][stepIndex]);
   };
 
   render() {
-    const { recipeItems, activeItem, activeStep } = this.props;
+    const { recipeItems, recipeSteps, activeItem, activeStep } = this.props;
 
     const activeItemIndex = recipeItems.findIndex(
       item => item._id === activeItem._id
     );
-    const activeStepIndex = activeItem.steps.findIndex(
+    const activeStepIndex = recipeSteps[activeItemIndex].findIndex(
       step => step._id === activeStep._id
     );
     const hasPrevStep =
       (activeItemIndex === 0 && activeStepIndex > 0) || activeItemIndex > 0;
     const hasNextStep =
       activeItemIndex < recipeItems.length - 1 ||
-      activeStepIndex < activeItem.steps.length - 1;
+      activeStepIndex < recipeSteps[activeItemIndex].length - 1;
 
     return (
       <nav className={css.nav}>

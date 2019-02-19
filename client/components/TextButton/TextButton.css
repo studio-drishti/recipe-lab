@@ -16,7 +16,12 @@
     margin-right: 0.15em;
   }
 
-  &:hover {
+  &:disabled {
+    cursor: default;
+    opacity: 0.15;
+  }
+
+  &:enabled:hover {
     opacity: 1;
   }
 }

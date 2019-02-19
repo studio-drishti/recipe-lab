@@ -47,7 +47,6 @@
   display: grid;
   grid-template-columns: 1fr 11fr;
   padding: 0.5rem;
-  padding-bottom: 1rem;
 
   & h3 {
     margin: 0;
