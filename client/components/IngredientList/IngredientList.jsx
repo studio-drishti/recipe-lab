@@ -27,9 +27,11 @@ export default class IngredientList extends Component {
     const { editing, children } = this.props;
     return (
       <>
-        <ul className={css.ingredients} data-editing={editing}>
-          {children}
-        </ul>
+        {children.length > 0 && (
+          <ul className={css.ingredients} data-editing={editing}>
+            {children}
+          </ul>
+        )}
         <div
           className={classnames(css.listActions, { [css.editing]: editing })}
         >

@@ -558,55 +558,41 @@ export default class Recipe extends Component {
             <div className={css.recipeDetailContent}>
               {/* <StepCarousel /> */}
 
-              {activeStepIngredients.length > 0 && (
-                <div>
-                  <h3>Ingredients Used</h3>
-                  <IngredientList
-                    createIngredient={() =>
-                      this.createIngredient(activeStep._id)
-                    }
+              <h3>Ingredients Used</h3>
+              <IngredientList
+                createIngredient={() => this.createIngredient(activeStep._id)}
+                editing={
+                  activeIngredient !== null &&
+                  activeStepIngredients.some(
+                    ingredient => ingredient._id === activeIngredient._id
+                  )
+                }
+              >
+                {activeStepIngredients.map(ingredient => (
+                  <Ingredient
+                    key={ingredient._id}
+                    ingredient={ingredient}
+                    ingredientMods={modification.alterations.filter(
+                      mod => mod.sourceId === ingredient._id
+                    )}
+                    removed={modification.removals.some(sourceId =>
+                      [activeItem._id, activeStep._id, ingredient._id].includes(
+                        sourceId
+                      )
+                    )}
                     editing={
                       activeIngredient !== null &&
-                      activeStepIngredients.some(
-                        ingredient => ingredient._id === activeIngredient._id
-                      )
+                      activeIngredient._id === ingredient._id
                     }
-                  >
-                    {activeStepIngredients.map(ingredient => (
-                      <Ingredient
-                        key={ingredient._id}
-                        ingredient={ingredient}
-                        ingredientMods={modification.alterations.filter(
-                          mod => mod.sourceId === ingredient._id
-                        )}
-                        removed={modification.removals.some(sourceId =>
-                          [
-                            activeItem._id,
-                            activeStep._id,
-                            ingredient._id
-                          ].includes(sourceId)
-                        )}
-                        editing={
-                          activeIngredient !== null &&
-                          activeIngredient._id === ingredient._id
-                        }
-                        removeIngredient={() =>
-                          this.removeIngredient(ingredient)
-                        }
-                        restoreIngredient={() =>
-                          this.undoAnyRemovals(
-                            activeItem,
-                            activeStep,
-                            ingredient
-                          )
-                        }
-                        handleIngredientChange={this.handleIngredientChange}
-                        setActiveIngredient={this.setActiveIngredient}
-                      />
-                    ))}
-                  </IngredientList>
-                </div>
-              )}
+                    removeIngredient={() => this.removeIngredient(ingredient)}
+                    restoreIngredient={() =>
+                      this.undoAnyRemovals(activeItem, activeStep, ingredient)
+                    }
+                    handleIngredientChange={this.handleIngredientChange}
+                    setActiveIngredient={this.setActiveIngredient}
+                  />
+                ))}
+              </IngredientList>
 
               {/* <h3>Notes</h3>
               {editing ? (
