@@ -1,7 +1,6 @@
 import React from 'react';
 import { Component } from 'react';
 import PropTypes from 'prop-types';
-import Swiper from 'react-id-swiper';
 import { DragDropContext } from 'react-beautiful-dnd';
 
 import css from './Recipe.css';
@@ -19,6 +18,7 @@ import IngredientList from '../IngredientList';
 import Ingredient from '../Ingredient';
 import IngredientTotals from '../IngredientTotals';
 import StepHeader from '../StepHeader';
+// import StepCarousel from '../StepCarousel';
 import RecipeNav from '../RecipeNav';
 import Directions from '../Directions';
 
@@ -423,20 +423,8 @@ export default class Recipe extends Component {
       modification
     } = this.state;
 
-    const swiperParams = {
-      pagination: {
-        el: '.swiper-pagination',
-        type: 'bullets',
-        clickable: true
-      },
-      navigation: {
-        nextEl: '.swiper-button-next',
-        prevEl: '.swiper-button-prev'
-      },
-      spaceBetween: 20
-    };
-
     const recipeItems = this.getItems();
+    const activeStepIngredients = this.getIngredients(activeStep);
 
     return (
       <article className={css.recipe}>
@@ -568,25 +556,9 @@ export default class Recipe extends Component {
               }
             />
             <div className={css.recipeDetailContent}>
-              <Swiper {...swiperParams}>
-                <img
-                  src={`https://loremflickr.com/530/300/food,cooking,spaghetti?s=${
-                    activeStep._id
-                  }_1`}
-                />
-                <img
-                  src={`https://loremflickr.com/530/300/food,cooking,spaghetti?s=${
-                    activeStep._id
-                  }_2`}
-                />
-                <img
-                  src={`https://loremflickr.com/530/300/food,cooking,spaghetti?s=${
-                    activeStep._id
-                  }_3`}
-                />
-              </Swiper>
+              {/* <StepCarousel /> */}
 
-              {this.getIngredients(activeStep).length > 0 && (
+              {activeStepIngredients.length > 0 && (
                 <div>
                   <h3>Ingredients Used</h3>
                   <IngredientList
@@ -595,12 +567,12 @@ export default class Recipe extends Component {
                     }
                     editing={
                       activeIngredient !== null &&
-                      this.getIngredients(activeStep).some(
+                      activeStepIngredients.some(
                         ingredient => ingredient._id === activeIngredient._id
                       )
                     }
                   >
-                    {this.getIngredients(activeStep).map(ingredient => (
+                    {activeStepIngredients.map(ingredient => (
                       <Ingredient
                         key={ingredient._id}
                         ingredient={ingredient}
