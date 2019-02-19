@@ -193,12 +193,12 @@ export default class Item extends PureComponent {
                 [css.dragging]: snapshot.isDragging
               })}
             >
-              <TextButton onClick={this.handleCreateStep}>
+              <TextButton onClick={this.handleCreateStep} disabled={editing}>
                 <MdAdd /> add step
               </TextButton>
 
               {isLast && (
-                <TextButton onClick={this.handleCreateItem}>
+                <TextButton onClick={this.handleCreateItem} disabled={editing}>
                   <MdAdd /> add item
                 </TextButton>
               )}
