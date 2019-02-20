@@ -4,7 +4,7 @@ import fetch from 'isomorphic-unfetch';
 import { MdSchool, MdTimer } from 'react-icons/md';
 
 import { API_URL } from '../../config';
-import Layout from '../../components/Layout';
+import Page from '../../components/Page';
 import Recipe from '../../components/Recipe';
 import css from './recipe.css';
 
@@ -30,7 +30,7 @@ export default class IndexPage extends Component {
   render() {
     const { recipe } = this.props;
     return (
-      <Layout>
+      <Page>
         <header
           style={{
             backgroundImage:
@@ -79,7 +79,7 @@ export default class IndexPage extends Component {
             </p>
           </div>
         </div>
-      </Layout>
+      </Page>
     );
   }
 }

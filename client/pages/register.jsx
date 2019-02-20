@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import Layout from '../components/Layout';
+import Page from '../layouts/Main';
 import Register from '../components/Register';
 
 export default class RegisterPage extends Component {
@@ -7,10 +7,10 @@ export default class RegisterPage extends Component {
 
   render() {
     return (
-      <Layout>
+      <Page>
         <h1>Register</h1>
         <Register />
-      </Layout>
+      </Page>
     );
   }
 }
