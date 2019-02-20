@@ -4,7 +4,7 @@ import fetch from 'isomorphic-unfetch';
 import { MdSchool, MdTimer } from 'react-icons/md';
 
 import { API_URL } from '../../config';
-import Page from '../../components/Page';
+import Page from '../../layouts/Main';
 import Recipe from '../../components/Recipe';
 import css from './recipe.css';
 
