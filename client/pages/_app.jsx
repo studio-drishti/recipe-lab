@@ -2,10 +2,9 @@ import App, { Container } from 'next/app';
 import React from 'react';
 
 import { NextAuth } from 'next-auth/client';
-import Theme from '../components/Theme';
 
 export default class MyApp extends App {
-  static async getInitialProps({ Component, ctx, req }) {
+  static async getInitialProps({ Component, ctx }) {
     let pageProps = {};
 
     if (Component.getInitialProps) {
@@ -14,19 +13,16 @@ export default class MyApp extends App {
 
     return {
       pageProps,
-      session: await NextAuth.init({ req })
+      session: await NextAuth.init({ req: ctx.req })
     };
   }
 
   render() {
-    const { Component, pageProps } = this.props;
-    // console.log("session", session)
+    const { Component, pageProps, session } = this.props;
     return (
-      <Theme>
-        <Container>
-          <Component {...pageProps} />
-        </Container>
-      </Theme>
+      <Container>
+        <Component {...pageProps} />
+      </Container>
     );
   }
 }
