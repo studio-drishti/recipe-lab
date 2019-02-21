@@ -1,7 +1,8 @@
 import App, { Container } from 'next/app';
 import React from 'react';
-
 import { NextAuth } from 'next-auth/client';
+
+import UserContext from '../util/UserContext';
 
 export default class MyApp extends App {
   static async getInitialProps({ Component, ctx }) {
@@ -20,9 +21,11 @@ export default class MyApp extends App {
   render() {
     const { Component, pageProps, session } = this.props;
     return (
-      <Container>
-        <Component {...pageProps} />
-      </Container>
+      <UserContext.Provider value={session}>
+        <Container>
+          <Component {...pageProps} />
+        </Container>
+      </UserContext.Provider>
     );
   }
 }
