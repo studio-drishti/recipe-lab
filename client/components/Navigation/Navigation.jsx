@@ -22,14 +22,18 @@ export default class Navigation extends Component {
           <Link href="/about">
             <a>About</a>
           </Link>
+
           {user && (
             <Link href="/profile">
               <a>My Profile</a>
             </Link>
           )}
-          <Link href="/register">
-            <a>Register</a>
-          </Link>
+
+          {!user && (
+            <Link href="/auth">
+              <a>Login / Register</a>
+            </Link>
+          )}
         </div>
       </nav>
     );
