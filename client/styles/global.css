@@ -1,6 +1,3 @@
-@import 'normalize.css';
-@import '../config/defaults.css';
-
 html {
   font-size: 1em;
   color: var(--body-font-color);

@@ -1,5 +1,3 @@
-@import '../../config/defaults.css';
-
 .diffText {
   & > del {
     opacity: 0.5;

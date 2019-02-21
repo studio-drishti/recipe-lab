@@ -1,7 +1,9 @@
 module.exports = {
   plugins: {
-    'postcss-import': {},
-    'postcss-preset-env': { stage: 0 },
+    'postcss-preset-env': {
+      importFrom: 'client/styles/variables.css',
+      stage: 0
+    },
     'postcss-calc': {}
   }
 };

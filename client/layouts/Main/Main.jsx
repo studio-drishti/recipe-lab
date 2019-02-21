@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import Navigation from '../../components/Navigation';
 import Footer from '../../components/Footer';
 
-import '../common.css';
 import css from './Main.css';
 
 export default class Layout extends Component {

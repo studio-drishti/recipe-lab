@@ -2,6 +2,10 @@ import App, { Container } from 'next/app';
 import React from 'react';
 import { NextAuth } from 'next-auth/client';
 
+import 'normalize.css';
+import '../styles/variables.css';
+import '../styles/global.css';
+
 import UserContext from '../util/UserContext';
 
 export default class MyApp extends App {
