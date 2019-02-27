@@ -1,8 +1,10 @@
+const path = require('path');
 const mongoose = require('mongoose');
 const next = require('next');
 const nextConfig = require('../next.config.js');
 const nextAuth = require('next-auth');
 const nextAuthConfig = require('./next-auth.config');
+const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan');
 // morgan provides easy logging for express, and by default it logs to stdout
@@ -46,11 +48,17 @@ module.exports = nextApp
   .then(nextAuthOptions => {
     // Don't pass a port to NextAuth so we can use custom express routes
     if (nextAuthOptions.port) delete nextAuthOptions.port;
+    // Override lusca settings so we can allow multipart form submissions
+    nextAuthOptions.csrf = { blacklist: ['/api/avatars/upload'] };
     return nextAuth(nextApp, nextAuthOptions);
   })
   .then(({ expressApp }) => {
     expressApp.use(morgan('common'));
     expressApp.use(cors());
+    expressApp.use(
+      '/public',
+      express.static(path.resolve(__dirname, 'public'))
+    );
     expressApp.use(routes);
 
     expressApp.get('/recipes/:id', (req, res) => {

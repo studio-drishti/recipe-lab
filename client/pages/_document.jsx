@@ -27,6 +27,10 @@ export default class MyDocument extends Document {
             rel="stylesheet"
             href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/4.2.6/css/swiper.min.css"
           />
+          <link
+            rel="stylesheet"
+            href="https://cdn.jsdelivr.net/npm/filepond@4.2.0/dist/filepond.min.css"
+          />
         </Head>
         <body>
           <Main />
