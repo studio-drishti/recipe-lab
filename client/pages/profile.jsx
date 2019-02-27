@@ -10,9 +10,22 @@ import FilePondPluginImageCrop from 'filepond-plugin-image-crop';
 import FilePondPluginImageResize from 'filepond-plugin-image-resize';
 import FilePondPluginImageTransform from 'filepond-plugin-image-transform';
 
+registerPlugin(
+  FilePondPluginImageTransform,
+  FilePondPluginImageCrop,
+  FilePondPluginImageResize
+);
+
 class ProfilePage extends Component {
   static displayName = 'ProfilePage';
   static contextType = UserContext;
+
+  handleUploadComplete = () => {
+    setTimeout(() => {
+      this.pond.removeFiles();
+    }, 1000);
+    this.context.refreshUser();
+  };
 
   render() {
     const { user, csrfToken } = this.context;
@@ -31,7 +44,16 @@ class ProfilePage extends Component {
     return (
       <Page>
         <h1>{`${user.name}'s`} Profile</h1>
-        <FilePond name="avatar" server={serverOptions} />
+        <FilePond
+          name="avatar"
+          ref={ref => (this.pond = ref)}
+          server={serverOptions}
+          allowRevert={false}
+          imageTransformOutputMimeType="image/jpeg"
+          imageCropAspectRatio="1:1"
+          imageResizeTargetWidth="300"
+          onprocessfile={this.handleUploadComplete}
+        />
         <img src={user.avatar} />
       </Page>
     );

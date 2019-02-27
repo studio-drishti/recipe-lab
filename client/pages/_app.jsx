@@ -22,10 +22,21 @@ export default class MyApp extends App {
     };
   }
 
+  refreshUser = async () => {
+    const session = await NextAuth.init({ force: true });
+    this.setState({ user: session.user, csrfToken: session.csrfToken });
+  };
+
+  state = {
+    user: this.props.session.user,
+    csrfToken: this.props.session.csrfToken,
+    refreshUser: this.refreshUser
+  };
+
   render() {
-    const { Component, pageProps, session } = this.props;
+    const { Component, pageProps } = this.props;
     return (
-      <UserContext.Provider value={session}>
+      <UserContext.Provider value={this.state}>
         <Container>
           <Component {...pageProps} />
         </Container>

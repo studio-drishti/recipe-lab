@@ -7,15 +7,15 @@ const lusca = require('lusca');
 const db = require('../../models');
 const tmpStorage = require('../../utils/tmpStorage');
 const upload = multer({
-  storage: tmpStorage
-  // fileFilter: (req, file, cb) => {
-  //   const mimes = ['image/jpeg', 'image/jpg'];
-  //   if (mimes.includes(file.mimetype)) {
-  //     cb(null, true);
-  //   } else {
-  //     cb(null, false);
-  //   }
-  // }
+  storage: tmpStorage,
+  fileFilter: (req, file, cb) => {
+    const mimes = ['image/jpeg', 'image/jpg'];
+    if (mimes.includes(file.mimetype)) {
+      cb(null, true);
+    } else {
+      cb(null, false);
+    }
+  }
 });
 
 const rmTmp = file => {
@@ -46,6 +46,9 @@ router.post('/upload', upload.single('avatar'), lusca.csrf(), (req, res) => {
 
       user.avatar = req.file.filename;
       user.save();
+      res.json({
+        avatar: `/public/avatars/${user.avatar}`
+      });
     })
     .catch(err => {
       rmTmp(req.file);
