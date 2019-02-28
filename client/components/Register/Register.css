@@ -1,14 +1,4 @@
 .form {
   max-width: 20rem;
   margin: 0 auto;
-
-  & label {
-    display: block;
-    margin-bottom: 1rem;
-  }
-
-  & input:not([type='submit']) {
-    display: block;
-    width: 100%;
-  }
 }

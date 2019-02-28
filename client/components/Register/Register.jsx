@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
+
 import css from './Register.css';
+import FormInput from '../FormInput';
+import FormButton from '../FormButton';
 
 export default class Register extends Component {
   static displayName = 'Register';
@@ -21,46 +24,29 @@ export default class Register extends Component {
   };
 
   render() {
-    const { firstName, lastName, email, password } = this.state;
+    const { name, email, password } = this.state;
     return (
       <form className={css.form} onSubmit={this.handleSubmission}>
-        <label>
-          First Name
-          <input
-            type="text"
-            name="firstName"
-            value={firstName}
-            onChange={this.handleInputChange}
-          />
-        </label>
-        <label>
-          Last Name
-          <input
-            type="text"
-            name="lastName"
-            value={lastName}
-            onChange={this.handleInputChange}
-          />
-        </label>
-        <label>
-          Email
-          <input
-            type="email"
-            name="email"
-            value={email}
-            onChange={this.handleInputChange}
-          />
-        </label>
-        <label>
-          Password
-          <input
-            type="password"
-            name="password"
-            value={password}
-            onChange={this.handleInputChange}
-          />
-        </label>
-        <button type="submit">Regsiter</button>
+        <FormInput
+          label="Name"
+          name="name"
+          value={name}
+          onChange={this.handleInputChange}
+        />
+        <FormInput
+          label="Email"
+          name="email"
+          value={email}
+          onChange={this.handleInputChange}
+        />
+        <FormInput
+          label="Password"
+          type="password"
+          name="password"
+          value={password}
+          onChange={this.handleInputChange}
+        />
+        <FormButton>Register</FormButton>
       </form>
     );
   }

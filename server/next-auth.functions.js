@@ -1,5 +1,3 @@
-/* eslint-disable */
-/* turning off linter until auth refactor */
 /**
  * next-auth.functions.js Example
  *
@@ -181,6 +179,7 @@ module.exports = () => {
     // storing user supplied passwords anywhere, preventing password re-use.
     //
     // To disable this option, do not set sendSignInEmail (or set it to null).
+    /*
     sendSignInEmail: ({ email, url, req }) => {
       nodemailer.createTransport(nodemailerTransport).sendMail(
         {
@@ -200,6 +199,7 @@ module.exports = () => {
         console.info('Generated sign in link ' + url + ' for ' + email);
       }
     }
+    */
     // Credentials Sign In
     //
     // If you use this you will need to define your own way to validate
@@ -209,28 +209,24 @@ module.exports = () => {
     // This feature is intended for strategies like Two Factor Authentication.
     //
     // To disable this option, do not set signin (or set it to null).
-    /*
-    signIn: ({form, req}) => {
+    signIn: ({ form, req }) => {
       return new Promise((resolve, reject) => {
         // Should validate credentials (e.g. hash password, compare 2FA token
         // etc) and return a valid user object from a database.
-          return usersCollection.findOne({
-          email: form.email
-        }, (err, user) => {
-          if (err) return reject(err)
-          if (!user) return resolve(null)
+        return User.findOne({ email: form.email }, (err, user) => {
+          if (err) return reject(err);
+          if (!user) return resolve(null);
 
           // Check credentials - e.g. compare bcrypt password hashes
-          if (form.password == "test1234") {
+          if (form.password == 'test1234') {
             // If valid, return user object - e.g. { id, name, email }
-            return resolve(user)
+            return resolve(user);
           } else {
             // If invalid, return null
-            return resolve(null)
+            return resolve(null);
           }
-        })
-      })
+        });
+      });
     }
-    */
   });
 };
