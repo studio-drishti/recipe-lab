@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { NextAuth } from 'next-auth/client';
 
 import withAuthGuard from '../util/withAuthGuard';
 import Page from '../layouts/Main';

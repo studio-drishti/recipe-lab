@@ -8,7 +8,8 @@ export default class TextButton extends PureComponent {
   static displayName = 'TextButton';
 
   static propTypes = {
-    className: PropTypes.string
+    className: PropTypes.string,
+    children: PropTypes.any
   };
 
   static defaultProps = {

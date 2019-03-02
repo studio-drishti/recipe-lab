@@ -29,7 +29,8 @@ export default class Item extends PureComponent {
     isLast: PropTypes.bool,
     focusOnMount: PropTypes.bool,
     removeItem: PropTypes.func,
-    resotreItem: PropTypes.func,
+    restoreItem: PropTypes.func,
+    createItem: PropTypes.func,
     createStep: PropTypes.func
   };
 

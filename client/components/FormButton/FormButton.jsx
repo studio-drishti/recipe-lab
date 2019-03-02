@@ -8,7 +8,8 @@ export default class FormButton extends PureComponent {
   static displayName = 'FormButton';
 
   static propTypes = {
-    className: PropTypes.string
+    className: PropTypes.string,
+    children: PropTypes.any
   };
 
   static defaultProps = {
