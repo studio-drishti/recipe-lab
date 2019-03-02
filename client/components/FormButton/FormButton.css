@@ -1,12 +1,11 @@
-.textButton {
-  font-size: 0.8em;
+.formButton {
+  background: var(--color-white);
+  border: 1px solid var(--color-medium-gray);
+  padding: 0.75rem;
+  border-radius: var(--default-border-radius);
   text-decoration: none;
   color: var(--color-black);
-  opacity: 0.5;
   transition: all linear 0.2s;
-  background: none;
-  padding: 0;
-  border: 0;
   vertical-align: middle;
 
   & svg {
@@ -17,9 +16,5 @@
   &:disabled {
     cursor: default;
     opacity: 0.15;
-  }
-
-  &:enabled:hover {
-    opacity: 1;
   }
 }

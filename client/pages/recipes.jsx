@@ -4,7 +4,7 @@ import Link from 'next/link';
 import PropTypes from 'prop-types';
 
 import { API_URL } from '../config';
-import Layout from '../components/Layout';
+import Page from '../layouts/Main';
 
 export default class RecipesPage extends Component {
   static displayName = 'RecipesPage';
@@ -25,7 +25,7 @@ export default class RecipesPage extends Component {
   render() {
     const { recipes } = this.props;
     return (
-      <Layout>
+      <Page>
         {recipes.map((recipe, i) => (
           <div key={i}>
             <h1>{recipe.title}</h1>
@@ -38,7 +38,7 @@ export default class RecipesPage extends Component {
             </Link>
           </div>
         ))}
-      </Layout>
+      </Page>
     );
   }
 }

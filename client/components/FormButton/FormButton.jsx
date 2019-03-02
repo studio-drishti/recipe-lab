@@ -2,10 +2,10 @@ import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 
-import css from './TextButtonGroup.css';
+import css from './FormButton.css';
 
-export default class TextButton extends PureComponent {
-  static displayName = 'TextButtonGroup';
+export default class FormButton extends PureComponent {
+  static displayName = 'FormButton';
 
   static propTypes = {
     className: PropTypes.string,
@@ -13,15 +13,16 @@ export default class TextButton extends PureComponent {
   };
 
   static defaultProps = {
-    className: null
+    className: null,
+    type: 'submit'
   };
 
   render() {
     const { children, className, ...rest } = this.props;
     return (
-      <div className={classnames(css.textButtonGroup, className)} {...rest}>
+      <button className={classnames(css.formButton, className)} {...rest}>
         {children}
-      </div>
+      </button>
     );
   }
 }

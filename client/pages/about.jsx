@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
-import Layout from '../components/Layout';
+import Page from '../layouts/Main';
 
 export default class AboutPage extends Component {
   static displayName = 'AboutPage';
 
   render() {
     return (
-      <Layout>
+      <Page>
         <h1>About</h1>
-      </Layout>
+      </Page>
     );
   }
 }

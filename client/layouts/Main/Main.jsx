@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import Navigation from '../Navigation';
-import Footer from '../Footer';
-import css from './Layout.css';
+
+import Navigation from '../../components/Navigation';
+import Footer from '../../components/Footer';
+
+import css from './Main.css';
 
 export default class Layout extends Component {
-  static displayName = 'Layout';
+  static displayName = 'MainLayout';
 
   static propTypes = {
     children: PropTypes.oneOfType([
