@@ -66,10 +66,6 @@
   & .button {
     border-bottom: 0;
 
-    & + .button {
-      border-left: 0;
-    }
-
     &:last-child {
       border-right: 0;
     }
