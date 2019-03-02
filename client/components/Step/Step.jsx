@@ -6,6 +6,7 @@ import classnames from 'classnames';
 
 import css from './Step.css';
 import IconButton from '../IconButton';
+import IconButtonGroup from '../IconButtonGroup';
 
 export default class Step extends PureComponent {
   static displayName = 'Step';
@@ -136,8 +137,8 @@ export default class Step extends PureComponent {
               </div>
 
               <div className={css.stepActions}>
-                {removed &&
-                  !editing && (
+                <IconButtonGroup>
+                  {removed && !editing && (
                     <IconButton
                       type="button"
                       className={css.button}
@@ -148,8 +149,7 @@ export default class Step extends PureComponent {
                     </IconButton>
                   )}
 
-                {!removed &&
-                  !editing && (
+                  {!removed && !editing && (
                     <>
                       <IconButton
                         title="Edit step"
@@ -168,15 +168,16 @@ export default class Step extends PureComponent {
                     </>
                   )}
 
-                {editing && (
-                  <IconButton
-                    title="Save modifications"
-                    className="button"
-                    onClick={this.handleSave}
-                  >
-                    <MdCheck />
-                  </IconButton>
-                )}
+                  {editing && (
+                    <IconButton
+                      title="Save modifications"
+                      className="button"
+                      onClick={this.handleSave}
+                    >
+                      <MdCheck />
+                    </IconButton>
+                  )}
+                </IconButtonGroup>
               </div>
             </div>
           </li>

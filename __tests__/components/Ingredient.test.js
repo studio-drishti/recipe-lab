@@ -24,7 +24,7 @@ const setup = propOverrides => {
   return {
     props,
     wrapper,
-    button: wrapper.find('button'),
+    button: wrapper.find('IconButton'),
     container: wrapper.find('li')
   };
 };

@@ -1,0 +1,5 @@
+.iconButtonGroup {
+  & button + button {
+    border-left: none;
+  }
+}

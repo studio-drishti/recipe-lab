@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import { MdNavigateBefore, MdNavigateNext } from 'react-icons/md';
 import IconButton from '../IconButton';
 
+import IconButtonGroup from '../IconButtonGroup';
+
 export default class Ingredient extends Component {
   static displayName = 'RecipeNav';
 
@@ -80,7 +82,7 @@ export default class Ingredient extends Component {
       activeStepIndex < recipeSteps[activeItemIndex].length - 1;
 
     return (
-      <nav>
+      <IconButtonGroup>
         <IconButton
           title="Previous step"
           onClick={this.prevStep}
@@ -95,7 +97,7 @@ export default class Ingredient extends Component {
         >
           <MdNavigateNext />
         </IconButton>
-      </nav>
+      </IconButtonGroup>
     );
   }
 }

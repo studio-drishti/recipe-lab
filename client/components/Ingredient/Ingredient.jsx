@@ -230,29 +230,27 @@ export default class Ingredient extends Component {
           )}
 
           <div className={css.buttons}>
-            {removed &&
-              !editing && (
-                <IconButton
-                  className={css.button}
-                  aria-label="restore ingredient"
-                  onClick={this.handleRestore}
-                  onKeyDown={this.handleKeybdRestore}
-                >
-                  <MdRefresh />
-                </IconButton>
-              )}
+            {removed && !editing && (
+              <IconButton
+                className={css.button}
+                aria-label="restore ingredient"
+                onClick={this.handleRestore}
+                onKeyDown={this.handleKeybdRestore}
+              >
+                <MdRefresh />
+              </IconButton>
+            )}
 
-            {!removed &&
-              !editing && (
-                <IconButton
-                  className={css.button}
-                  aria-label="remove ingredient"
-                  onClick={this.handleRemove}
-                  onKeyDown={this.handleKeybdRemove}
-                >
-                  <MdClear />
-                </IconButton>
-              )}
+            {!removed && !editing && (
+              <IconButton
+                className={css.button}
+                aria-label="remove ingredient"
+                onClick={this.handleRemove}
+                onKeyDown={this.handleKeybdRemove}
+              >
+                <MdClear />
+              </IconButton>
+            )}
 
             {editing && (
               <IconButton
