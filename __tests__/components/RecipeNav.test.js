@@ -68,7 +68,7 @@ describe('It navigates between steps', () => {
   test('navigates to the next steps', () => {
     const wrapper = shallow(<RecipeNav {...props} />);
 
-    wrapper.find('.next').simulate('click');
+    wrapper.find('[title^="Next"]').simulate('click');
     expect(props.setActiveStep).toHaveBeenCalledWith(
       props.recipeItems[0],
       props.recipeSteps[0][1]
@@ -79,7 +79,7 @@ describe('It navigates between steps', () => {
     props.activeStep = props.recipeSteps[0][props.recipeSteps[0].length - 1];
     const wrapper = shallow(<RecipeNav {...props} />);
 
-    wrapper.find('.next').simulate('click');
+    wrapper.find('[title^="Next"]').simulate('click');
     expect(props.setActiveStep).toHaveBeenCalledWith(
       props.recipeItems[1],
       props.recipeSteps[1][0]

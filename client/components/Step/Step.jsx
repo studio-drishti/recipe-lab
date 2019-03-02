@@ -5,6 +5,8 @@ import { MdEdit, MdClear, MdCheck, MdRefresh } from 'react-icons/md';
 import classnames from 'classnames';
 
 import css from './Step.css';
+import IconButton from '../IconButton';
+import IconButtonGroup from '../IconButtonGroup';
 
 export default class Step extends PureComponent {
   static displayName = 'Step';
@@ -135,32 +137,47 @@ export default class Step extends PureComponent {
               </div>
 
               <div className={css.stepActions}>
-                {removed && !editing && (
-                  <button
-                    type="button"
-                    title="restore step"
-                    onClick={this.handleRestore}
-                  >
-                    <MdRefresh />
-                  </button>
-                )}
+                <IconButtonGroup>
+                  {removed && !editing && (
+                    <IconButton
+                      type="button"
+                      className={css.button}
+                      title="restore step"
+                      onClick={this.handleRestore}
+                    >
+                      <MdRefresh />
+                    </IconButton>
+                  )}
 
-                {!removed && !editing && (
-                  <>
-                    <button title="Edit step" onClick={this.enableEditing}>
-                      <MdEdit />
-                    </button>
-                    <button title="Remove step" onClick={this.handleRemove}>
-                      <MdClear />
-                    </button>
-                  </>
-                )}
+                  {!removed && !editing && (
+                    <>
+                      <IconButton
+                        title="Edit step"
+                        className={css.button}
+                        onClick={this.enableEditing}
+                      >
+                        <MdEdit />
+                      </IconButton>
+                      <IconButton
+                        title="Remove step"
+                        className={css.button}
+                        onClick={this.handleRemove}
+                      >
+                        <MdClear />
+                      </IconButton>
+                    </>
+                  )}
 
-                {editing && (
-                  <button title="Save modifications" onClick={this.handleSave}>
-                    <MdCheck />
-                  </button>
-                )}
+                  {editing && (
+                    <IconButton
+                      title="Save modifications"
+                      className="button"
+                      onClick={this.handleSave}
+                    >
+                      <MdCheck />
+                    </IconButton>
+                  )}
+                </IconButtonGroup>
               </div>
             </div>
           </li>

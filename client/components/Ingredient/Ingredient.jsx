@@ -5,6 +5,7 @@ import { MdClear, MdRefresh, MdCheck } from 'react-icons/md';
 import css from './Ingredient.css';
 import DiffText from '../DiffText';
 import { MEASURE_UNITS } from '../../config';
+import IconButton from '../IconButton';
 
 export default class Ingredient extends Component {
   static displayName = 'Ingredient';
@@ -230,31 +231,35 @@ export default class Ingredient extends Component {
 
           <div className={css.buttons}>
             {removed && !editing && (
-              <button
-                type="button"
+              <IconButton
+                className={css.button}
                 aria-label="restore ingredient"
                 onClick={this.handleRestore}
                 onKeyDown={this.handleKeybdRestore}
               >
                 <MdRefresh />
-              </button>
+              </IconButton>
             )}
 
             {!removed && !editing && (
-              <button
-                type="button"
+              <IconButton
+                className={css.button}
                 aria-label="remove ingredient"
                 onClick={this.handleRemove}
                 onKeyDown={this.handleKeybdRemove}
               >
                 <MdClear />
-              </button>
+              </IconButton>
             )}
 
             {editing && (
-              <button type="submit" aria-label="save modifications">
+              <IconButton
+                className={css.button}
+                type="submit"
+                aria-label="save modifications"
+              >
                 <MdCheck />
-              </button>
+              </IconButton>
             )}
           </div>
         </form>
