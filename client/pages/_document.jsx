@@ -1,8 +1,6 @@
-/*
-In production the stylesheet is compiled to .next/static/style.css and served from /_next/static/style.css
+// _document is only rendered on the server side and not on the client side
+// Event handlers like onClick can't be added to this file
 
-You have to include it into the page using either next/head or a custom _document.js, as is being done in this file.
-*/
 import React from 'react';
 import Document, { Head, Main, NextScript } from 'next/document';
 import { resetServerContext } from 'react-beautiful-dnd';
@@ -12,6 +10,7 @@ export default class MyDocument extends Document {
     // Ensures that drag-n-drop context does not persist over server renders
     // https://github.com/atlassian/react-beautiful-dnd#resetservercontext
     resetServerContext();
+
     const initialProps = await Document.getInitialProps(ctx);
     return { ...initialProps };
   }
@@ -27,6 +26,10 @@ export default class MyDocument extends Document {
           <link
             rel="stylesheet"
             href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/4.2.6/css/swiper.min.css"
+          />
+          <link
+            rel="stylesheet"
+            href="https://cdn.jsdelivr.net/npm/filepond@4.2.0/dist/filepond.min.css"
           />
         </Head>
         <body>

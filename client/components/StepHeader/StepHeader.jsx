@@ -5,6 +5,7 @@ import classnames from 'classnames';
 
 import css from './StepHeader.css';
 import TextButton from '../TextButton';
+import TextButtonGroup from '../TextButtonGroup';
 
 export default class Step extends PureComponent {
   static displayName = 'Step';
@@ -114,31 +115,29 @@ export default class Step extends PureComponent {
               inputRef: this.directionsInputRef
             })}
         </div>
-        <div className={css.editActions}>
-          {!editing &&
-            !removed && (
-              <>
-                <TextButton
-                  className={css.editBtn}
-                  onClick={this.enableEditingDirections}
-                >
-                  <MdEdit />
-                  edit step
-                </TextButton>
-                <TextButton onClick={this.handleRemove}>
-                  <MdClear />
-                  remove step
-                </TextButton>
-              </>
-            )}
-
-          {!editing &&
-            removed && (
-              <TextButton onClick={this.handleRestore}>
-                <MdRefresh />
-                restore step
+        <TextButtonGroup className={css.editActions}>
+          {!editing && !removed && (
+            <>
+              <TextButton
+                className={css.editBtn}
+                onClick={this.enableEditingDirections}
+              >
+                <MdEdit />
+                edit step
               </TextButton>
-            )}
+              <TextButton onClick={this.handleRemove}>
+                <MdClear />
+                remove step
+              </TextButton>
+            </>
+          )}
+
+          {!editing && removed && (
+            <TextButton onClick={this.handleRestore}>
+              <MdRefresh />
+              restore step
+            </TextButton>
+          )}
 
           {editing && (
             <TextButton onClick={this.disableEditing}>
@@ -146,7 +145,7 @@ export default class Step extends PureComponent {
               save changes
             </TextButton>
           )}
-        </div>
+        </TextButtonGroup>
       </header>
     );
   }

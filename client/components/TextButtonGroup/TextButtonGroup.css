@@ -1,0 +1,8 @@
+.textButtonGroup {
+  & button + button::before {
+    content: '|';
+    color: var(--color-medium-gray);
+    display: inline-block;
+    margin: 0 0.25em;
+  }
+}

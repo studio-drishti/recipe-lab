@@ -151,8 +151,8 @@ describe('It saves sorting', () => {
   });
 });
 
-describe('It creates ingredients', () => {
-  test('saves sorting to localstorage', () => {
+describe('It creates additions', () => {
+  test('creates a new ingredient', () => {
     const wrapper = shallow(<Recipe {...props} />);
     const instance = wrapper.instance();
     const { additions } = instance.state.modification;
@@ -165,6 +165,42 @@ describe('It creates ingredients', () => {
           _id: expect.any(String),
           parentId: props.recipe.items[0].steps[0]._id,
           kind: 'Ingredient'
+        })
+      ])
+    );
+  });
+
+  test('creates a new step', () => {
+    const wrapper = shallow(<Recipe {...props} />);
+    const instance = wrapper.instance();
+    const { additions } = instance.state.modification;
+
+    instance.createStep(props.recipe.items[0]._id);
+
+    expect(additions).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          _id: expect.any(String),
+          parentId: props.recipe.items[0]._id,
+          kind: 'Step'
+        })
+      ])
+    );
+  });
+
+  test('creates a new item', () => {
+    const wrapper = shallow(<Recipe {...props} />);
+    const instance = wrapper.instance();
+    const { additions } = instance.state.modification;
+
+    instance.createItem();
+
+    expect(additions).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          _id: expect.any(String),
+          parentId: props.recipe._id,
+          kind: 'Item'
         })
       ])
     );

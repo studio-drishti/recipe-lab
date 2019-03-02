@@ -13,6 +13,7 @@ import classnames from 'classnames';
 
 import css from './Item.css';
 import TextButton from '../TextButton';
+import TextButtonGroup from '../TextButtonGroup';
 
 export default class Item extends PureComponent {
   static displayName = 'Item';
@@ -22,21 +23,31 @@ export default class Item extends PureComponent {
     index: PropTypes.number,
     itemId: PropTypes.string,
     handleItemChange: PropTypes.func,
+    itemNameValue: PropTypes.string,
     itemName: PropTypes.node,
     removed: PropTypes.bool,
+    isLast: PropTypes.bool,
+    focusOnMount: PropTypes.bool,
     removeItem: PropTypes.func,
-    resotreItem: PropTypes.func,
+    restoreItem: PropTypes.func,
+    createItem: PropTypes.func,
     createStep: PropTypes.func
   };
 
   state = {
     hovering: false,
     editing: false,
-    removed: false
+    removed: false,
+    isLast: false,
+    focusOnMount: false
   };
 
   itemRef = React.createRef();
   inputRef = React.createRef();
+
+  componentDidMount() {
+    if (this.props.focusOnMount) this.enableEditing();
+  }
 
   componentWillUnmount() {
     document.removeEventListener('mousedown', this.handleClick);
@@ -81,10 +92,22 @@ export default class Item extends PureComponent {
     this.props.restoreItem();
   };
 
-  handleCreate = () => {
+  handleSave = e => {
+    e.preventDefault();
+    this.disableEditing();
+    if (!this.props.itemNameValue) this.props.removeItem();
+  };
+
+  handleCreateStep = () => {
     const { editing } = this.state;
     const { createStep } = this.props;
     if (!editing) createStep();
+  };
+
+  handleCreateItem = () => {
+    const { editing } = this.state;
+    const { createItem } = this.props;
+    if (!editing) createItem();
   };
 
   render() {
@@ -94,6 +117,7 @@ export default class Item extends PureComponent {
       index,
       itemName,
       removed,
+      isLast,
       restoreItem
     } = this.props;
     const { hovering, editing } = this.state;
@@ -135,7 +159,7 @@ export default class Item extends PureComponent {
                     {editing && (
                       <button
                         title="Save modifications"
-                        onClick={this.disableEditing}
+                        onClick={this.handleSave}
                       >
                         <MdCheck />
                       </button>
@@ -165,16 +189,21 @@ export default class Item extends PureComponent {
               </div>
               {children}
             </div>
-            <div
+            <TextButtonGroup
               className={classnames(css.itemActions, {
-                [css.editing]: editing,
                 [css.dragging]: snapshot.isDragging
               })}
             >
-              <TextButton onClick={this.handleCreate}>
+              <TextButton onClick={this.handleCreateStep} disabled={editing}>
                 <MdAdd /> add step
               </TextButton>
-            </div>
+
+              {isLast && (
+                <TextButton onClick={this.handleCreateItem} disabled={editing}>
+                  <MdAdd /> add item
+                </TextButton>
+              )}
+            </TextButtonGroup>
           </div>
         )}
       </Draggable>

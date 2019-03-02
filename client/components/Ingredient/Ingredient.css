@@ -1,5 +1,3 @@
-@import '../../config/defaults.css';
-
 .ingredient {
   background: var(--color-white);
   padding: 0.5em;

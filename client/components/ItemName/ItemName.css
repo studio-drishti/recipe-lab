@@ -1,5 +1,3 @@
-@import '../../config/defaults.css';
-
 .itemName {
   & h3 {
     margin: 0;
