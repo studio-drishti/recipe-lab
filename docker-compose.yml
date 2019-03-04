@@ -1,4 +1,4 @@
-version: '2.3'
+version: '3'
 
 services:
   node:
@@ -40,25 +40,49 @@ services:
       - MONGO_DATABASE_NAME=schooled-lunch
       - EMAIL_FROM=no-reply@schooledlunch.club
     depends_on:
-      mongo:
-        condition: service_healthy
+      - prisma
     healthcheck:
       disable: true
 
+  prisma:
+    image: prismagraphql/prisma:1.27
+    restart: always
+    ports:
+      - '4466:4466'
+    environment:
+      PRISMA_CONFIG: |
+        port: 4466
+        databases:
+          default:
+            connector: mongo
+            uri: mongodb://prisma:prisma@mongo
+
   mongo:
     image: mongo
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: prisma
+      MONGO_INITDB_ROOT_PASSWORD: prisma
     ports:
       - '27017:27017'
-    environment:
-      - MONGO_INITDB_ROOT_USERNAME=root
-      - MONGO_INITDB_ROOT_PASSWORD=sch0013d
-      - MONGO_INITDB_DATABASE=schooled-lunch
-    healthcheck:
-      test: echo 'db.stats().ok' | mongo localhost:27017/schooled-lunch --quiet
-      interval: 5s
-      start_period: 10s
-      timeout: 4s
-      retries: 3
+    volumes:
+      - mongo:/var/lib/mongo
+
+  # mongo:
+  #   image: mongo
+  #   ports:
+  #     - '27017:27017'
+  #   environment:
+  #     - MONGO_INITDB_ROOT_USERNAME=root
+  #     - MONGO_INITDB_ROOT_PASSWORD=sch0013d
+  #     - MONGO_INITDB_DATABASE=schooled-lunch
+  #   healthcheck:
+  #     test: echo 'db.stats().ok' | mongo localhost:27017/schooled-lunch --quiet
+  #     interval: 5s
+  #     start_period: 10s
+  #     timeout: 4s
+  #     retries: 3
 
 volumes:
   notused:
+  mongo:

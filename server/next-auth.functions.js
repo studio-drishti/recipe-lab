@@ -180,7 +180,6 @@ module.exports = () => {
     // storing user supplied passwords anywhere, preventing password re-use.
     //
     // To disable this option, do not set sendSignInEmail (or set it to null).
-    /*
     sendSignInEmail: ({ email, url, req }) => {
       nodemailer.createTransport(nodemailerTransport).sendMail(
         {
@@ -199,8 +198,7 @@ module.exports = () => {
       if (process.env.NODE_ENV === 'development') {
         console.info('Generated sign in link ' + url + ' for ' + email);
       }
-    }
-    */
+    },
     // Credentials Sign In
     //
     // If you use this you will need to define your own way to validate
