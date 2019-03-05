@@ -1,9 +1,9 @@
 #!/usr/bin/env node
-const app = require('../server');
+const server = require('../server');
 // var express = require('express');
 
 // Constants
-const PORT = process.env.PORT || 8080;
+// const PORT = process.env.PORT || 8080;
 // if you're not using docker-compose for local development, this will default to 8080
 // to prevent non-root permission problems with 80. Dockerfile is set to make this 80
 // because containers don't have that issue :)
@@ -12,15 +12,22 @@ const PORT = process.env.PORT || 8080;
 //   console.log(`Webserver is ready and listening on port ${PORT}`);
 // });
 
-app.then(expressApp => {
-  const server = expressApp.listen(process.env.PORT, err => {
-    if (err) throw err;
-    if (process.env.NODE_ENV === 'development') {
-      console.info(`🍽  Ready on http://localhost:${PORT}`);
-    } else {
-      console.info(`Webserver is ready and listening on port ${PORT}`);
+server.then(server => {
+  server.start(
+    {
+      port: process.env.PORT,
+      endpoint: '/graphql',
+      playground: '/playground',
+      subscriptions: '/subscriptions'
+    },
+    ({ port }) => {
+      if (process.env.NODE_ENV === 'development') {
+        console.info(`🍽  Ready on http://localhost:${port}`);
+      } else {
+        console.info(`Webserver is ready and listening on port ${port}`);
+      }
     }
-  });
+  );
 
   //
   // need this in docker container to properly exit since node doesn't handle SIGINT/SIGTERM
@@ -50,44 +57,44 @@ app.then(expressApp => {
     shutdown();
   });
 
-  let sockets = {},
-    nextSocketId = 0;
+  // let sockets = {},
+  //   nextSocketId = 0;
 
-  server.on('connection', function(socket) {
-    const socketId = nextSocketId++;
-    sockets[socketId] = socket;
+  // server.on('connection', function(socket) {
+  //   const socketId = nextSocketId++;
+  //   sockets[socketId] = socket;
 
-    socket.once('close', function() {
-      delete sockets[socketId];
-    });
-  });
+  //   socket.once('close', function() {
+  //     delete sockets[socketId];
+  //   });
+  // });
 
   // shut down server
-  function shutdown() {
-    waitForSocketsToClose(10);
+  // function shutdown() {
+  //   waitForSocketsToClose(10);
 
-    server.close(function onServerClosed(err) {
-      if (err) {
-        console.error(err);
-        process.exitCode = 1;
-      }
-      process.exit();
-    });
-  }
+  //   server.close(function onServerClosed(err) {
+  //     if (err) {
+  //       console.error(err);
+  //       process.exitCode = 1;
+  //     }
+  //     process.exit();
+  //   });
+  // }
 
-  function waitForSocketsToClose(counter) {
-    if (counter > 0) {
-      console.log(
-        `Waiting ${counter} more ${
-          counter === 1 ? 'seconds' : 'second'
-        } for all connections to close...`
-      );
-      return setTimeout(waitForSocketsToClose, 1000, counter - 1);
-    }
+  // function waitForSocketsToClose(counter) {
+  //   if (counter > 0) {
+  //     console.log(
+  //       `Waiting ${counter} more ${
+  //         counter === 1 ? 'seconds' : 'second'
+  //       } for all connections to close...`
+  //     );
+  //     return setTimeout(waitForSocketsToClose, 1000, counter - 1);
+  //   }
 
-    console.log('Forcing all connections to close now');
-    for (var socketId in sockets) {
-      sockets[socketId].destroy();
-    }
-  }
+  //   console.log('Forcing all connections to close now');
+  //   for (var socketId in sockets) {
+  //     sockets[socketId].destroy();
+  //   }
+  // }
 });

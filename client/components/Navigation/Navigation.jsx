@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import UserContext from '../../util/UserContext';
+import UserContext from '../../utils/UserContext';
 import Link from 'next/link';
 import css from './Navigation.css';
 

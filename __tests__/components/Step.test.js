@@ -3,7 +3,7 @@ import React from 'react';
 import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 
 import Step from 'schooled-lunch/client/components/Step';
-import generateId from 'schooled-lunch/client/util/generateId';
+import generateId from 'schooled-lunch/client/utils/generateId';
 
 let props;
 

@@ -5,9 +5,9 @@ import { DragDropContext } from 'react-beautiful-dnd';
 
 import css from './Recipe.css';
 
-import reorder from '../../util/reorder';
-import generateId from '../../util/generateId';
-import areArraysEqual from '../../util/areArraysEqual';
+import reorder from '../../utils/reorder';
+import generateId from '../../utils/generateId';
+import areArraysEqual from '../../utils/areArraysEqual';
 
 import StepList from '../StepList';
 import Step from '../Step';

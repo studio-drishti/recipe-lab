@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 
-import withAuthGuard from '../util/withAuthGuard';
+import withAuthGuard from '../utils/withAuthGuard';
 import Page from '../layouts/Main';
-import UserContext from '../util/UserContext';
+import UserContext from '../utils/UserContext';
 
 import { FilePond, registerPlugin } from 'react-filepond';
 import FilePondPluginImageCrop from 'filepond-plugin-image-crop';

@@ -32,6 +32,7 @@ services:
       # /opt/node_modules location. Thanks to PR from @brnluiz
       - notused:/opt/app/node_modules
     environment:
+      - APP_SECRET=secret1234
       - NODE_ENV=development
       - MONGO_USERNAME=root
       - MONGO_PASSWORD=sch0013d

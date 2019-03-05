@@ -1,4 +1,4 @@
-import areArraysEqual from 'schooled-lunch/client/util/areArraysEqual';
+import areArraysEqual from 'schooled-lunch/client/utils/areArraysEqual';
 
 describe('are arrays equal', () => {
   test('false when not the same order', () => {

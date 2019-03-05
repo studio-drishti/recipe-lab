@@ -2,7 +2,7 @@ import { shallow } from 'enzyme';
 import React from 'react';
 
 import Recipe from 'schooled-lunch/client/components/Recipe';
-import generateId from 'schooled-lunch/client/util/generateId';
+import generateId from 'schooled-lunch/client/utils/generateId';
 
 let props, localStoreId;
 
