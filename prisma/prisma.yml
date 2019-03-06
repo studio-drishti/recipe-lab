@@ -2,7 +2,9 @@
 endpoint: http://prisma:4466
 
 # Defines your models, each model is mapped to the database as a table.
-datamodel: datamodel.prisma
+datamodel:
+  - user.prisma
+  - recipe.prisma
 
 # Specifies the language and directory for the generated Prisma client.
 generate:

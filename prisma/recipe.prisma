@@ -1,0 +1,33 @@
+type Recipe {
+  id: ID! @id
+  createdAt: DateTime! @createdAt
+  updatedAt: DateTime! @updatedAt
+  author: User!
+  title: String!
+  time: String!
+  skill: String!
+  course: String!
+  description: String!
+  items: [Item!]!
+}
+
+type Item @embedded {
+  id: ID!
+  name: String!
+  steps: [Step!]!
+}
+
+type Step @embedded {
+  id: ID!
+  directions: String!
+  notes: String
+  ingredients: [Ingredient!]!
+}
+
+type Ingredient @embedded {
+  id: ID!
+  name: String!
+  quantity: Float!
+  unit: String
+  processing: String
+}

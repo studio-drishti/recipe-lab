@@ -4,5 +4,11 @@ module.exports = {
   getUser: (parent, args, context) => {
     const userId = getUserId(context);
     return context.prisma.user({ id: userId });
+  },
+  allRecipes: (parent, args, context) => {
+    return context.prisma.recipes({});
+  },
+  recipe: (parent, { id }, context) => {
+    return context.prisma.recipe({ id });
   }
 };

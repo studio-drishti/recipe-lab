@@ -22,7 +22,8 @@
     "lint-js": "eslint \"**/*.{js,jsx}\"",
     "prettier": "prettier --write \"**/*.{js,jsx,json,yml,xml,md,css}\"",
     "build": "next build",
-    "seed": "node ./server/seed"
+    "prisma-deploy": "prisma deploy",
+    "prisma-seed": "prisma seed"
   },
   "dependencies": {
     "@zeit/next-css": "1.0.1",
@@ -33,6 +34,7 @@
     "connect-mongo": "2.0.3",
     "cookie": "0.3.1",
     "cors": "2.8.5",
+    "cuid": "2.1.6",
     "diff-match-patch": "1.0.4",
     "dotenv": "6.2.0",
     "express": "4.16.4",
@@ -88,6 +90,7 @@
     "postcss-calc": "7.0.1",
     "postcss-preset-env": "6.5.0",
     "prettier": "1.16.4",
+    "prisma": "1.28.0",
     "react-addons-test-utils": "15.6.2",
     "react-test-renderer": "16.8.3",
     "stylelint": "9.10.1",
