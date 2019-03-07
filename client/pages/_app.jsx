@@ -1,7 +1,6 @@
 import App, { Container } from 'next/app';
 import React from 'react';
 import { ApolloProvider } from 'react-apollo';
-// import { NextAuth } from 'next-auth/client';
 
 import 'normalize.css';
 import '../styles/variables.css';
@@ -9,6 +8,7 @@ import '../styles/global.css';
 
 import UserContext from '../utils/UserContext';
 import withApollo from '../utils/withApollo';
+import checkLoggedIn from '../utils/checkLoggedIn';
 
 class MyApp extends App {
   static async getInitialProps({ Component, ctx }) {
@@ -20,19 +20,14 @@ class MyApp extends App {
 
     return {
       pageProps,
-      // session: await NextAuth.init({ req: ctx.req })
-      session: {
-        user: 'fake',
-        csrfToken: '123'
-      }
+      session: await checkLoggedIn(ctx.apolloClient)
     };
   }
 
-  // refreshUser = async () => {
-  //   const session = await NextAuth.init({ force: true });
-  //   this.setState({ user: session.user, csrfToken: session.csrfToken });
-  // };
-  refreshUser = () => {};
+  refreshUser = async () => {
+    const session = await checkLoggedIn(this.props.apolloClient);
+    this.setState({ user: session.user, csrfToken: session.csrfToken });
+  };
 
   state = {
     user: this.props.session.user,

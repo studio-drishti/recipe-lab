@@ -13,9 +13,9 @@ export default apolloClient =>
       `
     })
     .then(({ data }) => {
-      return { loggedInUser: data };
+      return { user: data, csrfToken: 'foo' };
     })
     .catch(() => {
       // Fail gracefully
-      return { loggedInUser: {} };
+      return { user: {}, csrfToken: null };
     });

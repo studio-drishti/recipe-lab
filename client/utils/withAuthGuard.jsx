@@ -1,32 +1,28 @@
 import React, { Component } from 'react';
-import Router from 'next/router';
-import { NextAuth } from 'next-auth/client';
+
+import redirect from './redirect';
+import checkLoggedIn from './checkLoggedIn';
 
 // Gets the display name of a JSX component for dev tools
 const getDisplayName = Component =>
   Component.displayName || Component.name || 'Component';
 
-export default WrappedComponent =>
+export default Page =>
   class extends Component {
-    static displayName = `withAuthGuard(${getDisplayName(WrappedComponent)})`;
+    static displayName = `withAuthGuard(${getDisplayName(Page)})`;
 
     static async getInitialProps(ctx) {
-      const session = await NextAuth.init({ req: ctx.req });
-      if (!('user' in session)) {
-        process.browser
-          ? Router.push('/auth/error?action=signin')
-          : ctx.res.writeHead(301, { Location: '/auth/error?action=signin' });
-        return;
-      }
+      const session = await checkLoggedIn(ctx.apolloClient);
+
+      if (!session.user) return redirect(ctx, '/register');
 
       const componentProps =
-        WrappedComponent.getInitialProps &&
-        (await WrappedComponent.getInitialProps(ctx));
+        Page.getInitialProps && (await Page.getInitialProps(ctx));
 
       return { ...componentProps };
     }
 
     render() {
-      return <WrappedComponent {...this.props} />;
+      return <Page {...this.props} />;
     }
   };
