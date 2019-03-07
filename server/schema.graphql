@@ -2,7 +2,7 @@ scalar DateTime
 
 type Query {
   getUser: User
-  allRecipes: [Recipe!]!
+  recipes: [Recipe!]!
   recipe(id: ID!): Recipe
 }
 

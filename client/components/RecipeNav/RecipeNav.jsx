@@ -28,9 +28,9 @@ export default class Ingredient extends Component {
       recipeSteps,
       setActiveStep
     } = this.props;
-    let itemIndex = recipeItems.findIndex(item => item._id === activeItem._id);
+    let itemIndex = recipeItems.findIndex(item => item.id === activeItem.id);
     let stepIndex = recipeSteps[itemIndex].findIndex(
-      step => step._id === activeStep._id
+      step => step.id === activeStep.id
     );
 
     if (stepIndex + 1 < recipeSteps[itemIndex].length) {
@@ -51,9 +51,9 @@ export default class Ingredient extends Component {
       recipeSteps,
       setActiveStep
     } = this.props;
-    let itemIndex = recipeItems.findIndex(item => item._id === activeItem._id);
+    let itemIndex = recipeItems.findIndex(item => item.id === activeItem.id);
     let stepIndex = recipeSteps[itemIndex].findIndex(
-      step => step._id === activeStep._id
+      step => step.id === activeStep.id
     );
 
     if (stepIndex - 1 >= 0) {
@@ -70,10 +70,10 @@ export default class Ingredient extends Component {
     const { recipeItems, recipeSteps, activeItem, activeStep } = this.props;
 
     const activeItemIndex = recipeItems.findIndex(
-      item => item._id === activeItem._id
+      item => item.id === activeItem.id
     );
     const activeStepIndex = recipeSteps[activeItemIndex].findIndex(
-      step => step._id === activeStep._id
+      step => step.id === activeStep.id
     );
     const hasPrevStep =
       (activeItemIndex === 0 && activeStepIndex > 0) || activeItemIndex > 0;

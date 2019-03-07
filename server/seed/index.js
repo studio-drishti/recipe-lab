@@ -195,7 +195,7 @@ mongoose
 
     return db.Recipe.create({
       title: 'Spaghetti and Meatballs',
-      author: users[0]._id,
+      author: users[0].id,
       time: 'medium',
       skill: 'easy',
       description:

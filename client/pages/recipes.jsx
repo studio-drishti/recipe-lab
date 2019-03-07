@@ -1,43 +1,45 @@
 import React, { Component } from 'react';
-import fetch from 'isomorphic-unfetch';
 import Link from 'next/link';
-import PropTypes from 'prop-types';
+import { Query } from 'react-apollo';
+import gql from 'graphql-tag';
 
-import { API_URL } from '../config';
 import Page from '../layouts/Main';
+
+const GET_RECIPES = gql`
+  {
+    recipes {
+      id
+      title
+      description
+    }
+  }
+`;
 
 export default class RecipesPage extends Component {
   static displayName = 'RecipesPage';
 
-  static propTypes = {
-    recipes: PropTypes.array
-  };
-
-  static async getInitialProps() {
-    const res = await fetch(`${API_URL}/api/recipes`);
-    const recipes = await res.json();
-
-    return {
-      recipes
-    };
-  }
-
   render() {
-    const { recipes } = this.props;
     return (
       <Page>
-        {recipes.map((recipe, i) => (
-          <div key={i}>
-            <h1>{recipe.title}</h1>
-            <p>{recipe.description}</p>
-            <Link
-              as={`/recipes/${recipe._id}`}
-              href={`/recipe?id=${recipe._id}`}
-            >
-              <a>Show me more!</a>
-            </Link>
-          </div>
-        ))}
+        <Query query={GET_RECIPES}>
+          {({ loading, error, data }) => {
+            if (loading) return 'Loading...';
+            if (error) return `Error! ${error.message}`;
+
+            return data.recipes.map((recipe, i) => (
+              <div key={i}>
+                <h1>{recipe.title}</h1>
+                <p>{recipe.description}</p>
+                <Link
+                  as={`/recipes/${recipe.id}`}
+                  href={`/recipe?id=${recipe.id}`}
+                >
+                  <a>Show me more!</a>
+                </Link>
+              </div>
+            ));
+          }}
+        </Query>
       </Page>
     );
   }

@@ -8,24 +8,24 @@ type Recipe {
   skill: String!
   course: String!
   description: String!
-  items: [Item!]!
+  items: [Item!]! @relation(link: INLINE)
 }
 
-type Item @embedded {
-  id: ID!
+type Item {
+  id: ID! @id
   name: String!
-  steps: [Step!]!
+  steps: [Step!]! @relation(link: INLINE)
 }
 
-type Step @embedded {
-  id: ID!
+type Step {
+  id: ID! @id
   directions: String!
   notes: String
-  ingredients: [Ingredient!]!
+  ingredients: [Ingredient!]! @relation(link: INLINE)
 }
 
-type Ingredient @embedded {
-  id: ID!
+type Ingredient {
+  id: ID! @id
   name: String!
   quantity: Float!
   unit: String

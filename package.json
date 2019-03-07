@@ -23,7 +23,8 @@
     "prettier": "prettier --write \"**/*.{js,jsx,json,yml,xml,md,css}\"",
     "build": "next build",
     "prisma-deploy": "prisma deploy",
-    "prisma-seed": "prisma seed"
+    "prisma-seed": "prisma seed",
+    "prisma-reset": "prisma reset"
   },
   "dependencies": {
     "@zeit/next-css": "1.0.1",
@@ -90,7 +91,7 @@
     "postcss-calc": "7.0.1",
     "postcss-preset-env": "6.5.0",
     "prettier": "1.16.4",
-    "prisma": "1.28.0",
+    "prisma": "1.28.1",
     "react-addons-test-utils": "15.6.2",
     "react-test-renderer": "16.8.3",
     "stylelint": "9.10.1",

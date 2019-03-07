@@ -46,7 +46,7 @@ export default class Ingredient extends Component {
     const { ingredient, ingredientMods } = this.props;
 
     const mod = ingredientMods.find(
-      mod => mod.sourceId === ingredient._id && mod.field === fieldName
+      mod => mod.sourceId === ingredient.id && mod.field === fieldName
     );
 
     return mod !== undefined ? mod.value : ingredient[fieldName];

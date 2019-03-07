@@ -46,7 +46,7 @@ services:
       disable: true
 
   prisma:
-    image: prismagraphql/prisma:1.27
+    image: prismagraphql/prisma:1.28.1
     restart: always
     ports:
       - '4466:4466'
@@ -68,21 +68,6 @@ services:
       - '27017:27017'
     volumes:
       - mongo:/var/lib/mongo
-
-  # mongo:
-  #   image: mongo
-  #   ports:
-  #     - '27017:27017'
-  #   environment:
-  #     - MONGO_INITDB_ROOT_USERNAME=root
-  #     - MONGO_INITDB_ROOT_PASSWORD=sch0013d
-  #     - MONGO_INITDB_DATABASE=schooled-lunch
-  #   healthcheck:
-  #     test: echo 'db.stats().ok' | mongo localhost:27017/schooled-lunch --quiet
-  #     interval: 5s
-  #     start_period: 10s
-  #     timeout: 4s
-  #     retries: 3
 
 volumes:
   notused:

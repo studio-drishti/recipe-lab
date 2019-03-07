@@ -105,7 +105,7 @@ module.exports = () => {
 
           // Mongo Client automatically adds an id to an inserted object, but
           // if using a work-a-like we may need to add it from the response.
-          if (!user._id && response._id) user._id = response._id;
+          if (!user.id && response.id) user.id = response.id;
 
           return resolve(user);
         });
@@ -120,7 +120,7 @@ module.exports = () => {
     // You can use this to capture profile.avatar, profile.location, etc.
     update: (user, profile) => {
       return new Promise((resolve, reject) => {
-        User.updateOne({ _id: user._id }, user, err => {
+        User.updateOne({ _id: user.id }, user, err => {
           if (err) return reject(err);
           return resolve(user);
         });
@@ -144,9 +144,9 @@ module.exports = () => {
       if (user.id) {
         // Handle responses from deserialize()
         return Promise.resolve(user.id);
-      } else if (user._id) {
+      } else if (user.id) {
         // Handle responses from find(), insert(), update()
-        return Promise.resolve(user._id);
+        return Promise.resolve(user.id);
       } else {
         return Promise.reject(new Error('Unable to serialise user'));
       }
@@ -163,7 +163,7 @@ module.exports = () => {
           if (!user) return resolve(null);
 
           return resolve({
-            id: user._id,
+            id: user.id,
             name: user.name,
             email: user.email,
             emailVerified: user.emailVerified,

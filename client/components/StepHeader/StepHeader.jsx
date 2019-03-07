@@ -33,7 +33,7 @@ export default class Step extends PureComponent {
   componentDidUpdate(prevProps) {
     if (
       'activeStep' in prevProps &&
-      this.props.activeStep._id !== prevProps.activeStep._id
+      this.props.activeStep.id !== prevProps.activeStep.id
     ) {
       this.disableEditing();
     }
