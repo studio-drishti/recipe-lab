@@ -70,7 +70,7 @@ class Login extends Component {
                 }
               });
 
-              this.setState({ email: '', password: '' });
+              // this.setState({ email: '', password: '' });
             }}
           >
             {error && <p>No user found with that information.</p>}

@@ -4,8 +4,8 @@ export default apolloClient =>
   apolloClient
     .query({
       query: gql`
-        query getUser {
-          user {
+        {
+          getUser {
             id
             name
           }
@@ -13,9 +13,9 @@ export default apolloClient =>
       `
     })
     .then(({ data }) => {
-      return { user: data, csrfToken: 'foo' };
+      return { user: data.getUser, csrfToken: 'foo' };
     })
     .catch(() => {
       // Fail gracefully
-      return { user: {}, csrfToken: null };
+      return { user: null, csrfToken: null };
     });
