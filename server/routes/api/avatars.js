@@ -2,9 +2,9 @@ const path = require('path');
 const fs = require('fs');
 const router = require('express').Router();
 const multer = require('multer');
-const lusca = require('lusca');
 
-const db = require('../../models');
+const { prisma } = require('../../generated/prisma-client');
+const getUserId = require('../../utils/getUserId');
 const tmpStorage = require('../../utils/tmpStorage');
 const upload = multer({
   storage: tmpStorage,
@@ -23,37 +23,40 @@ const rmTmp = file => {
 };
 
 // Matches /api/avatars/upload
-router.post('/upload', upload.single('avatar'), lusca.csrf(), (req, res) => {
-  if (!req.user) {
+router.post('/upload', upload.single('avatar'), async (req, res) => {
+  const userId = getUserId({ request: req });
+
+  if (!userId || !prisma.$exists.user({ id: userId })) {
     rmTmp(req.file);
     return res
       .status(403)
       .json({ error: 'Must be signed in to upload a photo' });
   }
 
-  db.User.findById(req.user.id)
-    .then(user => {
-      const oldAvatar = path.resolve(
-        __dirname,
-        `../../public/avatars/${user.avatar}`
-      );
-      if (user.avatar && fs.existsSync(oldAvatar)) fs.unlinkSync(oldAvatar);
+  try {
+    const dest = path.resolve(__dirname, '../../public/avatars');
+    fs.mkdirSync(dest, { recursive: true });
 
-      fs.renameSync(
-        req.file.path,
-        path.resolve(__dirname, `../../public/avatars/${req.file.filename}`)
-      );
+    const user = await prisma.user({ id: userId });
+    const oldAvatar = path.join(dest, user.avatar);
+    if (user.avatar && fs.existsSync(oldAvatar)) fs.unlinkSync(oldAvatar);
 
-      user.avatar = req.file.filename;
-      user.save();
-      res.json({
-        avatar: `/public/avatars/${user.avatar}`
-      });
-    })
-    .catch(err => {
-      rmTmp(req.file);
-      res.json(err);
+    fs.renameSync(req.file.path, path.join(dest, req.file.filename));
+
+    prisma.updateUser({
+      where: { id: userId },
+      data: {
+        avatar: req.file.filename
+      }
     });
+
+    res.json({
+      avatar: `/public/avatars/${user.avatar}`
+    });
+  } catch (error) {
+    rmTmp(req.file);
+    res.json(error);
+  }
 });
 
 module.exports = router;

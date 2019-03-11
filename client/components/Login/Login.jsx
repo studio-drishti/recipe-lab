@@ -48,15 +48,11 @@ class Login extends Component {
           // Force a reload of all the current queries now that the user is
           // logged in
           client.cache.reset().then(() => {
-            redirect({}, '/');
+            redirect({}, '/profile');
           });
         }}
-        onError={error => {
-          // If you want to send error to external service?
-          console.log(error);
-        }}
       >
-        {(login, { data, error }) => (
+        {(login, { error }) => (
           <form
             className={css.form}
             onSubmit={e => {
@@ -70,7 +66,7 @@ class Login extends Component {
                 }
               });
 
-              // this.setState({ email: '', password: '' });
+              this.setState({ password: '' });
             }}
           >
             {error && <p>No user found with that information.</p>}

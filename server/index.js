@@ -1,9 +1,7 @@
 const path = require('path');
-const mongoose = require('mongoose');
 const next = require('next');
 const nextConfig = require('../next.config.js');
 const express = require('express');
-const cors = require('cors');
 const { GraphQLServer } = require('graphql-yoga');
 const { prisma } = require('./generated/prisma-client');
 const resolvers = require('./resolvers');
@@ -15,14 +13,7 @@ const morgan = require('morgan');
 
 const routes = require('./routes');
 
-const {
-  NODE_ENV
-  // MONGO_USERNAME,
-  // MONGO_PASSWORD,
-  // MONGO_HOSTNAME,
-  // MONGO_PORT,
-  // MONGO_DATABASE_NAME
-} = process.env;
+const { NODE_ENV } = process.env;
 
 // Initialize the Next.js app
 const nextApp = next({
@@ -33,27 +24,6 @@ const nextApp = next({
 
 module.exports = nextApp
   .prepare()
-  // .then(() => {
-  //   // Ensure that we are connected to mongo
-  //   return mongoose.connect(
-  //     `mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@${MONGO_HOSTNAME}:${MONGO_PORT}`,
-  //     {
-  //       dbName: MONGO_DATABASE_NAME,
-  //       useNewUrlParser: true
-  //     }
-  //   );
-  // })
-  // .then(mongoose => {
-  //   // Load configuration and return config object
-  //   return nextAuthConfig(mongoose);
-  // })
-  // .then(nextAuthOptions => {
-  //   // Don't pass a port to NextAuth so we can use custom express routes
-  //   if (nextAuthOptions.port) delete nextAuthOptions.port;
-  //   // Override lusca settings so we can allow multipart form submissions
-  //   nextAuthOptions.csrf = { blacklist: ['/api/avatars/upload'] };
-  //   return nextAuth(nextApp, nextAuthOptions);
-  // })
   .then(() => {
     return new GraphQLServer({
       typeDefs: path.resolve(__dirname, 'schema.graphql'),
@@ -69,7 +39,6 @@ module.exports = nextApp
   })
   .then(server => {
     server.express.use(morgan('common'));
-    server.express.use(cors());
     server.express.use(
       '/public',
       express.static(path.resolve(__dirname, 'public'))
