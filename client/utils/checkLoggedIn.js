@@ -8,6 +8,7 @@ export default apolloClient =>
           getUser {
             id
             name
+            avatar
           }
         }
       `

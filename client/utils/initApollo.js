@@ -1,5 +1,5 @@
 import { ApolloClient, InMemoryCache } from 'apollo-boost';
-import { createHttpLink } from 'apollo-link-http';
+import { createUploadLink } from 'apollo-upload-client';
 import { setContext } from 'apollo-link-context';
 import fetch from 'isomorphic-unfetch';
 
@@ -11,7 +11,7 @@ if (!process.browser) {
 }
 
 function create(initialState, { getToken }) {
-  const httpLink = createHttpLink({
+  const httpLink = createUploadLink({
     uri: 'http://localhost:3000/graphql',
     credentials: 'same-origin'
   });

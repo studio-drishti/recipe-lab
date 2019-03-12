@@ -1,4 +1,5 @@
 scalar DateTime
+scalar Upload
 
 type Query {
   getUser: User
@@ -9,11 +10,18 @@ type Query {
 type Mutation {
   signup(email: String!, password: String!, name: String): AuthPayload!
   login(email: String!, password: String!): AuthPayload!
+  avatarUpload(file: Upload!): File!
 }
 
 type AuthPayload {
   token: String!
   user: User!
+}
+
+type File {
+  filename: String!
+  mimetype: String!
+  encoding: String!
 }
 
 type User {
