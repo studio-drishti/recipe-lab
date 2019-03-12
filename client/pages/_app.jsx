@@ -25,13 +25,15 @@ class MyApp extends App {
   }
 
   refreshUser = async () => {
-    const session = await checkLoggedIn(this.props.apolloClient);
-    this.setState({ user: session.user, csrfToken: session.csrfToken });
+    const session = await checkLoggedIn(
+      this.props.apolloClient,
+      'network-only'
+    );
+    this.setState({ user: session.user });
   };
 
   state = {
     user: this.props.session.user,
-    csrfToken: this.props.session.csrfToken,
     refreshUser: this.refreshUser
   };
 
