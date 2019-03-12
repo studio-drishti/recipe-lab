@@ -42,9 +42,6 @@ module.exports = {
       encoding
     } = await file;
 
-    if (!userId || !context.prisma.$exists.user({ id: userId }))
-      throw new Error('Must be signed in to upload a photo');
-
     if (!['image/jpeg', 'image/jpg'].includes(mimetype))
       throw new Error('Invalid file type');
 

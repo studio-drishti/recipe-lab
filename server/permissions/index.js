@@ -24,6 +24,7 @@ module.exports = shield({
     // post: rules.isAuthenticatedUser
   },
   Mutation: {
+    avatarUpload: rules.isAuthenticatedUser
     // createDraft: rules.isAuthenticatedUser
     // deletePost: rules.isPostOwner,
     // publish: rules.isPostOwner
