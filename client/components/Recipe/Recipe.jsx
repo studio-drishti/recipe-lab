@@ -2,11 +2,11 @@ import React from 'react';
 import { Component } from 'react';
 import PropTypes from 'prop-types';
 import { DragDropContext } from 'react-beautiful-dnd';
+import cuid from 'cuid';
 
 import css from './Recipe.css';
 
 import reorder from '../../utils/reorder';
-import generateId from '../../utils/generateId';
 import areArraysEqual from '../../utils/areArraysEqual';
 
 import StepList from '../StepList';
@@ -27,7 +27,7 @@ export default class Recipe extends Component {
 
   static propTypes = {
     recipe: PropTypes.shape({
-      _id: PropTypes.string,
+      id: PropTypes.string,
       title: PropTypes.string,
       author: PropTypes.object,
       time: PropTypes.string,
@@ -287,7 +287,7 @@ export default class Recipe extends Component {
     const { recipe, modification, localStoreId } = this.state;
 
     const addition = {
-      _id: generateId(),
+      id: cuid(),
       kind: 'Item',
       parentId: recipe.id,
       name: ''
@@ -302,7 +302,7 @@ export default class Recipe extends Component {
     const { modification, localStoreId } = this.state;
 
     const addition = {
-      _id: generateId(),
+      id: cuid(),
       kind: 'Step',
       parentId: itemId,
       directions: '',
@@ -318,7 +318,7 @@ export default class Recipe extends Component {
     const { modification, localStoreId } = this.state;
 
     const addition = {
-      _id: generateId(),
+      id: cuid(),
       kind: 'Ingredient',
       parentId: stepId,
       quantity: '',
@@ -408,8 +408,7 @@ export default class Recipe extends Component {
   getActiveStepNumber = () => {
     const { activeItem, activeStep } = this.state;
     return (
-      this.getSteps(activeItem).findIndex(step => step.id === activeStep.id) +
-      1
+      this.getSteps(activeItem).findIndex(step => step.id === activeStep.id) + 1
     );
   };
 

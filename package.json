@@ -47,7 +47,6 @@
     "isomorphic-unfetch": "3.0.0",
     "jsonwebtoken": "8.5.0",
     "morgan": "1.9.1",
-    "multer": "1.4.1",
     "next": "8.0.4-canary.10",
     "normalize.css": "8.0.1",
     "prisma-client-lib": "1.28.3",

@@ -1,11 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import fetch from 'isomorphic-unfetch';
 import { MdSchool, MdTimer } from 'react-icons/md';
 import { Query } from 'react-apollo';
 import gql from 'graphql-tag';
 
-import { API_URL } from '../../config';
 import Page from '../../layouts/Main';
 import Recipe from '../../components/Recipe';
 import css from './recipe.css';

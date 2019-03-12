@@ -2,29 +2,29 @@ import { shallow } from 'enzyme';
 import React from 'react';
 
 import RecipeNav from 'schooled-lunch/client/components/RecipeNav';
-import generateId from 'schooled-lunch/client/utils/generateId';
+import cuid from 'cuid';
 
 let props = {};
 
 beforeEach(() => {
   props.recipeItems = [
     {
-      _id: generateId(),
+      id: cuid(),
       name: 'Boozy Drink'
     },
     {
-      _id: generateId(),
+      id: cuid(),
       name: 'Moar Booze'
     }
   ];
   props.recipeSteps = [
     [
       {
-        _id: generateId(),
+        id: cuid(),
         directions: 'Do the first thing',
         ingredients: [
           {
-            _id: generateId(),
+            id: cuid(),
             name: 'wine',
             quantity: 1,
             unit: 'cup'
@@ -32,11 +32,11 @@ beforeEach(() => {
         ]
       },
       {
-        _id: generateId(),
+        id: cuid(),
         directions: 'Do the second thing',
         ingredients: [
           {
-            _id: generateId(),
+            id: cuid(),
             name: 'whiskey',
             quantity: 1,
             unit: 'gallon'
@@ -46,11 +46,11 @@ beforeEach(() => {
     ],
     [
       {
-        _id: generateId(),
+        id: cuid(),
         directions: 'Do the third',
         ingredients: [
           {
-            _id: generateId(),
+            id: cuid(),
             name: 'gin',
             quantity: 1,
             unit: 'tsp'

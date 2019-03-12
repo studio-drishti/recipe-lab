@@ -2,17 +2,17 @@ import { shallow } from 'enzyme';
 import React from 'react';
 
 import Recipe from 'schooled-lunch/client/components/Recipe';
-import generateId from 'schooled-lunch/client/utils/generateId';
+import cuid from 'cuid';
 
 let props, localStoreId;
 
 beforeEach(() => {
   props = {
     recipe: {
-      _id: generateId(),
+      id: cuid(),
       title: 'Spaghetti and Meatballs',
       author: {
-        _id: generateId(),
+        id: cuid(),
         name: 'Test McTester'
       },
       time: 'medium',
@@ -21,15 +21,15 @@ beforeEach(() => {
       course: 'main',
       items: [
         {
-          _id: generateId(),
+          id: cuid(),
           name: 'Food thingy',
           steps: [
             {
-              _id: generateId(),
+              id: cuid(),
               directions: 'Do the first thing',
               ingredients: [
                 {
-                  _id: generateId(),
+                  id: cuid(),
                   name: 'wine',
                   quantity: 1,
                   unit: 'cup'
@@ -37,11 +37,11 @@ beforeEach(() => {
               ]
             },
             {
-              _id: generateId(),
+              id: cuid(),
               directions: 'Do the second thing',
               ingredients: [
                 {
-                  _id: generateId(),
+                  id: cuid(),
                   name: 'wine',
                   quantity: 1,
                   unit: 'cup'
@@ -51,7 +51,7 @@ beforeEach(() => {
           ]
         },
         {
-          _id: generateId(),
+          id: cuid(),
           name: 'Sauce',
           steps: []
         }
@@ -162,7 +162,7 @@ describe('It creates additions', () => {
     expect(additions).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
-          _id: expect.any(String),
+          id: expect.any(String),
           parentId: props.recipe.items[0].steps[0].id,
           kind: 'Ingredient'
         })
@@ -180,7 +180,7 @@ describe('It creates additions', () => {
     expect(additions).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
-          _id: expect.any(String),
+          id: expect.any(String),
           parentId: props.recipe.items[0].id,
           kind: 'Step'
         })
@@ -198,7 +198,7 @@ describe('It creates additions', () => {
     expect(additions).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
-          _id: expect.any(String),
+          id: expect.any(String),
           parentId: props.recipe.id,
           kind: 'Item'
         })

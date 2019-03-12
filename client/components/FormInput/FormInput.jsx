@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import classnames from 'classnames';
 
 import css from './FormInput.css';
-import generateId from '../../utils/generateId';
+import cuid from 'cuid';
 
 export default class FormInput extends PureComponent {
   static displayName = 'FormInput';
@@ -17,7 +17,7 @@ export default class FormInput extends PureComponent {
 
   static defaultProps = {
     className: null,
-    id: generateId()
+    id: cuid()
   };
 
   render() {

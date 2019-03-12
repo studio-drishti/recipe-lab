@@ -2,7 +2,7 @@ import { shallow } from 'enzyme';
 import React from 'react';
 
 import IngredientTotals from 'schooled-lunch/client/components/IngredientTotals';
-import generateId from 'schooled-lunch/client/utils/generateId';
+import cuid from 'cuid';
 
 let props;
 
@@ -10,13 +10,13 @@ beforeEach(() => {
   props = {
     ingredients: [
       {
-        _id: generateId(),
+        id: cuid(),
         name: 'wine',
         quantity: 1,
         unit: 'cup'
       },
       {
-        _id: generateId(),
+        id: cuid(),
         name: 'wine',
         quantity: 1,
         unit: 'cup'

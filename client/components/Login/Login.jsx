@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { Mutation, withApollo } from 'react-apollo';
+import { ApolloClient } from 'apollo-boost';
 import gql from 'graphql-tag';
 import cookie from 'cookie';
 import redirect from '../../utils/redirect';
@@ -17,6 +19,10 @@ const SIGN_IN = gql`
 `;
 class Login extends Component {
   static displayName = 'Login';
+
+  static propTypes = {
+    client: PropTypes.instanceOf(ApolloClient)
+  };
 
   state = {
     password: '',
