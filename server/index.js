@@ -51,10 +51,8 @@ module.exports = nextApp
     });
 
     server.express.all('*', (req, res, next) => {
-      if (['/playground', '/graphql'].includes(req.path)) {
-        next();
-        return;
-      }
+      if (['/playground', '/graphql'].includes(req.path)) return next();
+
       const nextRequestHandler = nextApp.getRequestHandler();
       return nextRequestHandler(req, res);
     });

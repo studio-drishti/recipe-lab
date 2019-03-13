@@ -19,7 +19,7 @@ const rules = {
 
 module.exports = shield({
   Query: {
-    getUser: rules.isAuthenticatedUser
+    sessionUser: rules.isAuthenticatedUser
     // filterPosts: rules.isAuthenticatedUser,
     // post: rules.isAuthenticatedUser
   },

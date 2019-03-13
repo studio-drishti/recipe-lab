@@ -5,7 +5,7 @@ export default (apolloClient, fetchPolicy = 'cache-first') =>
     .query({
       query: gql`
         {
-          getUser {
+          sessionUser {
             id
             name
             avatar
@@ -15,7 +15,7 @@ export default (apolloClient, fetchPolicy = 'cache-first') =>
       fetchPolicy
     })
     .then(({ data }) => {
-      return { user: data.getUser };
+      return { user: data.sessionUser };
     })
     .catch(() => {
       // Fail gracefully

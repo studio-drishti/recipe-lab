@@ -2,7 +2,7 @@ scalar DateTime
 scalar Upload
 
 type Query {
-  getUser: User
+  sessionUser: User
   recipes: [Recipe!]!
   recipe(id: ID!): Recipe
 }
