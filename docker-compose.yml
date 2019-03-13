@@ -46,7 +46,7 @@ services:
       disable: true
 
   prisma:
-    image: prismagraphql/prisma:1.28.1
+    image: prismagraphql/prisma:1.28.3
     restart: always
     ports:
       - '4466:4466'

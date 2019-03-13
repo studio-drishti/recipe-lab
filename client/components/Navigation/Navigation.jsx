@@ -30,7 +30,7 @@ export default class Navigation extends Component {
           )}
 
           {!user && (
-            <Link href="/auth">
+            <Link href="/register">
               <a>Login / Register</a>
             </Link>
           )}

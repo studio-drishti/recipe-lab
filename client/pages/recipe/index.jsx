@@ -95,7 +95,7 @@ export default class IndexPage extends Component {
 
                 <div className={css.bio}>
                   <div>
-                    <img src={`/public/avatars/${recipe.author.avatar}`} />
+                    <img src={recipe.author.avatar} />
                   </div>
                   <div>
                     <h3>About {recipe.author.name}</h3>
