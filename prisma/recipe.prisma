@@ -13,12 +13,14 @@ type Recipe {
 
 type Item {
   id: ID! @id
+  index: Int!
   name: String!
   steps: [Step!]! @relation(link: INLINE)
 }
 
 type Step {
   id: ID! @id
+  index: Int!
   directions: String!
   notes: String
   ingredients: [Ingredient!]! @relation(link: INLINE)
@@ -26,6 +28,7 @@ type Step {
 
 type Ingredient {
   id: ID! @id
+  index: Int!
   name: String!
   quantity: Float!
   unit: String

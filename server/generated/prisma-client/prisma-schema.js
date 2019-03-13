@@ -31,6 +31,7 @@ scalar DateTime
 
 type Ingredient {
   id: ID!
+  index: Int!
   name: String!
   quantity: Float!
   unit: String
@@ -44,6 +45,7 @@ type IngredientConnection {
 }
 
 input IngredientCreateInput {
+  index: Int!
   name: String!
   quantity: Float!
   unit: String
@@ -63,6 +65,8 @@ type IngredientEdge {
 enum IngredientOrderByInput {
   id_ASC
   id_DESC
+  index_ASC
+  index_DESC
   name_ASC
   name_DESC
   quantity_ASC
@@ -79,6 +83,7 @@ enum IngredientOrderByInput {
 
 type IngredientPreviousValues {
   id: ID!
+  index: Int!
   name: String!
   quantity: Float!
   unit: String
@@ -100,6 +105,14 @@ input IngredientScalarWhereInput {
   id_not_starts_with: ID
   id_ends_with: ID
   id_not_ends_with: ID
+  index: Int
+  index_not: Int
+  index_in: [Int!]
+  index_not_in: [Int!]
+  index_lt: Int
+  index_lte: Int
+  index_gt: Int
+  index_gte: Int
   name: String
   name_not: String
   name_in: [String!]
@@ -174,6 +187,7 @@ input IngredientSubscriptionWhereInput {
 }
 
 input IngredientUpdateDataInput {
+  index: Int
   name: String
   quantity: Float
   unit: String
@@ -181,6 +195,7 @@ input IngredientUpdateDataInput {
 }
 
 input IngredientUpdateInput {
+  index: Int
   name: String
   quantity: Float
   unit: String
@@ -188,6 +203,7 @@ input IngredientUpdateInput {
 }
 
 input IngredientUpdateManyDataInput {
+  index: Int
   name: String
   quantity: Float
   unit: String
@@ -207,6 +223,7 @@ input IngredientUpdateManyInput {
 }
 
 input IngredientUpdateManyMutationInput {
+  index: Int
   name: String
   quantity: Float
   unit: String
@@ -244,6 +261,14 @@ input IngredientWhereInput {
   id_not_starts_with: ID
   id_ends_with: ID
   id_not_ends_with: ID
+  index: Int
+  index_not: Int
+  index_in: [Int!]
+  index_not_in: [Int!]
+  index_lt: Int
+  index_lte: Int
+  index_gt: Int
+  index_gte: Int
   name: String
   name_not: String
   name_in: [String!]
@@ -305,6 +330,7 @@ input IngredientWhereUniqueInput {
 
 type Item {
   id: ID!
+  index: Int!
   name: String!
   steps(where: StepWhereInput, orderBy: StepOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Step!]
 }
@@ -316,6 +342,7 @@ type ItemConnection {
 }
 
 input ItemCreateInput {
+  index: Int!
   name: String!
   steps: StepCreateManyInput
 }
@@ -333,6 +360,8 @@ type ItemEdge {
 enum ItemOrderByInput {
   id_ASC
   id_DESC
+  index_ASC
+  index_DESC
   name_ASC
   name_DESC
   createdAt_ASC
@@ -343,6 +372,7 @@ enum ItemOrderByInput {
 
 type ItemPreviousValues {
   id: ID!
+  index: Int!
   name: String!
 }
 
@@ -361,6 +391,14 @@ input ItemScalarWhereInput {
   id_not_starts_with: ID
   id_ends_with: ID
   id_not_ends_with: ID
+  index: Int
+  index_not: Int
+  index_in: [Int!]
+  index_not_in: [Int!]
+  index_lt: Int
+  index_lte: Int
+  index_gt: Int
+  index_gte: Int
   name: String
   name_not: String
   name_in: [String!]
@@ -399,16 +437,19 @@ input ItemSubscriptionWhereInput {
 }
 
 input ItemUpdateDataInput {
+  index: Int
   name: String
   steps: StepUpdateManyInput
 }
 
 input ItemUpdateInput {
+  index: Int
   name: String
   steps: StepUpdateManyInput
 }
 
 input ItemUpdateManyDataInput {
+  index: Int
   name: String
 }
 
@@ -425,6 +466,7 @@ input ItemUpdateManyInput {
 }
 
 input ItemUpdateManyMutationInput {
+  index: Int
   name: String
 }
 
@@ -459,6 +501,14 @@ input ItemWhereInput {
   id_not_starts_with: ID
   id_ends_with: ID
   id_not_ends_with: ID
+  index: Int
+  index_not: Int
+  index_in: [Int!]
+  index_not_in: [Int!]
+  index_lt: Int
+  index_lte: Int
+  index_gt: Int
+  index_gte: Int
   name: String
   name_not: String
   name_in: [String!]
@@ -937,6 +987,7 @@ input RecipeWhereUniqueInput {
 
 type Step {
   id: ID!
+  index: Int!
   directions: String!
   notes: String
   ingredients(where: IngredientWhereInput, orderBy: IngredientOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Ingredient!]
@@ -949,6 +1000,7 @@ type StepConnection {
 }
 
 input StepCreateInput {
+  index: Int!
   directions: String!
   notes: String
   ingredients: IngredientCreateManyInput
@@ -967,6 +1019,8 @@ type StepEdge {
 enum StepOrderByInput {
   id_ASC
   id_DESC
+  index_ASC
+  index_DESC
   directions_ASC
   directions_DESC
   notes_ASC
@@ -979,6 +1033,7 @@ enum StepOrderByInput {
 
 type StepPreviousValues {
   id: ID!
+  index: Int!
   directions: String!
   notes: String
 }
@@ -998,6 +1053,14 @@ input StepScalarWhereInput {
   id_not_starts_with: ID
   id_ends_with: ID
   id_not_ends_with: ID
+  index: Int
+  index_not: Int
+  index_in: [Int!]
+  index_not_in: [Int!]
+  index_lt: Int
+  index_lte: Int
+  index_gt: Int
+  index_gte: Int
   directions: String
   directions_not: String
   directions_in: [String!]
@@ -1050,18 +1113,21 @@ input StepSubscriptionWhereInput {
 }
 
 input StepUpdateDataInput {
+  index: Int
   directions: String
   notes: String
   ingredients: IngredientUpdateManyInput
 }
 
 input StepUpdateInput {
+  index: Int
   directions: String
   notes: String
   ingredients: IngredientUpdateManyInput
 }
 
 input StepUpdateManyDataInput {
+  index: Int
   directions: String
   notes: String
 }
@@ -1079,6 +1145,7 @@ input StepUpdateManyInput {
 }
 
 input StepUpdateManyMutationInput {
+  index: Int
   directions: String
   notes: String
 }
@@ -1114,6 +1181,14 @@ input StepWhereInput {
   id_not_starts_with: ID
   id_ends_with: ID
   id_not_ends_with: ID
+  index: Int
+  index_not: Int
+  index_in: [Int!]
+  index_not_in: [Int!]
+  index_lt: Int
+  index_lte: Int
+  index_gt: Int
+  index_gte: Int
   directions: String
   directions_not: String
   directions_in: [String!]

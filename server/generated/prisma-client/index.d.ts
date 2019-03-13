@@ -278,21 +278,11 @@ export interface ClientConstructor<T> {
  * Types
  */
 
-export type StepOrderByInput =
-  | "id_ASC"
-  | "id_DESC"
-  | "directions_ASC"
-  | "directions_DESC"
-  | "notes_ASC"
-  | "notes_DESC"
-  | "createdAt_ASC"
-  | "createdAt_DESC"
-  | "updatedAt_ASC"
-  | "updatedAt_DESC";
-
 export type IngredientOrderByInput =
   | "id_ASC"
   | "id_DESC"
+  | "index_ASC"
+  | "index_DESC"
   | "name_ASC"
   | "name_DESC"
   | "quantity_ASC"
@@ -306,9 +296,25 @@ export type IngredientOrderByInput =
   | "updatedAt_ASC"
   | "updatedAt_DESC";
 
+export type StepOrderByInput =
+  | "id_ASC"
+  | "id_DESC"
+  | "index_ASC"
+  | "index_DESC"
+  | "directions_ASC"
+  | "directions_DESC"
+  | "notes_ASC"
+  | "notes_DESC"
+  | "createdAt_ASC"
+  | "createdAt_DESC"
+  | "updatedAt_ASC"
+  | "updatedAt_DESC";
+
 export type ItemOrderByInput =
   | "id_ASC"
   | "id_DESC"
+  | "index_ASC"
+  | "index_DESC"
   | "name_ASC"
   | "name_DESC"
   | "createdAt_ASC"
@@ -376,6 +382,7 @@ export interface IngredientUpdateManyWithWhereNestedInput {
 }
 
 export interface IngredientCreateInput {
+  index: Int;
   name: String;
   quantity: Float;
   unit?: String;
@@ -394,6 +401,7 @@ export interface StepSubscriptionWhereInput {
 }
 
 export interface IngredientUpdateInput {
+  index?: Int;
   name?: String;
   quantity?: Float;
   unit?: String;
@@ -405,6 +413,7 @@ export type ItemWhereUniqueInput = AtLeastOne<{
 }>;
 
 export interface IngredientUpdateManyMutationInput {
+  index?: Int;
   name?: String;
   quantity?: Float;
   unit?: String;
@@ -426,6 +435,14 @@ export interface StepWhereInput {
   id_not_starts_with?: ID_Input;
   id_ends_with?: ID_Input;
   id_not_ends_with?: ID_Input;
+  index?: Int;
+  index_not?: Int;
+  index_in?: Int[] | Int;
+  index_not_in?: Int[] | Int;
+  index_lt?: Int;
+  index_lte?: Int;
+  index_gt?: Int;
+  index_gte?: Int;
   directions?: String;
   directions_not?: String;
   directions_in?: String[] | String;
@@ -468,6 +485,23 @@ export interface ItemUpsertWithWhereUniqueNestedInput {
   create: ItemCreateInput;
 }
 
+export interface IngredientSubscriptionWhereInput {
+  mutation_in?: MutationType[] | MutationType;
+  updatedFields_contains?: String;
+  updatedFields_contains_every?: String[] | String;
+  updatedFields_contains_some?: String[] | String;
+  node?: IngredientWhereInput;
+  AND?: IngredientSubscriptionWhereInput[] | IngredientSubscriptionWhereInput;
+  OR?: IngredientSubscriptionWhereInput[] | IngredientSubscriptionWhereInput;
+  NOT?: IngredientSubscriptionWhereInput[] | IngredientSubscriptionWhereInput;
+}
+
+export interface ItemUpdateDataInput {
+  index?: Int;
+  name?: String;
+  steps?: StepUpdateManyInput;
+}
+
 export interface UserUpdateManyMutationInput {
   email?: String;
   password?: String;
@@ -477,82 +511,8 @@ export interface UserUpdateManyMutationInput {
   emailVerified?: Boolean;
 }
 
-export interface ItemUpdateDataInput {
-  name?: String;
-  steps?: StepUpdateManyInput;
-}
-
-export interface IngredientWhereInput {
-  id?: ID_Input;
-  id_not?: ID_Input;
-  id_in?: ID_Input[] | ID_Input;
-  id_not_in?: ID_Input[] | ID_Input;
-  id_lt?: ID_Input;
-  id_lte?: ID_Input;
-  id_gt?: ID_Input;
-  id_gte?: ID_Input;
-  id_contains?: ID_Input;
-  id_not_contains?: ID_Input;
-  id_starts_with?: ID_Input;
-  id_not_starts_with?: ID_Input;
-  id_ends_with?: ID_Input;
-  id_not_ends_with?: ID_Input;
-  name?: String;
-  name_not?: String;
-  name_in?: String[] | String;
-  name_not_in?: String[] | String;
-  name_lt?: String;
-  name_lte?: String;
-  name_gt?: String;
-  name_gte?: String;
-  name_contains?: String;
-  name_not_contains?: String;
-  name_starts_with?: String;
-  name_not_starts_with?: String;
-  name_ends_with?: String;
-  name_not_ends_with?: String;
-  quantity?: Float;
-  quantity_not?: Float;
-  quantity_in?: Float[] | Float;
-  quantity_not_in?: Float[] | Float;
-  quantity_lt?: Float;
-  quantity_lte?: Float;
-  quantity_gt?: Float;
-  quantity_gte?: Float;
-  unit?: String;
-  unit_not?: String;
-  unit_in?: String[] | String;
-  unit_not_in?: String[] | String;
-  unit_lt?: String;
-  unit_lte?: String;
-  unit_gt?: String;
-  unit_gte?: String;
-  unit_contains?: String;
-  unit_not_contains?: String;
-  unit_starts_with?: String;
-  unit_not_starts_with?: String;
-  unit_ends_with?: String;
-  unit_not_ends_with?: String;
-  processing?: String;
-  processing_not?: String;
-  processing_in?: String[] | String;
-  processing_not_in?: String[] | String;
-  processing_lt?: String;
-  processing_lte?: String;
-  processing_gt?: String;
-  processing_gte?: String;
-  processing_contains?: String;
-  processing_not_contains?: String;
-  processing_starts_with?: String;
-  processing_not_starts_with?: String;
-  processing_ends_with?: String;
-  processing_not_ends_with?: String;
-  AND?: IngredientWhereInput[] | IngredientWhereInput;
-  OR?: IngredientWhereInput[] | IngredientWhereInput;
-  NOT?: IngredientWhereInput[] | IngredientWhereInput;
-}
-
 export interface ItemCreateInput {
+  index: Int;
   name: String;
   steps?: StepCreateManyInput;
 }
@@ -572,6 +532,7 @@ export type RecipeWhereUniqueInput = AtLeastOne<{
 }>;
 
 export interface StepCreateInput {
+  index: Int;
   directions: String;
   notes?: String;
   ingredients?: IngredientCreateManyInput;
@@ -702,6 +663,7 @@ export interface RecipeWhereInput {
 }
 
 export interface ItemUpdateInput {
+  index?: Int;
   name?: String;
   steps?: StepUpdateManyInput;
 }
@@ -761,12 +723,14 @@ export type StepWhereUniqueInput = AtLeastOne<{
 }>;
 
 export interface StepUpdateDataInput {
+  index?: Int;
   directions?: String;
   notes?: String;
   ingredients?: IngredientUpdateManyInput;
 }
 
 export interface StepUpdateManyMutationInput {
+  index?: Int;
   directions?: String;
   notes?: String;
 }
@@ -800,10 +764,12 @@ export interface ItemUpdateWithWhereUniqueNestedInput {
 }
 
 export interface ItemUpdateManyDataInput {
+  index?: Int;
   name?: String;
 }
 
 export interface IngredientUpdateDataInput {
+  index?: Int;
   name?: String;
   quantity?: Float;
   unit?: String;
@@ -825,6 +791,14 @@ export interface ItemScalarWhereInput {
   id_not_starts_with?: ID_Input;
   id_ends_with?: ID_Input;
   id_not_ends_with?: ID_Input;
+  index?: Int;
+  index_not?: Int;
+  index_in?: Int[] | Int;
+  index_not_in?: Int[] | Int;
+  index_lt?: Int;
+  index_lte?: Int;
+  index_gt?: Int;
+  index_gte?: Int;
   name?: String;
   name_not?: String;
   name_in?: String[] | String;
@@ -876,6 +850,14 @@ export interface IngredientScalarWhereInput {
   id_not_starts_with?: ID_Input;
   id_ends_with?: ID_Input;
   id_not_ends_with?: ID_Input;
+  index?: Int;
+  index_not?: Int;
+  index_in?: Int[] | Int;
+  index_not_in?: Int[] | Int;
+  index_lt?: Int;
+  index_lte?: Int;
+  index_gt?: Int;
+  index_gte?: Int;
   name?: String;
   name_not?: String;
   name_in?: String[] | String;
@@ -931,15 +913,82 @@ export interface IngredientScalarWhereInput {
   NOT?: IngredientScalarWhereInput[] | IngredientScalarWhereInput;
 }
 
-export interface IngredientSubscriptionWhereInput {
-  mutation_in?: MutationType[] | MutationType;
-  updatedFields_contains?: String;
-  updatedFields_contains_every?: String[] | String;
-  updatedFields_contains_some?: String[] | String;
-  node?: IngredientWhereInput;
-  AND?: IngredientSubscriptionWhereInput[] | IngredientSubscriptionWhereInput;
-  OR?: IngredientSubscriptionWhereInput[] | IngredientSubscriptionWhereInput;
-  NOT?: IngredientSubscriptionWhereInput[] | IngredientSubscriptionWhereInput;
+export interface IngredientWhereInput {
+  id?: ID_Input;
+  id_not?: ID_Input;
+  id_in?: ID_Input[] | ID_Input;
+  id_not_in?: ID_Input[] | ID_Input;
+  id_lt?: ID_Input;
+  id_lte?: ID_Input;
+  id_gt?: ID_Input;
+  id_gte?: ID_Input;
+  id_contains?: ID_Input;
+  id_not_contains?: ID_Input;
+  id_starts_with?: ID_Input;
+  id_not_starts_with?: ID_Input;
+  id_ends_with?: ID_Input;
+  id_not_ends_with?: ID_Input;
+  index?: Int;
+  index_not?: Int;
+  index_in?: Int[] | Int;
+  index_not_in?: Int[] | Int;
+  index_lt?: Int;
+  index_lte?: Int;
+  index_gt?: Int;
+  index_gte?: Int;
+  name?: String;
+  name_not?: String;
+  name_in?: String[] | String;
+  name_not_in?: String[] | String;
+  name_lt?: String;
+  name_lte?: String;
+  name_gt?: String;
+  name_gte?: String;
+  name_contains?: String;
+  name_not_contains?: String;
+  name_starts_with?: String;
+  name_not_starts_with?: String;
+  name_ends_with?: String;
+  name_not_ends_with?: String;
+  quantity?: Float;
+  quantity_not?: Float;
+  quantity_in?: Float[] | Float;
+  quantity_not_in?: Float[] | Float;
+  quantity_lt?: Float;
+  quantity_lte?: Float;
+  quantity_gt?: Float;
+  quantity_gte?: Float;
+  unit?: String;
+  unit_not?: String;
+  unit_in?: String[] | String;
+  unit_not_in?: String[] | String;
+  unit_lt?: String;
+  unit_lte?: String;
+  unit_gt?: String;
+  unit_gte?: String;
+  unit_contains?: String;
+  unit_not_contains?: String;
+  unit_starts_with?: String;
+  unit_not_starts_with?: String;
+  unit_ends_with?: String;
+  unit_not_ends_with?: String;
+  processing?: String;
+  processing_not?: String;
+  processing_in?: String[] | String;
+  processing_not_in?: String[] | String;
+  processing_lt?: String;
+  processing_lte?: String;
+  processing_gt?: String;
+  processing_gte?: String;
+  processing_contains?: String;
+  processing_not_contains?: String;
+  processing_starts_with?: String;
+  processing_not_starts_with?: String;
+  processing_ends_with?: String;
+  processing_not_ends_with?: String;
+  AND?: IngredientWhereInput[] | IngredientWhereInput;
+  OR?: IngredientWhereInput[] | IngredientWhereInput;
+  NOT?: IngredientWhereInput[] | IngredientWhereInput;
 }
 
 export interface ItemUpdateManyInput {
@@ -969,6 +1018,7 @@ export interface RecipeUpdateManyDataInput {
 }
 
 export interface IngredientUpdateManyDataInput {
+  index?: Int;
   name?: String;
   quantity?: Float;
   unit?: String;
@@ -1113,6 +1163,14 @@ export interface StepScalarWhereInput {
   id_not_starts_with?: ID_Input;
   id_ends_with?: ID_Input;
   id_not_ends_with?: ID_Input;
+  index?: Int;
+  index_not?: Int;
+  index_in?: Int[] | Int;
+  index_not_in?: Int[] | Int;
+  index_lt?: Int;
+  index_lte?: Int;
+  index_gt?: Int;
+  index_gte?: Int;
   directions?: String;
   directions_not?: String;
   directions_in?: String[] | String;
@@ -1157,12 +1215,14 @@ export interface StepUpdateManyWithWhereNestedInput {
 }
 
 export interface StepUpdateInput {
+  index?: Int;
   directions?: String;
   notes?: String;
   ingredients?: IngredientUpdateManyInput;
 }
 
 export interface StepUpdateManyDataInput {
+  index?: Int;
   directions?: String;
   notes?: String;
 }
@@ -1173,6 +1233,7 @@ export interface ItemUpdateManyWithWhereNestedInput {
 }
 
 export interface ItemUpdateManyMutationInput {
+  index?: Int;
   name?: String;
 }
 
@@ -1407,6 +1468,14 @@ export interface ItemWhereInput {
   id_not_starts_with?: ID_Input;
   id_ends_with?: ID_Input;
   id_not_ends_with?: ID_Input;
+  index?: Int;
+  index_not?: Int;
+  index_in?: Int[] | Int;
+  index_not_in?: Int[] | Int;
+  index_lt?: Int;
+  index_lte?: Int;
+  index_gt?: Int;
+  index_gte?: Int;
   name?: String;
   name_not?: String;
   name_in?: String[] | String;
@@ -1555,87 +1624,20 @@ export interface PageInfoSubscription
   endCursor: () => Promise<AsyncIterator<String>>;
 }
 
-export interface Step {
-  id: ID_Output;
-  directions: String;
-  notes?: String;
-}
-
-export interface StepPromise extends Promise<Step>, Fragmentable {
-  id: () => Promise<ID_Output>;
-  directions: () => Promise<String>;
-  notes: () => Promise<String>;
-  ingredients: <T = FragmentableArray<Ingredient>>(
-    args?: {
-      where?: IngredientWhereInput;
-      orderBy?: IngredientOrderByInput;
-      skip?: Int;
-      after?: String;
-      before?: String;
-      first?: Int;
-      last?: Int;
-    }
-  ) => T;
-}
-
-export interface StepSubscription
-  extends Promise<AsyncIterator<Step>>,
-    Fragmentable {
-  id: () => Promise<AsyncIterator<ID_Output>>;
-  directions: () => Promise<AsyncIterator<String>>;
-  notes: () => Promise<AsyncIterator<String>>;
-  ingredients: <T = Promise<AsyncIterator<IngredientSubscription>>>(
-    args?: {
-      where?: IngredientWhereInput;
-      orderBy?: IngredientOrderByInput;
-      skip?: Int;
-      after?: String;
-      before?: String;
-      first?: Int;
-      last?: Int;
-    }
-  ) => T;
-}
-
-export interface AggregateUser {
+export interface AggregateItem {
   count: Int;
 }
 
-export interface AggregateUserPromise
-  extends Promise<AggregateUser>,
+export interface AggregateItemPromise
+  extends Promise<AggregateItem>,
     Fragmentable {
   count: () => Promise<Int>;
 }
 
-export interface AggregateUserSubscription
-  extends Promise<AsyncIterator<AggregateUser>>,
+export interface AggregateItemSubscription
+  extends Promise<AsyncIterator<AggregateItem>>,
     Fragmentable {
   count: () => Promise<AsyncIterator<Int>>;
-}
-
-export interface StepSubscriptionPayload {
-  mutation: MutationType;
-  node: Step;
-  updatedFields: String[];
-  previousValues: StepPreviousValues;
-}
-
-export interface StepSubscriptionPayloadPromise
-  extends Promise<StepSubscriptionPayload>,
-    Fragmentable {
-  mutation: () => Promise<MutationType>;
-  node: <T = StepPromise>() => T;
-  updatedFields: () => Promise<String[]>;
-  previousValues: <T = StepPreviousValuesPromise>() => T;
-}
-
-export interface StepSubscriptionPayloadSubscription
-  extends Promise<AsyncIterator<StepSubscriptionPayload>>,
-    Fragmentable {
-  mutation: () => Promise<AsyncIterator<MutationType>>;
-  node: <T = StepSubscription>() => T;
-  updatedFields: () => Promise<AsyncIterator<String[]>>;
-  previousValues: <T = StepPreviousValuesSubscription>() => T;
 }
 
 export interface RecipePreviousValues {
@@ -1675,6 +1677,41 @@ export interface RecipePreviousValuesSubscription
   description: () => Promise<AsyncIterator<String>>;
 }
 
+export interface IngredientEdge {
+  node: Ingredient;
+  cursor: String;
+}
+
+export interface IngredientEdgePromise
+  extends Promise<IngredientEdge>,
+    Fragmentable {
+  node: <T = IngredientPromise>() => T;
+  cursor: () => Promise<String>;
+}
+
+export interface IngredientEdgeSubscription
+  extends Promise<AsyncIterator<IngredientEdge>>,
+    Fragmentable {
+  node: <T = IngredientSubscription>() => T;
+  cursor: () => Promise<AsyncIterator<String>>;
+}
+
+export interface AggregateUser {
+  count: Int;
+}
+
+export interface AggregateUserPromise
+  extends Promise<AggregateUser>,
+    Fragmentable {
+  count: () => Promise<Int>;
+}
+
+export interface AggregateUserSubscription
+  extends Promise<AsyncIterator<AggregateUser>>,
+    Fragmentable {
+  count: () => Promise<AsyncIterator<Int>>;
+}
+
 export interface BatchPayload {
   count: Long;
 }
@@ -1691,25 +1728,29 @@ export interface BatchPayloadSubscription
   count: () => Promise<AsyncIterator<Long>>;
 }
 
-export interface UserConnection {
-  pageInfo: PageInfo;
-  edges: UserEdge[];
+export interface UserSubscriptionPayload {
+  mutation: MutationType;
+  node: User;
+  updatedFields: String[];
+  previousValues: UserPreviousValues;
 }
 
-export interface UserConnectionPromise
-  extends Promise<UserConnection>,
+export interface UserSubscriptionPayloadPromise
+  extends Promise<UserSubscriptionPayload>,
     Fragmentable {
-  pageInfo: <T = PageInfoPromise>() => T;
-  edges: <T = FragmentableArray<UserEdge>>() => T;
-  aggregate: <T = AggregateUserPromise>() => T;
+  mutation: () => Promise<MutationType>;
+  node: <T = UserPromise>() => T;
+  updatedFields: () => Promise<String[]>;
+  previousValues: <T = UserPreviousValuesPromise>() => T;
 }
 
-export interface UserConnectionSubscription
-  extends Promise<AsyncIterator<UserConnection>>,
+export interface UserSubscriptionPayloadSubscription
+  extends Promise<AsyncIterator<UserSubscriptionPayload>>,
     Fragmentable {
-  pageInfo: <T = PageInfoSubscription>() => T;
-  edges: <T = Promise<AsyncIterator<UserEdgeSubscription>>>() => T;
-  aggregate: <T = AggregateUserSubscription>() => T;
+  mutation: () => Promise<AsyncIterator<MutationType>>;
+  node: <T = UserSubscription>() => T;
+  updatedFields: () => Promise<AsyncIterator<String[]>>;
+  previousValues: <T = UserPreviousValuesSubscription>() => T;
 }
 
 export interface UserEdge {
@@ -1746,23 +1787,49 @@ export interface StepEdgeSubscription
   cursor: () => Promise<AsyncIterator<String>>;
 }
 
-export interface IngredientEdge {
-  node: Ingredient;
-  cursor: String;
+export interface Step {
+  id: ID_Output;
+  index: Int;
+  directions: String;
+  notes?: String;
 }
 
-export interface IngredientEdgePromise
-  extends Promise<IngredientEdge>,
-    Fragmentable {
-  node: <T = IngredientPromise>() => T;
-  cursor: () => Promise<String>;
+export interface StepPromise extends Promise<Step>, Fragmentable {
+  id: () => Promise<ID_Output>;
+  index: () => Promise<Int>;
+  directions: () => Promise<String>;
+  notes: () => Promise<String>;
+  ingredients: <T = FragmentableArray<Ingredient>>(
+    args?: {
+      where?: IngredientWhereInput;
+      orderBy?: IngredientOrderByInput;
+      skip?: Int;
+      after?: String;
+      before?: String;
+      first?: Int;
+      last?: Int;
+    }
+  ) => T;
 }
 
-export interface IngredientEdgeSubscription
-  extends Promise<AsyncIterator<IngredientEdge>>,
+export interface StepSubscription
+  extends Promise<AsyncIterator<Step>>,
     Fragmentable {
-  node: <T = IngredientSubscription>() => T;
-  cursor: () => Promise<AsyncIterator<String>>;
+  id: () => Promise<AsyncIterator<ID_Output>>;
+  index: () => Promise<AsyncIterator<Int>>;
+  directions: () => Promise<AsyncIterator<String>>;
+  notes: () => Promise<AsyncIterator<String>>;
+  ingredients: <T = Promise<AsyncIterator<IngredientSubscription>>>(
+    args?: {
+      where?: IngredientWhereInput;
+      orderBy?: IngredientOrderByInput;
+      skip?: Int;
+      after?: String;
+      before?: String;
+      first?: Int;
+      last?: Int;
+    }
+  ) => T;
 }
 
 export interface AggregateRecipe {
@@ -1783,6 +1850,7 @@ export interface AggregateRecipeSubscription
 
 export interface Ingredient {
   id: ID_Output;
+  index: Int;
   name: String;
   quantity: Float;
   unit?: String;
@@ -1791,6 +1859,7 @@ export interface Ingredient {
 
 export interface IngredientPromise extends Promise<Ingredient>, Fragmentable {
   id: () => Promise<ID_Output>;
+  index: () => Promise<Int>;
   name: () => Promise<String>;
   quantity: () => Promise<Float>;
   unit: () => Promise<String>;
@@ -1801,6 +1870,7 @@ export interface IngredientSubscription
   extends Promise<AsyncIterator<Ingredient>>,
     Fragmentable {
   id: () => Promise<AsyncIterator<ID_Output>>;
+  index: () => Promise<AsyncIterator<Int>>;
   name: () => Promise<AsyncIterator<String>>;
   quantity: () => Promise<AsyncIterator<Float>>;
   unit: () => Promise<AsyncIterator<String>>;
@@ -1915,6 +1985,7 @@ export interface UserSubscription
 
 export interface IngredientPreviousValues {
   id: ID_Output;
+  index: Int;
   name: String;
   quantity: Float;
   unit?: String;
@@ -1925,6 +1996,7 @@ export interface IngredientPreviousValuesPromise
   extends Promise<IngredientPreviousValues>,
     Fragmentable {
   id: () => Promise<ID_Output>;
+  index: () => Promise<Int>;
   name: () => Promise<String>;
   quantity: () => Promise<Float>;
   unit: () => Promise<String>;
@@ -1935,6 +2007,7 @@ export interface IngredientPreviousValuesSubscription
   extends Promise<AsyncIterator<IngredientPreviousValues>>,
     Fragmentable {
   id: () => Promise<AsyncIterator<ID_Output>>;
+  index: () => Promise<AsyncIterator<Int>>;
   name: () => Promise<AsyncIterator<String>>;
   quantity: () => Promise<AsyncIterator<Float>>;
   unit: () => Promise<AsyncIterator<String>>;
@@ -2002,11 +2075,13 @@ export interface RecipeSubscription
 
 export interface Item {
   id: ID_Output;
+  index: Int;
   name: String;
 }
 
 export interface ItemPromise extends Promise<Item>, Fragmentable {
   id: () => Promise<ID_Output>;
+  index: () => Promise<Int>;
   name: () => Promise<String>;
   steps: <T = FragmentableArray<Step>>(
     args?: {
@@ -2025,6 +2100,7 @@ export interface ItemSubscription
   extends Promise<AsyncIterator<Item>>,
     Fragmentable {
   id: () => Promise<AsyncIterator<ID_Output>>;
+  index: () => Promise<AsyncIterator<Int>>;
   name: () => Promise<AsyncIterator<String>>;
   steps: <T = Promise<AsyncIterator<StepSubscription>>>(
     args?: {
@@ -2115,6 +2191,7 @@ export interface AggregateIngredientSubscription
 
 export interface ItemPreviousValues {
   id: ID_Output;
+  index: Int;
   name: String;
 }
 
@@ -2122,6 +2199,7 @@ export interface ItemPreviousValuesPromise
   extends Promise<ItemPreviousValues>,
     Fragmentable {
   id: () => Promise<ID_Output>;
+  index: () => Promise<Int>;
   name: () => Promise<String>;
 }
 
@@ -2129,6 +2207,7 @@ export interface ItemPreviousValuesSubscription
   extends Promise<AsyncIterator<ItemPreviousValues>>,
     Fragmentable {
   id: () => Promise<AsyncIterator<ID_Output>>;
+  index: () => Promise<AsyncIterator<Int>>;
   name: () => Promise<AsyncIterator<String>>;
 }
 
@@ -2157,29 +2236,29 @@ export interface ItemSubscriptionPayloadSubscription
   previousValues: <T = ItemPreviousValuesSubscription>() => T;
 }
 
-export interface UserSubscriptionPayload {
-  mutation: MutationType;
-  node: User;
-  updatedFields: String[];
-  previousValues: UserPreviousValues;
+export interface StepPreviousValues {
+  id: ID_Output;
+  index: Int;
+  directions: String;
+  notes?: String;
 }
 
-export interface UserSubscriptionPayloadPromise
-  extends Promise<UserSubscriptionPayload>,
+export interface StepPreviousValuesPromise
+  extends Promise<StepPreviousValues>,
     Fragmentable {
-  mutation: () => Promise<MutationType>;
-  node: <T = UserPromise>() => T;
-  updatedFields: () => Promise<String[]>;
-  previousValues: <T = UserPreviousValuesPromise>() => T;
+  id: () => Promise<ID_Output>;
+  index: () => Promise<Int>;
+  directions: () => Promise<String>;
+  notes: () => Promise<String>;
 }
 
-export interface UserSubscriptionPayloadSubscription
-  extends Promise<AsyncIterator<UserSubscriptionPayload>>,
+export interface StepPreviousValuesSubscription
+  extends Promise<AsyncIterator<StepPreviousValues>>,
     Fragmentable {
-  mutation: () => Promise<AsyncIterator<MutationType>>;
-  node: <T = UserSubscription>() => T;
-  updatedFields: () => Promise<AsyncIterator<String[]>>;
-  previousValues: <T = UserPreviousValuesSubscription>() => T;
+  id: () => Promise<AsyncIterator<ID_Output>>;
+  index: () => Promise<AsyncIterator<Int>>;
+  directions: () => Promise<AsyncIterator<String>>;
+  notes: () => Promise<AsyncIterator<String>>;
 }
 
 export interface StepConnection {
@@ -2203,60 +2282,73 @@ export interface StepConnectionSubscription
   aggregate: <T = AggregateStepSubscription>() => T;
 }
 
-export interface AggregateItem {
-  count: Int;
+export interface UserConnection {
+  pageInfo: PageInfo;
+  edges: UserEdge[];
 }
 
-export interface AggregateItemPromise
-  extends Promise<AggregateItem>,
+export interface UserConnectionPromise
+  extends Promise<UserConnection>,
     Fragmentable {
-  count: () => Promise<Int>;
+  pageInfo: <T = PageInfoPromise>() => T;
+  edges: <T = FragmentableArray<UserEdge>>() => T;
+  aggregate: <T = AggregateUserPromise>() => T;
 }
 
-export interface AggregateItemSubscription
-  extends Promise<AsyncIterator<AggregateItem>>,
+export interface UserConnectionSubscription
+  extends Promise<AsyncIterator<UserConnection>>,
     Fragmentable {
-  count: () => Promise<AsyncIterator<Int>>;
+  pageInfo: <T = PageInfoSubscription>() => T;
+  edges: <T = Promise<AsyncIterator<UserEdgeSubscription>>>() => T;
+  aggregate: <T = AggregateUserSubscription>() => T;
 }
 
-export interface StepPreviousValues {
-  id: ID_Output;
-  directions: String;
-  notes?: String;
+export interface StepSubscriptionPayload {
+  mutation: MutationType;
+  node: Step;
+  updatedFields: String[];
+  previousValues: StepPreviousValues;
 }
 
-export interface StepPreviousValuesPromise
-  extends Promise<StepPreviousValues>,
+export interface StepSubscriptionPayloadPromise
+  extends Promise<StepSubscriptionPayload>,
     Fragmentable {
-  id: () => Promise<ID_Output>;
-  directions: () => Promise<String>;
-  notes: () => Promise<String>;
+  mutation: () => Promise<MutationType>;
+  node: <T = StepPromise>() => T;
+  updatedFields: () => Promise<String[]>;
+  previousValues: <T = StepPreviousValuesPromise>() => T;
 }
 
-export interface StepPreviousValuesSubscription
-  extends Promise<AsyncIterator<StepPreviousValues>>,
+export interface StepSubscriptionPayloadSubscription
+  extends Promise<AsyncIterator<StepSubscriptionPayload>>,
     Fragmentable {
-  id: () => Promise<AsyncIterator<ID_Output>>;
-  directions: () => Promise<AsyncIterator<String>>;
-  notes: () => Promise<AsyncIterator<String>>;
+  mutation: () => Promise<AsyncIterator<MutationType>>;
+  node: <T = StepSubscription>() => T;
+  updatedFields: () => Promise<AsyncIterator<String[]>>;
+  previousValues: <T = StepPreviousValuesSubscription>() => T;
 }
-
-/*
-The `Int` scalar type represents non-fractional signed whole numeric values. Int can represent values between -(2^31) and 2^31 - 1. 
-*/
-export type Int = number;
-
-export type Long = string;
 
 /*
 The `Float` scalar type represents signed double-precision fractional values as specified by [IEEE 754](https://en.wikipedia.org/wiki/IEEE_floating_point). 
 */
 export type Float = number;
 
+export type Long = string;
+
+/*
+The `Int` scalar type represents non-fractional signed whole numeric values. Int can represent values between -(2^31) and 2^31 - 1. 
+*/
+export type Int = number;
+
 /*
 The `Boolean` scalar type represents `true` or `false`.
 */
 export type Boolean = boolean;
+
+/*
+The `String` scalar type represents textual data, represented as UTF-8 character sequences. The String type is most often used by GraphQL to represent free-form human-readable text.
+*/
+export type String = string;
 
 /*
 DateTime scalar input type, allowing Date
@@ -2273,11 +2365,6 @@ The `ID` scalar type represents a unique identifier, often used to refetch an ob
 */
 export type ID_Input = string | number;
 export type ID_Output = string;
-
-/*
-The `String` scalar type represents textual data, represented as UTF-8 character sequences. The String type is most often used by GraphQL to represent free-form human-readable text.
-*/
-export type String = string;
 
 /**
  * Model Metadata
