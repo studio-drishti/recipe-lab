@@ -1,91 +1,45 @@
 # TODO: Rewrite mongoose model as prisma schema
 
-# const AdditionSchema = new Schema(
-#   {
-#     parentId: Schema.Types.ObjectId
-#   },
-#   {
-#     discriminatorKey: 'kind'
-#   }
-# );
+type Modification {
+  id: ID! @id
+  createdAt: DateTime! @createdAt
+  updatedAt: DateTime! @updatedAt
+  author: User!
+  recipe: Recipe!
+  sortings: [Sorting!]!
+  alterations: [Alteration!]!
+  removals: [ID!]!
+  itemAdditions: [ItemAddition!]!
+  stepAdditions: [StepAddition!]!
+  ingredientAdditions: [IngredientAddition!]!
+}
 
-# const ModificationSchema = new Schema({
-#   author: {
-#     type: Schema.Types.ObjectId,
-#     ref: 'User',
-#     required: true
-#   },
-#   recipe: {
-#     type: Schema.Types.ObjectId,
-#     ref: 'Recipe',
-#     required: true
-#   },
-#   sortings: [
-#     {
-#       parentId: Schema.Types.ObjectId,
-#       order: [Schema.Types.ObjectId]
-#     }
-#   ],
-#   alterations: [
-#     {
-#       sourceId: Schema.Types.ObjectId,
-#       field: String,
-#       value: String
-#     }
-#   ],
-#   removals: [
-#     {
-#       sourceId: Schema.Types.ObjectId
-#     }
-#   ],
-#   additions: [AdditionSchema]
-# });
+type Sorting @embedded {
+  parentId: ID!
+  order: [ID!]!
+}
 
-# const additionArray = ModificationSchema.path('additions');
+type Alteration @embedded {
+  sourceId: ID!
+  field: String!
+  value: String!
+}
 
-# additionArray.discriminator(
-#   'Item',
-#   new Schema({
-#     name: {
-#       type: String,
-#       required: true
-#     }
-#   })
-# );
+type ItemAddition @embedded {
+  id: ID!
+  name: String!
+}
 
-# additionArray.discriminator(
-#   'Step',
-#   new Schema({
-#     directions: {
-#       type: String,
-#       required: true
-#     },
-#     notes: {
-#       type: String
-#     }
-#   })
-# );
+type StepAddition @embedded {
+  id: ID!
+  directions: String!
+  notes: String!
+}
 
-# additionArray.discriminator(
-#   'Ingredient',
-#   new Schema({
-#     name: {
-#       type: String,
-#       required: true
-#     },
-#     quantity: {
-#       type: Number,
-#       required: true
-#     },
-#     unit: {
-#       type: String
-#     },
-#     processing: {
-#       type: String
-#     }
-#   })
-# );
-
-# const Modification = mongoose.model('Modification', ModificationSchema);
-
-# module.exports = Modification;
+type IngredientAddition @embedded {
+  id: ID!
+  name: String!
+  quantity: Float!
+  unit: String
+  processing: String
+}

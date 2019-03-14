@@ -1,9 +1,6 @@
 const { prisma } = require('../server/generated/prisma-client');
 
 async function main() {
-  await prisma.deleteManyUsers({});
-  await prisma.deleteManyRecipes({});
-
   await prisma.createUser({
     email: 'jay@schooledlunch.club',
     emailVerified: true,
