@@ -23,6 +23,30 @@ var models = [
   {
     name: "Ingredient",
     embedded: false
+  },
+  {
+    name: "Modification",
+    embedded: false
+  },
+  {
+    name: "Sorting",
+    embedded: false
+  },
+  {
+    name: "Alteration",
+    embedded: false
+  },
+  {
+    name: "ItemAddition",
+    embedded: false
+  },
+  {
+    name: "StepAddition",
+    embedded: false
+  },
+  {
+    name: "IngredientAddition",
+    embedded: false
   }
 ];
 exports.Prisma = prisma_lib_1.makePrismaClientClass({

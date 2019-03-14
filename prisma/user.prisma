@@ -9,4 +9,5 @@ type User {
   slug: String
   emailVerified: Boolean! @default(value: false)
   recipes: [Recipe!]! @relation(link: INLINE)
+  modifications: [Modification!]! @relation(link: INLINE)
 }

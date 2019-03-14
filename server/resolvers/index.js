@@ -4,6 +4,8 @@ const User = require('./User');
 const Recipe = require('./Recipe');
 const Item = require('./Item');
 const Step = require('./Step');
+const Addition = require('./Addition');
+const Modification = require('./Modification');
 
 module.exports = {
   Query,
@@ -11,5 +13,7 @@ module.exports = {
   User,
   Recipe,
   Item,
-  Step
+  Step,
+  Addition,
+  Modification
 };

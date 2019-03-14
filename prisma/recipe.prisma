@@ -9,6 +9,7 @@ type Recipe {
   course: String!
   description: String!
   items: [Item!]! @relation(link: INLINE)
+  modifications: [Modification!]! @relation(link: INLINE)
 }
 
 type Item {

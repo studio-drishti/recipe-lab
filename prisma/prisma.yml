@@ -5,6 +5,7 @@ endpoint: http://prisma:4466
 datamodel:
   - user.prisma
   - recipe.prisma
+  - modification.prisma
 
 # Specifies the language and directory for the generated Prisma client.
 generate:
