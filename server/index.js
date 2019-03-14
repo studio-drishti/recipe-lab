@@ -26,7 +26,7 @@ module.exports = nextApp
   .prepare()
   .then(() => {
     return new GraphQLServer({
-      typeDefs: path.resolve(__dirname, 'schema.graphql'),
+      typeDefs: path.resolve(__dirname, 'schema/schema.graphql'),
       resolvers,
       middlewares: [permissions],
       context: request => {

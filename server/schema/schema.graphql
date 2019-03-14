@@ -1,0 +1,18 @@
+# import Recipe from 'recipes.graphql'
+# import User, AuthPayload from 'users.graphql'
+# import File from 'files.graphql'
+
+scalar DateTime
+scalar Upload
+
+type Query {
+  sessionUser: User
+  recipes: [Recipe!]!
+  recipe(id: ID!): Recipe
+}
+
+type Mutation {
+  signup(email: String!, password: String!, name: String): AuthPayload!
+  login(email: String!, password: String!): AuthPayload!
+  avatarUpload(file: Upload!): File!
+}
