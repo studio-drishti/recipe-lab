@@ -3,6 +3,6 @@ module.exports = {
     return context.prisma.recipe({ id }).author();
   },
   items: ({ id }, args, context) => {
-    return context.prisma.recipe({ id }).items({ orderBy: "index_ASC" });
+    return context.prisma.recipe({ id }).items({ orderBy: 'index_ASC' });
   }
 };

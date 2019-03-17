@@ -1,7 +1,7 @@
 # import Recipe from 'recipes.graphql'
 # import User, AuthPayload from 'users.graphql'
 # import File from 'files.graphql'
-# import Modification from 'modifications.graphql'
+# import Modification, SortingInput from 'modifications.graphql'
 
 scalar DateTime
 scalar Upload
@@ -17,4 +17,9 @@ type Mutation {
   signup(email: String!, password: String!, name: String): AuthPayload!
   login(email: String!, password: String!): AuthPayload!
   avatarUpload(file: Upload!): File!
+  saveModification(
+    recipe: ID!
+    author: ID!
+    sortings: [SortingInput!]
+  ): Modification!
 }

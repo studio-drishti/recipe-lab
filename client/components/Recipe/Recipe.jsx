@@ -3,11 +3,14 @@ import { Component } from 'react';
 import PropTypes from 'prop-types';
 import { DragDropContext } from 'react-beautiful-dnd';
 import cuid from 'cuid';
+import gql from 'graphql-tag';
+import { Mutation } from 'react-apollo';
 
 import css from './Recipe.css';
 
 import reorder from '../../utils/reorder';
 import areArraysEqual from '../../utils/areArraysEqual';
+import UserContext from '../../utils/UserContext';
 
 import StepList from '../StepList';
 import Step from '../Step';
@@ -22,9 +25,25 @@ import StepHeader from '../StepHeader';
 import RecipeNav from '../RecipeNav';
 import Directions from '../Directions';
 
+const SAVE_MODIFICATION = gql`
+  mutation saveModification(
+    $recipe: ID!
+    $author: ID!
+    $sortings: [SortingInput!]
+  ) {
+    saveModification(recipe: $recipe, author: $author, sortings: $sortings) {
+      id
+      sortings {
+        parentId
+        order
+      }
+    }
+  }
+`;
+
 export default class Recipe extends Component {
   static displayName = 'Recipe';
-
+  static contextType = UserContext;
   static propTypes = {
     recipe: PropTypes.shape({
       id: PropTypes.string,
@@ -46,6 +65,7 @@ export default class Recipe extends Component {
     autoFocusId: null,
     localStoreId: `MOD-${this.props.recipe.id}`,
     modification: {
+      id: null,
       sortings: [],
       alterations: [],
       removals: [],
@@ -422,12 +442,43 @@ export default class Recipe extends Component {
       modification
     } = this.state;
 
+    const { user } = this.context;
+
     const recipeItems = this.getItems();
     const activeStepIngredients = this.getIngredients(activeStep);
 
     return (
       <article className={css.recipe}>
         <div className={css.recipeMain}>
+          {modification.sortings.length > 0 && user && (
+            <Mutation
+              mutation={SAVE_MODIFICATION}
+              onCompleted={data => {
+                console.log(data);
+                const { modification } = this.state;
+                modification.id = data.saveModification.id;
+                this.setState({ modification });
+              }}
+            >
+              {(saveModification, { error, loading }) => (
+                <button
+                  onClick={() =>
+                    saveModification({
+                      variables: {
+                        recipe: recipe.id,
+                        author: user.id,
+                        sortings: modification.sortings
+                      }
+                    })
+                  }
+                >
+                  {loading && 'loading...'}
+                  {error && 'ERR!!!'}
+                  {!loading && !error && 'Save modification'}
+                </button>
+              )}
+            </Mutation>
+          )}
           <div className={css.ingredientTotals}>
             {recipeItems
               .filter(item => !modification.removals.includes(item.id))

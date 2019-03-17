@@ -18,6 +18,11 @@ type Sorting {
   order: [ID!]!
 }
 
+input SortingInput {
+  parentId: ID!
+  order: [ID!]!
+}
+
 type Alteration {
   sourceId: ID!
   field: String!

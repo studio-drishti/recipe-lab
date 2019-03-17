@@ -65,5 +65,64 @@ module.exports = {
     });
 
     return { filename, mimetype, encoding };
+  },
+  saveModification: async (parent, { author, recipe, sortings }, context) => {
+    const mod = await context.prisma
+      .modifications({
+        where: { recipe: { id: recipe }, author: { id: author } }
+      })
+      .then(mods => mods.shift());
+
+    if (mod) {
+      // return await context.prisma.updateModification({
+      //   where: {
+      //     id: mod.id
+      //   },
+      //   data: {
+      //     sortings: {
+      //       deleteMany: {
+      //         parentId_not_in: sortings.map(sorting => sorting.parentId)
+      //       },
+      //       updateMany: sortings
+      //         .filter(sorting => curSortings.includes(sorting.parentId))
+      //         .map(sorting => ({
+      //           where: {
+      //             parentId: sorting.parentId
+      //           },
+      //           data: {
+      //             order: {
+      //               set: sorting.order
+      //             }
+      //           }
+      //         }))
+      //       create: sortings
+      //         .filter(sorting => !curSortings.includes(sorting.parentId))
+      //         .map(sorting => ({
+      //           parentId: sorting.parentId,
+      //           order: {
+      //             set: sorting.order
+      //           }
+      //         }))
+      //     }
+      //   }
+      // });
+    } else {
+      return await context.prisma.createModification({
+        recipe: {
+          connect: { id: recipe }
+        },
+        author: {
+          connect: { id: author }
+        },
+        sortings: {
+          create: sortings.map(sorting => ({
+            parentId: sorting.parentId,
+            order: {
+              set: sorting.order
+            }
+          }))
+        }
+      });
+    }
   }
 };
