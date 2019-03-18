@@ -1,14 +1,14 @@
 const getUserId = require('../utils/getUserId');
 
 module.exports = {
-  sessionUser: (parent, args, context) => {
-    const userId = getUserId(context);
-    return context.prisma.user({ id: userId });
+  sessionUser: (parent, args, ctx) => {
+    const userId = getUserId(ctx);
+    return ctx.prisma.user({ id: userId });
   },
-  recipes: (parent, args, context) => {
-    return context.prisma.recipes();
+  recipes: (parent, args, ctx) => {
+    return ctx.prisma.recipes();
   },
-  recipe: (parent, { id }, context) => {
-    return context.prisma.recipe({ id });
+  recipe: (parent, { id }, ctx) => {
+    return ctx.prisma.recipe({ id });
   }
 };

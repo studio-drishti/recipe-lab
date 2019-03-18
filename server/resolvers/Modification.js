@@ -1,5 +1,8 @@
 module.exports = {
-  alterations: ({ id }, args, context) => {
-    return context.prisma.modification({ id }).alterations();
+  alterations: ({ id }, args, ctx) => {
+    return ctx.prisma.modification({ id }).alterations();
+  },
+  sortings: ({ id }, args, ctx) => {
+    return ctx.prisma.modification({ id }).sortings();
   }
 };

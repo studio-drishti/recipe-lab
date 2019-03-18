@@ -1,8 +1,8 @@
 module.exports = {
-  author: ({ id }, args, context) => {
-    return context.prisma.recipe({ id }).author();
+  author: ({ id }, args, ctx) => {
+    return ctx.prisma.recipe({ id }).author();
   },
-  items: ({ id }, args, context) => {
-    return context.prisma.recipe({ id }).items({ orderBy: 'index_ASC' });
+  items: ({ id }, args, ctx) => {
+    return ctx.prisma.recipe({ id }).items({ orderBy: 'index_ASC' });
   }
 };

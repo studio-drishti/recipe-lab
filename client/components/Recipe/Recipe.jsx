@@ -450,11 +450,10 @@ export default class Recipe extends Component {
     return (
       <article className={css.recipe}>
         <div className={css.recipeMain}>
-          {modification.sortings.length > 0 && user && (
+          {user && (
             <Mutation
               mutation={SAVE_MODIFICATION}
               onCompleted={data => {
-                console.log(data);
                 const { modification } = this.state;
                 modification.id = data.saveModification.id;
                 this.setState({ modification });
