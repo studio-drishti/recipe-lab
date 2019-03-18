@@ -6,6 +6,8 @@ import gql from 'graphql-tag';
 import cookie from 'cookie';
 import redirect from '../../utils/redirect';
 
+import UserContext from '../../utils/UserContext';
+
 import css from './Login.css';
 import FormInput from '../FormInput';
 import FormButton from '../FormButton';
@@ -19,7 +21,7 @@ const SIGN_IN = gql`
 `;
 class Login extends Component {
   static displayName = 'Login';
-
+  static contextType = UserContext;
   static propTypes = {
     client: PropTypes.instanceOf(ApolloClient)
   };
@@ -43,6 +45,7 @@ class Login extends Component {
   render() {
     const { email, password } = this.state;
     const { client } = this.props;
+    const { refreshUser } = this.context;
     return (
       <Mutation
         mutation={SIGN_IN}
@@ -53,9 +56,14 @@ class Login extends Component {
           });
           // Force a reload of all the current queries now that the user is
           // logged in
-          client.cache.reset().then(() => {
-            redirect({}, '/profile');
-          });
+          client.cache
+            .reset()
+            .then(() => {
+              return refreshUser();
+            })
+            .then(() => {
+              redirect({}, '/profile');
+            });
         }}
       >
         {(login, { error }) => (
