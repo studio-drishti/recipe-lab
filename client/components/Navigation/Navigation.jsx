@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import UserContext from '../../util/UserContext';
+import UserContext from '../../utils/UserContext';
 import Link from 'next/link';
 import css from './Navigation.css';
 
@@ -30,7 +30,7 @@ export default class Navigation extends Component {
           )}
 
           {!user && (
-            <Link href="/auth">
+            <Link href="/register">
               <a>Login / Register</a>
             </Link>
           )}

@@ -1,14 +1,16 @@
 import App, { Container } from 'next/app';
 import React from 'react';
-import { NextAuth } from 'next-auth/client';
+import { ApolloProvider } from 'react-apollo';
 
 import 'normalize.css';
 import '../styles/variables.css';
 import '../styles/global.css';
 
-import UserContext from '../util/UserContext';
+import UserContext from '../utils/UserContext';
+import withApollo from '../utils/withApollo';
+import checkLoggedIn from '../utils/checkLoggedIn';
 
-export default class MyApp extends App {
+class MyApp extends App {
   static async getInitialProps({ Component, ctx }) {
     let pageProps = {};
 
@@ -18,29 +20,35 @@ export default class MyApp extends App {
 
     return {
       pageProps,
-      session: await NextAuth.init({ req: ctx.req })
+      session: await checkLoggedIn(ctx.apolloClient)
     };
   }
 
   refreshUser = async () => {
-    const session = await NextAuth.init({ force: true });
-    this.setState({ user: session.user, csrfToken: session.csrfToken });
+    const session = await checkLoggedIn(
+      this.props.apolloClient,
+      'network-only'
+    );
+    this.setState({ user: session.user });
   };
 
   state = {
     user: this.props.session.user,
-    csrfToken: this.props.session.csrfToken,
     refreshUser: this.refreshUser
   };
 
   render() {
-    const { Component, pageProps } = this.props;
+    const { Component, pageProps, apolloClient } = this.props;
     return (
-      <UserContext.Provider value={this.state}>
-        <Container>
-          <Component {...pageProps} />
-        </Container>
-      </UserContext.Provider>
+      <Container>
+        <ApolloProvider client={apolloClient}>
+          <UserContext.Provider value={this.state}>
+            <Component {...pageProps} />
+          </UserContext.Provider>
+        </ApolloProvider>
+      </Container>
     );
   }
 }
+
+export default withApollo(MyApp);

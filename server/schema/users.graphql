@@ -1,0 +1,15 @@
+type User {
+  id: ID!
+  createdAt: DateTime!
+  email: String!
+  name: String!
+  avatar: String
+  slug: String
+  emailVerified: Boolean!
+  recipes: [Recipe!]!
+}
+
+type AuthPayload {
+  token: String!
+  user: User!
+}

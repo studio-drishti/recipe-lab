@@ -20,7 +20,7 @@ export default class IngredientTotals extends Component {
     const { alterations } = this.props;
     const newIngredient = { ...ingredient };
     alterations
-      .filter(mod => mod.sourceId === ingredient._id)
+      .filter(mod => mod.sourceId === ingredient.id)
       .forEach(mod => {
         newIngredient[mod.field] = mod.value;
       });

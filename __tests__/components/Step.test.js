@@ -3,14 +3,14 @@ import React from 'react';
 import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 
 import Step from 'schooled-lunch/client/components/Step';
-import generateId from 'schooled-lunch/client/util/generateId';
+import cuid from 'cuid';
 
 let props;
 
 const setup = props => {
   const wrapper = mount(
     <DragDropContext onDragEnd={() => {}}>
-      <Droppable type="STEP" droppableId={generateId()}>
+      <Droppable type="STEP" droppableId={cuid()}>
         {provided => (
           <ol ref={provided.innerRef} {...provided.droppableProps}>
             <Step {...props} />
@@ -29,8 +29,8 @@ const setup = props => {
 beforeEach(() => {
   props = {
     index: 0,
-    itemId: generateId(),
-    stepId: generateId(),
+    itemId: cuid(),
+    stepId: cuid(),
     activateStep: jest.fn()
   };
 });

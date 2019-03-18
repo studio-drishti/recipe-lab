@@ -1,0 +1,51 @@
+type Modification {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  author: User!
+  recipe: Recipe!
+  sortings: [Sorting!]!
+  alterations: [Alteration!]!
+  removals: [ID!]!
+  additions: [Addition!]!
+  itemAdditions: [ItemAddition!]!
+  stepAdditions: [StepAddition!]!
+  ingredientAdditions: [IngredientAddition!]!
+}
+
+type Sorting {
+  parentId: ID!
+  order: [ID!]!
+}
+
+input SortingInput {
+  parentId: ID!
+  order: [ID!]!
+}
+
+type Alteration {
+  sourceId: ID!
+  field: String!
+  value: String!
+}
+
+union Addition = ItemAddition | StepAddition | IngredientAddition
+
+type ItemAddition {
+  id: ID!
+  name: String!
+}
+
+type StepAddition {
+  id: ID!
+  directions: String!
+  notes: String!
+}
+
+type IngredientAddition {
+  id: ID!
+  name: String!
+  quantity: Float!
+  unit: String
+  processing: String
+}

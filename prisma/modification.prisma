@@ -1,0 +1,43 @@
+type Modification {
+  id: ID! @id
+  createdAt: DateTime! @createdAt
+  updatedAt: DateTime! @updatedAt
+  author: User!
+  recipe: Recipe!
+  sortings: [Sorting!]!
+  alterations: [Alteration!]!
+  removals: [ID!]!
+  itemAdditions: [ItemAddition!]!
+  stepAdditions: [StepAddition!]!
+  ingredientAdditions: [IngredientAddition!]!
+}
+
+type Sorting @embedded {
+  parentId: ID!
+  order: [ID!]!
+}
+
+type Alteration @embedded {
+  sourceId: ID!
+  field: String!
+  value: String!
+}
+
+type ItemAddition @embedded {
+  id: ID!
+  name: String!
+}
+
+type StepAddition @embedded {
+  id: ID!
+  directions: String!
+  notes: String!
+}
+
+type IngredientAddition @embedded {
+  id: ID!
+  name: String!
+  quantity: Float!
+  unit: String
+  processing: String
+}

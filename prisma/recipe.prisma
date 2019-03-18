@@ -1,0 +1,37 @@
+type Recipe {
+  id: ID! @id
+  createdAt: DateTime! @createdAt
+  updatedAt: DateTime! @updatedAt
+  author: User!
+  title: String!
+  time: String!
+  skill: String!
+  course: String!
+  description: String!
+  items: [Item!]! @relation(link: INLINE, onDelete: CASCADE)
+  modifications: [Modification!]! @relation(link: INLINE, onDelete: CASCADE)
+}
+
+type Item {
+  id: ID! @id
+  index: Int!
+  name: String!
+  steps: [Step!]! @relation(link: INLINE, onDelete: CASCADE)
+}
+
+type Step {
+  id: ID! @id
+  index: Int!
+  directions: String!
+  notes: String
+  ingredients: [Ingredient!]! @relation(link: INLINE, onDelete: CASCADE)
+}
+
+type Ingredient {
+  id: ID! @id
+  index: Int!
+  name: String!
+  quantity: Float!
+  unit: String
+  processing: String
+}
