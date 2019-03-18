@@ -8,15 +8,15 @@ type Recipe {
   skill: String!
   course: String!
   description: String!
-  items: [Item!]! @relation(link: INLINE)
-  modifications: [Modification!]! @relation(link: INLINE)
+  items: [Item!]! @relation(link: INLINE, onDelete: CASCADE)
+  modifications: [Modification!]! @relation(link: INLINE, onDelete: CASCADE)
 }
 
 type Item {
   id: ID! @id
   index: Int!
   name: String!
-  steps: [Step!]! @relation(link: INLINE)
+  steps: [Step!]! @relation(link: INLINE, onDelete: CASCADE)
 }
 
 type Step {
@@ -24,7 +24,7 @@ type Step {
   index: Int!
   directions: String!
   notes: String
-  ingredients: [Ingredient!]! @relation(link: INLINE)
+  ingredients: [Ingredient!]! @relation(link: INLINE, onDelete: CASCADE)
 }
 
 type Ingredient {
