@@ -2,7 +2,7 @@ type Modification {
   id: ID!
   createdAt: DateTime!
   updatedAt: DateTime!
-  author: User!
+  user: User!
   recipe: Recipe!
   sortings: [Sorting!]!
   alterations: [Alteration!]!
@@ -21,6 +21,12 @@ type Sorting {
 input SortingInput {
   parentId: ID!
   order: [ID!]!
+}
+
+input AlterationInput {
+  sourceId: ID!
+  field: String!
+  value: String!
 }
 
 type Alteration {

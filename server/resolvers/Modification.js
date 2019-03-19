@@ -4,5 +4,8 @@ module.exports = {
   },
   sortings: ({ id }, args, ctx) => {
     return ctx.prisma.modification({ id }).sortings();
+  },
+  user: ({ id }, args, ctx) => {
+    return ctx.prisma.modification({ id }).user();
   }
 };

@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { MdClear, MdRefresh, MdCheck } from 'react-icons/md';
+import classnames from 'classnames';
+import math from 'mathjs';
 
 import css from './Ingredient.css';
 import DiffText from '../DiffText';
@@ -17,7 +19,7 @@ export default class Ingredient extends Component {
     removed: PropTypes.bool,
     removeIngredient: PropTypes.func,
     restoreIngredient: PropTypes.func,
-    handleIngredientChange: PropTypes.func,
+    saveOrUpdateField: PropTypes.func,
     setActiveIngredient: PropTypes.func
   };
 
@@ -25,6 +27,11 @@ export default class Ingredient extends Component {
     ingredientMods: [],
     editing: false,
     removed: false
+  };
+
+  state = {
+    errors: {},
+    edits: {}
   };
 
   ingredientFields = ['quantity', 'unit', 'name', 'processing'];
@@ -44,6 +51,9 @@ export default class Ingredient extends Component {
 
   getIngredientValue = fieldName => {
     const { ingredient, ingredientMods } = this.props;
+
+    // Always prefer the current state's value
+    if (this.state.edits[fieldName] !== undefined) return this.state[fieldName];
 
     const mod = ingredientMods.find(
       mod => mod.sourceId === ingredient.id && mod.field === fieldName
@@ -104,6 +114,7 @@ export default class Ingredient extends Component {
   deselect = () => {
     this.props.setActiveIngredient(null);
     document.removeEventListener('mousedown', this.handleClick);
+    this.setState({ errors: {}, edits: {} });
   };
 
   handleClick = e => {
@@ -161,14 +172,45 @@ export default class Ingredient extends Component {
   };
 
   handleIngredientChange = e => {
-    const { removed, handleIngredientChange, restoreIngredient } = this.props;
-    if (removed) restoreIngredient();
-    handleIngredientChange(e);
+    let { name, value } = e.target;
+    const { errors, edits } = this.state;
+    const {
+      removed,
+      ingredient,
+      saveOrUpdateField,
+      restoreIngredient
+    } = this.props;
+
+    errors[name] = null;
+    edits[name] = value;
+
+    switch (name) {
+      case 'quantity':
+        try {
+          if (value) math.fraction(value);
+        } catch {
+          errors.quantity =
+            'Please enter quantity as whole numbers and fractions (e.g. 1 1/3)';
+        }
+        break;
+    }
+
+    this.setState({ edits, errors });
+
+    if (
+      !errors.quantity &&
+      !errors.unit &&
+      !errors.name &&
+      !errors.processing
+    ) {
+      if (removed) restoreIngredient();
+      saveOrUpdateField(ingredient, name, value);
+    }
   };
 
   render() {
     const { editing, removed } = this.props;
-
+    const { errors } = this.state;
     return (
       <li
         className={css.ingredient}
@@ -179,7 +221,7 @@ export default class Ingredient extends Component {
         tabIndex="0"
       >
         <form onSubmit={this.handleSave}>
-          {editing ? (
+          {editing && (
             <fieldset>
               <input
                 type="text"
@@ -189,6 +231,7 @@ export default class Ingredient extends Component {
                 value={this.getIngredientValue('quantity')}
                 placeholder={'Qty'}
                 onChange={this.handleIngredientChange}
+                className={classnames({ [css.error]: errors.quantity })}
               />
               <select
                 type="text"
@@ -221,13 +264,11 @@ export default class Ingredient extends Component {
                 onChange={this.handleIngredientChange}
               />
             </fieldset>
-          ) : (
-            <div>
-              {removed
-                ? this.renderRemovedIngredient()
-                : this.renderIngredientWithMods()}
-            </div>
           )}
+
+          {!editing && removed && this.renderRemovedIngredient()}
+
+          {!editing && !removed && this.renderIngredientWithMods()}
 
           <div className={css.buttons}>
             {removed && !editing && (

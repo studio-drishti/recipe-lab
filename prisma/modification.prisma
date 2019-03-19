@@ -2,7 +2,7 @@ type Modification {
   id: ID! @id
   createdAt: DateTime! @createdAt
   updatedAt: DateTime! @updatedAt
-  author: User!
+  user: User!
   recipe: Recipe!
   sortings: [Sorting!]!
   alterations: [Alteration!]!
@@ -37,7 +37,7 @@ type StepAddition @embedded {
 type IngredientAddition @embedded {
   id: ID!
   name: String!
-  quantity: Float!
+  quantity: String!
   unit: String
   processing: String
 }

@@ -242,7 +242,7 @@ type Ingredient {
   id: ID!
   index: Int!
   name: String!
-  quantity: Float!
+  quantity: String!
   unit: String
   processing: String
 }
@@ -250,7 +250,7 @@ type Ingredient {
 type IngredientAddition {
   id: ID!
   name: String!
-  quantity: Float!
+  quantity: String!
   unit: String
   processing: String
 }
@@ -263,7 +263,7 @@ type IngredientAdditionConnection {
 
 input IngredientAdditionCreateInput {
   name: String!
-  quantity: Float!
+  quantity: String!
   unit: String
   processing: String
 }
@@ -298,7 +298,7 @@ enum IngredientAdditionOrderByInput {
 type IngredientAdditionPreviousValues {
   id: ID!
   name: String!
-  quantity: Float!
+  quantity: String!
   unit: String
   processing: String
 }
@@ -332,14 +332,20 @@ input IngredientAdditionScalarWhereInput {
   name_not_starts_with: String
   name_ends_with: String
   name_not_ends_with: String
-  quantity: Float
-  quantity_not: Float
-  quantity_in: [Float!]
-  quantity_not_in: [Float!]
-  quantity_lt: Float
-  quantity_lte: Float
-  quantity_gt: Float
-  quantity_gte: Float
+  quantity: String
+  quantity_not: String
+  quantity_in: [String!]
+  quantity_not_in: [String!]
+  quantity_lt: String
+  quantity_lte: String
+  quantity_gt: String
+  quantity_gte: String
+  quantity_contains: String
+  quantity_not_contains: String
+  quantity_starts_with: String
+  quantity_not_starts_with: String
+  quantity_ends_with: String
+  quantity_not_ends_with: String
   unit: String
   unit_not: String
   unit_in: [String!]
@@ -393,21 +399,21 @@ input IngredientAdditionSubscriptionWhereInput {
 
 input IngredientAdditionUpdateDataInput {
   name: String
-  quantity: Float
+  quantity: String
   unit: String
   processing: String
 }
 
 input IngredientAdditionUpdateInput {
   name: String
-  quantity: Float
+  quantity: String
   unit: String
   processing: String
 }
 
 input IngredientAdditionUpdateManyDataInput {
   name: String
-  quantity: Float
+  quantity: String
   unit: String
   processing: String
 }
@@ -426,7 +432,7 @@ input IngredientAdditionUpdateManyInput {
 
 input IngredientAdditionUpdateManyMutationInput {
   name: String
-  quantity: Float
+  quantity: String
   unit: String
   processing: String
 }
@@ -476,14 +482,20 @@ input IngredientAdditionWhereInput {
   name_not_starts_with: String
   name_ends_with: String
   name_not_ends_with: String
-  quantity: Float
-  quantity_not: Float
-  quantity_in: [Float!]
-  quantity_not_in: [Float!]
-  quantity_lt: Float
-  quantity_lte: Float
-  quantity_gt: Float
-  quantity_gte: Float
+  quantity: String
+  quantity_not: String
+  quantity_in: [String!]
+  quantity_not_in: [String!]
+  quantity_lt: String
+  quantity_lte: String
+  quantity_gt: String
+  quantity_gte: String
+  quantity_contains: String
+  quantity_not_contains: String
+  quantity_starts_with: String
+  quantity_not_starts_with: String
+  quantity_ends_with: String
+  quantity_not_ends_with: String
   unit: String
   unit_not: String
   unit_in: [String!]
@@ -530,7 +542,7 @@ type IngredientConnection {
 input IngredientCreateInput {
   index: Int!
   name: String!
-  quantity: Float!
+  quantity: String!
   unit: String
   processing: String
 }
@@ -568,7 +580,7 @@ type IngredientPreviousValues {
   id: ID!
   index: Int!
   name: String!
-  quantity: Float!
+  quantity: String!
   unit: String
   processing: String
 }
@@ -610,14 +622,20 @@ input IngredientScalarWhereInput {
   name_not_starts_with: String
   name_ends_with: String
   name_not_ends_with: String
-  quantity: Float
-  quantity_not: Float
-  quantity_in: [Float!]
-  quantity_not_in: [Float!]
-  quantity_lt: Float
-  quantity_lte: Float
-  quantity_gt: Float
-  quantity_gte: Float
+  quantity: String
+  quantity_not: String
+  quantity_in: [String!]
+  quantity_not_in: [String!]
+  quantity_lt: String
+  quantity_lte: String
+  quantity_gt: String
+  quantity_gte: String
+  quantity_contains: String
+  quantity_not_contains: String
+  quantity_starts_with: String
+  quantity_not_starts_with: String
+  quantity_ends_with: String
+  quantity_not_ends_with: String
   unit: String
   unit_not: String
   unit_in: [String!]
@@ -672,7 +690,7 @@ input IngredientSubscriptionWhereInput {
 input IngredientUpdateDataInput {
   index: Int
   name: String
-  quantity: Float
+  quantity: String
   unit: String
   processing: String
 }
@@ -680,7 +698,7 @@ input IngredientUpdateDataInput {
 input IngredientUpdateInput {
   index: Int
   name: String
-  quantity: Float
+  quantity: String
   unit: String
   processing: String
 }
@@ -688,7 +706,7 @@ input IngredientUpdateInput {
 input IngredientUpdateManyDataInput {
   index: Int
   name: String
-  quantity: Float
+  quantity: String
   unit: String
   processing: String
 }
@@ -708,7 +726,7 @@ input IngredientUpdateManyInput {
 input IngredientUpdateManyMutationInput {
   index: Int
   name: String
-  quantity: Float
+  quantity: String
   unit: String
   processing: String
 }
@@ -766,14 +784,20 @@ input IngredientWhereInput {
   name_not_starts_with: String
   name_ends_with: String
   name_not_ends_with: String
-  quantity: Float
-  quantity_not: Float
-  quantity_in: [Float!]
-  quantity_not_in: [Float!]
-  quantity_lt: Float
-  quantity_lte: Float
-  quantity_gt: Float
-  quantity_gte: Float
+  quantity: String
+  quantity_not: String
+  quantity_in: [String!]
+  quantity_not_in: [String!]
+  quantity_lt: String
+  quantity_lte: String
+  quantity_gt: String
+  quantity_gte: String
+  quantity_contains: String
+  quantity_not_contains: String
+  quantity_starts_with: String
+  quantity_not_starts_with: String
+  quantity_ends_with: String
+  quantity_not_ends_with: String
   unit: String
   unit_not: String
   unit_in: [String!]
@@ -1199,7 +1223,7 @@ type Modification {
   id: ID!
   createdAt: DateTime!
   updatedAt: DateTime!
-  author: User!
+  user: User!
   recipe: Recipe!
   sortings(where: SortingWhereInput, orderBy: SortingOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Sorting!]
   alterations(where: AlterationWhereInput, orderBy: AlterationOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Alteration!]
@@ -1216,7 +1240,7 @@ type ModificationConnection {
 }
 
 input ModificationCreateInput {
-  author: UserCreateOneWithoutModificationsInput!
+  user: UserCreateOneWithoutModificationsInput!
   recipe: RecipeCreateOneWithoutModificationsInput!
   sortings: SortingCreateManyInput
   alterations: AlterationCreateManyInput
@@ -1224,11 +1248,6 @@ input ModificationCreateInput {
   itemAdditions: ItemAdditionCreateManyInput
   stepAdditions: StepAdditionCreateManyInput
   ingredientAdditions: IngredientAdditionCreateManyInput
-}
-
-input ModificationCreateManyWithoutAuthorInput {
-  create: [ModificationCreateWithoutAuthorInput!]
-  connect: [ModificationWhereUniqueInput!]
 }
 
 input ModificationCreateManyWithoutRecipeInput {
@@ -1236,12 +1255,17 @@ input ModificationCreateManyWithoutRecipeInput {
   connect: [ModificationWhereUniqueInput!]
 }
 
+input ModificationCreateManyWithoutUserInput {
+  create: [ModificationCreateWithoutUserInput!]
+  connect: [ModificationWhereUniqueInput!]
+}
+
 input ModificationCreateremovalsInput {
   set: [ID!]
 }
 
-input ModificationCreateWithoutAuthorInput {
-  recipe: RecipeCreateOneWithoutModificationsInput!
+input ModificationCreateWithoutRecipeInput {
+  user: UserCreateOneWithoutModificationsInput!
   sortings: SortingCreateManyInput
   alterations: AlterationCreateManyInput
   removals: ModificationCreateremovalsInput
@@ -1250,8 +1274,8 @@ input ModificationCreateWithoutAuthorInput {
   ingredientAdditions: IngredientAdditionCreateManyInput
 }
 
-input ModificationCreateWithoutRecipeInput {
-  author: UserCreateOneWithoutModificationsInput!
+input ModificationCreateWithoutUserInput {
+  recipe: RecipeCreateOneWithoutModificationsInput!
   sortings: SortingCreateManyInput
   alterations: AlterationCreateManyInput
   removals: ModificationCreateremovalsInput
@@ -1336,7 +1360,7 @@ input ModificationSubscriptionWhereInput {
 }
 
 input ModificationUpdateInput {
-  author: UserUpdateOneRequiredWithoutModificationsInput
+  user: UserUpdateOneRequiredWithoutModificationsInput
   recipe: RecipeUpdateOneRequiredWithoutModificationsInput
   sortings: SortingUpdateManyInput
   alterations: AlterationUpdateManyInput
@@ -1354,18 +1378,6 @@ input ModificationUpdateManyMutationInput {
   removals: ModificationUpdateremovalsInput
 }
 
-input ModificationUpdateManyWithoutAuthorInput {
-  create: [ModificationCreateWithoutAuthorInput!]
-  delete: [ModificationWhereUniqueInput!]
-  connect: [ModificationWhereUniqueInput!]
-  set: [ModificationWhereUniqueInput!]
-  disconnect: [ModificationWhereUniqueInput!]
-  update: [ModificationUpdateWithWhereUniqueWithoutAuthorInput!]
-  upsert: [ModificationUpsertWithWhereUniqueWithoutAuthorInput!]
-  deleteMany: [ModificationScalarWhereInput!]
-  updateMany: [ModificationUpdateManyWithWhereNestedInput!]
-}
-
 input ModificationUpdateManyWithoutRecipeInput {
   create: [ModificationCreateWithoutRecipeInput!]
   delete: [ModificationWhereUniqueInput!]
@@ -1374,6 +1386,18 @@ input ModificationUpdateManyWithoutRecipeInput {
   disconnect: [ModificationWhereUniqueInput!]
   update: [ModificationUpdateWithWhereUniqueWithoutRecipeInput!]
   upsert: [ModificationUpsertWithWhereUniqueWithoutRecipeInput!]
+  deleteMany: [ModificationScalarWhereInput!]
+  updateMany: [ModificationUpdateManyWithWhereNestedInput!]
+}
+
+input ModificationUpdateManyWithoutUserInput {
+  create: [ModificationCreateWithoutUserInput!]
+  delete: [ModificationWhereUniqueInput!]
+  connect: [ModificationWhereUniqueInput!]
+  set: [ModificationWhereUniqueInput!]
+  disconnect: [ModificationWhereUniqueInput!]
+  update: [ModificationUpdateWithWhereUniqueWithoutUserInput!]
+  upsert: [ModificationUpsertWithWhereUniqueWithoutUserInput!]
   deleteMany: [ModificationScalarWhereInput!]
   updateMany: [ModificationUpdateManyWithWhereNestedInput!]
 }
@@ -1387,7 +1411,17 @@ input ModificationUpdateremovalsInput {
   set: [ID!]
 }
 
-input ModificationUpdateWithoutAuthorDataInput {
+input ModificationUpdateWithoutRecipeDataInput {
+  user: UserUpdateOneRequiredWithoutModificationsInput
+  sortings: SortingUpdateManyInput
+  alterations: AlterationUpdateManyInput
+  removals: ModificationUpdateremovalsInput
+  itemAdditions: ItemAdditionUpdateManyInput
+  stepAdditions: StepAdditionUpdateManyInput
+  ingredientAdditions: IngredientAdditionUpdateManyInput
+}
+
+input ModificationUpdateWithoutUserDataInput {
   recipe: RecipeUpdateOneRequiredWithoutModificationsInput
   sortings: SortingUpdateManyInput
   alterations: AlterationUpdateManyInput
@@ -1397,36 +1431,26 @@ input ModificationUpdateWithoutAuthorDataInput {
   ingredientAdditions: IngredientAdditionUpdateManyInput
 }
 
-input ModificationUpdateWithoutRecipeDataInput {
-  author: UserUpdateOneRequiredWithoutModificationsInput
-  sortings: SortingUpdateManyInput
-  alterations: AlterationUpdateManyInput
-  removals: ModificationUpdateremovalsInput
-  itemAdditions: ItemAdditionUpdateManyInput
-  stepAdditions: StepAdditionUpdateManyInput
-  ingredientAdditions: IngredientAdditionUpdateManyInput
-}
-
-input ModificationUpdateWithWhereUniqueWithoutAuthorInput {
-  where: ModificationWhereUniqueInput!
-  data: ModificationUpdateWithoutAuthorDataInput!
-}
-
 input ModificationUpdateWithWhereUniqueWithoutRecipeInput {
   where: ModificationWhereUniqueInput!
   data: ModificationUpdateWithoutRecipeDataInput!
 }
 
-input ModificationUpsertWithWhereUniqueWithoutAuthorInput {
+input ModificationUpdateWithWhereUniqueWithoutUserInput {
   where: ModificationWhereUniqueInput!
-  update: ModificationUpdateWithoutAuthorDataInput!
-  create: ModificationCreateWithoutAuthorInput!
+  data: ModificationUpdateWithoutUserDataInput!
 }
 
 input ModificationUpsertWithWhereUniqueWithoutRecipeInput {
   where: ModificationWhereUniqueInput!
   update: ModificationUpdateWithoutRecipeDataInput!
   create: ModificationCreateWithoutRecipeInput!
+}
+
+input ModificationUpsertWithWhereUniqueWithoutUserInput {
+  where: ModificationWhereUniqueInput!
+  update: ModificationUpdateWithoutUserDataInput!
+  create: ModificationCreateWithoutUserInput!
 }
 
 input ModificationWhereInput {
@@ -1460,7 +1484,7 @@ input ModificationWhereInput {
   updatedAt_lte: DateTime
   updatedAt_gt: DateTime
   updatedAt_gte: DateTime
-  author: UserWhereInput
+  user: UserWhereInput
   recipe: RecipeWhereInput
   sortings_every: SortingWhereInput
   sortings_some: SortingWhereInput
@@ -2651,7 +2675,7 @@ input UserCreateInput {
   slug: String
   emailVerified: Boolean
   recipes: RecipeCreateManyWithoutAuthorInput
-  modifications: ModificationCreateManyWithoutAuthorInput
+  modifications: ModificationCreateManyWithoutUserInput
 }
 
 input UserCreateOneWithoutModificationsInput {
@@ -2681,7 +2705,7 @@ input UserCreateWithoutRecipesInput {
   avatar: String
   slug: String
   emailVerified: Boolean
-  modifications: ModificationCreateManyWithoutAuthorInput
+  modifications: ModificationCreateManyWithoutUserInput
 }
 
 type UserEdge {
@@ -2748,7 +2772,7 @@ input UserUpdateInput {
   slug: String
   emailVerified: Boolean
   recipes: RecipeUpdateManyWithoutAuthorInput
-  modifications: ModificationUpdateManyWithoutAuthorInput
+  modifications: ModificationUpdateManyWithoutUserInput
 }
 
 input UserUpdateManyMutationInput {
@@ -2791,7 +2815,7 @@ input UserUpdateWithoutRecipesDataInput {
   avatar: String
   slug: String
   emailVerified: Boolean
-  modifications: ModificationUpdateManyWithoutAuthorInput
+  modifications: ModificationUpdateManyWithoutUserInput
 }
 
 input UserUpsertWithoutModificationsInput {

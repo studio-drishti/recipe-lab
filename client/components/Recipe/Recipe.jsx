@@ -21,7 +21,7 @@ import StepHeader from '../StepHeader';
 // import StepCarousel from '../StepCarousel';
 import RecipeNav from '../RecipeNav';
 import Directions from '../Directions';
-// import RecipeStatus from '../RecipeStatus';
+import RecipeStatus from '../RecipeStatus';
 
 export default class Recipe extends Component {
   static displayName = 'Recipe';
@@ -46,8 +46,8 @@ export default class Recipe extends Component {
     activeIngredient: null,
     autoFocusId: null,
     localStoreId: `MOD-${this.props.recipe.id}`,
+    unsavedCount: 0,
     modification: {
-      id: null,
       sortings: [],
       alterations: [],
       removals: [],
@@ -57,7 +57,11 @@ export default class Recipe extends Component {
 
   componentDidMount() {
     const { localStoreId } = this.state;
-    let { modification } = this.state;
+    let { modification, recipe } = this.state;
+
+    if (recipe.modification) {
+      modification = Object.assign(modification, recipe.modification);
+    }
 
     if (localStorage.getItem(localStoreId)) {
       modification = Object.assign(
@@ -80,8 +84,16 @@ export default class Recipe extends Component {
     this.setState({ activeIngredient: ingredient });
   };
 
+  setModification = modification => {
+    const { localStoreId } = this.state;
+    let { unsavedCount } = this.state;
+    unsavedCount++;
+    localStorage.setItem(localStoreId, JSON.stringify(modification));
+    this.setState({ modification, unsavedCount });
+  };
+
   saveAlteration = (source, field, value) => {
-    const { modification, localStoreId } = this.state;
+    const { modification } = this.state;
     const alterationIndex = modification.alterations.findIndex(
       alteration =>
         alteration.field === field && alteration.sourceId === source.id
@@ -107,8 +119,7 @@ export default class Recipe extends Component {
       modification.alterations.push(alteration);
     }
 
-    localStorage.setItem(localStoreId, JSON.stringify(modification));
-    this.setState({ modification });
+    this.setModification(modification);
   };
 
   updateAddition = (source, field, value) => {
@@ -144,12 +155,6 @@ export default class Recipe extends Component {
     const { name, value } = e.target;
     const { activeStep } = this.state;
     this.saveOrUpdateField(activeStep, name, value);
-  };
-
-  handleIngredientChange = e => {
-    const { name, value } = e.target;
-    const { activeIngredient } = this.state;
-    this.saveOrUpdateField(activeIngredient, name, value);
   };
 
   saveRemoval = source => {
@@ -227,7 +232,7 @@ export default class Recipe extends Component {
   };
 
   saveSorting = (parentId, unsorted, sourceI, destinationI) => {
-    const { modification, localStoreId } = this.state;
+    const { modification } = this.state;
     const sortingIndex = modification.sortings.findIndex(
       sorting => sorting.parentId === parentId
     );
@@ -255,8 +260,7 @@ export default class Recipe extends Component {
       modification.sortings.push(sorting);
     }
 
-    localStorage.setItem(localStoreId, JSON.stringify(modification));
-    this.setState({ modification });
+    this.setModification(modification);
   };
 
   onDragEnd = result => {
@@ -421,7 +425,8 @@ export default class Recipe extends Component {
       activeStep,
       activeIngredient,
       autoFocusId,
-      modification
+      modification,
+      unsavedCount
     } = this.state;
 
     const recipeItems = this.getItems();
@@ -429,7 +434,11 @@ export default class Recipe extends Component {
 
     return (
       <>
-        {/* <RecipeStatus recipe={recipe} modification={modification} /> */}
+        <RecipeStatus
+          recipe={recipe}
+          modification={modification}
+          unsavedCount={unsavedCount}
+        />
         <article className={css.recipe}>
           <div className={css.recipeMain}>
             <div className={css.ingredientTotals}>
@@ -597,7 +606,7 @@ export default class Recipe extends Component {
                       restoreIngredient={() =>
                         this.undoAnyRemovals(activeItem, activeStep, ingredient)
                       }
-                      handleIngredientChange={this.handleIngredientChange}
+                      saveOrUpdateField={this.saveOrUpdateField}
                       setActiveIngredient={this.setActiveIngredient}
                     />
                   ))}

@@ -1,0 +1,5 @@
+.recipeStatus {
+  border: 1px solid var(--color-medium-gray);
+  padding: 1rem;
+  margin-bottom: 2rem;
+}
