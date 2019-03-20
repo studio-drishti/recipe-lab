@@ -63,12 +63,12 @@ export default class Recipe extends Component {
       modification = Object.assign(modification, recipe.modification);
     }
 
-    if (localStorage.getItem(localStoreId)) {
-      modification = Object.assign(
-        modification,
-        JSON.parse(localStorage.getItem(localStoreId))
-      );
-    }
+    // if (localStorage.getItem(localStoreId)) {
+    //   modification = Object.assign(
+    //     modification,
+    //     JSON.parse(localStorage.getItem(localStoreId))
+    //   );
+    // }
 
     this.setState({ modification });
   }
@@ -438,6 +438,7 @@ export default class Recipe extends Component {
           recipe={recipe}
           modification={modification}
           unsavedCount={unsavedCount}
+          updateModification={modification => this.setState({ modification })}
         />
         <article className={css.recipe}>
           <div className={css.recipeMain}>

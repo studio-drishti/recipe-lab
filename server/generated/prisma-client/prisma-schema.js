@@ -3,23 +3,11 @@ module.exports = {
   // Please don't change this file manually but run `prisma generate` to update it.
   // For more information, please read the docs: https://www.prisma.io/docs/prisma-client/
 
-/* GraphQL */ `type AggregateAlteration {
-  count: Int!
-}
-
-type AggregateIngredient {
-  count: Int!
-}
-
-type AggregateIngredientAddition {
+/* GraphQL */ `type AggregateIngredient {
   count: Int!
 }
 
 type AggregateItem {
-  count: Int!
-}
-
-type AggregateItemAddition {
   count: Int!
 }
 
@@ -31,15 +19,7 @@ type AggregateRecipe {
   count: Int!
 }
 
-type AggregateSorting {
-  count: Int!
-}
-
 type AggregateStep {
-  count: Int!
-}
-
-type AggregateStepAddition {
   count: Int!
 }
 
@@ -48,15 +28,10 @@ type AggregateUser {
 }
 
 type Alteration {
+  uid: ID!
   sourceId: ID!
   field: String!
   value: String!
-}
-
-type AlterationConnection {
-  pageInfo: PageInfo!
-  edges: [AlterationEdge]!
-  aggregate: AggregateAlteration!
 }
 
 input AlterationCreateInput {
@@ -69,33 +44,81 @@ input AlterationCreateManyInput {
   create: [AlterationCreateInput!]
 }
 
-type AlterationEdge {
-  node: Alteration!
-  cursor: String!
-}
-
-enum AlterationOrderByInput {
-  sourceId_ASC
-  sourceId_DESC
-  field_ASC
-  field_DESC
-  value_ASC
-  value_DESC
-  id_ASC
-  id_DESC
-  createdAt_ASC
-  createdAt_DESC
-  updatedAt_ASC
-  updatedAt_DESC
-}
-
-type AlterationPreviousValues {
-  sourceId: ID!
-  field: String!
-  value: String!
+input AlterationRestrictedWhereInput {
+  uid: ID
+  uid_not: ID
+  uid_in: [ID!]
+  uid_not_in: [ID!]
+  uid_lt: ID
+  uid_lte: ID
+  uid_gt: ID
+  uid_gte: ID
+  uid_contains: ID
+  uid_not_contains: ID
+  uid_starts_with: ID
+  uid_not_starts_with: ID
+  uid_ends_with: ID
+  uid_not_ends_with: ID
+  sourceId: ID
+  sourceId_not: ID
+  sourceId_in: [ID!]
+  sourceId_not_in: [ID!]
+  sourceId_lt: ID
+  sourceId_lte: ID
+  sourceId_gt: ID
+  sourceId_gte: ID
+  sourceId_contains: ID
+  sourceId_not_contains: ID
+  sourceId_starts_with: ID
+  sourceId_not_starts_with: ID
+  sourceId_ends_with: ID
+  sourceId_not_ends_with: ID
+  field: String
+  field_not: String
+  field_in: [String!]
+  field_not_in: [String!]
+  field_lt: String
+  field_lte: String
+  field_gt: String
+  field_gte: String
+  field_contains: String
+  field_not_contains: String
+  field_starts_with: String
+  field_not_starts_with: String
+  field_ends_with: String
+  field_not_ends_with: String
+  value: String
+  value_not: String
+  value_in: [String!]
+  value_not_in: [String!]
+  value_lt: String
+  value_lte: String
+  value_gt: String
+  value_gte: String
+  value_contains: String
+  value_not_contains: String
+  value_starts_with: String
+  value_not_starts_with: String
+  value_ends_with: String
+  value_not_ends_with: String
+  AND: [AlterationRestrictedWhereInput!]
 }
 
 input AlterationScalarWhereInput {
+  uid: ID
+  uid_not: ID
+  uid_in: [ID!]
+  uid_not_in: [ID!]
+  uid_lt: ID
+  uid_lte: ID
+  uid_gt: ID
+  uid_gte: ID
+  uid_contains: ID
+  uid_not_contains: ID
+  uid_starts_with: ID
+  uid_not_starts_with: ID
+  uid_ends_with: ID
+  uid_not_ends_with: ID
   sourceId: ID
   sourceId_not: ID
   sourceId_in: [ID!]
@@ -143,22 +166,10 @@ input AlterationScalarWhereInput {
   NOT: [AlterationScalarWhereInput!]
 }
 
-type AlterationSubscriptionPayload {
-  mutation: MutationType!
-  node: Alteration
-  updatedFields: [String!]
-  previousValues: AlterationPreviousValues
-}
-
-input AlterationSubscriptionWhereInput {
-  mutation_in: [MutationType!]
-  updatedFields_contains: String
-  updatedFields_contains_every: [String!]
-  updatedFields_contains_some: [String!]
-  node: AlterationWhereInput
-  AND: [AlterationSubscriptionWhereInput!]
-  OR: [AlterationSubscriptionWhereInput!]
-  NOT: [AlterationSubscriptionWhereInput!]
+input AlterationUpdateDataInput {
+  sourceId: ID
+  field: String
+  value: String
 }
 
 input AlterationUpdateManyDataInput {
@@ -169,14 +180,11 @@ input AlterationUpdateManyDataInput {
 
 input AlterationUpdateManyInput {
   create: [AlterationCreateInput!]
+  update: [AlterationUpdateWithWhereUniqueNestedInput!]
+  upsert: [AlterationUpsertWithWhereUniqueNestedInput!]
+  delete: [AlterationWhereUniqueInput!]
   deleteMany: [AlterationScalarWhereInput!]
   updateMany: [AlterationUpdateManyWithWhereNestedInput!]
-}
-
-input AlterationUpdateManyMutationInput {
-  sourceId: ID
-  field: String
-  value: String
 }
 
 input AlterationUpdateManyWithWhereNestedInput {
@@ -184,7 +192,32 @@ input AlterationUpdateManyWithWhereNestedInput {
   data: AlterationUpdateManyDataInput!
 }
 
+input AlterationUpdateWithWhereUniqueNestedInput {
+  where: AlterationWhereUniqueInput!
+  data: AlterationUpdateDataInput!
+}
+
+input AlterationUpsertWithWhereUniqueNestedInput {
+  where: AlterationWhereUniqueInput!
+  update: AlterationUpdateDataInput!
+  create: AlterationCreateInput!
+}
+
 input AlterationWhereInput {
+  uid: ID
+  uid_not: ID
+  uid_in: [ID!]
+  uid_not_in: [ID!]
+  uid_lt: ID
+  uid_lte: ID
+  uid_gt: ID
+  uid_gte: ID
+  uid_contains: ID
+  uid_not_contains: ID
+  uid_starts_with: ID
+  uid_not_starts_with: ID
+  uid_ends_with: ID
+  uid_not_ends_with: ID
   sourceId: ID
   sourceId_not: ID
   sourceId_in: [ID!]
@@ -228,8 +261,10 @@ input AlterationWhereInput {
   value_ends_with: String
   value_not_ends_with: String
   AND: [AlterationWhereInput!]
-  OR: [AlterationWhereInput!]
-  NOT: [AlterationWhereInput!]
+}
+
+input AlterationWhereUniqueInput {
+  uid: ID
 }
 
 type BatchPayload {
@@ -255,13 +290,8 @@ type IngredientAddition {
   processing: String
 }
 
-type IngredientAdditionConnection {
-  pageInfo: PageInfo!
-  edges: [IngredientAdditionEdge]!
-  aggregate: AggregateIngredientAddition!
-}
-
 input IngredientAdditionCreateInput {
+  id: ID!
   name: String!
   quantity: String!
   unit: String
@@ -270,37 +300,80 @@ input IngredientAdditionCreateInput {
 
 input IngredientAdditionCreateManyInput {
   create: [IngredientAdditionCreateInput!]
-  connect: [IngredientAdditionWhereUniqueInput!]
 }
 
-type IngredientAdditionEdge {
-  node: IngredientAddition!
-  cursor: String!
-}
-
-enum IngredientAdditionOrderByInput {
-  id_ASC
-  id_DESC
-  name_ASC
-  name_DESC
-  quantity_ASC
-  quantity_DESC
-  unit_ASC
-  unit_DESC
-  processing_ASC
-  processing_DESC
-  createdAt_ASC
-  createdAt_DESC
-  updatedAt_ASC
-  updatedAt_DESC
-}
-
-type IngredientAdditionPreviousValues {
-  id: ID!
-  name: String!
-  quantity: String!
+input IngredientAdditionRestrictedWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  name: String
+  name_not: String
+  name_in: [String!]
+  name_not_in: [String!]
+  name_lt: String
+  name_lte: String
+  name_gt: String
+  name_gte: String
+  name_contains: String
+  name_not_contains: String
+  name_starts_with: String
+  name_not_starts_with: String
+  name_ends_with: String
+  name_not_ends_with: String
+  quantity: String
+  quantity_not: String
+  quantity_in: [String!]
+  quantity_not_in: [String!]
+  quantity_lt: String
+  quantity_lte: String
+  quantity_gt: String
+  quantity_gte: String
+  quantity_contains: String
+  quantity_not_contains: String
+  quantity_starts_with: String
+  quantity_not_starts_with: String
+  quantity_ends_with: String
+  quantity_not_ends_with: String
   unit: String
+  unit_not: String
+  unit_in: [String!]
+  unit_not_in: [String!]
+  unit_lt: String
+  unit_lte: String
+  unit_gt: String
+  unit_gte: String
+  unit_contains: String
+  unit_not_contains: String
+  unit_starts_with: String
+  unit_not_starts_with: String
+  unit_ends_with: String
+  unit_not_ends_with: String
   processing: String
+  processing_not: String
+  processing_in: [String!]
+  processing_not_in: [String!]
+  processing_lt: String
+  processing_lte: String
+  processing_gt: String
+  processing_gte: String
+  processing_contains: String
+  processing_not_contains: String
+  processing_starts_with: String
+  processing_not_starts_with: String
+  processing_ends_with: String
+  processing_not_ends_with: String
+  AND: [IngredientAdditionRestrictedWhereInput!]
 }
 
 input IngredientAdditionScalarWhereInput {
@@ -379,39 +452,8 @@ input IngredientAdditionScalarWhereInput {
   NOT: [IngredientAdditionScalarWhereInput!]
 }
 
-type IngredientAdditionSubscriptionPayload {
-  mutation: MutationType!
-  node: IngredientAddition
-  updatedFields: [String!]
-  previousValues: IngredientAdditionPreviousValues
-}
-
-input IngredientAdditionSubscriptionWhereInput {
-  mutation_in: [MutationType!]
-  updatedFields_contains: String
-  updatedFields_contains_every: [String!]
-  updatedFields_contains_some: [String!]
-  node: IngredientAdditionWhereInput
-  AND: [IngredientAdditionSubscriptionWhereInput!]
-  OR: [IngredientAdditionSubscriptionWhereInput!]
-  NOT: [IngredientAdditionSubscriptionWhereInput!]
-}
-
-input IngredientAdditionUpdateDataInput {
-  name: String
-  quantity: String
-  unit: String
-  processing: String
-}
-
-input IngredientAdditionUpdateInput {
-  name: String
-  quantity: String
-  unit: String
-  processing: String
-}
-
 input IngredientAdditionUpdateManyDataInput {
+  id: ID
   name: String
   quantity: String
   unit: String
@@ -420,37 +462,13 @@ input IngredientAdditionUpdateManyDataInput {
 
 input IngredientAdditionUpdateManyInput {
   create: [IngredientAdditionCreateInput!]
-  update: [IngredientAdditionUpdateWithWhereUniqueNestedInput!]
-  upsert: [IngredientAdditionUpsertWithWhereUniqueNestedInput!]
-  delete: [IngredientAdditionWhereUniqueInput!]
-  connect: [IngredientAdditionWhereUniqueInput!]
-  set: [IngredientAdditionWhereUniqueInput!]
-  disconnect: [IngredientAdditionWhereUniqueInput!]
   deleteMany: [IngredientAdditionScalarWhereInput!]
   updateMany: [IngredientAdditionUpdateManyWithWhereNestedInput!]
-}
-
-input IngredientAdditionUpdateManyMutationInput {
-  name: String
-  quantity: String
-  unit: String
-  processing: String
 }
 
 input IngredientAdditionUpdateManyWithWhereNestedInput {
   where: IngredientAdditionScalarWhereInput!
   data: IngredientAdditionUpdateManyDataInput!
-}
-
-input IngredientAdditionUpdateWithWhereUniqueNestedInput {
-  where: IngredientAdditionWhereUniqueInput!
-  data: IngredientAdditionUpdateDataInput!
-}
-
-input IngredientAdditionUpsertWithWhereUniqueNestedInput {
-  where: IngredientAdditionWhereUniqueInput!
-  update: IngredientAdditionUpdateDataInput!
-  create: IngredientAdditionCreateInput!
 }
 
 input IngredientAdditionWhereInput {
@@ -525,12 +543,6 @@ input IngredientAdditionWhereInput {
   processing_ends_with: String
   processing_not_ends_with: String
   AND: [IngredientAdditionWhereInput!]
-  OR: [IngredientAdditionWhereInput!]
-  NOT: [IngredientAdditionWhereInput!]
-}
-
-input IngredientAdditionWhereUniqueInput {
-  id: ID
 }
 
 type IngredientConnection {
@@ -570,10 +582,6 @@ enum IngredientOrderByInput {
   unit_DESC
   processing_ASC
   processing_DESC
-  createdAt_ASC
-  createdAt_DESC
-  updatedAt_ASC
-  updatedAt_DESC
 }
 
 type IngredientPreviousValues {
@@ -683,8 +691,6 @@ input IngredientSubscriptionWhereInput {
   updatedFields_contains_some: [String!]
   node: IngredientWhereInput
   AND: [IngredientSubscriptionWhereInput!]
-  OR: [IngredientSubscriptionWhereInput!]
-  NOT: [IngredientSubscriptionWhereInput!]
 }
 
 input IngredientUpdateDataInput {
@@ -827,8 +833,6 @@ input IngredientWhereInput {
   processing_ends_with: String
   processing_not_ends_with: String
   AND: [IngredientWhereInput!]
-  OR: [IngredientWhereInput!]
-  NOT: [IngredientWhereInput!]
 }
 
 input IngredientWhereUniqueInput {
@@ -847,40 +851,45 @@ type ItemAddition {
   name: String!
 }
 
-type ItemAdditionConnection {
-  pageInfo: PageInfo!
-  edges: [ItemAdditionEdge]!
-  aggregate: AggregateItemAddition!
-}
-
 input ItemAdditionCreateInput {
+  id: ID!
   name: String!
 }
 
 input ItemAdditionCreateManyInput {
   create: [ItemAdditionCreateInput!]
-  connect: [ItemAdditionWhereUniqueInput!]
 }
 
-type ItemAdditionEdge {
-  node: ItemAddition!
-  cursor: String!
-}
-
-enum ItemAdditionOrderByInput {
-  id_ASC
-  id_DESC
-  name_ASC
-  name_DESC
-  createdAt_ASC
-  createdAt_DESC
-  updatedAt_ASC
-  updatedAt_DESC
-}
-
-type ItemAdditionPreviousValues {
-  id: ID!
-  name: String!
+input ItemAdditionRestrictedWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  name: String
+  name_not: String
+  name_in: [String!]
+  name_not_in: [String!]
+  name_lt: String
+  name_lte: String
+  name_gt: String
+  name_gte: String
+  name_contains: String
+  name_not_contains: String
+  name_starts_with: String
+  name_not_starts_with: String
+  name_ends_with: String
+  name_not_ends_with: String
+  AND: [ItemAdditionRestrictedWhereInput!]
 }
 
 input ItemAdditionScalarWhereInput {
@@ -917,66 +926,20 @@ input ItemAdditionScalarWhereInput {
   NOT: [ItemAdditionScalarWhereInput!]
 }
 
-type ItemAdditionSubscriptionPayload {
-  mutation: MutationType!
-  node: ItemAddition
-  updatedFields: [String!]
-  previousValues: ItemAdditionPreviousValues
-}
-
-input ItemAdditionSubscriptionWhereInput {
-  mutation_in: [MutationType!]
-  updatedFields_contains: String
-  updatedFields_contains_every: [String!]
-  updatedFields_contains_some: [String!]
-  node: ItemAdditionWhereInput
-  AND: [ItemAdditionSubscriptionWhereInput!]
-  OR: [ItemAdditionSubscriptionWhereInput!]
-  NOT: [ItemAdditionSubscriptionWhereInput!]
-}
-
-input ItemAdditionUpdateDataInput {
-  name: String
-}
-
-input ItemAdditionUpdateInput {
-  name: String
-}
-
 input ItemAdditionUpdateManyDataInput {
+  id: ID
   name: String
 }
 
 input ItemAdditionUpdateManyInput {
   create: [ItemAdditionCreateInput!]
-  update: [ItemAdditionUpdateWithWhereUniqueNestedInput!]
-  upsert: [ItemAdditionUpsertWithWhereUniqueNestedInput!]
-  delete: [ItemAdditionWhereUniqueInput!]
-  connect: [ItemAdditionWhereUniqueInput!]
-  set: [ItemAdditionWhereUniqueInput!]
-  disconnect: [ItemAdditionWhereUniqueInput!]
   deleteMany: [ItemAdditionScalarWhereInput!]
   updateMany: [ItemAdditionUpdateManyWithWhereNestedInput!]
-}
-
-input ItemAdditionUpdateManyMutationInput {
-  name: String
 }
 
 input ItemAdditionUpdateManyWithWhereNestedInput {
   where: ItemAdditionScalarWhereInput!
   data: ItemAdditionUpdateManyDataInput!
-}
-
-input ItemAdditionUpdateWithWhereUniqueNestedInput {
-  where: ItemAdditionWhereUniqueInput!
-  data: ItemAdditionUpdateDataInput!
-}
-
-input ItemAdditionUpsertWithWhereUniqueNestedInput {
-  where: ItemAdditionWhereUniqueInput!
-  update: ItemAdditionUpdateDataInput!
-  create: ItemAdditionCreateInput!
 }
 
 input ItemAdditionWhereInput {
@@ -1009,12 +972,6 @@ input ItemAdditionWhereInput {
   name_ends_with: String
   name_not_ends_with: String
   AND: [ItemAdditionWhereInput!]
-  OR: [ItemAdditionWhereInput!]
-  NOT: [ItemAdditionWhereInput!]
-}
-
-input ItemAdditionWhereUniqueInput {
-  id: ID
 }
 
 type ItemConnection {
@@ -1046,10 +1003,6 @@ enum ItemOrderByInput {
   index_DESC
   name_ASC
   name_DESC
-  createdAt_ASC
-  createdAt_DESC
-  updatedAt_ASC
-  updatedAt_DESC
 }
 
 type ItemPreviousValues {
@@ -1114,8 +1067,6 @@ input ItemSubscriptionWhereInput {
   updatedFields_contains_some: [String!]
   node: ItemWhereInput
   AND: [ItemSubscriptionWhereInput!]
-  OR: [ItemSubscriptionWhereInput!]
-  NOT: [ItemSubscriptionWhereInput!]
 }
 
 input ItemUpdateDataInput {
@@ -1205,12 +1156,8 @@ input ItemWhereInput {
   name_not_starts_with: String
   name_ends_with: String
   name_not_ends_with: String
-  steps_every: StepWhereInput
   steps_some: StepWhereInput
-  steps_none: StepWhereInput
   AND: [ItemWhereInput!]
-  OR: [ItemWhereInput!]
-  NOT: [ItemWhereInput!]
 }
 
 input ItemWhereUniqueInput {
@@ -1225,12 +1172,12 @@ type Modification {
   updatedAt: DateTime!
   user: User!
   recipe: Recipe!
-  sortings(where: SortingWhereInput, orderBy: SortingOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Sorting!]
-  alterations(where: AlterationWhereInput, orderBy: AlterationOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Alteration!]
+  sortings: [Sorting!]
+  alterations: [Alteration!]
   removals: [ID!]!
-  itemAdditions(where: ItemAdditionWhereInput, orderBy: ItemAdditionOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [ItemAddition!]
-  stepAdditions(where: StepAdditionWhereInput, orderBy: StepAdditionOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [StepAddition!]
-  ingredientAdditions(where: IngredientAdditionWhereInput, orderBy: IngredientAdditionOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [IngredientAddition!]
+  itemAdditions: [ItemAddition!]
+  stepAdditions: [StepAddition!]
+  ingredientAdditions: [IngredientAddition!]
 }
 
 type ModificationConnection {
@@ -1355,8 +1302,6 @@ input ModificationSubscriptionWhereInput {
   updatedFields_contains_some: [String!]
   node: ModificationWhereInput
   AND: [ModificationSubscriptionWhereInput!]
-  OR: [ModificationSubscriptionWhereInput!]
-  NOT: [ModificationSubscriptionWhereInput!]
 }
 
 input ModificationUpdateInput {
@@ -1486,24 +1431,22 @@ input ModificationWhereInput {
   updatedAt_gte: DateTime
   user: UserWhereInput
   recipe: RecipeWhereInput
-  sortings_every: SortingWhereInput
   sortings_some: SortingWhereInput
-  sortings_none: SortingWhereInput
-  alterations_every: AlterationWhereInput
+  sortings_every: SortingRestrictedWhereInput
+  sortings_none: SortingRestrictedWhereInput
   alterations_some: AlterationWhereInput
-  alterations_none: AlterationWhereInput
-  itemAdditions_every: ItemAdditionWhereInput
+  alterations_every: AlterationRestrictedWhereInput
+  alterations_none: AlterationRestrictedWhereInput
   itemAdditions_some: ItemAdditionWhereInput
-  itemAdditions_none: ItemAdditionWhereInput
-  stepAdditions_every: StepAdditionWhereInput
+  itemAdditions_every: ItemAdditionRestrictedWhereInput
+  itemAdditions_none: ItemAdditionRestrictedWhereInput
   stepAdditions_some: StepAdditionWhereInput
-  stepAdditions_none: StepAdditionWhereInput
-  ingredientAdditions_every: IngredientAdditionWhereInput
+  stepAdditions_every: StepAdditionRestrictedWhereInput
+  stepAdditions_none: StepAdditionRestrictedWhereInput
   ingredientAdditions_some: IngredientAdditionWhereInput
-  ingredientAdditions_none: IngredientAdditionWhereInput
+  ingredientAdditions_every: IngredientAdditionRestrictedWhereInput
+  ingredientAdditions_none: IngredientAdditionRestrictedWhereInput
   AND: [ModificationWhereInput!]
-  OR: [ModificationWhereInput!]
-  NOT: [ModificationWhereInput!]
 }
 
 input ModificationWhereUniqueInput {
@@ -1511,33 +1454,18 @@ input ModificationWhereUniqueInput {
 }
 
 type Mutation {
-  createAlteration(data: AlterationCreateInput!): Alteration!
-  updateManyAlterations(data: AlterationUpdateManyMutationInput!, where: AlterationWhereInput): BatchPayload!
-  deleteManyAlterations(where: AlterationWhereInput): BatchPayload!
   createIngredient(data: IngredientCreateInput!): Ingredient!
   updateIngredient(data: IngredientUpdateInput!, where: IngredientWhereUniqueInput!): Ingredient
   updateManyIngredients(data: IngredientUpdateManyMutationInput!, where: IngredientWhereInput): BatchPayload!
   upsertIngredient(where: IngredientWhereUniqueInput!, create: IngredientCreateInput!, update: IngredientUpdateInput!): Ingredient!
   deleteIngredient(where: IngredientWhereUniqueInput!): Ingredient
   deleteManyIngredients(where: IngredientWhereInput): BatchPayload!
-  createIngredientAddition(data: IngredientAdditionCreateInput!): IngredientAddition!
-  updateIngredientAddition(data: IngredientAdditionUpdateInput!, where: IngredientAdditionWhereUniqueInput!): IngredientAddition
-  updateManyIngredientAdditions(data: IngredientAdditionUpdateManyMutationInput!, where: IngredientAdditionWhereInput): BatchPayload!
-  upsertIngredientAddition(where: IngredientAdditionWhereUniqueInput!, create: IngredientAdditionCreateInput!, update: IngredientAdditionUpdateInput!): IngredientAddition!
-  deleteIngredientAddition(where: IngredientAdditionWhereUniqueInput!): IngredientAddition
-  deleteManyIngredientAdditions(where: IngredientAdditionWhereInput): BatchPayload!
   createItem(data: ItemCreateInput!): Item!
   updateItem(data: ItemUpdateInput!, where: ItemWhereUniqueInput!): Item
   updateManyItems(data: ItemUpdateManyMutationInput!, where: ItemWhereInput): BatchPayload!
   upsertItem(where: ItemWhereUniqueInput!, create: ItemCreateInput!, update: ItemUpdateInput!): Item!
   deleteItem(where: ItemWhereUniqueInput!): Item
   deleteManyItems(where: ItemWhereInput): BatchPayload!
-  createItemAddition(data: ItemAdditionCreateInput!): ItemAddition!
-  updateItemAddition(data: ItemAdditionUpdateInput!, where: ItemAdditionWhereUniqueInput!): ItemAddition
-  updateManyItemAdditions(data: ItemAdditionUpdateManyMutationInput!, where: ItemAdditionWhereInput): BatchPayload!
-  upsertItemAddition(where: ItemAdditionWhereUniqueInput!, create: ItemAdditionCreateInput!, update: ItemAdditionUpdateInput!): ItemAddition!
-  deleteItemAddition(where: ItemAdditionWhereUniqueInput!): ItemAddition
-  deleteManyItemAdditions(where: ItemAdditionWhereInput): BatchPayload!
   createModification(data: ModificationCreateInput!): Modification!
   updateModification(data: ModificationUpdateInput!, where: ModificationWhereUniqueInput!): Modification
   updateManyModifications(data: ModificationUpdateManyMutationInput!, where: ModificationWhereInput): BatchPayload!
@@ -1550,21 +1478,12 @@ type Mutation {
   upsertRecipe(where: RecipeWhereUniqueInput!, create: RecipeCreateInput!, update: RecipeUpdateInput!): Recipe!
   deleteRecipe(where: RecipeWhereUniqueInput!): Recipe
   deleteManyRecipes(where: RecipeWhereInput): BatchPayload!
-  createSorting(data: SortingCreateInput!): Sorting!
-  updateManySortings(data: SortingUpdateManyMutationInput!, where: SortingWhereInput): BatchPayload!
-  deleteManySortings(where: SortingWhereInput): BatchPayload!
   createStep(data: StepCreateInput!): Step!
   updateStep(data: StepUpdateInput!, where: StepWhereUniqueInput!): Step
   updateManySteps(data: StepUpdateManyMutationInput!, where: StepWhereInput): BatchPayload!
   upsertStep(where: StepWhereUniqueInput!, create: StepCreateInput!, update: StepUpdateInput!): Step!
   deleteStep(where: StepWhereUniqueInput!): Step
   deleteManySteps(where: StepWhereInput): BatchPayload!
-  createStepAddition(data: StepAdditionCreateInput!): StepAddition!
-  updateStepAddition(data: StepAdditionUpdateInput!, where: StepAdditionWhereUniqueInput!): StepAddition
-  updateManyStepAdditions(data: StepAdditionUpdateManyMutationInput!, where: StepAdditionWhereInput): BatchPayload!
-  upsertStepAddition(where: StepAdditionWhereUniqueInput!, create: StepAdditionCreateInput!, update: StepAdditionUpdateInput!): StepAddition!
-  deleteStepAddition(where: StepAdditionWhereUniqueInput!): StepAddition
-  deleteManyStepAdditions(where: StepAdditionWhereInput): BatchPayload!
   createUser(data: UserCreateInput!): User!
   updateUser(data: UserUpdateInput!, where: UserWhereUniqueInput!): User
   updateManyUsers(data: UserUpdateManyMutationInput!, where: UserWhereInput): BatchPayload!
@@ -1591,34 +1510,21 @@ type PageInfo {
 }
 
 type Query {
-  alterations(where: AlterationWhereInput, orderBy: AlterationOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Alteration]!
-  alterationsConnection(where: AlterationWhereInput, orderBy: AlterationOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): AlterationConnection!
   ingredient(where: IngredientWhereUniqueInput!): Ingredient
   ingredients(where: IngredientWhereInput, orderBy: IngredientOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Ingredient]!
   ingredientsConnection(where: IngredientWhereInput, orderBy: IngredientOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): IngredientConnection!
-  ingredientAddition(where: IngredientAdditionWhereUniqueInput!): IngredientAddition
-  ingredientAdditions(where: IngredientAdditionWhereInput, orderBy: IngredientAdditionOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [IngredientAddition]!
-  ingredientAdditionsConnection(where: IngredientAdditionWhereInput, orderBy: IngredientAdditionOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): IngredientAdditionConnection!
   item(where: ItemWhereUniqueInput!): Item
   items(where: ItemWhereInput, orderBy: ItemOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Item]!
   itemsConnection(where: ItemWhereInput, orderBy: ItemOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ItemConnection!
-  itemAddition(where: ItemAdditionWhereUniqueInput!): ItemAddition
-  itemAdditions(where: ItemAdditionWhereInput, orderBy: ItemAdditionOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [ItemAddition]!
-  itemAdditionsConnection(where: ItemAdditionWhereInput, orderBy: ItemAdditionOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ItemAdditionConnection!
   modification(where: ModificationWhereUniqueInput!): Modification
   modifications(where: ModificationWhereInput, orderBy: ModificationOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Modification]!
   modificationsConnection(where: ModificationWhereInput, orderBy: ModificationOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ModificationConnection!
   recipe(where: RecipeWhereUniqueInput!): Recipe
   recipes(where: RecipeWhereInput, orderBy: RecipeOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Recipe]!
   recipesConnection(where: RecipeWhereInput, orderBy: RecipeOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): RecipeConnection!
-  sortings(where: SortingWhereInput, orderBy: SortingOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Sorting]!
-  sortingsConnection(where: SortingWhereInput, orderBy: SortingOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): SortingConnection!
   step(where: StepWhereUniqueInput!): Step
   steps(where: StepWhereInput, orderBy: StepOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Step]!
   stepsConnection(where: StepWhereInput, orderBy: StepOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): StepConnection!
-  stepAddition(where: StepAdditionWhereUniqueInput!): StepAddition
-  stepAdditions(where: StepAdditionWhereInput, orderBy: StepAdditionOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [StepAddition]!
-  stepAdditionsConnection(where: StepAdditionWhereInput, orderBy: StepAdditionOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): StepAdditionConnection!
   user(where: UserWhereUniqueInput!): User
   users(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User]!
   usersConnection(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): UserConnection!
@@ -1841,8 +1747,6 @@ input RecipeSubscriptionWhereInput {
   updatedFields_contains_some: [String!]
   node: RecipeWhereInput
   AND: [RecipeSubscriptionWhereInput!]
-  OR: [RecipeSubscriptionWhereInput!]
-  NOT: [RecipeSubscriptionWhereInput!]
 }
 
 input RecipeUpdateInput {
@@ -2034,15 +1938,9 @@ input RecipeWhereInput {
   description_not_starts_with: String
   description_ends_with: String
   description_not_ends_with: String
-  items_every: ItemWhereInput
   items_some: ItemWhereInput
-  items_none: ItemWhereInput
-  modifications_every: ModificationWhereInput
   modifications_some: ModificationWhereInput
-  modifications_none: ModificationWhereInput
   AND: [RecipeWhereInput!]
-  OR: [RecipeWhereInput!]
-  NOT: [RecipeWhereInput!]
 }
 
 input RecipeWhereUniqueInput {
@@ -2050,14 +1948,9 @@ input RecipeWhereUniqueInput {
 }
 
 type Sorting {
+  uid: ID!
   parentId: ID!
   order: [ID!]!
-}
-
-type SortingConnection {
-  pageInfo: PageInfo!
-  edges: [SortingEdge]!
-  aggregate: AggregateSorting!
 }
 
 input SortingCreateInput {
@@ -2073,28 +1966,53 @@ input SortingCreateorderInput {
   set: [ID!]
 }
 
-type SortingEdge {
-  node: Sorting!
-  cursor: String!
-}
-
-enum SortingOrderByInput {
-  parentId_ASC
-  parentId_DESC
-  id_ASC
-  id_DESC
-  createdAt_ASC
-  createdAt_DESC
-  updatedAt_ASC
-  updatedAt_DESC
-}
-
-type SortingPreviousValues {
-  parentId: ID!
-  order: [ID!]!
+input SortingRestrictedWhereInput {
+  uid: ID
+  uid_not: ID
+  uid_in: [ID!]
+  uid_not_in: [ID!]
+  uid_lt: ID
+  uid_lte: ID
+  uid_gt: ID
+  uid_gte: ID
+  uid_contains: ID
+  uid_not_contains: ID
+  uid_starts_with: ID
+  uid_not_starts_with: ID
+  uid_ends_with: ID
+  uid_not_ends_with: ID
+  parentId: ID
+  parentId_not: ID
+  parentId_in: [ID!]
+  parentId_not_in: [ID!]
+  parentId_lt: ID
+  parentId_lte: ID
+  parentId_gt: ID
+  parentId_gte: ID
+  parentId_contains: ID
+  parentId_not_contains: ID
+  parentId_starts_with: ID
+  parentId_not_starts_with: ID
+  parentId_ends_with: ID
+  parentId_not_ends_with: ID
+  AND: [SortingRestrictedWhereInput!]
 }
 
 input SortingScalarWhereInput {
+  uid: ID
+  uid_not: ID
+  uid_in: [ID!]
+  uid_not_in: [ID!]
+  uid_lt: ID
+  uid_lte: ID
+  uid_gt: ID
+  uid_gte: ID
+  uid_contains: ID
+  uid_not_contains: ID
+  uid_starts_with: ID
+  uid_not_starts_with: ID
+  uid_ends_with: ID
+  uid_not_ends_with: ID
   parentId: ID
   parentId_not: ID
   parentId_in: [ID!]
@@ -2114,22 +2032,9 @@ input SortingScalarWhereInput {
   NOT: [SortingScalarWhereInput!]
 }
 
-type SortingSubscriptionPayload {
-  mutation: MutationType!
-  node: Sorting
-  updatedFields: [String!]
-  previousValues: SortingPreviousValues
-}
-
-input SortingSubscriptionWhereInput {
-  mutation_in: [MutationType!]
-  updatedFields_contains: String
-  updatedFields_contains_every: [String!]
-  updatedFields_contains_some: [String!]
-  node: SortingWhereInput
-  AND: [SortingSubscriptionWhereInput!]
-  OR: [SortingSubscriptionWhereInput!]
-  NOT: [SortingSubscriptionWhereInput!]
+input SortingUpdateDataInput {
+  parentId: ID
+  order: SortingUpdateorderInput
 }
 
 input SortingUpdateManyDataInput {
@@ -2139,13 +2044,11 @@ input SortingUpdateManyDataInput {
 
 input SortingUpdateManyInput {
   create: [SortingCreateInput!]
+  update: [SortingUpdateWithWhereUniqueNestedInput!]
+  upsert: [SortingUpsertWithWhereUniqueNestedInput!]
+  delete: [SortingWhereUniqueInput!]
   deleteMany: [SortingScalarWhereInput!]
   updateMany: [SortingUpdateManyWithWhereNestedInput!]
-}
-
-input SortingUpdateManyMutationInput {
-  parentId: ID
-  order: SortingUpdateorderInput
 }
 
 input SortingUpdateManyWithWhereNestedInput {
@@ -2157,7 +2060,32 @@ input SortingUpdateorderInput {
   set: [ID!]
 }
 
+input SortingUpdateWithWhereUniqueNestedInput {
+  where: SortingWhereUniqueInput!
+  data: SortingUpdateDataInput!
+}
+
+input SortingUpsertWithWhereUniqueNestedInput {
+  where: SortingWhereUniqueInput!
+  update: SortingUpdateDataInput!
+  create: SortingCreateInput!
+}
+
 input SortingWhereInput {
+  uid: ID
+  uid_not: ID
+  uid_in: [ID!]
+  uid_not_in: [ID!]
+  uid_lt: ID
+  uid_lte: ID
+  uid_gt: ID
+  uid_gte: ID
+  uid_contains: ID
+  uid_not_contains: ID
+  uid_starts_with: ID
+  uid_not_starts_with: ID
+  uid_ends_with: ID
+  uid_not_ends_with: ID
   parentId: ID
   parentId_not: ID
   parentId_in: [ID!]
@@ -2173,8 +2101,10 @@ input SortingWhereInput {
   parentId_ends_with: ID
   parentId_not_ends_with: ID
   AND: [SortingWhereInput!]
-  OR: [SortingWhereInput!]
-  NOT: [SortingWhereInput!]
+}
+
+input SortingWhereUniqueInput {
+  uid: ID
 }
 
 type Step {
@@ -2191,44 +2121,60 @@ type StepAddition {
   notes: String!
 }
 
-type StepAdditionConnection {
-  pageInfo: PageInfo!
-  edges: [StepAdditionEdge]!
-  aggregate: AggregateStepAddition!
-}
-
 input StepAdditionCreateInput {
+  id: ID!
   directions: String!
   notes: String!
 }
 
 input StepAdditionCreateManyInput {
   create: [StepAdditionCreateInput!]
-  connect: [StepAdditionWhereUniqueInput!]
 }
 
-type StepAdditionEdge {
-  node: StepAddition!
-  cursor: String!
-}
-
-enum StepAdditionOrderByInput {
-  id_ASC
-  id_DESC
-  directions_ASC
-  directions_DESC
-  notes_ASC
-  notes_DESC
-  createdAt_ASC
-  createdAt_DESC
-  updatedAt_ASC
-  updatedAt_DESC
-}
-
-type StepAdditionPreviousValues {
-  id: ID!
-  directions: String!
-  notes: String!
+input StepAdditionRestrictedWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  directions: String
+  directions_not: String
+  directions_in: [String!]
+  directions_not_in: [String!]
+  directions_lt: String
+  directions_lte: String
+  directions_gt: String
+  directions_gte: String
+  directions_contains: String
+  directions_not_contains: String
+  directions_starts_with: String
+  directions_not_starts_with: String
+  directions_ends_with: String
+  directions_not_ends_with: String
+  notes: String
+  notes_not: String
+  notes_in: [String!]
+  notes_not_in: [String!]
+  notes_lt: String
+  notes_lte: String
+  notes_gt: String
+  notes_gte: String
+  notes_contains: String
+  notes_not_contains: String
+  notes_starts_with: String
+  notes_not_starts_with: String
+  notes_ends_with: String
+  notes_not_ends_with: String
+  AND: [StepAdditionRestrictedWhereInput!]
 }
 
 input StepAdditionScalarWhereInput {
@@ -2279,70 +2225,21 @@ input StepAdditionScalarWhereInput {
   NOT: [StepAdditionScalarWhereInput!]
 }
 
-type StepAdditionSubscriptionPayload {
-  mutation: MutationType!
-  node: StepAddition
-  updatedFields: [String!]
-  previousValues: StepAdditionPreviousValues
-}
-
-input StepAdditionSubscriptionWhereInput {
-  mutation_in: [MutationType!]
-  updatedFields_contains: String
-  updatedFields_contains_every: [String!]
-  updatedFields_contains_some: [String!]
-  node: StepAdditionWhereInput
-  AND: [StepAdditionSubscriptionWhereInput!]
-  OR: [StepAdditionSubscriptionWhereInput!]
-  NOT: [StepAdditionSubscriptionWhereInput!]
-}
-
-input StepAdditionUpdateDataInput {
-  directions: String
-  notes: String
-}
-
-input StepAdditionUpdateInput {
-  directions: String
-  notes: String
-}
-
 input StepAdditionUpdateManyDataInput {
+  id: ID
   directions: String
   notes: String
 }
 
 input StepAdditionUpdateManyInput {
   create: [StepAdditionCreateInput!]
-  update: [StepAdditionUpdateWithWhereUniqueNestedInput!]
-  upsert: [StepAdditionUpsertWithWhereUniqueNestedInput!]
-  delete: [StepAdditionWhereUniqueInput!]
-  connect: [StepAdditionWhereUniqueInput!]
-  set: [StepAdditionWhereUniqueInput!]
-  disconnect: [StepAdditionWhereUniqueInput!]
   deleteMany: [StepAdditionScalarWhereInput!]
   updateMany: [StepAdditionUpdateManyWithWhereNestedInput!]
-}
-
-input StepAdditionUpdateManyMutationInput {
-  directions: String
-  notes: String
 }
 
 input StepAdditionUpdateManyWithWhereNestedInput {
   where: StepAdditionScalarWhereInput!
   data: StepAdditionUpdateManyDataInput!
-}
-
-input StepAdditionUpdateWithWhereUniqueNestedInput {
-  where: StepAdditionWhereUniqueInput!
-  data: StepAdditionUpdateDataInput!
-}
-
-input StepAdditionUpsertWithWhereUniqueNestedInput {
-  where: StepAdditionWhereUniqueInput!
-  update: StepAdditionUpdateDataInput!
-  create: StepAdditionCreateInput!
 }
 
 input StepAdditionWhereInput {
@@ -2389,12 +2286,6 @@ input StepAdditionWhereInput {
   notes_ends_with: String
   notes_not_ends_with: String
   AND: [StepAdditionWhereInput!]
-  OR: [StepAdditionWhereInput!]
-  NOT: [StepAdditionWhereInput!]
-}
-
-input StepAdditionWhereUniqueInput {
-  id: ID
 }
 
 type StepConnection {
@@ -2429,10 +2320,6 @@ enum StepOrderByInput {
   directions_DESC
   notes_ASC
   notes_DESC
-  createdAt_ASC
-  createdAt_DESC
-  updatedAt_ASC
-  updatedAt_DESC
 }
 
 type StepPreviousValues {
@@ -2512,8 +2399,6 @@ input StepSubscriptionWhereInput {
   updatedFields_contains_some: [String!]
   node: StepWhereInput
   AND: [StepSubscriptionWhereInput!]
-  OR: [StepSubscriptionWhereInput!]
-  NOT: [StepSubscriptionWhereInput!]
 }
 
 input StepUpdateDataInput {
@@ -2621,12 +2506,8 @@ input StepWhereInput {
   notes_not_starts_with: String
   notes_ends_with: String
   notes_not_ends_with: String
-  ingredients_every: IngredientWhereInput
   ingredients_some: IngredientWhereInput
-  ingredients_none: IngredientWhereInput
   AND: [StepWhereInput!]
-  OR: [StepWhereInput!]
-  NOT: [StepWhereInput!]
 }
 
 input StepWhereUniqueInput {
@@ -2634,16 +2515,11 @@ input StepWhereUniqueInput {
 }
 
 type Subscription {
-  alteration(where: AlterationSubscriptionWhereInput): AlterationSubscriptionPayload
   ingredient(where: IngredientSubscriptionWhereInput): IngredientSubscriptionPayload
-  ingredientAddition(where: IngredientAdditionSubscriptionWhereInput): IngredientAdditionSubscriptionPayload
   item(where: ItemSubscriptionWhereInput): ItemSubscriptionPayload
-  itemAddition(where: ItemAdditionSubscriptionWhereInput): ItemAdditionSubscriptionPayload
   modification(where: ModificationSubscriptionWhereInput): ModificationSubscriptionPayload
   recipe(where: RecipeSubscriptionWhereInput): RecipeSubscriptionPayload
-  sorting(where: SortingSubscriptionWhereInput): SortingSubscriptionPayload
   step(where: StepSubscriptionWhereInput): StepSubscriptionPayload
-  stepAddition(where: StepAdditionSubscriptionWhereInput): StepAdditionSubscriptionPayload
   user(where: UserSubscriptionWhereInput): UserSubscriptionPayload
 }
 
@@ -2760,8 +2636,6 @@ input UserSubscriptionWhereInput {
   updatedFields_contains_some: [String!]
   node: UserWhereInput
   AND: [UserSubscriptionWhereInput!]
-  OR: [UserSubscriptionWhereInput!]
-  NOT: [UserSubscriptionWhereInput!]
 }
 
 input UserUpdateInput {
@@ -2931,15 +2805,9 @@ input UserWhereInput {
   slug_not_ends_with: String
   emailVerified: Boolean
   emailVerified_not: Boolean
-  recipes_every: RecipeWhereInput
   recipes_some: RecipeWhereInput
-  recipes_none: RecipeWhereInput
-  modifications_every: ModificationWhereInput
   modifications_some: ModificationWhereInput
-  modifications_none: ModificationWhereInput
   AND: [UserWhereInput!]
-  OR: [UserWhereInput!]
-  NOT: [UserWhereInput!]
 }
 
 input UserWhereUniqueInput {

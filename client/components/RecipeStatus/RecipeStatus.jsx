@@ -18,7 +18,8 @@ export default withApollo(
       recipe: PropTypes.object,
       modification: PropTypes.object,
       unsavedCount: PropTypes.number,
-      client: PropTypes.instanceOf(ApolloClient)
+      client: PropTypes.instanceOf(ApolloClient),
+      updateModification: PropTypes.func
     };
 
     static defaultProps = {
@@ -49,37 +50,51 @@ export default withApollo(
         .mutate({
           mutation: gql`
             mutation saveModification(
+              $id: ID
               $recipe: ID!
               $user: ID!
               $sortings: [SortingInput!]!
               $alterations: [AlterationInput!]!
+              $items: [ItemAdditionInput!]!
             ) {
               saveModification(
+                id: $id
                 recipe: $recipe
                 user: $user
                 sortings: $sortings
                 alterations: $alterations
+                items: $items
               ) {
                 id
                 sortings {
+                  uid
                   parentId
                   order
                 }
                 alterations {
+                  uid
                   sourceId
                   field
+                  value
                 }
               }
             }
           `,
           variables: {
+            id: modification.id,
             recipe: recipe.id,
             user: user.id,
             sortings: modification.sortings,
-            alterations: modification.alterations
+            alterations: modification.alterations,
+            items: modification.additions.filter(
+              addition => addition.kind === 'Item'
+            )
           }
         })
-        .then(() => {
+        .then(data => {
+          this.props.updateModification(
+            Object.assign(modification, data.saveModification)
+          );
           this.setState({ isSaving: false, savedCount: unsavedCount });
         });
     };

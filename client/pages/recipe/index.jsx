@@ -35,14 +35,13 @@ const GET_RECIPE = gql`
         avatar
       }
       modification(user: $user) {
-        user {
-          id
-        }
         sortings {
+          uid
           parentId
           order
         }
         alterations {
+          uid
           sourceId
           field
           value

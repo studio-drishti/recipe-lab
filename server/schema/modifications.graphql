@@ -14,22 +14,26 @@ type Modification {
 }
 
 type Sorting {
+  uid: ID!
   parentId: ID!
   order: [ID!]!
 }
 
 input SortingInput {
+  uid: ID
   parentId: ID!
   order: [ID!]!
 }
 
-input AlterationInput {
+type Alteration {
+  uid: ID!
   sourceId: ID!
   field: String!
   value: String!
 }
 
-type Alteration {
+input AlterationInput {
+  uid: ID
   sourceId: ID!
   field: String!
   value: String!
@@ -38,6 +42,11 @@ type Alteration {
 union Addition = ItemAddition | StepAddition | IngredientAddition
 
 type ItemAddition {
+  id: ID!
+  name: String!
+}
+
+input ItemAdditionInput {
   id: ID!
   name: String!
 }
