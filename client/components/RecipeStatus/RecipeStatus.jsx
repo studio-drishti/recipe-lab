@@ -50,7 +50,6 @@ export default withApollo(
         .mutate({
           mutation: gql`
             mutation saveModification(
-              $id: ID
               $recipe: ID!
               $user: ID!
               $sortings: [SortingInput!]!
@@ -58,7 +57,6 @@ export default withApollo(
               $items: [ItemAdditionInput!]!
             ) {
               saveModification(
-                id: $id
                 recipe: $recipe
                 user: $user
                 sortings: $sortings
@@ -81,7 +79,6 @@ export default withApollo(
             }
           `,
           variables: {
-            id: modification.id,
             recipe: recipe.id,
             user: user.id,
             sortings: modification.sortings,

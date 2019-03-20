@@ -1,8 +1,5 @@
-module.exports = async (
-  parent,
-  { id, user, recipe, sortings, alterations, items },
-  ctx
-) => {
+module.exports = async (parent, args, ctx) => {
+  const { user, recipe, sortings, alterations, items } = args;
   const mod = await ctx.prisma
     .modifications({
       where: { recipe: { id: recipe }, user: { id: user } }

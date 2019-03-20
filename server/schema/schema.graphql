@@ -18,7 +18,6 @@ type Mutation {
   login(email: String!, password: String!): AuthPayload!
   avatarUpload(file: Upload!): File!
   saveModification(
-    id: ID
     recipe: ID!
     user: ID!
     sortings: [SortingInput!]!
