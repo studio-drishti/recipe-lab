@@ -408,69 +408,28 @@ export type UserOrderByInput =
 
 export type MutationType = "CREATED" | "UPDATED" | "DELETED";
 
-export interface ItemAdditionCreateInput {
-  id: ID_Input;
-  name: String;
+export interface RecipeCreateWithoutModificationsInput {
+  author: UserCreateOneWithoutRecipesInput;
+  title: String;
+  time: String;
+  skill: String;
+  course: String;
+  description: String;
+  items?: ItemCreateManyInput;
 }
 
 export type IngredientWhereUniqueInput = AtLeastOne<{
   id: ID_Input;
 }>;
 
-export interface StepScalarWhereInput {
-  id?: ID_Input;
-  id_not?: ID_Input;
-  id_in?: ID_Input[] | ID_Input;
-  id_not_in?: ID_Input[] | ID_Input;
-  id_lt?: ID_Input;
-  id_lte?: ID_Input;
-  id_gt?: ID_Input;
-  id_gte?: ID_Input;
-  id_contains?: ID_Input;
-  id_not_contains?: ID_Input;
-  id_starts_with?: ID_Input;
-  id_not_starts_with?: ID_Input;
-  id_ends_with?: ID_Input;
-  id_not_ends_with?: ID_Input;
-  index?: Int;
-  index_not?: Int;
-  index_in?: Int[] | Int;
-  index_not_in?: Int[] | Int;
-  index_lt?: Int;
-  index_lte?: Int;
-  index_gt?: Int;
-  index_gte?: Int;
-  directions?: String;
-  directions_not?: String;
-  directions_in?: String[] | String;
-  directions_not_in?: String[] | String;
-  directions_lt?: String;
-  directions_lte?: String;
-  directions_gt?: String;
-  directions_gte?: String;
-  directions_contains?: String;
-  directions_not_contains?: String;
-  directions_starts_with?: String;
-  directions_not_starts_with?: String;
-  directions_ends_with?: String;
-  directions_not_ends_with?: String;
-  notes?: String;
-  notes_not?: String;
-  notes_in?: String[] | String;
-  notes_not_in?: String[] | String;
-  notes_lt?: String;
-  notes_lte?: String;
-  notes_gt?: String;
-  notes_gte?: String;
-  notes_contains?: String;
-  notes_not_contains?: String;
-  notes_starts_with?: String;
-  notes_not_starts_with?: String;
-  notes_ends_with?: String;
-  notes_not_ends_with?: String;
-  AND?: StepScalarWhereInput[] | StepScalarWhereInput;
-  OR?: StepScalarWhereInput[] | StepScalarWhereInput;
-  NOT?: StepScalarWhereInput[] | StepScalarWhereInput;
+export interface UserCreateWithoutModificationsInput {
+  email: String;
+  password: String;
+  name: String;
+  avatar?: String;
+  slug?: String;
+  emailVerified?: Boolean;
+  recipes?: RecipeCreateManyWithoutAuthorInput;
 }
 
 export interface IngredientAdditionUpdateManyWithWhereNestedInput {
@@ -478,32 +437,38 @@ export interface IngredientAdditionUpdateManyWithWhereNestedInput {
   data: IngredientAdditionUpdateManyDataInput;
 }
 
-export interface StepUpdateManyWithWhereNestedInput {
-  where: StepScalarWhereInput;
-  data: StepUpdateManyDataInput;
+export interface RecipeCreateManyWithoutAuthorInput {
+  create?: RecipeCreateWithoutAuthorInput[] | RecipeCreateWithoutAuthorInput;
+  connect?: RecipeWhereUniqueInput[] | RecipeWhereUniqueInput;
 }
 
-export interface IngredientAdditionCreateInput {
-  id: ID_Input;
-  name: String;
-  quantity: String;
-  unit?: String;
-  processing?: String;
+export interface ModificationCreateWithoutUserInput {
+  recipe: RecipeCreateOneWithoutModificationsInput;
+  sortings?: SortingCreateManyInput;
+  alterations?: AlterationCreateManyInput;
+  removals?: ModificationCreateremovalsInput;
+  itemAdditions?: ItemAdditionCreateManyInput;
+  stepAdditions?: StepAdditionCreateManyInput;
+  ingredientAdditions?: IngredientAdditionCreateManyInput;
 }
 
-export interface StepUpdateManyDataInput {
-  index?: Int;
-  directions?: String;
-  notes?: String;
+export interface RecipeCreateWithoutAuthorInput {
+  title: String;
+  time: String;
+  skill: String;
+  course: String;
+  description: String;
+  items?: ItemCreateManyInput;
+  modifications?: ModificationCreateManyWithoutRecipeInput;
 }
 
 export type ItemWhereUniqueInput = AtLeastOne<{
   id: ID_Input;
 }>;
 
-export interface ItemUpdateManyMutationInput {
-  index?: Int;
-  name?: String;
+export interface ItemCreateManyInput {
+  create?: ItemCreateInput[] | ItemCreateInput;
+  connect?: ItemWhereUniqueInput[] | ItemWhereUniqueInput;
 }
 
 export interface StepWhereInput {
@@ -561,15 +526,11 @@ export interface StepWhereInput {
   AND?: StepWhereInput[] | StepWhereInput;
 }
 
-export interface ModificationCreateInput {
-  user: UserCreateOneWithoutModificationsInput;
-  recipe: RecipeCreateOneWithoutModificationsInput;
-  sortings?: SortingCreateManyInput;
-  alterations?: AlterationCreateManyInput;
-  removals?: ModificationCreateremovalsInput;
-  itemAdditions?: ItemAdditionCreateManyInput;
-  stepAdditions?: StepAdditionCreateManyInput;
-  ingredientAdditions?: IngredientAdditionCreateManyInput;
+export interface ModificationCreateManyWithoutRecipeInput {
+  create?:
+    | ModificationCreateWithoutRecipeInput[]
+    | ModificationCreateWithoutRecipeInput;
+  connect?: ModificationWhereUniqueInput[] | ModificationWhereUniqueInput;
 }
 
 export interface ModificationSubscriptionWhereInput {
@@ -583,9 +544,14 @@ export interface ModificationSubscriptionWhereInput {
     | ModificationSubscriptionWhereInput;
 }
 
-export interface UserCreateOneWithoutModificationsInput {
-  create?: UserCreateWithoutModificationsInput;
-  connect?: UserWhereUniqueInput;
+export interface ModificationCreateWithoutRecipeInput {
+  user: UserCreateOneWithoutModificationsInput;
+  sortings?: SortingCreateManyInput;
+  alterations?: AlterationCreateManyInput;
+  removals?: ModificationCreateremovalsInput;
+  itemAdditions?: ItemAdditionCreateManyInput;
+  stepAdditions?: StepAdditionCreateManyInput;
+  ingredientAdditions?: IngredientAdditionCreateManyInput;
 }
 
 export interface ItemSubscriptionWhereInput {
@@ -597,14 +563,8 @@ export interface ItemSubscriptionWhereInput {
   AND?: ItemSubscriptionWhereInput[] | ItemSubscriptionWhereInput;
 }
 
-export interface UserCreateWithoutModificationsInput {
-  email: String;
-  password: String;
-  name: String;
-  avatar?: String;
-  slug?: String;
-  emailVerified?: Boolean;
-  recipes?: RecipeCreateManyWithoutAuthorInput;
+export interface SortingCreateManyInput {
+  create?: SortingCreateInput[] | SortingCreateInput;
 }
 
 export interface UserUpdateManyMutationInput {
@@ -616,23 +576,17 @@ export interface UserUpdateManyMutationInput {
   emailVerified?: Boolean;
 }
 
-export interface RecipeCreateManyWithoutAuthorInput {
-  create?: RecipeCreateWithoutAuthorInput[] | RecipeCreateWithoutAuthorInput;
-  connect?: RecipeWhereUniqueInput[] | RecipeWhereUniqueInput;
+export interface SortingCreateInput {
+  parentId: ID_Input;
+  order?: SortingCreateorderInput;
 }
 
 export type ModificationWhereUniqueInput = AtLeastOne<{
   id: ID_Input;
 }>;
 
-export interface RecipeCreateWithoutAuthorInput {
-  title: String;
-  time: String;
-  skill: String;
-  course: String;
-  description: String;
-  items?: ItemCreateManyInput;
-  modifications?: ModificationCreateManyWithoutRecipeInput;
+export interface SortingCreateorderInput {
+  set?: ID_Input[] | ID_Input;
 }
 
 export interface StepUpdateManyMutationInput {
@@ -641,9 +595,8 @@ export interface StepUpdateManyMutationInput {
   notes?: String;
 }
 
-export interface ItemCreateManyInput {
-  create?: ItemCreateInput[] | ItemCreateInput;
-  connect?: ItemWhereUniqueInput[] | ItemWhereUniqueInput;
+export interface AlterationCreateManyInput {
+  create?: AlterationCreateInput[] | AlterationCreateInput;
 }
 
 export interface RecipeWhereInput {
@@ -753,11 +706,10 @@ export interface RecipeWhereInput {
   AND?: RecipeWhereInput[] | RecipeWhereInput;
 }
 
-export interface ModificationCreateManyWithoutRecipeInput {
-  create?:
-    | ModificationCreateWithoutRecipeInput[]
-    | ModificationCreateWithoutRecipeInput;
-  connect?: ModificationWhereUniqueInput[] | ModificationWhereUniqueInput;
+export interface AlterationCreateInput {
+  sourceId: ID_Input;
+  field: String;
+  value: String;
 }
 
 export interface ModificationWhereInput {
@@ -811,14 +763,8 @@ export interface ModificationWhereInput {
   AND?: ModificationWhereInput[] | ModificationWhereInput;
 }
 
-export interface ModificationCreateWithoutRecipeInput {
-  user: UserCreateOneWithoutModificationsInput;
-  sortings?: SortingCreateManyInput;
-  alterations?: AlterationCreateManyInput;
-  removals?: ModificationCreateremovalsInput;
-  itemAdditions?: ItemAdditionCreateManyInput;
-  stepAdditions?: StepAdditionCreateManyInput;
-  ingredientAdditions?: IngredientAdditionCreateManyInput;
+export interface ModificationCreateremovalsInput {
+  set?: ID_Input[] | ID_Input;
 }
 
 export interface SortingRestrictedWhereInput {
@@ -853,8 +799,8 @@ export interface SortingRestrictedWhereInput {
   AND?: SortingRestrictedWhereInput[] | SortingRestrictedWhereInput;
 }
 
-export interface SortingCreateManyInput {
-  create?: SortingCreateInput[] | SortingCreateInput;
+export interface ItemAdditionCreateManyInput {
+  create?: ItemAdditionCreateInput[] | ItemAdditionCreateInput;
 }
 
 export interface AlterationRestrictedWhereInput {
@@ -917,26 +863,55 @@ export interface AlterationRestrictedWhereInput {
   AND?: AlterationRestrictedWhereInput[] | AlterationRestrictedWhereInput;
 }
 
-export interface SortingCreateInput {
+export interface ItemAdditionCreateInput {
+  clientId: ID_Input;
   parentId: ID_Input;
-  order?: SortingCreateorderInput;
+  name: String;
 }
 
 export interface ItemAdditionRestrictedWhereInput {
-  id?: ID_Input;
-  id_not?: ID_Input;
-  id_in?: ID_Input[] | ID_Input;
-  id_not_in?: ID_Input[] | ID_Input;
-  id_lt?: ID_Input;
-  id_lte?: ID_Input;
-  id_gt?: ID_Input;
-  id_gte?: ID_Input;
-  id_contains?: ID_Input;
-  id_not_contains?: ID_Input;
-  id_starts_with?: ID_Input;
-  id_not_starts_with?: ID_Input;
-  id_ends_with?: ID_Input;
-  id_not_ends_with?: ID_Input;
+  uid?: ID_Input;
+  uid_not?: ID_Input;
+  uid_in?: ID_Input[] | ID_Input;
+  uid_not_in?: ID_Input[] | ID_Input;
+  uid_lt?: ID_Input;
+  uid_lte?: ID_Input;
+  uid_gt?: ID_Input;
+  uid_gte?: ID_Input;
+  uid_contains?: ID_Input;
+  uid_not_contains?: ID_Input;
+  uid_starts_with?: ID_Input;
+  uid_not_starts_with?: ID_Input;
+  uid_ends_with?: ID_Input;
+  uid_not_ends_with?: ID_Input;
+  clientId?: ID_Input;
+  clientId_not?: ID_Input;
+  clientId_in?: ID_Input[] | ID_Input;
+  clientId_not_in?: ID_Input[] | ID_Input;
+  clientId_lt?: ID_Input;
+  clientId_lte?: ID_Input;
+  clientId_gt?: ID_Input;
+  clientId_gte?: ID_Input;
+  clientId_contains?: ID_Input;
+  clientId_not_contains?: ID_Input;
+  clientId_starts_with?: ID_Input;
+  clientId_not_starts_with?: ID_Input;
+  clientId_ends_with?: ID_Input;
+  clientId_not_ends_with?: ID_Input;
+  parentId?: ID_Input;
+  parentId_not?: ID_Input;
+  parentId_in?: ID_Input[] | ID_Input;
+  parentId_not_in?: ID_Input[] | ID_Input;
+  parentId_lt?: ID_Input;
+  parentId_lte?: ID_Input;
+  parentId_gt?: ID_Input;
+  parentId_gte?: ID_Input;
+  parentId_contains?: ID_Input;
+  parentId_not_contains?: ID_Input;
+  parentId_starts_with?: ID_Input;
+  parentId_not_starts_with?: ID_Input;
+  parentId_ends_with?: ID_Input;
+  parentId_not_ends_with?: ID_Input;
   name?: String;
   name_not?: String;
   name_in?: String[] | String;
@@ -954,11 +929,25 @@ export interface ItemAdditionRestrictedWhereInput {
   AND?: ItemAdditionRestrictedWhereInput[] | ItemAdditionRestrictedWhereInput;
 }
 
-export interface SortingCreateorderInput {
-  set?: ID_Input[] | ID_Input;
+export interface StepAdditionCreateManyInput {
+  create?: StepAdditionCreateInput[] | StepAdditionCreateInput;
 }
 
 export interface StepAdditionRestrictedWhereInput {
+  uid?: ID_Input;
+  uid_not?: ID_Input;
+  uid_in?: ID_Input[] | ID_Input;
+  uid_not_in?: ID_Input[] | ID_Input;
+  uid_lt?: ID_Input;
+  uid_lte?: ID_Input;
+  uid_gt?: ID_Input;
+  uid_gte?: ID_Input;
+  uid_contains?: ID_Input;
+  uid_not_contains?: ID_Input;
+  uid_starts_with?: ID_Input;
+  uid_not_starts_with?: ID_Input;
+  uid_ends_with?: ID_Input;
+  uid_not_ends_with?: ID_Input;
   id?: ID_Input;
   id_not?: ID_Input;
   id_in?: ID_Input[] | ID_Input;
@@ -973,6 +962,20 @@ export interface StepAdditionRestrictedWhereInput {
   id_not_starts_with?: ID_Input;
   id_ends_with?: ID_Input;
   id_not_ends_with?: ID_Input;
+  parentId?: ID_Input;
+  parentId_not?: ID_Input;
+  parentId_in?: ID_Input[] | ID_Input;
+  parentId_not_in?: ID_Input[] | ID_Input;
+  parentId_lt?: ID_Input;
+  parentId_lte?: ID_Input;
+  parentId_gt?: ID_Input;
+  parentId_gte?: ID_Input;
+  parentId_contains?: ID_Input;
+  parentId_not_contains?: ID_Input;
+  parentId_starts_with?: ID_Input;
+  parentId_not_starts_with?: ID_Input;
+  parentId_ends_with?: ID_Input;
+  parentId_not_ends_with?: ID_Input;
   directions?: String;
   directions_not?: String;
   directions_in?: String[] | String;
@@ -1004,11 +1007,28 @@ export interface StepAdditionRestrictedWhereInput {
   AND?: StepAdditionRestrictedWhereInput[] | StepAdditionRestrictedWhereInput;
 }
 
-export interface AlterationCreateManyInput {
-  create?: AlterationCreateInput[] | AlterationCreateInput;
+export interface StepAdditionCreateInput {
+  id: ID_Input;
+  parentId: ID_Input;
+  directions: String;
+  notes: String;
 }
 
 export interface IngredientAdditionRestrictedWhereInput {
+  uid?: ID_Input;
+  uid_not?: ID_Input;
+  uid_in?: ID_Input[] | ID_Input;
+  uid_not_in?: ID_Input[] | ID_Input;
+  uid_lt?: ID_Input;
+  uid_lte?: ID_Input;
+  uid_gt?: ID_Input;
+  uid_gte?: ID_Input;
+  uid_contains?: ID_Input;
+  uid_not_contains?: ID_Input;
+  uid_starts_with?: ID_Input;
+  uid_not_starts_with?: ID_Input;
+  uid_ends_with?: ID_Input;
+  uid_not_ends_with?: ID_Input;
   id?: ID_Input;
   id_not?: ID_Input;
   id_in?: ID_Input[] | ID_Input;
@@ -1023,6 +1043,20 @@ export interface IngredientAdditionRestrictedWhereInput {
   id_not_starts_with?: ID_Input;
   id_ends_with?: ID_Input;
   id_not_ends_with?: ID_Input;
+  parentId?: ID_Input;
+  parentId_not?: ID_Input;
+  parentId_in?: ID_Input[] | ID_Input;
+  parentId_not_in?: ID_Input[] | ID_Input;
+  parentId_lt?: ID_Input;
+  parentId_lte?: ID_Input;
+  parentId_gt?: ID_Input;
+  parentId_gte?: ID_Input;
+  parentId_contains?: ID_Input;
+  parentId_not_contains?: ID_Input;
+  parentId_starts_with?: ID_Input;
+  parentId_not_starts_with?: ID_Input;
+  parentId_ends_with?: ID_Input;
+  parentId_not_ends_with?: ID_Input;
   name?: String;
   name_not?: String;
   name_in?: String[] | String;
@@ -1084,10 +1118,8 @@ export interface IngredientAdditionRestrictedWhereInput {
     | IngredientAdditionRestrictedWhereInput;
 }
 
-export interface AlterationCreateInput {
-  sourceId: ID_Input;
-  field: String;
-  value: String;
+export interface IngredientAdditionCreateManyInput {
+  create?: IngredientAdditionCreateInput[] | IngredientAdditionCreateInput;
 }
 
 export interface RecipeUpdateManyMutationInput {
@@ -1098,8 +1130,13 @@ export interface RecipeUpdateManyMutationInput {
   description?: String;
 }
 
-export interface ModificationCreateremovalsInput {
-  set?: ID_Input[] | ID_Input;
+export interface IngredientAdditionCreateInput {
+  id: ID_Input;
+  parentId: ID_Input;
+  name: String;
+  quantity: String;
+  unit?: String;
+  processing?: String;
 }
 
 export interface RecipeCreateInput {
@@ -1113,8 +1150,9 @@ export interface RecipeCreateInput {
   modifications?: ModificationCreateManyWithoutRecipeInput;
 }
 
-export interface ItemAdditionCreateManyInput {
-  create?: ItemAdditionCreateInput[] | ItemAdditionCreateInput;
+export interface RecipeCreateOneWithoutModificationsInput {
+  create?: RecipeCreateWithoutModificationsInput;
+  connect?: RecipeWhereUniqueInput;
 }
 
 export interface RecipeUpsertWithoutModificationsInput {
@@ -1134,8 +1172,9 @@ export interface ModificationUpsertWithWhereUniqueWithoutUserInput {
   create: ModificationCreateWithoutUserInput;
 }
 
-export interface StepAdditionCreateManyInput {
-  create?: StepAdditionCreateInput[] | StepAdditionCreateInput;
+export interface UserCreateOneWithoutRecipesInput {
+  create?: UserCreateWithoutRecipesInput;
+  connect?: UserWhereUniqueInput;
 }
 
 export interface ModificationUpdateWithWhereUniqueWithoutUserInput {
@@ -1143,18 +1182,25 @@ export interface ModificationUpdateWithWhereUniqueWithoutUserInput {
   data: ModificationUpdateWithoutUserDataInput;
 }
 
-export interface StepAdditionCreateInput {
-  id: ID_Input;
-  directions: String;
-  notes: String;
+export interface UserCreateWithoutRecipesInput {
+  email: String;
+  password: String;
+  name: String;
+  avatar?: String;
+  slug?: String;
+  emailVerified?: Boolean;
+  modifications?: ModificationCreateManyWithoutUserInput;
 }
 
 export type RecipeWhereUniqueInput = AtLeastOne<{
   id: ID_Input;
 }>;
 
-export interface IngredientAdditionCreateManyInput {
-  create?: IngredientAdditionCreateInput[] | IngredientAdditionCreateInput;
+export interface ModificationCreateManyWithoutUserInput {
+  create?:
+    | ModificationCreateWithoutUserInput[]
+    | ModificationCreateWithoutUserInput;
+  connect?: ModificationWhereUniqueInput[] | ModificationWhereUniqueInput;
 }
 
 export interface UserUpdateOneRequiredWithoutRecipesInput {
@@ -1166,6 +1212,7 @@ export interface UserUpdateOneRequiredWithoutRecipesInput {
 
 export interface IngredientAdditionUpdateManyDataInput {
   id?: ID_Input;
+  parentId?: ID_Input;
   name?: String;
   quantity?: String;
   unit?: String;
@@ -1176,9 +1223,15 @@ export type StepWhereUniqueInput = AtLeastOne<{
   id: ID_Input;
 }>;
 
-export interface RecipeCreateOneWithoutModificationsInput {
-  create?: RecipeCreateWithoutModificationsInput;
-  connect?: RecipeWhereUniqueInput;
+export interface ModificationUpdateInput {
+  user?: UserUpdateOneRequiredWithoutModificationsInput;
+  recipe?: RecipeUpdateOneRequiredWithoutModificationsInput;
+  sortings?: SortingUpdateManyInput;
+  alterations?: AlterationUpdateManyInput;
+  removals?: ModificationUpdateremovalsInput;
+  itemAdditions?: ItemAdditionUpdateManyInput;
+  stepAdditions?: StepAdditionUpdateManyInput;
+  ingredientAdditions?: IngredientAdditionUpdateManyInput;
 }
 
 export interface UserUpsertWithoutModificationsInput {
@@ -1186,14 +1239,11 @@ export interface UserUpsertWithoutModificationsInput {
   create: UserCreateWithoutModificationsInput;
 }
 
-export interface RecipeCreateWithoutModificationsInput {
-  author: UserCreateOneWithoutRecipesInput;
-  title: String;
-  time: String;
-  skill: String;
-  course: String;
-  description: String;
-  items?: ItemCreateManyInput;
+export interface UserUpdateOneRequiredWithoutModificationsInput {
+  create?: UserCreateWithoutModificationsInput;
+  update?: UserUpdateWithoutModificationsDataInput;
+  upsert?: UserUpsertWithoutModificationsInput;
+  connect?: UserWhereUniqueInput;
 }
 
 export type UserWhereUniqueInput = AtLeastOne<{
@@ -1201,9 +1251,14 @@ export type UserWhereUniqueInput = AtLeastOne<{
   email?: String;
 }>;
 
-export interface UserCreateOneWithoutRecipesInput {
-  create?: UserCreateWithoutRecipesInput;
-  connect?: UserWhereUniqueInput;
+export interface UserUpdateWithoutModificationsDataInput {
+  email?: String;
+  password?: String;
+  name?: String;
+  avatar?: String;
+  slug?: String;
+  emailVerified?: Boolean;
+  recipes?: RecipeUpdateManyWithoutAuthorInput;
 }
 
 export interface RecipeScalarWhereInput {
@@ -1312,25 +1367,31 @@ export interface RecipeScalarWhereInput {
   NOT?: RecipeScalarWhereInput[] | RecipeScalarWhereInput;
 }
 
-export interface UserCreateWithoutRecipesInput {
-  email: String;
-  password: String;
-  name: String;
-  avatar?: String;
-  slug?: String;
-  emailVerified?: Boolean;
-  modifications?: ModificationCreateManyWithoutUserInput;
+export interface RecipeUpdateManyWithoutAuthorInput {
+  create?: RecipeCreateWithoutAuthorInput[] | RecipeCreateWithoutAuthorInput;
+  delete?: RecipeWhereUniqueInput[] | RecipeWhereUniqueInput;
+  connect?: RecipeWhereUniqueInput[] | RecipeWhereUniqueInput;
+  set?: RecipeWhereUniqueInput[] | RecipeWhereUniqueInput;
+  disconnect?: RecipeWhereUniqueInput[] | RecipeWhereUniqueInput;
+  update?:
+    | RecipeUpdateWithWhereUniqueWithoutAuthorInput[]
+    | RecipeUpdateWithWhereUniqueWithoutAuthorInput;
+  upsert?:
+    | RecipeUpsertWithWhereUniqueWithoutAuthorInput[]
+    | RecipeUpsertWithWhereUniqueWithoutAuthorInput;
+  deleteMany?: RecipeScalarWhereInput[] | RecipeScalarWhereInput;
+  updateMany?:
+    | RecipeUpdateManyWithWhereNestedInput[]
+    | RecipeUpdateManyWithWhereNestedInput;
 }
 
 export interface ModificationUpdateManyDataInput {
   removals?: ModificationUpdateremovalsInput;
 }
 
-export interface ModificationCreateManyWithoutUserInput {
-  create?:
-    | ModificationCreateWithoutUserInput[]
-    | ModificationCreateWithoutUserInput;
-  connect?: ModificationWhereUniqueInput[] | ModificationWhereUniqueInput;
+export interface RecipeUpdateWithWhereUniqueWithoutAuthorInput {
+  where: RecipeWhereUniqueInput;
+  data: RecipeUpdateWithoutAuthorDataInput;
 }
 
 export interface IngredientCreateInput {
@@ -1341,14 +1402,14 @@ export interface IngredientCreateInput {
   processing?: String;
 }
 
-export interface ModificationCreateWithoutUserInput {
-  recipe: RecipeCreateOneWithoutModificationsInput;
-  sortings?: SortingCreateManyInput;
-  alterations?: AlterationCreateManyInput;
-  removals?: ModificationCreateremovalsInput;
-  itemAdditions?: ItemAdditionCreateManyInput;
-  stepAdditions?: StepAdditionCreateManyInput;
-  ingredientAdditions?: IngredientAdditionCreateManyInput;
+export interface RecipeUpdateWithoutAuthorDataInput {
+  title?: String;
+  time?: String;
+  skill?: String;
+  course?: String;
+  description?: String;
+  items?: ItemUpdateManyInput;
+  modifications?: ModificationUpdateManyWithoutRecipeInput;
 }
 
 export interface IngredientUpdateManyMutationInput {
@@ -1359,15 +1420,22 @@ export interface IngredientUpdateManyMutationInput {
   processing?: String;
 }
 
-export interface ModificationUpdateInput {
-  user?: UserUpdateOneRequiredWithoutModificationsInput;
-  recipe?: RecipeUpdateOneRequiredWithoutModificationsInput;
-  sortings?: SortingUpdateManyInput;
-  alterations?: AlterationUpdateManyInput;
-  removals?: ModificationUpdateremovalsInput;
-  itemAdditions?: ItemAdditionUpdateManyInput;
-  stepAdditions?: StepAdditionUpdateManyInput;
-  ingredientAdditions?: IngredientAdditionUpdateManyInput;
+export interface ItemUpdateManyInput {
+  create?: ItemCreateInput[] | ItemCreateInput;
+  update?:
+    | ItemUpdateWithWhereUniqueNestedInput[]
+    | ItemUpdateWithWhereUniqueNestedInput;
+  upsert?:
+    | ItemUpsertWithWhereUniqueNestedInput[]
+    | ItemUpsertWithWhereUniqueNestedInput;
+  delete?: ItemWhereUniqueInput[] | ItemWhereUniqueInput;
+  connect?: ItemWhereUniqueInput[] | ItemWhereUniqueInput;
+  set?: ItemWhereUniqueInput[] | ItemWhereUniqueInput;
+  disconnect?: ItemWhereUniqueInput[] | ItemWhereUniqueInput;
+  deleteMany?: ItemScalarWhereInput[] | ItemScalarWhereInput;
+  updateMany?:
+    | ItemUpdateManyWithWhereNestedInput[]
+    | ItemUpdateManyWithWhereNestedInput;
 }
 
 export interface ModificationScalarWhereInput {
@@ -1406,11 +1474,9 @@ export interface ModificationScalarWhereInput {
   NOT?: ModificationScalarWhereInput[] | ModificationScalarWhereInput;
 }
 
-export interface UserUpdateOneRequiredWithoutModificationsInput {
-  create?: UserCreateWithoutModificationsInput;
-  update?: UserUpdateWithoutModificationsDataInput;
-  upsert?: UserUpsertWithoutModificationsInput;
-  connect?: UserWhereUniqueInput;
+export interface ItemUpdateWithWhereUniqueNestedInput {
+  where: ItemWhereUniqueInput;
+  data: ItemUpdateDataInput;
 }
 
 export interface StepCreateManyInput {
@@ -1418,14 +1484,10 @@ export interface StepCreateManyInput {
   connect?: StepWhereUniqueInput[] | StepWhereUniqueInput;
 }
 
-export interface UserUpdateWithoutModificationsDataInput {
-  email?: String;
-  password?: String;
+export interface ItemUpdateDataInput {
+  index?: Int;
   name?: String;
-  avatar?: String;
-  slug?: String;
-  emailVerified?: Boolean;
-  recipes?: RecipeUpdateManyWithoutAuthorInput;
+  steps?: StepUpdateManyInput;
 }
 
 export interface IngredientCreateManyInput {
@@ -1433,22 +1495,10 @@ export interface IngredientCreateManyInput {
   connect?: IngredientWhereUniqueInput[] | IngredientWhereUniqueInput;
 }
 
-export interface RecipeUpdateManyWithoutAuthorInput {
-  create?: RecipeCreateWithoutAuthorInput[] | RecipeCreateWithoutAuthorInput;
-  delete?: RecipeWhereUniqueInput[] | RecipeWhereUniqueInput;
-  connect?: RecipeWhereUniqueInput[] | RecipeWhereUniqueInput;
-  set?: RecipeWhereUniqueInput[] | RecipeWhereUniqueInput;
-  disconnect?: RecipeWhereUniqueInput[] | RecipeWhereUniqueInput;
-  update?:
-    | RecipeUpdateWithWhereUniqueWithoutAuthorInput[]
-    | RecipeUpdateWithWhereUniqueWithoutAuthorInput;
-  upsert?:
-    | RecipeUpsertWithWhereUniqueWithoutAuthorInput[]
-    | RecipeUpsertWithWhereUniqueWithoutAuthorInput;
-  deleteMany?: RecipeScalarWhereInput[] | RecipeScalarWhereInput;
-  updateMany?:
-    | RecipeUpdateManyWithWhereNestedInput[]
-    | RecipeUpdateManyWithWhereNestedInput;
+export interface ItemUpsertWithWhereUniqueNestedInput {
+  where: ItemWhereUniqueInput;
+  update: ItemUpdateDataInput;
+  create: ItemCreateInput;
 }
 
 export interface StepUpdateManyInput {
@@ -1467,94 +1517,6 @@ export interface StepUpdateManyInput {
   updateMany?:
     | StepUpdateManyWithWhereNestedInput[]
     | StepUpdateManyWithWhereNestedInput;
-}
-
-export interface RecipeUpdateWithWhereUniqueWithoutAuthorInput {
-  where: RecipeWhereUniqueInput;
-  data: RecipeUpdateWithoutAuthorDataInput;
-}
-
-export interface StepUpdateDataInput {
-  index?: Int;
-  directions?: String;
-  notes?: String;
-  ingredients?: IngredientUpdateManyInput;
-}
-
-export interface RecipeUpdateWithoutAuthorDataInput {
-  title?: String;
-  time?: String;
-  skill?: String;
-  course?: String;
-  description?: String;
-  items?: ItemUpdateManyInput;
-  modifications?: ModificationUpdateManyWithoutRecipeInput;
-}
-
-export interface IngredientUpdateWithWhereUniqueNestedInput {
-  where: IngredientWhereUniqueInput;
-  data: IngredientUpdateDataInput;
-}
-
-export interface ItemUpdateManyInput {
-  create?: ItemCreateInput[] | ItemCreateInput;
-  update?:
-    | ItemUpdateWithWhereUniqueNestedInput[]
-    | ItemUpdateWithWhereUniqueNestedInput;
-  upsert?:
-    | ItemUpsertWithWhereUniqueNestedInput[]
-    | ItemUpsertWithWhereUniqueNestedInput;
-  delete?: ItemWhereUniqueInput[] | ItemWhereUniqueInput;
-  connect?: ItemWhereUniqueInput[] | ItemWhereUniqueInput;
-  set?: ItemWhereUniqueInput[] | ItemWhereUniqueInput;
-  disconnect?: ItemWhereUniqueInput[] | ItemWhereUniqueInput;
-  deleteMany?: ItemScalarWhereInput[] | ItemScalarWhereInput;
-  updateMany?:
-    | ItemUpdateManyWithWhereNestedInput[]
-    | ItemUpdateManyWithWhereNestedInput;
-}
-
-export interface IngredientUpsertWithWhereUniqueNestedInput {
-  where: IngredientWhereUniqueInput;
-  update: IngredientUpdateDataInput;
-  create: IngredientCreateInput;
-}
-
-export interface ItemUpdateWithWhereUniqueNestedInput {
-  where: ItemWhereUniqueInput;
-  data: ItemUpdateDataInput;
-}
-
-export interface IngredientUpdateManyWithWhereNestedInput {
-  where: IngredientScalarWhereInput;
-  data: IngredientUpdateManyDataInput;
-}
-
-export interface ItemUpdateDataInput {
-  index?: Int;
-  name?: String;
-  steps?: StepUpdateManyInput;
-}
-
-export interface StepUpsertWithWhereUniqueNestedInput {
-  where: StepWhereUniqueInput;
-  update: StepUpdateDataInput;
-  create: StepCreateInput;
-}
-
-export interface ItemUpsertWithWhereUniqueNestedInput {
-  where: ItemWhereUniqueInput;
-  update: ItemUpdateDataInput;
-  create: ItemCreateInput;
-}
-
-export interface StepSubscriptionWhereInput {
-  mutation_in?: MutationType[] | MutationType;
-  updatedFields_contains?: String;
-  updatedFields_contains_every?: String[] | String;
-  updatedFields_contains_some?: String[] | String;
-  node?: StepWhereInput;
-  AND?: StepSubscriptionWhereInput[] | StepSubscriptionWhereInput;
 }
 
 export interface ItemScalarWhereInput {
@@ -1599,6 +1561,133 @@ export interface ItemScalarWhereInput {
   NOT?: ItemScalarWhereInput[] | ItemScalarWhereInput;
 }
 
+export interface StepUpdateDataInput {
+  index?: Int;
+  directions?: String;
+  notes?: String;
+  ingredients?: IngredientUpdateManyInput;
+}
+
+export interface ItemUpdateManyWithWhereNestedInput {
+  where: ItemScalarWhereInput;
+  data: ItemUpdateManyDataInput;
+}
+
+export interface IngredientUpdateWithWhereUniqueNestedInput {
+  where: IngredientWhereUniqueInput;
+  data: IngredientUpdateDataInput;
+}
+
+export interface ItemUpdateManyDataInput {
+  index?: Int;
+  name?: String;
+}
+
+export interface IngredientUpsertWithWhereUniqueNestedInput {
+  where: IngredientWhereUniqueInput;
+  update: IngredientUpdateDataInput;
+  create: IngredientCreateInput;
+}
+
+export interface ModificationUpdateManyWithoutRecipeInput {
+  create?:
+    | ModificationCreateWithoutRecipeInput[]
+    | ModificationCreateWithoutRecipeInput;
+  delete?: ModificationWhereUniqueInput[] | ModificationWhereUniqueInput;
+  connect?: ModificationWhereUniqueInput[] | ModificationWhereUniqueInput;
+  set?: ModificationWhereUniqueInput[] | ModificationWhereUniqueInput;
+  disconnect?: ModificationWhereUniqueInput[] | ModificationWhereUniqueInput;
+  update?:
+    | ModificationUpdateWithWhereUniqueWithoutRecipeInput[]
+    | ModificationUpdateWithWhereUniqueWithoutRecipeInput;
+  upsert?:
+    | ModificationUpsertWithWhereUniqueWithoutRecipeInput[]
+    | ModificationUpsertWithWhereUniqueWithoutRecipeInput;
+  deleteMany?: ModificationScalarWhereInput[] | ModificationScalarWhereInput;
+  updateMany?:
+    | ModificationUpdateManyWithWhereNestedInput[]
+    | ModificationUpdateManyWithWhereNestedInput;
+}
+
+export interface IngredientUpdateManyWithWhereNestedInput {
+  where: IngredientScalarWhereInput;
+  data: IngredientUpdateManyDataInput;
+}
+
+export interface ModificationUpdateWithWhereUniqueWithoutRecipeInput {
+  where: ModificationWhereUniqueInput;
+  data: ModificationUpdateWithoutRecipeDataInput;
+}
+
+export interface StepUpsertWithWhereUniqueNestedInput {
+  where: StepWhereUniqueInput;
+  update: StepUpdateDataInput;
+  create: StepCreateInput;
+}
+
+export interface ModificationUpdateWithoutRecipeDataInput {
+  user?: UserUpdateOneRequiredWithoutModificationsInput;
+  sortings?: SortingUpdateManyInput;
+  alterations?: AlterationUpdateManyInput;
+  removals?: ModificationUpdateremovalsInput;
+  itemAdditions?: ItemAdditionUpdateManyInput;
+  stepAdditions?: StepAdditionUpdateManyInput;
+  ingredientAdditions?: IngredientAdditionUpdateManyInput;
+}
+
+export interface StepUpdateManyWithWhereNestedInput {
+  where: StepScalarWhereInput;
+  data: StepUpdateManyDataInput;
+}
+
+export interface SortingUpdateManyInput {
+  create?: SortingCreateInput[] | SortingCreateInput;
+  update?:
+    | SortingUpdateWithWhereUniqueNestedInput[]
+    | SortingUpdateWithWhereUniqueNestedInput;
+  upsert?:
+    | SortingUpsertWithWhereUniqueNestedInput[]
+    | SortingUpsertWithWhereUniqueNestedInput;
+  delete?: SortingWhereUniqueInput[] | SortingWhereUniqueInput;
+  deleteMany?: SortingScalarWhereInput[] | SortingScalarWhereInput;
+  updateMany?:
+    | SortingUpdateManyWithWhereNestedInput[]
+    | SortingUpdateManyWithWhereNestedInput;
+}
+
+export interface ItemUpdateManyMutationInput {
+  index?: Int;
+  name?: String;
+}
+
+export interface SortingUpdateWithWhereUniqueNestedInput {
+  where: SortingWhereUniqueInput;
+  data: SortingUpdateDataInput;
+}
+
+export interface UserCreateOneWithoutModificationsInput {
+  create?: UserCreateWithoutModificationsInput;
+  connect?: UserWhereUniqueInput;
+}
+
+export type SortingWhereUniqueInput = AtLeastOne<{
+  uid: ID_Input;
+}>;
+
+export interface StepSubscriptionWhereInput {
+  mutation_in?: MutationType[] | MutationType;
+  updatedFields_contains?: String;
+  updatedFields_contains_every?: String[] | String;
+  updatedFields_contains_some?: String[] | String;
+  node?: StepWhereInput;
+  AND?: StepSubscriptionWhereInput[] | StepSubscriptionWhereInput;
+}
+
+export interface SortingUpdateDataInput {
+  parentId?: ID_Input;
+  order?: SortingUpdateorderInput;
+}
+
 export interface ItemWhereInput {
   id?: ID_Input;
   id_not?: ID_Input;
@@ -1640,9 +1729,8 @@ export interface ItemWhereInput {
   AND?: ItemWhereInput[] | ItemWhereInput;
 }
 
-export interface ItemUpdateManyWithWhereNestedInput {
-  where: ItemScalarWhereInput;
-  data: ItemUpdateManyDataInput;
+export interface SortingUpdateorderInput {
+  set?: ID_Input[] | ID_Input;
 }
 
 export interface UserUpdateInput {
@@ -1656,9 +1744,10 @@ export interface UserUpdateInput {
   modifications?: ModificationUpdateManyWithoutUserInput;
 }
 
-export interface ItemUpdateManyDataInput {
-  index?: Int;
-  name?: String;
+export interface SortingUpsertWithWhereUniqueNestedInput {
+  where: SortingWhereUniqueInput;
+  update: SortingUpdateDataInput;
+  create: SortingCreateInput;
 }
 
 export interface StepUpdateInput {
@@ -1668,24 +1757,38 @@ export interface StepUpdateInput {
   ingredients?: IngredientUpdateManyInput;
 }
 
-export interface ModificationUpdateManyWithoutRecipeInput {
-  create?:
-    | ModificationCreateWithoutRecipeInput[]
-    | ModificationCreateWithoutRecipeInput;
-  delete?: ModificationWhereUniqueInput[] | ModificationWhereUniqueInput;
-  connect?: ModificationWhereUniqueInput[] | ModificationWhereUniqueInput;
-  set?: ModificationWhereUniqueInput[] | ModificationWhereUniqueInput;
-  disconnect?: ModificationWhereUniqueInput[] | ModificationWhereUniqueInput;
-  update?:
-    | ModificationUpdateWithWhereUniqueWithoutRecipeInput[]
-    | ModificationUpdateWithWhereUniqueWithoutRecipeInput;
-  upsert?:
-    | ModificationUpsertWithWhereUniqueWithoutRecipeInput[]
-    | ModificationUpsertWithWhereUniqueWithoutRecipeInput;
-  deleteMany?: ModificationScalarWhereInput[] | ModificationScalarWhereInput;
-  updateMany?:
-    | ModificationUpdateManyWithWhereNestedInput[]
-    | ModificationUpdateManyWithWhereNestedInput;
+export interface SortingScalarWhereInput {
+  uid?: ID_Input;
+  uid_not?: ID_Input;
+  uid_in?: ID_Input[] | ID_Input;
+  uid_not_in?: ID_Input[] | ID_Input;
+  uid_lt?: ID_Input;
+  uid_lte?: ID_Input;
+  uid_gt?: ID_Input;
+  uid_gte?: ID_Input;
+  uid_contains?: ID_Input;
+  uid_not_contains?: ID_Input;
+  uid_starts_with?: ID_Input;
+  uid_not_starts_with?: ID_Input;
+  uid_ends_with?: ID_Input;
+  uid_not_ends_with?: ID_Input;
+  parentId?: ID_Input;
+  parentId_not?: ID_Input;
+  parentId_in?: ID_Input[] | ID_Input;
+  parentId_not_in?: ID_Input[] | ID_Input;
+  parentId_lt?: ID_Input;
+  parentId_lte?: ID_Input;
+  parentId_gt?: ID_Input;
+  parentId_gte?: ID_Input;
+  parentId_contains?: ID_Input;
+  parentId_not_contains?: ID_Input;
+  parentId_starts_with?: ID_Input;
+  parentId_not_starts_with?: ID_Input;
+  parentId_ends_with?: ID_Input;
+  parentId_not_ends_with?: ID_Input;
+  AND?: SortingScalarWhereInput[] | SortingScalarWhereInput;
+  OR?: SortingScalarWhereInput[] | SortingScalarWhereInput;
+  NOT?: SortingScalarWhereInput[] | SortingScalarWhereInput;
 }
 
 export interface SortingWhereInput {
@@ -1720,26 +1823,54 @@ export interface SortingWhereInput {
   AND?: SortingWhereInput[] | SortingWhereInput;
 }
 
-export interface ModificationUpdateWithWhereUniqueWithoutRecipeInput {
-  where: ModificationWhereUniqueInput;
-  data: ModificationUpdateWithoutRecipeDataInput;
+export interface SortingUpdateManyWithWhereNestedInput {
+  where: SortingScalarWhereInput;
+  data: SortingUpdateManyDataInput;
 }
 
 export interface ItemAdditionWhereInput {
-  id?: ID_Input;
-  id_not?: ID_Input;
-  id_in?: ID_Input[] | ID_Input;
-  id_not_in?: ID_Input[] | ID_Input;
-  id_lt?: ID_Input;
-  id_lte?: ID_Input;
-  id_gt?: ID_Input;
-  id_gte?: ID_Input;
-  id_contains?: ID_Input;
-  id_not_contains?: ID_Input;
-  id_starts_with?: ID_Input;
-  id_not_starts_with?: ID_Input;
-  id_ends_with?: ID_Input;
-  id_not_ends_with?: ID_Input;
+  uid?: ID_Input;
+  uid_not?: ID_Input;
+  uid_in?: ID_Input[] | ID_Input;
+  uid_not_in?: ID_Input[] | ID_Input;
+  uid_lt?: ID_Input;
+  uid_lte?: ID_Input;
+  uid_gt?: ID_Input;
+  uid_gte?: ID_Input;
+  uid_contains?: ID_Input;
+  uid_not_contains?: ID_Input;
+  uid_starts_with?: ID_Input;
+  uid_not_starts_with?: ID_Input;
+  uid_ends_with?: ID_Input;
+  uid_not_ends_with?: ID_Input;
+  clientId?: ID_Input;
+  clientId_not?: ID_Input;
+  clientId_in?: ID_Input[] | ID_Input;
+  clientId_not_in?: ID_Input[] | ID_Input;
+  clientId_lt?: ID_Input;
+  clientId_lte?: ID_Input;
+  clientId_gt?: ID_Input;
+  clientId_gte?: ID_Input;
+  clientId_contains?: ID_Input;
+  clientId_not_contains?: ID_Input;
+  clientId_starts_with?: ID_Input;
+  clientId_not_starts_with?: ID_Input;
+  clientId_ends_with?: ID_Input;
+  clientId_not_ends_with?: ID_Input;
+  parentId?: ID_Input;
+  parentId_not?: ID_Input;
+  parentId_in?: ID_Input[] | ID_Input;
+  parentId_not_in?: ID_Input[] | ID_Input;
+  parentId_lt?: ID_Input;
+  parentId_lte?: ID_Input;
+  parentId_gt?: ID_Input;
+  parentId_gte?: ID_Input;
+  parentId_contains?: ID_Input;
+  parentId_not_contains?: ID_Input;
+  parentId_starts_with?: ID_Input;
+  parentId_not_starts_with?: ID_Input;
+  parentId_ends_with?: ID_Input;
+  parentId_not_ends_with?: ID_Input;
   name?: String;
   name_not?: String;
   name_in?: String[] | String;
@@ -1757,17 +1888,26 @@ export interface ItemAdditionWhereInput {
   AND?: ItemAdditionWhereInput[] | ItemAdditionWhereInput;
 }
 
-export interface ModificationUpdateWithoutRecipeDataInput {
-  user?: UserUpdateOneRequiredWithoutModificationsInput;
-  sortings?: SortingUpdateManyInput;
-  alterations?: AlterationUpdateManyInput;
-  removals?: ModificationUpdateremovalsInput;
-  itemAdditions?: ItemAdditionUpdateManyInput;
-  stepAdditions?: StepAdditionUpdateManyInput;
-  ingredientAdditions?: IngredientAdditionUpdateManyInput;
+export interface SortingUpdateManyDataInput {
+  parentId?: ID_Input;
+  order?: SortingUpdateorderInput;
 }
 
 export interface IngredientAdditionWhereInput {
+  uid?: ID_Input;
+  uid_not?: ID_Input;
+  uid_in?: ID_Input[] | ID_Input;
+  uid_not_in?: ID_Input[] | ID_Input;
+  uid_lt?: ID_Input;
+  uid_lte?: ID_Input;
+  uid_gt?: ID_Input;
+  uid_gte?: ID_Input;
+  uid_contains?: ID_Input;
+  uid_not_contains?: ID_Input;
+  uid_starts_with?: ID_Input;
+  uid_not_starts_with?: ID_Input;
+  uid_ends_with?: ID_Input;
+  uid_not_ends_with?: ID_Input;
   id?: ID_Input;
   id_not?: ID_Input;
   id_in?: ID_Input[] | ID_Input;
@@ -1782,6 +1922,20 @@ export interface IngredientAdditionWhereInput {
   id_not_starts_with?: ID_Input;
   id_ends_with?: ID_Input;
   id_not_ends_with?: ID_Input;
+  parentId?: ID_Input;
+  parentId_not?: ID_Input;
+  parentId_in?: ID_Input[] | ID_Input;
+  parentId_not_in?: ID_Input[] | ID_Input;
+  parentId_lt?: ID_Input;
+  parentId_lte?: ID_Input;
+  parentId_gt?: ID_Input;
+  parentId_gte?: ID_Input;
+  parentId_contains?: ID_Input;
+  parentId_not_contains?: ID_Input;
+  parentId_starts_with?: ID_Input;
+  parentId_not_starts_with?: ID_Input;
+  parentId_ends_with?: ID_Input;
+  parentId_not_ends_with?: ID_Input;
   name?: String;
   name_not?: String;
   name_in?: String[] | String;
@@ -1841,19 +1995,19 @@ export interface IngredientAdditionWhereInput {
   AND?: IngredientAdditionWhereInput[] | IngredientAdditionWhereInput;
 }
 
-export interface SortingUpdateManyInput {
-  create?: SortingCreateInput[] | SortingCreateInput;
+export interface AlterationUpdateManyInput {
+  create?: AlterationCreateInput[] | AlterationCreateInput;
   update?:
-    | SortingUpdateWithWhereUniqueNestedInput[]
-    | SortingUpdateWithWhereUniqueNestedInput;
+    | AlterationUpdateWithWhereUniqueNestedInput[]
+    | AlterationUpdateWithWhereUniqueNestedInput;
   upsert?:
-    | SortingUpsertWithWhereUniqueNestedInput[]
-    | SortingUpsertWithWhereUniqueNestedInput;
-  delete?: SortingWhereUniqueInput[] | SortingWhereUniqueInput;
-  deleteMany?: SortingScalarWhereInput[] | SortingScalarWhereInput;
+    | AlterationUpsertWithWhereUniqueNestedInput[]
+    | AlterationUpsertWithWhereUniqueNestedInput;
+  delete?: AlterationWhereUniqueInput[] | AlterationWhereUniqueInput;
+  deleteMany?: AlterationScalarWhereInput[] | AlterationScalarWhereInput;
   updateMany?:
-    | SortingUpdateManyWithWhereNestedInput[]
-    | SortingUpdateManyWithWhereNestedInput;
+    | AlterationUpdateManyWithWhereNestedInput[]
+    | AlterationUpdateManyWithWhereNestedInput;
 }
 
 export interface RecipeUpdateInput {
@@ -1867,9 +2021,9 @@ export interface RecipeUpdateInput {
   modifications?: ModificationUpdateManyWithoutRecipeInput;
 }
 
-export interface SortingUpdateWithWhereUniqueNestedInput {
-  where: SortingWhereUniqueInput;
-  data: SortingUpdateDataInput;
+export interface AlterationUpdateWithWhereUniqueNestedInput {
+  where: AlterationWhereUniqueInput;
+  data: AlterationUpdateDataInput;
 }
 
 export interface UserUpsertWithoutRecipesInput {
@@ -1877,7 +2031,7 @@ export interface UserUpsertWithoutRecipesInput {
   create: UserCreateWithoutRecipesInput;
 }
 
-export type SortingWhereUniqueInput = AtLeastOne<{
+export type AlterationWhereUniqueInput = AtLeastOne<{
   uid: ID_Input;
 }>;
 
@@ -1901,9 +2055,10 @@ export interface ModificationUpdateManyWithoutUserInput {
     | ModificationUpdateManyWithWhereNestedInput;
 }
 
-export interface SortingUpdateDataInput {
-  parentId?: ID_Input;
-  order?: SortingUpdateorderInput;
+export interface AlterationUpdateDataInput {
+  sourceId?: ID_Input;
+  field?: String;
+  value?: String;
 }
 
 export interface RecipeUpdateWithoutModificationsDataInput {
@@ -1916,8 +2071,10 @@ export interface RecipeUpdateWithoutModificationsDataInput {
   items?: ItemUpdateManyInput;
 }
 
-export interface SortingUpdateorderInput {
-  set?: ID_Input[] | ID_Input;
+export interface AlterationUpsertWithWhereUniqueNestedInput {
+  where: AlterationWhereUniqueInput;
+  update: AlterationUpdateDataInput;
+  create: AlterationCreateInput;
 }
 
 export interface RecipeUpdateManyDataInput {
@@ -1928,19 +2085,7 @@ export interface RecipeUpdateManyDataInput {
   description?: String;
 }
 
-export interface SortingUpsertWithWhereUniqueNestedInput {
-  where: SortingWhereUniqueInput;
-  update: SortingUpdateDataInput;
-  create: SortingCreateInput;
-}
-
-export interface RecipeUpsertWithWhereUniqueWithoutAuthorInput {
-  where: RecipeWhereUniqueInput;
-  update: RecipeUpdateWithoutAuthorDataInput;
-  create: RecipeCreateWithoutAuthorInput;
-}
-
-export interface SortingScalarWhereInput {
+export interface AlterationScalarWhereInput {
   uid?: ID_Input;
   uid_not?: ID_Input;
   uid_in?: ID_Input[] | ID_Input;
@@ -1955,23 +2100,62 @@ export interface SortingScalarWhereInput {
   uid_not_starts_with?: ID_Input;
   uid_ends_with?: ID_Input;
   uid_not_ends_with?: ID_Input;
-  parentId?: ID_Input;
-  parentId_not?: ID_Input;
-  parentId_in?: ID_Input[] | ID_Input;
-  parentId_not_in?: ID_Input[] | ID_Input;
-  parentId_lt?: ID_Input;
-  parentId_lte?: ID_Input;
-  parentId_gt?: ID_Input;
-  parentId_gte?: ID_Input;
-  parentId_contains?: ID_Input;
-  parentId_not_contains?: ID_Input;
-  parentId_starts_with?: ID_Input;
-  parentId_not_starts_with?: ID_Input;
-  parentId_ends_with?: ID_Input;
-  parentId_not_ends_with?: ID_Input;
-  AND?: SortingScalarWhereInput[] | SortingScalarWhereInput;
-  OR?: SortingScalarWhereInput[] | SortingScalarWhereInput;
-  NOT?: SortingScalarWhereInput[] | SortingScalarWhereInput;
+  sourceId?: ID_Input;
+  sourceId_not?: ID_Input;
+  sourceId_in?: ID_Input[] | ID_Input;
+  sourceId_not_in?: ID_Input[] | ID_Input;
+  sourceId_lt?: ID_Input;
+  sourceId_lte?: ID_Input;
+  sourceId_gt?: ID_Input;
+  sourceId_gte?: ID_Input;
+  sourceId_contains?: ID_Input;
+  sourceId_not_contains?: ID_Input;
+  sourceId_starts_with?: ID_Input;
+  sourceId_not_starts_with?: ID_Input;
+  sourceId_ends_with?: ID_Input;
+  sourceId_not_ends_with?: ID_Input;
+  field?: String;
+  field_not?: String;
+  field_in?: String[] | String;
+  field_not_in?: String[] | String;
+  field_lt?: String;
+  field_lte?: String;
+  field_gt?: String;
+  field_gte?: String;
+  field_contains?: String;
+  field_not_contains?: String;
+  field_starts_with?: String;
+  field_not_starts_with?: String;
+  field_ends_with?: String;
+  field_not_ends_with?: String;
+  value?: String;
+  value_not?: String;
+  value_in?: String[] | String;
+  value_not_in?: String[] | String;
+  value_lt?: String;
+  value_lte?: String;
+  value_gt?: String;
+  value_gte?: String;
+  value_contains?: String;
+  value_not_contains?: String;
+  value_starts_with?: String;
+  value_not_starts_with?: String;
+  value_ends_with?: String;
+  value_not_ends_with?: String;
+  AND?: AlterationScalarWhereInput[] | AlterationScalarWhereInput;
+  OR?: AlterationScalarWhereInput[] | AlterationScalarWhereInput;
+  NOT?: AlterationScalarWhereInput[] | AlterationScalarWhereInput;
+}
+
+export interface RecipeUpsertWithWhereUniqueWithoutAuthorInput {
+  where: RecipeWhereUniqueInput;
+  update: RecipeUpdateWithoutAuthorDataInput;
+  create: RecipeCreateWithoutAuthorInput;
+}
+
+export interface AlterationUpdateManyWithWhereNestedInput {
+  where: AlterationScalarWhereInput;
+  data: AlterationUpdateManyDataInput;
 }
 
 export interface IngredientUpdateInput {
@@ -1982,9 +2166,10 @@ export interface IngredientUpdateInput {
   processing?: String;
 }
 
-export interface SortingUpdateManyWithWhereNestedInput {
-  where: SortingScalarWhereInput;
-  data: SortingUpdateManyDataInput;
+export interface AlterationUpdateManyDataInput {
+  sourceId?: ID_Input;
+  field?: String;
+  value?: String;
 }
 
 export interface ItemCreateInput {
@@ -1993,9 +2178,8 @@ export interface ItemCreateInput {
   steps?: StepCreateManyInput;
 }
 
-export interface SortingUpdateManyDataInput {
-  parentId?: ID_Input;
-  order?: SortingUpdateorderInput;
+export interface ModificationUpdateremovalsInput {
+  set?: ID_Input[] | ID_Input;
 }
 
 export interface ItemUpdateInput {
@@ -2004,19 +2188,19 @@ export interface ItemUpdateInput {
   steps?: StepUpdateManyInput;
 }
 
-export interface AlterationUpdateManyInput {
-  create?: AlterationCreateInput[] | AlterationCreateInput;
+export interface ItemAdditionUpdateManyInput {
+  create?: ItemAdditionCreateInput[] | ItemAdditionCreateInput;
   update?:
-    | AlterationUpdateWithWhereUniqueNestedInput[]
-    | AlterationUpdateWithWhereUniqueNestedInput;
+    | ItemAdditionUpdateWithWhereUniqueNestedInput[]
+    | ItemAdditionUpdateWithWhereUniqueNestedInput;
   upsert?:
-    | AlterationUpsertWithWhereUniqueNestedInput[]
-    | AlterationUpsertWithWhereUniqueNestedInput;
-  delete?: AlterationWhereUniqueInput[] | AlterationWhereUniqueInput;
-  deleteMany?: AlterationScalarWhereInput[] | AlterationScalarWhereInput;
+    | ItemAdditionUpsertWithWhereUniqueNestedInput[]
+    | ItemAdditionUpsertWithWhereUniqueNestedInput;
+  delete?: ItemAdditionWhereUniqueInput[] | ItemAdditionWhereUniqueInput;
+  deleteMany?: ItemAdditionScalarWhereInput[] | ItemAdditionScalarWhereInput;
   updateMany?:
-    | AlterationUpdateManyWithWhereNestedInput[]
-    | AlterationUpdateManyWithWhereNestedInput;
+    | ItemAdditionUpdateManyWithWhereNestedInput[]
+    | ItemAdditionUpdateManyWithWhereNestedInput;
 }
 
 export interface IngredientUpdateManyInput {
@@ -2037,9 +2221,9 @@ export interface IngredientUpdateManyInput {
     | IngredientUpdateManyWithWhereNestedInput;
 }
 
-export interface AlterationUpdateWithWhereUniqueNestedInput {
-  where: AlterationWhereUniqueInput;
-  data: AlterationUpdateDataInput;
+export interface ItemAdditionUpdateWithWhereUniqueNestedInput {
+  where: ItemAdditionWhereUniqueInput;
+  data: ItemAdditionUpdateDataInput;
 }
 
 export interface IngredientScalarWhereInput {
@@ -2126,7 +2310,743 @@ export interface IngredientScalarWhereInput {
   NOT?: IngredientScalarWhereInput[] | IngredientScalarWhereInput;
 }
 
-export type AlterationWhereUniqueInput = AtLeastOne<{
+export type ItemAdditionWhereUniqueInput = AtLeastOne<{
+  uid: ID_Input;
+}>;
+
+export interface StepScalarWhereInput {
+  id?: ID_Input;
+  id_not?: ID_Input;
+  id_in?: ID_Input[] | ID_Input;
+  id_not_in?: ID_Input[] | ID_Input;
+  id_lt?: ID_Input;
+  id_lte?: ID_Input;
+  id_gt?: ID_Input;
+  id_gte?: ID_Input;
+  id_contains?: ID_Input;
+  id_not_contains?: ID_Input;
+  id_starts_with?: ID_Input;
+  id_not_starts_with?: ID_Input;
+  id_ends_with?: ID_Input;
+  id_not_ends_with?: ID_Input;
+  index?: Int;
+  index_not?: Int;
+  index_in?: Int[] | Int;
+  index_not_in?: Int[] | Int;
+  index_lt?: Int;
+  index_lte?: Int;
+  index_gt?: Int;
+  index_gte?: Int;
+  directions?: String;
+  directions_not?: String;
+  directions_in?: String[] | String;
+  directions_not_in?: String[] | String;
+  directions_lt?: String;
+  directions_lte?: String;
+  directions_gt?: String;
+  directions_gte?: String;
+  directions_contains?: String;
+  directions_not_contains?: String;
+  directions_starts_with?: String;
+  directions_not_starts_with?: String;
+  directions_ends_with?: String;
+  directions_not_ends_with?: String;
+  notes?: String;
+  notes_not?: String;
+  notes_in?: String[] | String;
+  notes_not_in?: String[] | String;
+  notes_lt?: String;
+  notes_lte?: String;
+  notes_gt?: String;
+  notes_gte?: String;
+  notes_contains?: String;
+  notes_not_contains?: String;
+  notes_starts_with?: String;
+  notes_not_starts_with?: String;
+  notes_ends_with?: String;
+  notes_not_ends_with?: String;
+  AND?: StepScalarWhereInput[] | StepScalarWhereInput;
+  OR?: StepScalarWhereInput[] | StepScalarWhereInput;
+  NOT?: StepScalarWhereInput[] | StepScalarWhereInput;
+}
+
+export interface ItemAdditionUpdateDataInput {
+  clientId?: ID_Input;
+  parentId?: ID_Input;
+  name?: String;
+}
+
+export interface ModificationCreateInput {
+  user: UserCreateOneWithoutModificationsInput;
+  recipe: RecipeCreateOneWithoutModificationsInput;
+  sortings?: SortingCreateManyInput;
+  alterations?: AlterationCreateManyInput;
+  removals?: ModificationCreateremovalsInput;
+  itemAdditions?: ItemAdditionCreateManyInput;
+  stepAdditions?: StepAdditionCreateManyInput;
+  ingredientAdditions?: IngredientAdditionCreateManyInput;
+}
+
+export interface ItemAdditionUpsertWithWhereUniqueNestedInput {
+  where: ItemAdditionWhereUniqueInput;
+  update: ItemAdditionUpdateDataInput;
+  create: ItemAdditionCreateInput;
+}
+
+export interface RecipeSubscriptionWhereInput {
+  mutation_in?: MutationType[] | MutationType;
+  updatedFields_contains?: String;
+  updatedFields_contains_every?: String[] | String;
+  updatedFields_contains_some?: String[] | String;
+  node?: RecipeWhereInput;
+  AND?: RecipeSubscriptionWhereInput[] | RecipeSubscriptionWhereInput;
+}
+
+export interface ItemAdditionScalarWhereInput {
+  uid?: ID_Input;
+  uid_not?: ID_Input;
+  uid_in?: ID_Input[] | ID_Input;
+  uid_not_in?: ID_Input[] | ID_Input;
+  uid_lt?: ID_Input;
+  uid_lte?: ID_Input;
+  uid_gt?: ID_Input;
+  uid_gte?: ID_Input;
+  uid_contains?: ID_Input;
+  uid_not_contains?: ID_Input;
+  uid_starts_with?: ID_Input;
+  uid_not_starts_with?: ID_Input;
+  uid_ends_with?: ID_Input;
+  uid_not_ends_with?: ID_Input;
+  clientId?: ID_Input;
+  clientId_not?: ID_Input;
+  clientId_in?: ID_Input[] | ID_Input;
+  clientId_not_in?: ID_Input[] | ID_Input;
+  clientId_lt?: ID_Input;
+  clientId_lte?: ID_Input;
+  clientId_gt?: ID_Input;
+  clientId_gte?: ID_Input;
+  clientId_contains?: ID_Input;
+  clientId_not_contains?: ID_Input;
+  clientId_starts_with?: ID_Input;
+  clientId_not_starts_with?: ID_Input;
+  clientId_ends_with?: ID_Input;
+  clientId_not_ends_with?: ID_Input;
+  parentId?: ID_Input;
+  parentId_not?: ID_Input;
+  parentId_in?: ID_Input[] | ID_Input;
+  parentId_not_in?: ID_Input[] | ID_Input;
+  parentId_lt?: ID_Input;
+  parentId_lte?: ID_Input;
+  parentId_gt?: ID_Input;
+  parentId_gte?: ID_Input;
+  parentId_contains?: ID_Input;
+  parentId_not_contains?: ID_Input;
+  parentId_starts_with?: ID_Input;
+  parentId_not_starts_with?: ID_Input;
+  parentId_ends_with?: ID_Input;
+  parentId_not_ends_with?: ID_Input;
+  name?: String;
+  name_not?: String;
+  name_in?: String[] | String;
+  name_not_in?: String[] | String;
+  name_lt?: String;
+  name_lte?: String;
+  name_gt?: String;
+  name_gte?: String;
+  name_contains?: String;
+  name_not_contains?: String;
+  name_starts_with?: String;
+  name_not_starts_with?: String;
+  name_ends_with?: String;
+  name_not_ends_with?: String;
+  AND?: ItemAdditionScalarWhereInput[] | ItemAdditionScalarWhereInput;
+  OR?: ItemAdditionScalarWhereInput[] | ItemAdditionScalarWhereInput;
+  NOT?: ItemAdditionScalarWhereInput[] | ItemAdditionScalarWhereInput;
+}
+
+export interface UserCreateInput {
+  email: String;
+  password: String;
+  name: String;
+  avatar?: String;
+  slug?: String;
+  emailVerified?: Boolean;
+  recipes?: RecipeCreateManyWithoutAuthorInput;
+  modifications?: ModificationCreateManyWithoutUserInput;
+}
+
+export interface ItemAdditionUpdateManyWithWhereNestedInput {
+  where: ItemAdditionScalarWhereInput;
+  data: ItemAdditionUpdateManyDataInput;
+}
+
+export interface AlterationWhereInput {
+  uid?: ID_Input;
+  uid_not?: ID_Input;
+  uid_in?: ID_Input[] | ID_Input;
+  uid_not_in?: ID_Input[] | ID_Input;
+  uid_lt?: ID_Input;
+  uid_lte?: ID_Input;
+  uid_gt?: ID_Input;
+  uid_gte?: ID_Input;
+  uid_contains?: ID_Input;
+  uid_not_contains?: ID_Input;
+  uid_starts_with?: ID_Input;
+  uid_not_starts_with?: ID_Input;
+  uid_ends_with?: ID_Input;
+  uid_not_ends_with?: ID_Input;
+  sourceId?: ID_Input;
+  sourceId_not?: ID_Input;
+  sourceId_in?: ID_Input[] | ID_Input;
+  sourceId_not_in?: ID_Input[] | ID_Input;
+  sourceId_lt?: ID_Input;
+  sourceId_lte?: ID_Input;
+  sourceId_gt?: ID_Input;
+  sourceId_gte?: ID_Input;
+  sourceId_contains?: ID_Input;
+  sourceId_not_contains?: ID_Input;
+  sourceId_starts_with?: ID_Input;
+  sourceId_not_starts_with?: ID_Input;
+  sourceId_ends_with?: ID_Input;
+  sourceId_not_ends_with?: ID_Input;
+  field?: String;
+  field_not?: String;
+  field_in?: String[] | String;
+  field_not_in?: String[] | String;
+  field_lt?: String;
+  field_lte?: String;
+  field_gt?: String;
+  field_gte?: String;
+  field_contains?: String;
+  field_not_contains?: String;
+  field_starts_with?: String;
+  field_not_starts_with?: String;
+  field_ends_with?: String;
+  field_not_ends_with?: String;
+  value?: String;
+  value_not?: String;
+  value_in?: String[] | String;
+  value_not_in?: String[] | String;
+  value_lt?: String;
+  value_lte?: String;
+  value_gt?: String;
+  value_gte?: String;
+  value_contains?: String;
+  value_not_contains?: String;
+  value_starts_with?: String;
+  value_not_starts_with?: String;
+  value_ends_with?: String;
+  value_not_ends_with?: String;
+  AND?: AlterationWhereInput[] | AlterationWhereInput;
+}
+
+export interface ItemAdditionUpdateManyDataInput {
+  clientId?: ID_Input;
+  parentId?: ID_Input;
+  name?: String;
+}
+
+export interface IngredientWhereInput {
+  id?: ID_Input;
+  id_not?: ID_Input;
+  id_in?: ID_Input[] | ID_Input;
+  id_not_in?: ID_Input[] | ID_Input;
+  id_lt?: ID_Input;
+  id_lte?: ID_Input;
+  id_gt?: ID_Input;
+  id_gte?: ID_Input;
+  id_contains?: ID_Input;
+  id_not_contains?: ID_Input;
+  id_starts_with?: ID_Input;
+  id_not_starts_with?: ID_Input;
+  id_ends_with?: ID_Input;
+  id_not_ends_with?: ID_Input;
+  index?: Int;
+  index_not?: Int;
+  index_in?: Int[] | Int;
+  index_not_in?: Int[] | Int;
+  index_lt?: Int;
+  index_lte?: Int;
+  index_gt?: Int;
+  index_gte?: Int;
+  name?: String;
+  name_not?: String;
+  name_in?: String[] | String;
+  name_not_in?: String[] | String;
+  name_lt?: String;
+  name_lte?: String;
+  name_gt?: String;
+  name_gte?: String;
+  name_contains?: String;
+  name_not_contains?: String;
+  name_starts_with?: String;
+  name_not_starts_with?: String;
+  name_ends_with?: String;
+  name_not_ends_with?: String;
+  quantity?: String;
+  quantity_not?: String;
+  quantity_in?: String[] | String;
+  quantity_not_in?: String[] | String;
+  quantity_lt?: String;
+  quantity_lte?: String;
+  quantity_gt?: String;
+  quantity_gte?: String;
+  quantity_contains?: String;
+  quantity_not_contains?: String;
+  quantity_starts_with?: String;
+  quantity_not_starts_with?: String;
+  quantity_ends_with?: String;
+  quantity_not_ends_with?: String;
+  unit?: String;
+  unit_not?: String;
+  unit_in?: String[] | String;
+  unit_not_in?: String[] | String;
+  unit_lt?: String;
+  unit_lte?: String;
+  unit_gt?: String;
+  unit_gte?: String;
+  unit_contains?: String;
+  unit_not_contains?: String;
+  unit_starts_with?: String;
+  unit_not_starts_with?: String;
+  unit_ends_with?: String;
+  unit_not_ends_with?: String;
+  processing?: String;
+  processing_not?: String;
+  processing_in?: String[] | String;
+  processing_not_in?: String[] | String;
+  processing_lt?: String;
+  processing_lte?: String;
+  processing_gt?: String;
+  processing_gte?: String;
+  processing_contains?: String;
+  processing_not_contains?: String;
+  processing_starts_with?: String;
+  processing_not_starts_with?: String;
+  processing_ends_with?: String;
+  processing_not_ends_with?: String;
+  AND?: IngredientWhereInput[] | IngredientWhereInput;
+}
+
+export interface StepAdditionUpdateManyInput {
+  create?: StepAdditionCreateInput[] | StepAdditionCreateInput;
+  update?:
+    | StepAdditionUpdateWithWhereUniqueNestedInput[]
+    | StepAdditionUpdateWithWhereUniqueNestedInput;
+  upsert?:
+    | StepAdditionUpsertWithWhereUniqueNestedInput[]
+    | StepAdditionUpsertWithWhereUniqueNestedInput;
+  delete?: StepAdditionWhereUniqueInput[] | StepAdditionWhereUniqueInput;
+  deleteMany?: StepAdditionScalarWhereInput[] | StepAdditionScalarWhereInput;
+  updateMany?:
+    | StepAdditionUpdateManyWithWhereNestedInput[]
+    | StepAdditionUpdateManyWithWhereNestedInput;
+}
+
+export interface ModificationUpdateWithoutUserDataInput {
+  recipe?: RecipeUpdateOneRequiredWithoutModificationsInput;
+  sortings?: SortingUpdateManyInput;
+  alterations?: AlterationUpdateManyInput;
+  removals?: ModificationUpdateremovalsInput;
+  itemAdditions?: ItemAdditionUpdateManyInput;
+  stepAdditions?: StepAdditionUpdateManyInput;
+  ingredientAdditions?: IngredientAdditionUpdateManyInput;
+}
+
+export interface StepAdditionUpdateWithWhereUniqueNestedInput {
+  where: StepAdditionWhereUniqueInput;
+  data: StepAdditionUpdateDataInput;
+}
+
+export interface RecipeUpdateOneRequiredWithoutModificationsInput {
+  create?: RecipeCreateWithoutModificationsInput;
+  update?: RecipeUpdateWithoutModificationsDataInput;
+  upsert?: RecipeUpsertWithoutModificationsInput;
+  connect?: RecipeWhereUniqueInput;
+}
+
+export type StepAdditionWhereUniqueInput = AtLeastOne<{
+  uid: ID_Input;
+}>;
+
+export interface StepCreateInput {
+  index: Int;
+  directions: String;
+  notes?: String;
+  ingredients?: IngredientCreateManyInput;
+}
+
+export interface StepAdditionUpdateDataInput {
+  id?: ID_Input;
+  parentId?: ID_Input;
+  directions?: String;
+  notes?: String;
+}
+
+export interface IngredientUpdateDataInput {
+  index?: Int;
+  name?: String;
+  quantity?: String;
+  unit?: String;
+  processing?: String;
+}
+
+export interface StepAdditionUpsertWithWhereUniqueNestedInput {
+  where: StepAdditionWhereUniqueInput;
+  update: StepAdditionUpdateDataInput;
+  create: StepAdditionCreateInput;
+}
+
+export interface StepUpdateManyDataInput {
+  index?: Int;
+  directions?: String;
+  notes?: String;
+}
+
+export interface StepAdditionScalarWhereInput {
+  uid?: ID_Input;
+  uid_not?: ID_Input;
+  uid_in?: ID_Input[] | ID_Input;
+  uid_not_in?: ID_Input[] | ID_Input;
+  uid_lt?: ID_Input;
+  uid_lte?: ID_Input;
+  uid_gt?: ID_Input;
+  uid_gte?: ID_Input;
+  uid_contains?: ID_Input;
+  uid_not_contains?: ID_Input;
+  uid_starts_with?: ID_Input;
+  uid_not_starts_with?: ID_Input;
+  uid_ends_with?: ID_Input;
+  uid_not_ends_with?: ID_Input;
+  id?: ID_Input;
+  id_not?: ID_Input;
+  id_in?: ID_Input[] | ID_Input;
+  id_not_in?: ID_Input[] | ID_Input;
+  id_lt?: ID_Input;
+  id_lte?: ID_Input;
+  id_gt?: ID_Input;
+  id_gte?: ID_Input;
+  id_contains?: ID_Input;
+  id_not_contains?: ID_Input;
+  id_starts_with?: ID_Input;
+  id_not_starts_with?: ID_Input;
+  id_ends_with?: ID_Input;
+  id_not_ends_with?: ID_Input;
+  parentId?: ID_Input;
+  parentId_not?: ID_Input;
+  parentId_in?: ID_Input[] | ID_Input;
+  parentId_not_in?: ID_Input[] | ID_Input;
+  parentId_lt?: ID_Input;
+  parentId_lte?: ID_Input;
+  parentId_gt?: ID_Input;
+  parentId_gte?: ID_Input;
+  parentId_contains?: ID_Input;
+  parentId_not_contains?: ID_Input;
+  parentId_starts_with?: ID_Input;
+  parentId_not_starts_with?: ID_Input;
+  parentId_ends_with?: ID_Input;
+  parentId_not_ends_with?: ID_Input;
+  directions?: String;
+  directions_not?: String;
+  directions_in?: String[] | String;
+  directions_not_in?: String[] | String;
+  directions_lt?: String;
+  directions_lte?: String;
+  directions_gt?: String;
+  directions_gte?: String;
+  directions_contains?: String;
+  directions_not_contains?: String;
+  directions_starts_with?: String;
+  directions_not_starts_with?: String;
+  directions_ends_with?: String;
+  directions_not_ends_with?: String;
+  notes?: String;
+  notes_not?: String;
+  notes_in?: String[] | String;
+  notes_not_in?: String[] | String;
+  notes_lt?: String;
+  notes_lte?: String;
+  notes_gt?: String;
+  notes_gte?: String;
+  notes_contains?: String;
+  notes_not_contains?: String;
+  notes_starts_with?: String;
+  notes_not_starts_with?: String;
+  notes_ends_with?: String;
+  notes_not_ends_with?: String;
+  AND?: StepAdditionScalarWhereInput[] | StepAdditionScalarWhereInput;
+  OR?: StepAdditionScalarWhereInput[] | StepAdditionScalarWhereInput;
+  NOT?: StepAdditionScalarWhereInput[] | StepAdditionScalarWhereInput;
+}
+
+export interface IngredientSubscriptionWhereInput {
+  mutation_in?: MutationType[] | MutationType;
+  updatedFields_contains?: String;
+  updatedFields_contains_every?: String[] | String;
+  updatedFields_contains_some?: String[] | String;
+  node?: IngredientWhereInput;
+  AND?: IngredientSubscriptionWhereInput[] | IngredientSubscriptionWhereInput;
+}
+
+export interface StepAdditionUpdateManyWithWhereNestedInput {
+  where: StepAdditionScalarWhereInput;
+  data: StepAdditionUpdateManyDataInput;
+}
+
+export interface StepAdditionWhereInput {
+  uid?: ID_Input;
+  uid_not?: ID_Input;
+  uid_in?: ID_Input[] | ID_Input;
+  uid_not_in?: ID_Input[] | ID_Input;
+  uid_lt?: ID_Input;
+  uid_lte?: ID_Input;
+  uid_gt?: ID_Input;
+  uid_gte?: ID_Input;
+  uid_contains?: ID_Input;
+  uid_not_contains?: ID_Input;
+  uid_starts_with?: ID_Input;
+  uid_not_starts_with?: ID_Input;
+  uid_ends_with?: ID_Input;
+  uid_not_ends_with?: ID_Input;
+  id?: ID_Input;
+  id_not?: ID_Input;
+  id_in?: ID_Input[] | ID_Input;
+  id_not_in?: ID_Input[] | ID_Input;
+  id_lt?: ID_Input;
+  id_lte?: ID_Input;
+  id_gt?: ID_Input;
+  id_gte?: ID_Input;
+  id_contains?: ID_Input;
+  id_not_contains?: ID_Input;
+  id_starts_with?: ID_Input;
+  id_not_starts_with?: ID_Input;
+  id_ends_with?: ID_Input;
+  id_not_ends_with?: ID_Input;
+  parentId?: ID_Input;
+  parentId_not?: ID_Input;
+  parentId_in?: ID_Input[] | ID_Input;
+  parentId_not_in?: ID_Input[] | ID_Input;
+  parentId_lt?: ID_Input;
+  parentId_lte?: ID_Input;
+  parentId_gt?: ID_Input;
+  parentId_gte?: ID_Input;
+  parentId_contains?: ID_Input;
+  parentId_not_contains?: ID_Input;
+  parentId_starts_with?: ID_Input;
+  parentId_not_starts_with?: ID_Input;
+  parentId_ends_with?: ID_Input;
+  parentId_not_ends_with?: ID_Input;
+  directions?: String;
+  directions_not?: String;
+  directions_in?: String[] | String;
+  directions_not_in?: String[] | String;
+  directions_lt?: String;
+  directions_lte?: String;
+  directions_gt?: String;
+  directions_gte?: String;
+  directions_contains?: String;
+  directions_not_contains?: String;
+  directions_starts_with?: String;
+  directions_not_starts_with?: String;
+  directions_ends_with?: String;
+  directions_not_ends_with?: String;
+  notes?: String;
+  notes_not?: String;
+  notes_in?: String[] | String;
+  notes_not_in?: String[] | String;
+  notes_lt?: String;
+  notes_lte?: String;
+  notes_gt?: String;
+  notes_gte?: String;
+  notes_contains?: String;
+  notes_not_contains?: String;
+  notes_starts_with?: String;
+  notes_not_starts_with?: String;
+  notes_ends_with?: String;
+  notes_not_ends_with?: String;
+  AND?: StepAdditionWhereInput[] | StepAdditionWhereInput;
+}
+
+export interface StepAdditionUpdateManyDataInput {
+  id?: ID_Input;
+  parentId?: ID_Input;
+  directions?: String;
+  notes?: String;
+}
+
+export interface UserUpdateWithoutRecipesDataInput {
+  email?: String;
+  password?: String;
+  name?: String;
+  avatar?: String;
+  slug?: String;
+  emailVerified?: Boolean;
+  modifications?: ModificationUpdateManyWithoutUserInput;
+}
+
+export interface IngredientAdditionUpdateManyInput {
+  create?: IngredientAdditionCreateInput[] | IngredientAdditionCreateInput;
+  update?:
+    | IngredientAdditionUpdateWithWhereUniqueNestedInput[]
+    | IngredientAdditionUpdateWithWhereUniqueNestedInput;
+  upsert?:
+    | IngredientAdditionUpsertWithWhereUniqueNestedInput[]
+    | IngredientAdditionUpsertWithWhereUniqueNestedInput;
+  delete?:
+    | IngredientAdditionWhereUniqueInput[]
+    | IngredientAdditionWhereUniqueInput;
+  deleteMany?:
+    | IngredientAdditionScalarWhereInput[]
+    | IngredientAdditionScalarWhereInput;
+  updateMany?:
+    | IngredientAdditionUpdateManyWithWhereNestedInput[]
+    | IngredientAdditionUpdateManyWithWhereNestedInput;
+}
+
+export interface ModificationUpdateManyWithWhereNestedInput {
+  where: ModificationScalarWhereInput;
+  data: ModificationUpdateManyDataInput;
+}
+
+export interface IngredientAdditionUpdateWithWhereUniqueNestedInput {
+  where: IngredientAdditionWhereUniqueInput;
+  data: IngredientAdditionUpdateDataInput;
+}
+
+export interface IngredientUpdateManyDataInput {
+  index?: Int;
+  name?: String;
+  quantity?: String;
+  unit?: String;
+  processing?: String;
+}
+
+export interface IngredientAdditionScalarWhereInput {
+  uid?: ID_Input;
+  uid_not?: ID_Input;
+  uid_in?: ID_Input[] | ID_Input;
+  uid_not_in?: ID_Input[] | ID_Input;
+  uid_lt?: ID_Input;
+  uid_lte?: ID_Input;
+  uid_gt?: ID_Input;
+  uid_gte?: ID_Input;
+  uid_contains?: ID_Input;
+  uid_not_contains?: ID_Input;
+  uid_starts_with?: ID_Input;
+  uid_not_starts_with?: ID_Input;
+  uid_ends_with?: ID_Input;
+  uid_not_ends_with?: ID_Input;
+  id?: ID_Input;
+  id_not?: ID_Input;
+  id_in?: ID_Input[] | ID_Input;
+  id_not_in?: ID_Input[] | ID_Input;
+  id_lt?: ID_Input;
+  id_lte?: ID_Input;
+  id_gt?: ID_Input;
+  id_gte?: ID_Input;
+  id_contains?: ID_Input;
+  id_not_contains?: ID_Input;
+  id_starts_with?: ID_Input;
+  id_not_starts_with?: ID_Input;
+  id_ends_with?: ID_Input;
+  id_not_ends_with?: ID_Input;
+  parentId?: ID_Input;
+  parentId_not?: ID_Input;
+  parentId_in?: ID_Input[] | ID_Input;
+  parentId_not_in?: ID_Input[] | ID_Input;
+  parentId_lt?: ID_Input;
+  parentId_lte?: ID_Input;
+  parentId_gt?: ID_Input;
+  parentId_gte?: ID_Input;
+  parentId_contains?: ID_Input;
+  parentId_not_contains?: ID_Input;
+  parentId_starts_with?: ID_Input;
+  parentId_not_starts_with?: ID_Input;
+  parentId_ends_with?: ID_Input;
+  parentId_not_ends_with?: ID_Input;
+  name?: String;
+  name_not?: String;
+  name_in?: String[] | String;
+  name_not_in?: String[] | String;
+  name_lt?: String;
+  name_lte?: String;
+  name_gt?: String;
+  name_gte?: String;
+  name_contains?: String;
+  name_not_contains?: String;
+  name_starts_with?: String;
+  name_not_starts_with?: String;
+  name_ends_with?: String;
+  name_not_ends_with?: String;
+  quantity?: String;
+  quantity_not?: String;
+  quantity_in?: String[] | String;
+  quantity_not_in?: String[] | String;
+  quantity_lt?: String;
+  quantity_lte?: String;
+  quantity_gt?: String;
+  quantity_gte?: String;
+  quantity_contains?: String;
+  quantity_not_contains?: String;
+  quantity_starts_with?: String;
+  quantity_not_starts_with?: String;
+  quantity_ends_with?: String;
+  quantity_not_ends_with?: String;
+  unit?: String;
+  unit_not?: String;
+  unit_in?: String[] | String;
+  unit_not_in?: String[] | String;
+  unit_lt?: String;
+  unit_lte?: String;
+  unit_gt?: String;
+  unit_gte?: String;
+  unit_contains?: String;
+  unit_not_contains?: String;
+  unit_starts_with?: String;
+  unit_not_starts_with?: String;
+  unit_ends_with?: String;
+  unit_not_ends_with?: String;
+  processing?: String;
+  processing_not?: String;
+  processing_in?: String[] | String;
+  processing_not_in?: String[] | String;
+  processing_lt?: String;
+  processing_lte?: String;
+  processing_gt?: String;
+  processing_gte?: String;
+  processing_contains?: String;
+  processing_not_contains?: String;
+  processing_starts_with?: String;
+  processing_not_starts_with?: String;
+  processing_ends_with?: String;
+  processing_not_ends_with?: String;
+  AND?:
+    | IngredientAdditionScalarWhereInput[]
+    | IngredientAdditionScalarWhereInput;
+  OR?:
+    | IngredientAdditionScalarWhereInput[]
+    | IngredientAdditionScalarWhereInput;
+  NOT?:
+    | IngredientAdditionScalarWhereInput[]
+    | IngredientAdditionScalarWhereInput;
+}
+
+export interface IngredientAdditionUpsertWithWhereUniqueNestedInput {
+  where: IngredientAdditionWhereUniqueInput;
+  update: IngredientAdditionUpdateDataInput;
+  create: IngredientAdditionCreateInput;
+}
+
+export interface IngredientAdditionUpdateDataInput {
+  id?: ID_Input;
+  parentId?: ID_Input;
+  name?: String;
+  quantity?: String;
+  unit?: String;
+  processing?: String;
+}
+
+export type IngredientAdditionWhereUniqueInput = AtLeastOne<{
   uid: ID_Input;
 }>;
 
@@ -2139,25 +3059,18 @@ export interface UserSubscriptionWhereInput {
   AND?: UserSubscriptionWhereInput[] | UserSubscriptionWhereInput;
 }
 
-export interface AlterationUpdateDataInput {
-  sourceId?: ID_Input;
-  field?: String;
-  value?: String;
+export interface StepUpdateWithWhereUniqueNestedInput {
+  where: StepWhereUniqueInput;
+  data: StepUpdateDataInput;
 }
 
-export interface IngredientSubscriptionWhereInput {
-  mutation_in?: MutationType[] | MutationType;
-  updatedFields_contains?: String;
-  updatedFields_contains_every?: String[] | String;
-  updatedFields_contains_some?: String[] | String;
-  node?: IngredientWhereInput;
-  AND?: IngredientSubscriptionWhereInput[] | IngredientSubscriptionWhereInput;
+export interface RecipeUpdateManyWithWhereNestedInput {
+  where: RecipeScalarWhereInput;
+  data: RecipeUpdateManyDataInput;
 }
 
-export interface AlterationUpsertWithWhereUniqueNestedInput {
-  where: AlterationWhereUniqueInput;
-  update: AlterationUpdateDataInput;
-  create: AlterationCreateInput;
+export interface ModificationUpdateManyMutationInput {
+  removals?: ModificationUpdateremovalsInput;
 }
 
 export interface UserWhereInput {
@@ -2266,571 +3179,6 @@ export interface UserWhereInput {
   recipes_some?: RecipeWhereInput;
   modifications_some?: ModificationWhereInput;
   AND?: UserWhereInput[] | UserWhereInput;
-}
-
-export interface AlterationScalarWhereInput {
-  uid?: ID_Input;
-  uid_not?: ID_Input;
-  uid_in?: ID_Input[] | ID_Input;
-  uid_not_in?: ID_Input[] | ID_Input;
-  uid_lt?: ID_Input;
-  uid_lte?: ID_Input;
-  uid_gt?: ID_Input;
-  uid_gte?: ID_Input;
-  uid_contains?: ID_Input;
-  uid_not_contains?: ID_Input;
-  uid_starts_with?: ID_Input;
-  uid_not_starts_with?: ID_Input;
-  uid_ends_with?: ID_Input;
-  uid_not_ends_with?: ID_Input;
-  sourceId?: ID_Input;
-  sourceId_not?: ID_Input;
-  sourceId_in?: ID_Input[] | ID_Input;
-  sourceId_not_in?: ID_Input[] | ID_Input;
-  sourceId_lt?: ID_Input;
-  sourceId_lte?: ID_Input;
-  sourceId_gt?: ID_Input;
-  sourceId_gte?: ID_Input;
-  sourceId_contains?: ID_Input;
-  sourceId_not_contains?: ID_Input;
-  sourceId_starts_with?: ID_Input;
-  sourceId_not_starts_with?: ID_Input;
-  sourceId_ends_with?: ID_Input;
-  sourceId_not_ends_with?: ID_Input;
-  field?: String;
-  field_not?: String;
-  field_in?: String[] | String;
-  field_not_in?: String[] | String;
-  field_lt?: String;
-  field_lte?: String;
-  field_gt?: String;
-  field_gte?: String;
-  field_contains?: String;
-  field_not_contains?: String;
-  field_starts_with?: String;
-  field_not_starts_with?: String;
-  field_ends_with?: String;
-  field_not_ends_with?: String;
-  value?: String;
-  value_not?: String;
-  value_in?: String[] | String;
-  value_not_in?: String[] | String;
-  value_lt?: String;
-  value_lte?: String;
-  value_gt?: String;
-  value_gte?: String;
-  value_contains?: String;
-  value_not_contains?: String;
-  value_starts_with?: String;
-  value_not_starts_with?: String;
-  value_ends_with?: String;
-  value_not_ends_with?: String;
-  AND?: AlterationScalarWhereInput[] | AlterationScalarWhereInput;
-  OR?: AlterationScalarWhereInput[] | AlterationScalarWhereInput;
-  NOT?: AlterationScalarWhereInput[] | AlterationScalarWhereInput;
-}
-
-export interface StepAdditionWhereInput {
-  id?: ID_Input;
-  id_not?: ID_Input;
-  id_in?: ID_Input[] | ID_Input;
-  id_not_in?: ID_Input[] | ID_Input;
-  id_lt?: ID_Input;
-  id_lte?: ID_Input;
-  id_gt?: ID_Input;
-  id_gte?: ID_Input;
-  id_contains?: ID_Input;
-  id_not_contains?: ID_Input;
-  id_starts_with?: ID_Input;
-  id_not_starts_with?: ID_Input;
-  id_ends_with?: ID_Input;
-  id_not_ends_with?: ID_Input;
-  directions?: String;
-  directions_not?: String;
-  directions_in?: String[] | String;
-  directions_not_in?: String[] | String;
-  directions_lt?: String;
-  directions_lte?: String;
-  directions_gt?: String;
-  directions_gte?: String;
-  directions_contains?: String;
-  directions_not_contains?: String;
-  directions_starts_with?: String;
-  directions_not_starts_with?: String;
-  directions_ends_with?: String;
-  directions_not_ends_with?: String;
-  notes?: String;
-  notes_not?: String;
-  notes_in?: String[] | String;
-  notes_not_in?: String[] | String;
-  notes_lt?: String;
-  notes_lte?: String;
-  notes_gt?: String;
-  notes_gte?: String;
-  notes_contains?: String;
-  notes_not_contains?: String;
-  notes_starts_with?: String;
-  notes_not_starts_with?: String;
-  notes_ends_with?: String;
-  notes_not_ends_with?: String;
-  AND?: StepAdditionWhereInput[] | StepAdditionWhereInput;
-}
-
-export interface AlterationUpdateManyWithWhereNestedInput {
-  where: AlterationScalarWhereInput;
-  data: AlterationUpdateManyDataInput;
-}
-
-export interface ModificationUpdateManyMutationInput {
-  removals?: ModificationUpdateremovalsInput;
-}
-
-export interface AlterationUpdateManyDataInput {
-  sourceId?: ID_Input;
-  field?: String;
-  value?: String;
-}
-
-export interface UserUpdateWithoutRecipesDataInput {
-  email?: String;
-  password?: String;
-  name?: String;
-  avatar?: String;
-  slug?: String;
-  emailVerified?: Boolean;
-  modifications?: ModificationUpdateManyWithoutUserInput;
-}
-
-export interface ModificationUpdateremovalsInput {
-  set?: ID_Input[] | ID_Input;
-}
-
-export interface RecipeUpdateManyWithWhereNestedInput {
-  where: RecipeScalarWhereInput;
-  data: RecipeUpdateManyDataInput;
-}
-
-export interface ItemAdditionUpdateManyInput {
-  create?: ItemAdditionCreateInput[] | ItemAdditionCreateInput;
-  deleteMany?: ItemAdditionScalarWhereInput[] | ItemAdditionScalarWhereInput;
-  updateMany?:
-    | ItemAdditionUpdateManyWithWhereNestedInput[]
-    | ItemAdditionUpdateManyWithWhereNestedInput;
-}
-
-export interface ModificationUpdateManyWithWhereNestedInput {
-  where: ModificationScalarWhereInput;
-  data: ModificationUpdateManyDataInput;
-}
-
-export interface ItemAdditionScalarWhereInput {
-  id?: ID_Input;
-  id_not?: ID_Input;
-  id_in?: ID_Input[] | ID_Input;
-  id_not_in?: ID_Input[] | ID_Input;
-  id_lt?: ID_Input;
-  id_lte?: ID_Input;
-  id_gt?: ID_Input;
-  id_gte?: ID_Input;
-  id_contains?: ID_Input;
-  id_not_contains?: ID_Input;
-  id_starts_with?: ID_Input;
-  id_not_starts_with?: ID_Input;
-  id_ends_with?: ID_Input;
-  id_not_ends_with?: ID_Input;
-  name?: String;
-  name_not?: String;
-  name_in?: String[] | String;
-  name_not_in?: String[] | String;
-  name_lt?: String;
-  name_lte?: String;
-  name_gt?: String;
-  name_gte?: String;
-  name_contains?: String;
-  name_not_contains?: String;
-  name_starts_with?: String;
-  name_not_starts_with?: String;
-  name_ends_with?: String;
-  name_not_ends_with?: String;
-  AND?: ItemAdditionScalarWhereInput[] | ItemAdditionScalarWhereInput;
-  OR?: ItemAdditionScalarWhereInput[] | ItemAdditionScalarWhereInput;
-  NOT?: ItemAdditionScalarWhereInput[] | ItemAdditionScalarWhereInput;
-}
-
-export interface StepUpdateWithWhereUniqueNestedInput {
-  where: StepWhereUniqueInput;
-  data: StepUpdateDataInput;
-}
-
-export interface ItemAdditionUpdateManyWithWhereNestedInput {
-  where: ItemAdditionScalarWhereInput;
-  data: ItemAdditionUpdateManyDataInput;
-}
-
-export interface IngredientUpdateManyDataInput {
-  index?: Int;
-  name?: String;
-  quantity?: String;
-  unit?: String;
-  processing?: String;
-}
-
-export interface ItemAdditionUpdateManyDataInput {
-  id?: ID_Input;
-  name?: String;
-}
-
-export interface UserCreateInput {
-  email: String;
-  password: String;
-  name: String;
-  avatar?: String;
-  slug?: String;
-  emailVerified?: Boolean;
-  recipes?: RecipeCreateManyWithoutAuthorInput;
-  modifications?: ModificationCreateManyWithoutUserInput;
-}
-
-export interface StepAdditionUpdateManyInput {
-  create?: StepAdditionCreateInput[] | StepAdditionCreateInput;
-  deleteMany?: StepAdditionScalarWhereInput[] | StepAdditionScalarWhereInput;
-  updateMany?:
-    | StepAdditionUpdateManyWithWhereNestedInput[]
-    | StepAdditionUpdateManyWithWhereNestedInput;
-}
-
-export interface IngredientWhereInput {
-  id?: ID_Input;
-  id_not?: ID_Input;
-  id_in?: ID_Input[] | ID_Input;
-  id_not_in?: ID_Input[] | ID_Input;
-  id_lt?: ID_Input;
-  id_lte?: ID_Input;
-  id_gt?: ID_Input;
-  id_gte?: ID_Input;
-  id_contains?: ID_Input;
-  id_not_contains?: ID_Input;
-  id_starts_with?: ID_Input;
-  id_not_starts_with?: ID_Input;
-  id_ends_with?: ID_Input;
-  id_not_ends_with?: ID_Input;
-  index?: Int;
-  index_not?: Int;
-  index_in?: Int[] | Int;
-  index_not_in?: Int[] | Int;
-  index_lt?: Int;
-  index_lte?: Int;
-  index_gt?: Int;
-  index_gte?: Int;
-  name?: String;
-  name_not?: String;
-  name_in?: String[] | String;
-  name_not_in?: String[] | String;
-  name_lt?: String;
-  name_lte?: String;
-  name_gt?: String;
-  name_gte?: String;
-  name_contains?: String;
-  name_not_contains?: String;
-  name_starts_with?: String;
-  name_not_starts_with?: String;
-  name_ends_with?: String;
-  name_not_ends_with?: String;
-  quantity?: String;
-  quantity_not?: String;
-  quantity_in?: String[] | String;
-  quantity_not_in?: String[] | String;
-  quantity_lt?: String;
-  quantity_lte?: String;
-  quantity_gt?: String;
-  quantity_gte?: String;
-  quantity_contains?: String;
-  quantity_not_contains?: String;
-  quantity_starts_with?: String;
-  quantity_not_starts_with?: String;
-  quantity_ends_with?: String;
-  quantity_not_ends_with?: String;
-  unit?: String;
-  unit_not?: String;
-  unit_in?: String[] | String;
-  unit_not_in?: String[] | String;
-  unit_lt?: String;
-  unit_lte?: String;
-  unit_gt?: String;
-  unit_gte?: String;
-  unit_contains?: String;
-  unit_not_contains?: String;
-  unit_starts_with?: String;
-  unit_not_starts_with?: String;
-  unit_ends_with?: String;
-  unit_not_ends_with?: String;
-  processing?: String;
-  processing_not?: String;
-  processing_in?: String[] | String;
-  processing_not_in?: String[] | String;
-  processing_lt?: String;
-  processing_lte?: String;
-  processing_gt?: String;
-  processing_gte?: String;
-  processing_contains?: String;
-  processing_not_contains?: String;
-  processing_starts_with?: String;
-  processing_not_starts_with?: String;
-  processing_ends_with?: String;
-  processing_not_ends_with?: String;
-  AND?: IngredientWhereInput[] | IngredientWhereInput;
-}
-
-export interface StepAdditionScalarWhereInput {
-  id?: ID_Input;
-  id_not?: ID_Input;
-  id_in?: ID_Input[] | ID_Input;
-  id_not_in?: ID_Input[] | ID_Input;
-  id_lt?: ID_Input;
-  id_lte?: ID_Input;
-  id_gt?: ID_Input;
-  id_gte?: ID_Input;
-  id_contains?: ID_Input;
-  id_not_contains?: ID_Input;
-  id_starts_with?: ID_Input;
-  id_not_starts_with?: ID_Input;
-  id_ends_with?: ID_Input;
-  id_not_ends_with?: ID_Input;
-  directions?: String;
-  directions_not?: String;
-  directions_in?: String[] | String;
-  directions_not_in?: String[] | String;
-  directions_lt?: String;
-  directions_lte?: String;
-  directions_gt?: String;
-  directions_gte?: String;
-  directions_contains?: String;
-  directions_not_contains?: String;
-  directions_starts_with?: String;
-  directions_not_starts_with?: String;
-  directions_ends_with?: String;
-  directions_not_ends_with?: String;
-  notes?: String;
-  notes_not?: String;
-  notes_in?: String[] | String;
-  notes_not_in?: String[] | String;
-  notes_lt?: String;
-  notes_lte?: String;
-  notes_gt?: String;
-  notes_gte?: String;
-  notes_contains?: String;
-  notes_not_contains?: String;
-  notes_starts_with?: String;
-  notes_not_starts_with?: String;
-  notes_ends_with?: String;
-  notes_not_ends_with?: String;
-  AND?: StepAdditionScalarWhereInput[] | StepAdditionScalarWhereInput;
-  OR?: StepAdditionScalarWhereInput[] | StepAdditionScalarWhereInput;
-  NOT?: StepAdditionScalarWhereInput[] | StepAdditionScalarWhereInput;
-}
-
-export interface RecipeUpdateOneRequiredWithoutModificationsInput {
-  create?: RecipeCreateWithoutModificationsInput;
-  update?: RecipeUpdateWithoutModificationsDataInput;
-  upsert?: RecipeUpsertWithoutModificationsInput;
-  connect?: RecipeWhereUniqueInput;
-}
-
-export interface StepCreateInput {
-  index: Int;
-  directions: String;
-  notes?: String;
-  ingredients?: IngredientCreateManyInput;
-}
-
-export interface IngredientAdditionScalarWhereInput {
-  id?: ID_Input;
-  id_not?: ID_Input;
-  id_in?: ID_Input[] | ID_Input;
-  id_not_in?: ID_Input[] | ID_Input;
-  id_lt?: ID_Input;
-  id_lte?: ID_Input;
-  id_gt?: ID_Input;
-  id_gte?: ID_Input;
-  id_contains?: ID_Input;
-  id_not_contains?: ID_Input;
-  id_starts_with?: ID_Input;
-  id_not_starts_with?: ID_Input;
-  id_ends_with?: ID_Input;
-  id_not_ends_with?: ID_Input;
-  name?: String;
-  name_not?: String;
-  name_in?: String[] | String;
-  name_not_in?: String[] | String;
-  name_lt?: String;
-  name_lte?: String;
-  name_gt?: String;
-  name_gte?: String;
-  name_contains?: String;
-  name_not_contains?: String;
-  name_starts_with?: String;
-  name_not_starts_with?: String;
-  name_ends_with?: String;
-  name_not_ends_with?: String;
-  quantity?: String;
-  quantity_not?: String;
-  quantity_in?: String[] | String;
-  quantity_not_in?: String[] | String;
-  quantity_lt?: String;
-  quantity_lte?: String;
-  quantity_gt?: String;
-  quantity_gte?: String;
-  quantity_contains?: String;
-  quantity_not_contains?: String;
-  quantity_starts_with?: String;
-  quantity_not_starts_with?: String;
-  quantity_ends_with?: String;
-  quantity_not_ends_with?: String;
-  unit?: String;
-  unit_not?: String;
-  unit_in?: String[] | String;
-  unit_not_in?: String[] | String;
-  unit_lt?: String;
-  unit_lte?: String;
-  unit_gt?: String;
-  unit_gte?: String;
-  unit_contains?: String;
-  unit_not_contains?: String;
-  unit_starts_with?: String;
-  unit_not_starts_with?: String;
-  unit_ends_with?: String;
-  unit_not_ends_with?: String;
-  processing?: String;
-  processing_not?: String;
-  processing_in?: String[] | String;
-  processing_not_in?: String[] | String;
-  processing_lt?: String;
-  processing_lte?: String;
-  processing_gt?: String;
-  processing_gte?: String;
-  processing_contains?: String;
-  processing_not_contains?: String;
-  processing_starts_with?: String;
-  processing_not_starts_with?: String;
-  processing_ends_with?: String;
-  processing_not_ends_with?: String;
-  AND?:
-    | IngredientAdditionScalarWhereInput[]
-    | IngredientAdditionScalarWhereInput;
-  OR?:
-    | IngredientAdditionScalarWhereInput[]
-    | IngredientAdditionScalarWhereInput;
-  NOT?:
-    | IngredientAdditionScalarWhereInput[]
-    | IngredientAdditionScalarWhereInput;
-}
-
-export interface IngredientAdditionUpdateManyInput {
-  create?: IngredientAdditionCreateInput[] | IngredientAdditionCreateInput;
-  deleteMany?:
-    | IngredientAdditionScalarWhereInput[]
-    | IngredientAdditionScalarWhereInput;
-  updateMany?:
-    | IngredientAdditionUpdateManyWithWhereNestedInput[]
-    | IngredientAdditionUpdateManyWithWhereNestedInput;
-}
-
-export interface StepAdditionUpdateManyDataInput {
-  id?: ID_Input;
-  directions?: String;
-  notes?: String;
-}
-
-export interface StepAdditionUpdateManyWithWhereNestedInput {
-  where: StepAdditionScalarWhereInput;
-  data: StepAdditionUpdateManyDataInput;
-}
-
-export interface IngredientUpdateDataInput {
-  index?: Int;
-  name?: String;
-  quantity?: String;
-  unit?: String;
-  processing?: String;
-}
-
-export interface ModificationUpdateWithoutUserDataInput {
-  recipe?: RecipeUpdateOneRequiredWithoutModificationsInput;
-  sortings?: SortingUpdateManyInput;
-  alterations?: AlterationUpdateManyInput;
-  removals?: ModificationUpdateremovalsInput;
-  itemAdditions?: ItemAdditionUpdateManyInput;
-  stepAdditions?: StepAdditionUpdateManyInput;
-  ingredientAdditions?: IngredientAdditionUpdateManyInput;
-}
-
-export interface AlterationWhereInput {
-  uid?: ID_Input;
-  uid_not?: ID_Input;
-  uid_in?: ID_Input[] | ID_Input;
-  uid_not_in?: ID_Input[] | ID_Input;
-  uid_lt?: ID_Input;
-  uid_lte?: ID_Input;
-  uid_gt?: ID_Input;
-  uid_gte?: ID_Input;
-  uid_contains?: ID_Input;
-  uid_not_contains?: ID_Input;
-  uid_starts_with?: ID_Input;
-  uid_not_starts_with?: ID_Input;
-  uid_ends_with?: ID_Input;
-  uid_not_ends_with?: ID_Input;
-  sourceId?: ID_Input;
-  sourceId_not?: ID_Input;
-  sourceId_in?: ID_Input[] | ID_Input;
-  sourceId_not_in?: ID_Input[] | ID_Input;
-  sourceId_lt?: ID_Input;
-  sourceId_lte?: ID_Input;
-  sourceId_gt?: ID_Input;
-  sourceId_gte?: ID_Input;
-  sourceId_contains?: ID_Input;
-  sourceId_not_contains?: ID_Input;
-  sourceId_starts_with?: ID_Input;
-  sourceId_not_starts_with?: ID_Input;
-  sourceId_ends_with?: ID_Input;
-  sourceId_not_ends_with?: ID_Input;
-  field?: String;
-  field_not?: String;
-  field_in?: String[] | String;
-  field_not_in?: String[] | String;
-  field_lt?: String;
-  field_lte?: String;
-  field_gt?: String;
-  field_gte?: String;
-  field_contains?: String;
-  field_not_contains?: String;
-  field_starts_with?: String;
-  field_not_starts_with?: String;
-  field_ends_with?: String;
-  field_not_ends_with?: String;
-  value?: String;
-  value_not?: String;
-  value_in?: String[] | String;
-  value_not_in?: String[] | String;
-  value_lt?: String;
-  value_lte?: String;
-  value_gt?: String;
-  value_gte?: String;
-  value_contains?: String;
-  value_not_contains?: String;
-  value_starts_with?: String;
-  value_not_starts_with?: String;
-  value_ends_with?: String;
-  value_not_ends_with?: String;
-  AND?: AlterationWhereInput[] | AlterationWhereInput;
-}
-
-export interface RecipeSubscriptionWhereInput {
-  mutation_in?: MutationType[] | MutationType;
-  updatedFields_contains?: String;
-  updatedFields_contains_every?: String[] | String;
-  updatedFields_contains_some?: String[] | String;
-  node?: RecipeWhereInput;
-  AND?: RecipeSubscriptionWhereInput[] | RecipeSubscriptionWhereInput;
 }
 
 export interface NodeNode {
@@ -3370,7 +3718,9 @@ export interface IngredientSubscription
 }
 
 export interface IngredientAddition {
+  uid: ID_Output;
   id: ID_Output;
+  parentId: ID_Output;
   name: String;
   quantity: String;
   unit?: String;
@@ -3380,7 +3730,9 @@ export interface IngredientAddition {
 export interface IngredientAdditionPromise
   extends Promise<IngredientAddition>,
     Fragmentable {
+  uid: () => Promise<ID_Output>;
   id: () => Promise<ID_Output>;
+  parentId: () => Promise<ID_Output>;
   name: () => Promise<String>;
   quantity: () => Promise<String>;
   unit: () => Promise<String>;
@@ -3390,7 +3742,9 @@ export interface IngredientAdditionPromise
 export interface IngredientAdditionSubscription
   extends Promise<AsyncIterator<IngredientAddition>>,
     Fragmentable {
+  uid: () => Promise<AsyncIterator<ID_Output>>;
   id: () => Promise<AsyncIterator<ID_Output>>;
+  parentId: () => Promise<AsyncIterator<ID_Output>>;
   name: () => Promise<AsyncIterator<String>>;
   quantity: () => Promise<AsyncIterator<String>>;
   unit: () => Promise<AsyncIterator<String>>;
@@ -3423,21 +3777,27 @@ export interface IngredientSubscriptionPayloadSubscription
 }
 
 export interface ItemAddition {
-  id: ID_Output;
+  uid: ID_Output;
+  clientId: ID_Output;
+  parentId: ID_Output;
   name: String;
 }
 
 export interface ItemAdditionPromise
   extends Promise<ItemAddition>,
     Fragmentable {
-  id: () => Promise<ID_Output>;
+  uid: () => Promise<ID_Output>;
+  clientId: () => Promise<ID_Output>;
+  parentId: () => Promise<ID_Output>;
   name: () => Promise<String>;
 }
 
 export interface ItemAdditionSubscription
   extends Promise<AsyncIterator<ItemAddition>>,
     Fragmentable {
-  id: () => Promise<AsyncIterator<ID_Output>>;
+  uid: () => Promise<AsyncIterator<ID_Output>>;
+  clientId: () => Promise<AsyncIterator<ID_Output>>;
+  parentId: () => Promise<AsyncIterator<ID_Output>>;
   name: () => Promise<AsyncIterator<String>>;
 }
 
@@ -3934,7 +4294,9 @@ export interface AggregateIngredientSubscription
 }
 
 export interface StepAddition {
+  uid: ID_Output;
   id: ID_Output;
+  parentId: ID_Output;
   directions: String;
   notes: String;
 }
@@ -3942,7 +4304,9 @@ export interface StepAddition {
 export interface StepAdditionPromise
   extends Promise<StepAddition>,
     Fragmentable {
+  uid: () => Promise<ID_Output>;
   id: () => Promise<ID_Output>;
+  parentId: () => Promise<ID_Output>;
   directions: () => Promise<String>;
   notes: () => Promise<String>;
 }
@@ -3950,7 +4314,9 @@ export interface StepAdditionPromise
 export interface StepAdditionSubscription
   extends Promise<AsyncIterator<StepAddition>>,
     Fragmentable {
+  uid: () => Promise<AsyncIterator<ID_Output>>;
   id: () => Promise<AsyncIterator<ID_Output>>;
+  parentId: () => Promise<AsyncIterator<ID_Output>>;
   directions: () => Promise<AsyncIterator<String>>;
   notes: () => Promise<AsyncIterator<String>>;
 }

@@ -32,6 +32,7 @@
     "apollo-link-context": "1.0.17",
     "apollo-upload-client": "10.0.0",
     "bcrypt": "3.0.5",
+    "bson": "4.0.2",
     "classnames": "2.2.6",
     "cookie": "0.3.1",
     "cuid": "2.1.6",

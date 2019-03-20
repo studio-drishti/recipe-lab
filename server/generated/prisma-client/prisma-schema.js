@@ -283,7 +283,9 @@ type Ingredient {
 }
 
 type IngredientAddition {
+  uid: ID!
   id: ID!
+  parentId: ID!
   name: String!
   quantity: String!
   unit: String
@@ -292,6 +294,7 @@ type IngredientAddition {
 
 input IngredientAdditionCreateInput {
   id: ID!
+  parentId: ID!
   name: String!
   quantity: String!
   unit: String
@@ -303,6 +306,20 @@ input IngredientAdditionCreateManyInput {
 }
 
 input IngredientAdditionRestrictedWhereInput {
+  uid: ID
+  uid_not: ID
+  uid_in: [ID!]
+  uid_not_in: [ID!]
+  uid_lt: ID
+  uid_lte: ID
+  uid_gt: ID
+  uid_gte: ID
+  uid_contains: ID
+  uid_not_contains: ID
+  uid_starts_with: ID
+  uid_not_starts_with: ID
+  uid_ends_with: ID
+  uid_not_ends_with: ID
   id: ID
   id_not: ID
   id_in: [ID!]
@@ -317,6 +334,20 @@ input IngredientAdditionRestrictedWhereInput {
   id_not_starts_with: ID
   id_ends_with: ID
   id_not_ends_with: ID
+  parentId: ID
+  parentId_not: ID
+  parentId_in: [ID!]
+  parentId_not_in: [ID!]
+  parentId_lt: ID
+  parentId_lte: ID
+  parentId_gt: ID
+  parentId_gte: ID
+  parentId_contains: ID
+  parentId_not_contains: ID
+  parentId_starts_with: ID
+  parentId_not_starts_with: ID
+  parentId_ends_with: ID
+  parentId_not_ends_with: ID
   name: String
   name_not: String
   name_in: [String!]
@@ -377,6 +408,20 @@ input IngredientAdditionRestrictedWhereInput {
 }
 
 input IngredientAdditionScalarWhereInput {
+  uid: ID
+  uid_not: ID
+  uid_in: [ID!]
+  uid_not_in: [ID!]
+  uid_lt: ID
+  uid_lte: ID
+  uid_gt: ID
+  uid_gte: ID
+  uid_contains: ID
+  uid_not_contains: ID
+  uid_starts_with: ID
+  uid_not_starts_with: ID
+  uid_ends_with: ID
+  uid_not_ends_with: ID
   id: ID
   id_not: ID
   id_in: [ID!]
@@ -391,6 +436,20 @@ input IngredientAdditionScalarWhereInput {
   id_not_starts_with: ID
   id_ends_with: ID
   id_not_ends_with: ID
+  parentId: ID
+  parentId_not: ID
+  parentId_in: [ID!]
+  parentId_not_in: [ID!]
+  parentId_lt: ID
+  parentId_lte: ID
+  parentId_gt: ID
+  parentId_gte: ID
+  parentId_contains: ID
+  parentId_not_contains: ID
+  parentId_starts_with: ID
+  parentId_not_starts_with: ID
+  parentId_ends_with: ID
+  parentId_not_ends_with: ID
   name: String
   name_not: String
   name_in: [String!]
@@ -452,8 +511,18 @@ input IngredientAdditionScalarWhereInput {
   NOT: [IngredientAdditionScalarWhereInput!]
 }
 
+input IngredientAdditionUpdateDataInput {
+  id: ID
+  parentId: ID
+  name: String
+  quantity: String
+  unit: String
+  processing: String
+}
+
 input IngredientAdditionUpdateManyDataInput {
   id: ID
+  parentId: ID
   name: String
   quantity: String
   unit: String
@@ -462,6 +531,9 @@ input IngredientAdditionUpdateManyDataInput {
 
 input IngredientAdditionUpdateManyInput {
   create: [IngredientAdditionCreateInput!]
+  update: [IngredientAdditionUpdateWithWhereUniqueNestedInput!]
+  upsert: [IngredientAdditionUpsertWithWhereUniqueNestedInput!]
+  delete: [IngredientAdditionWhereUniqueInput!]
   deleteMany: [IngredientAdditionScalarWhereInput!]
   updateMany: [IngredientAdditionUpdateManyWithWhereNestedInput!]
 }
@@ -471,7 +543,32 @@ input IngredientAdditionUpdateManyWithWhereNestedInput {
   data: IngredientAdditionUpdateManyDataInput!
 }
 
+input IngredientAdditionUpdateWithWhereUniqueNestedInput {
+  where: IngredientAdditionWhereUniqueInput!
+  data: IngredientAdditionUpdateDataInput!
+}
+
+input IngredientAdditionUpsertWithWhereUniqueNestedInput {
+  where: IngredientAdditionWhereUniqueInput!
+  update: IngredientAdditionUpdateDataInput!
+  create: IngredientAdditionCreateInput!
+}
+
 input IngredientAdditionWhereInput {
+  uid: ID
+  uid_not: ID
+  uid_in: [ID!]
+  uid_not_in: [ID!]
+  uid_lt: ID
+  uid_lte: ID
+  uid_gt: ID
+  uid_gte: ID
+  uid_contains: ID
+  uid_not_contains: ID
+  uid_starts_with: ID
+  uid_not_starts_with: ID
+  uid_ends_with: ID
+  uid_not_ends_with: ID
   id: ID
   id_not: ID
   id_in: [ID!]
@@ -486,6 +583,20 @@ input IngredientAdditionWhereInput {
   id_not_starts_with: ID
   id_ends_with: ID
   id_not_ends_with: ID
+  parentId: ID
+  parentId_not: ID
+  parentId_in: [ID!]
+  parentId_not_in: [ID!]
+  parentId_lt: ID
+  parentId_lte: ID
+  parentId_gt: ID
+  parentId_gte: ID
+  parentId_contains: ID
+  parentId_not_contains: ID
+  parentId_starts_with: ID
+  parentId_not_starts_with: ID
+  parentId_ends_with: ID
+  parentId_not_ends_with: ID
   name: String
   name_not: String
   name_in: [String!]
@@ -543,6 +654,10 @@ input IngredientAdditionWhereInput {
   processing_ends_with: String
   processing_not_ends_with: String
   AND: [IngredientAdditionWhereInput!]
+}
+
+input IngredientAdditionWhereUniqueInput {
+  uid: ID
 }
 
 type IngredientConnection {
@@ -847,12 +962,15 @@ type Item {
 }
 
 type ItemAddition {
-  id: ID!
+  uid: ID!
+  clientId: ID!
+  parentId: ID!
   name: String!
 }
 
 input ItemAdditionCreateInput {
-  id: ID!
+  clientId: ID!
+  parentId: ID!
   name: String!
 }
 
@@ -861,20 +979,48 @@ input ItemAdditionCreateManyInput {
 }
 
 input ItemAdditionRestrictedWhereInput {
-  id: ID
-  id_not: ID
-  id_in: [ID!]
-  id_not_in: [ID!]
-  id_lt: ID
-  id_lte: ID
-  id_gt: ID
-  id_gte: ID
-  id_contains: ID
-  id_not_contains: ID
-  id_starts_with: ID
-  id_not_starts_with: ID
-  id_ends_with: ID
-  id_not_ends_with: ID
+  uid: ID
+  uid_not: ID
+  uid_in: [ID!]
+  uid_not_in: [ID!]
+  uid_lt: ID
+  uid_lte: ID
+  uid_gt: ID
+  uid_gte: ID
+  uid_contains: ID
+  uid_not_contains: ID
+  uid_starts_with: ID
+  uid_not_starts_with: ID
+  uid_ends_with: ID
+  uid_not_ends_with: ID
+  clientId: ID
+  clientId_not: ID
+  clientId_in: [ID!]
+  clientId_not_in: [ID!]
+  clientId_lt: ID
+  clientId_lte: ID
+  clientId_gt: ID
+  clientId_gte: ID
+  clientId_contains: ID
+  clientId_not_contains: ID
+  clientId_starts_with: ID
+  clientId_not_starts_with: ID
+  clientId_ends_with: ID
+  clientId_not_ends_with: ID
+  parentId: ID
+  parentId_not: ID
+  parentId_in: [ID!]
+  parentId_not_in: [ID!]
+  parentId_lt: ID
+  parentId_lte: ID
+  parentId_gt: ID
+  parentId_gte: ID
+  parentId_contains: ID
+  parentId_not_contains: ID
+  parentId_starts_with: ID
+  parentId_not_starts_with: ID
+  parentId_ends_with: ID
+  parentId_not_ends_with: ID
   name: String
   name_not: String
   name_in: [String!]
@@ -893,20 +1039,48 @@ input ItemAdditionRestrictedWhereInput {
 }
 
 input ItemAdditionScalarWhereInput {
-  id: ID
-  id_not: ID
-  id_in: [ID!]
-  id_not_in: [ID!]
-  id_lt: ID
-  id_lte: ID
-  id_gt: ID
-  id_gte: ID
-  id_contains: ID
-  id_not_contains: ID
-  id_starts_with: ID
-  id_not_starts_with: ID
-  id_ends_with: ID
-  id_not_ends_with: ID
+  uid: ID
+  uid_not: ID
+  uid_in: [ID!]
+  uid_not_in: [ID!]
+  uid_lt: ID
+  uid_lte: ID
+  uid_gt: ID
+  uid_gte: ID
+  uid_contains: ID
+  uid_not_contains: ID
+  uid_starts_with: ID
+  uid_not_starts_with: ID
+  uid_ends_with: ID
+  uid_not_ends_with: ID
+  clientId: ID
+  clientId_not: ID
+  clientId_in: [ID!]
+  clientId_not_in: [ID!]
+  clientId_lt: ID
+  clientId_lte: ID
+  clientId_gt: ID
+  clientId_gte: ID
+  clientId_contains: ID
+  clientId_not_contains: ID
+  clientId_starts_with: ID
+  clientId_not_starts_with: ID
+  clientId_ends_with: ID
+  clientId_not_ends_with: ID
+  parentId: ID
+  parentId_not: ID
+  parentId_in: [ID!]
+  parentId_not_in: [ID!]
+  parentId_lt: ID
+  parentId_lte: ID
+  parentId_gt: ID
+  parentId_gte: ID
+  parentId_contains: ID
+  parentId_not_contains: ID
+  parentId_starts_with: ID
+  parentId_not_starts_with: ID
+  parentId_ends_with: ID
+  parentId_not_ends_with: ID
   name: String
   name_not: String
   name_in: [String!]
@@ -926,13 +1100,23 @@ input ItemAdditionScalarWhereInput {
   NOT: [ItemAdditionScalarWhereInput!]
 }
 
+input ItemAdditionUpdateDataInput {
+  clientId: ID
+  parentId: ID
+  name: String
+}
+
 input ItemAdditionUpdateManyDataInput {
-  id: ID
+  clientId: ID
+  parentId: ID
   name: String
 }
 
 input ItemAdditionUpdateManyInput {
   create: [ItemAdditionCreateInput!]
+  update: [ItemAdditionUpdateWithWhereUniqueNestedInput!]
+  upsert: [ItemAdditionUpsertWithWhereUniqueNestedInput!]
+  delete: [ItemAdditionWhereUniqueInput!]
   deleteMany: [ItemAdditionScalarWhereInput!]
   updateMany: [ItemAdditionUpdateManyWithWhereNestedInput!]
 }
@@ -942,21 +1126,60 @@ input ItemAdditionUpdateManyWithWhereNestedInput {
   data: ItemAdditionUpdateManyDataInput!
 }
 
+input ItemAdditionUpdateWithWhereUniqueNestedInput {
+  where: ItemAdditionWhereUniqueInput!
+  data: ItemAdditionUpdateDataInput!
+}
+
+input ItemAdditionUpsertWithWhereUniqueNestedInput {
+  where: ItemAdditionWhereUniqueInput!
+  update: ItemAdditionUpdateDataInput!
+  create: ItemAdditionCreateInput!
+}
+
 input ItemAdditionWhereInput {
-  id: ID
-  id_not: ID
-  id_in: [ID!]
-  id_not_in: [ID!]
-  id_lt: ID
-  id_lte: ID
-  id_gt: ID
-  id_gte: ID
-  id_contains: ID
-  id_not_contains: ID
-  id_starts_with: ID
-  id_not_starts_with: ID
-  id_ends_with: ID
-  id_not_ends_with: ID
+  uid: ID
+  uid_not: ID
+  uid_in: [ID!]
+  uid_not_in: [ID!]
+  uid_lt: ID
+  uid_lte: ID
+  uid_gt: ID
+  uid_gte: ID
+  uid_contains: ID
+  uid_not_contains: ID
+  uid_starts_with: ID
+  uid_not_starts_with: ID
+  uid_ends_with: ID
+  uid_not_ends_with: ID
+  clientId: ID
+  clientId_not: ID
+  clientId_in: [ID!]
+  clientId_not_in: [ID!]
+  clientId_lt: ID
+  clientId_lte: ID
+  clientId_gt: ID
+  clientId_gte: ID
+  clientId_contains: ID
+  clientId_not_contains: ID
+  clientId_starts_with: ID
+  clientId_not_starts_with: ID
+  clientId_ends_with: ID
+  clientId_not_ends_with: ID
+  parentId: ID
+  parentId_not: ID
+  parentId_in: [ID!]
+  parentId_not_in: [ID!]
+  parentId_lt: ID
+  parentId_lte: ID
+  parentId_gt: ID
+  parentId_gte: ID
+  parentId_contains: ID
+  parentId_not_contains: ID
+  parentId_starts_with: ID
+  parentId_not_starts_with: ID
+  parentId_ends_with: ID
+  parentId_not_ends_with: ID
   name: String
   name_not: String
   name_in: [String!]
@@ -972,6 +1195,10 @@ input ItemAdditionWhereInput {
   name_ends_with: String
   name_not_ends_with: String
   AND: [ItemAdditionWhereInput!]
+}
+
+input ItemAdditionWhereUniqueInput {
+  uid: ID
 }
 
 type ItemConnection {
@@ -2116,13 +2343,16 @@ type Step {
 }
 
 type StepAddition {
+  uid: ID!
   id: ID!
+  parentId: ID!
   directions: String!
   notes: String!
 }
 
 input StepAdditionCreateInput {
   id: ID!
+  parentId: ID!
   directions: String!
   notes: String!
 }
@@ -2132,6 +2362,20 @@ input StepAdditionCreateManyInput {
 }
 
 input StepAdditionRestrictedWhereInput {
+  uid: ID
+  uid_not: ID
+  uid_in: [ID!]
+  uid_not_in: [ID!]
+  uid_lt: ID
+  uid_lte: ID
+  uid_gt: ID
+  uid_gte: ID
+  uid_contains: ID
+  uid_not_contains: ID
+  uid_starts_with: ID
+  uid_not_starts_with: ID
+  uid_ends_with: ID
+  uid_not_ends_with: ID
   id: ID
   id_not: ID
   id_in: [ID!]
@@ -2146,6 +2390,20 @@ input StepAdditionRestrictedWhereInput {
   id_not_starts_with: ID
   id_ends_with: ID
   id_not_ends_with: ID
+  parentId: ID
+  parentId_not: ID
+  parentId_in: [ID!]
+  parentId_not_in: [ID!]
+  parentId_lt: ID
+  parentId_lte: ID
+  parentId_gt: ID
+  parentId_gte: ID
+  parentId_contains: ID
+  parentId_not_contains: ID
+  parentId_starts_with: ID
+  parentId_not_starts_with: ID
+  parentId_ends_with: ID
+  parentId_not_ends_with: ID
   directions: String
   directions_not: String
   directions_in: [String!]
@@ -2178,6 +2436,20 @@ input StepAdditionRestrictedWhereInput {
 }
 
 input StepAdditionScalarWhereInput {
+  uid: ID
+  uid_not: ID
+  uid_in: [ID!]
+  uid_not_in: [ID!]
+  uid_lt: ID
+  uid_lte: ID
+  uid_gt: ID
+  uid_gte: ID
+  uid_contains: ID
+  uid_not_contains: ID
+  uid_starts_with: ID
+  uid_not_starts_with: ID
+  uid_ends_with: ID
+  uid_not_ends_with: ID
   id: ID
   id_not: ID
   id_in: [ID!]
@@ -2192,6 +2464,20 @@ input StepAdditionScalarWhereInput {
   id_not_starts_with: ID
   id_ends_with: ID
   id_not_ends_with: ID
+  parentId: ID
+  parentId_not: ID
+  parentId_in: [ID!]
+  parentId_not_in: [ID!]
+  parentId_lt: ID
+  parentId_lte: ID
+  parentId_gt: ID
+  parentId_gte: ID
+  parentId_contains: ID
+  parentId_not_contains: ID
+  parentId_starts_with: ID
+  parentId_not_starts_with: ID
+  parentId_ends_with: ID
+  parentId_not_ends_with: ID
   directions: String
   directions_not: String
   directions_in: [String!]
@@ -2225,14 +2511,25 @@ input StepAdditionScalarWhereInput {
   NOT: [StepAdditionScalarWhereInput!]
 }
 
+input StepAdditionUpdateDataInput {
+  id: ID
+  parentId: ID
+  directions: String
+  notes: String
+}
+
 input StepAdditionUpdateManyDataInput {
   id: ID
+  parentId: ID
   directions: String
   notes: String
 }
 
 input StepAdditionUpdateManyInput {
   create: [StepAdditionCreateInput!]
+  update: [StepAdditionUpdateWithWhereUniqueNestedInput!]
+  upsert: [StepAdditionUpsertWithWhereUniqueNestedInput!]
+  delete: [StepAdditionWhereUniqueInput!]
   deleteMany: [StepAdditionScalarWhereInput!]
   updateMany: [StepAdditionUpdateManyWithWhereNestedInput!]
 }
@@ -2242,7 +2539,32 @@ input StepAdditionUpdateManyWithWhereNestedInput {
   data: StepAdditionUpdateManyDataInput!
 }
 
+input StepAdditionUpdateWithWhereUniqueNestedInput {
+  where: StepAdditionWhereUniqueInput!
+  data: StepAdditionUpdateDataInput!
+}
+
+input StepAdditionUpsertWithWhereUniqueNestedInput {
+  where: StepAdditionWhereUniqueInput!
+  update: StepAdditionUpdateDataInput!
+  create: StepAdditionCreateInput!
+}
+
 input StepAdditionWhereInput {
+  uid: ID
+  uid_not: ID
+  uid_in: [ID!]
+  uid_not_in: [ID!]
+  uid_lt: ID
+  uid_lte: ID
+  uid_gt: ID
+  uid_gte: ID
+  uid_contains: ID
+  uid_not_contains: ID
+  uid_starts_with: ID
+  uid_not_starts_with: ID
+  uid_ends_with: ID
+  uid_not_ends_with: ID
   id: ID
   id_not: ID
   id_in: [ID!]
@@ -2257,6 +2579,20 @@ input StepAdditionWhereInput {
   id_not_starts_with: ID
   id_ends_with: ID
   id_not_ends_with: ID
+  parentId: ID
+  parentId_not: ID
+  parentId_in: [ID!]
+  parentId_not_in: [ID!]
+  parentId_lt: ID
+  parentId_lte: ID
+  parentId_gt: ID
+  parentId_gte: ID
+  parentId_contains: ID
+  parentId_not_contains: ID
+  parentId_starts_with: ID
+  parentId_not_starts_with: ID
+  parentId_ends_with: ID
+  parentId_not_ends_with: ID
   directions: String
   directions_not: String
   directions_in: [String!]
@@ -2286,6 +2622,10 @@ input StepAdditionWhereInput {
   notes_ends_with: String
   notes_not_ends_with: String
   AND: [StepAdditionWhereInput!]
+}
+
+input StepAdditionWhereUniqueInput {
+  uid: ID
 }
 
 type StepConnection {

@@ -26,18 +26,24 @@ type Alteration @embedded {
 }
 
 type ItemAddition @embedded {
-  id: ID!
+  uid: ID! @id
+  clientId: ID!
+  parentId: ID!
   name: String!
 }
 
 type StepAddition @embedded {
+  uid: ID! @id
   id: ID!
+  parentId: ID!
   directions: String!
   notes: String!
 }
 
 type IngredientAddition @embedded {
+  uid: ID! @id
   id: ID!
+  parentId: ID!
   name: String!
   quantity: String!
   unit: String

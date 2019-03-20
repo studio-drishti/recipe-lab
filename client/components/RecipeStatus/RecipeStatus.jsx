@@ -75,17 +75,39 @@ export default withApollo(
                   field
                   value
                 }
+                additions {
+                  uid
+                  id
+                  parentId
+                  ... on ItemAddition {
+                    name
+                  }
+                }
               }
             }
           `,
           variables: {
             recipe: recipe.id,
             user: user.id,
-            sortings: modification.sortings,
-            alterations: modification.alterations,
-            items: modification.additions.filter(
-              addition => addition.kind === 'Item'
-            )
+            sortings: modification.sortings.map(sorting => ({
+              uid: sorting.uid,
+              parentId: sorting.parentId,
+              order: sorting.order
+            })),
+            alterations: modification.alterations.map(alteration => ({
+              uid: alteration.uid,
+              sourceId: alteration.sourceId,
+              field: alteration.field,
+              value: alteration.value
+            })),
+            items: modification.additions
+              .filter(addition => addition.kind === 'Item')
+              .map(item => ({
+                uid: item.uid,
+                id: item.id,
+                parentId: item.parentId,
+                name: item.name
+              }))
           }
         })
         .then(data => {

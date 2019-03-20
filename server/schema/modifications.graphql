@@ -39,26 +39,38 @@ input AlterationInput {
   value: String!
 }
 
-union Addition = ItemAddition | StepAddition | IngredientAddition
-
-type ItemAddition {
+interface Addition {
+  uid: ID!
   id: ID!
+  parentId: ID!
+}
+
+type ItemAddition implements Addition {
+  uid: ID!
+  id: ID!
+  parentId: ID!
   name: String!
 }
 
 input ItemAdditionInput {
+  uid: ID
   id: ID!
+  parentId: ID!
   name: String!
 }
 
-type StepAddition {
+type StepAddition implements Addition {
+  uid: ID!
   id: ID!
+  parentId: ID!
   directions: String!
   notes: String!
 }
 
-type IngredientAddition {
+type IngredientAddition implements Addition {
+  uid: ID!
   id: ID!
+  parentId: ID!
   name: String!
   quantity: Float!
   unit: String

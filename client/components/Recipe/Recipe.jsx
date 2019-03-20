@@ -2,12 +2,12 @@ import React from 'react';
 import { Component } from 'react';
 import PropTypes from 'prop-types';
 import { DragDropContext } from 'react-beautiful-dnd';
-import cuid from 'cuid';
 
 import css from './Recipe.css';
 
 import reorder from '../../utils/reorder';
 import areArraysEqual from '../../utils/areArraysEqual';
+import generateId from '../../utils/generateId';
 
 import StepList from '../StepList';
 import Step from '../Step';
@@ -132,8 +132,8 @@ export default class Recipe extends Component {
     if (index === -1) return;
 
     modification.additions[index][field] = value;
-    localStorage.setItem(localStoreId, JSON.stringify(modification));
-    this.setState({ modification });
+
+    this.setModification(modification);
   };
 
   saveOrUpdateField = (source, fieldName, value) => {
@@ -290,25 +290,26 @@ export default class Recipe extends Component {
   };
 
   createItem = () => {
-    const { recipe, modification, localStoreId } = this.state;
+    const { recipe, modification } = this.state;
 
     const addition = {
-      id: cuid(),
+      id: generateId(),
       kind: 'Item',
       parentId: recipe.id,
       name: ''
     };
 
     modification.additions.push(addition);
-    localStorage.setItem(localStoreId, JSON.stringify(modification));
-    this.setState({ modification, autoFocusId: addition.id });
+
+    this.setState({ autoFocusId: addition.id });
+    this.setModification(modification);
   };
 
   createStep = itemId => {
     const { modification, localStoreId } = this.state;
 
     const addition = {
-      id: cuid(),
+      id: generateId(),
       kind: 'Step',
       parentId: itemId,
       directions: '',
@@ -324,7 +325,7 @@ export default class Recipe extends Component {
     const { modification, localStoreId } = this.state;
 
     const addition = {
-      id: cuid(),
+      id: generateId(),
       kind: 'Ingredient',
       parentId: stepId,
       quantity: '',

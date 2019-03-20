@@ -6,6 +6,7 @@ const Item = require('./Item');
 const Step = require('./Step');
 const Addition = require('./Addition');
 const Modification = require('./Modification');
+const ItemAddition = require('./ItemAddition');
 
 module.exports = {
   Query,
@@ -15,5 +16,6 @@ module.exports = {
   Item,
   Step,
   Addition,
-  Modification
+  Modification,
+  ItemAddition
 };

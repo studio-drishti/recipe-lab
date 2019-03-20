@@ -23,6 +23,11 @@ module.exports = async (parent, args, ctx) => {
               .filter(alteration => alteration.uid)
               .map(alteration => alteration.uid)
           }
+        },
+        itemAdditions: {
+          deleteMany: {
+            uid_not_in: items.filter(item => item.uid).map(item => item.uid)
+          }
         }
       }
     });
@@ -66,6 +71,23 @@ module.exports = async (parent, args, ctx) => {
               field: alteration.field,
               value: alteration.value
             }))
+        },
+        itemAdditions: {
+          update: items
+            .filter(item => item.uid)
+            .map(item => ({
+              where: { uid: item.uid },
+              data: {
+                name: item.name
+              }
+            })),
+          create: items
+            .filter(item => !item.uid)
+            .map(item => ({
+              clientId: item.id,
+              parentId: item.parentId,
+              name: item.name
+            }))
         }
       }
     });
@@ -90,6 +112,13 @@ module.exports = async (parent, args, ctx) => {
           sourceId: alteration.sourceId,
           field: alteration.field,
           value: alteration.value
+        }))
+      },
+      itemAdditions: {
+        create: items.map(item => ({
+          clientId: item.id,
+          parentId: item.parentId,
+          name: item.name
         }))
       }
     });

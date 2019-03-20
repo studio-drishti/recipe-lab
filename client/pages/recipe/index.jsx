@@ -46,6 +46,14 @@ const GET_RECIPE = gql`
           field
           value
         }
+        additions {
+          uid
+          id
+          parentId
+          ... on ItemAddition {
+            name
+          }
+        }
       }
     }
   }
