@@ -158,7 +158,7 @@ export default class Recipe extends Component {
   };
 
   saveRemoval = source => {
-    const { modification, localStoreId } = this.state;
+    const { modification } = this.state;
 
     // source was already removed
     if (modification.removals.includes(source.id)) return;
@@ -170,8 +170,7 @@ export default class Recipe extends Component {
       mod => mod.sourceId !== source.id
     );
 
-    this.setState({ modification });
-    localStorage.setItem(localStoreId, JSON.stringify(modification));
+    this.setModification(modification);
   };
 
   deleteAdditions = (...sources) => {
@@ -216,15 +215,14 @@ export default class Recipe extends Component {
   };
 
   undoRemoval = source => {
-    const { modification, localStoreId } = this.state;
+    const { modification } = this.state;
     const removalIndex = modification.removals.indexOf(source.id);
 
     if (removalIndex === -1) return;
 
     modification.removals.splice(removalIndex, 1);
 
-    this.setState({ modification });
-    localStorage.setItem(localStoreId, JSON.stringify(modification));
+    this.setModification(modification);
   };
 
   undoAnyRemovals = (...sources) => {

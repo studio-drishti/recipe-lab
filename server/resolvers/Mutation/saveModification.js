@@ -1,5 +1,5 @@
 module.exports = async (parent, args, ctx) => {
-  const { user, recipe, sortings, alterations, items } = args;
+  const { user, recipe, sortings, alterations, removals, items } = args;
   const mod = await ctx.prisma
     .modifications({
       where: { recipe: { id: recipe }, user: { id: user } }
@@ -37,6 +37,9 @@ module.exports = async (parent, args, ctx) => {
     await ctx.prisma.updateModification({
       where: { id: mod.id },
       data: {
+        removals: {
+          set: removals
+        },
         sortings: {
           update: sortings
             .filter(sorting => sorting.uid)
@@ -113,6 +116,9 @@ module.exports = async (parent, args, ctx) => {
       },
       user: {
         connect: { id: user }
+      },
+      removals: {
+        set: removals
       },
       sortings: {
         create: sortings.map(sorting => ({

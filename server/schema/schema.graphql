@@ -20,6 +20,7 @@ type Mutation {
   saveModification(
     recipe: ID!
     user: ID!
+    removals: [ID!]!
     sortings: [SortingInput!]!
     alterations: [AlterationInput!]!
     items: [ItemAdditionInput!]!

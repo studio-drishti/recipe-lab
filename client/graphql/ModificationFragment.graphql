@@ -1,4 +1,5 @@
 fragment ModificationInfo on Modification {
+  removals
   sortings {
     uid
     parentId

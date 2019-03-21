@@ -52,6 +52,7 @@ export default withApollo(
           variables: {
             recipe: recipe.id,
             user: user.id,
+            removals: modification.removals,
             sortings: modification.sortings.map(sorting => ({
               uid: sorting.uid,
               parentId: sorting.parentId,

@@ -3,6 +3,7 @@
 mutation SaveModification(
   $recipe: ID!
   $user: ID!
+  $removals: [ID!]!
   $sortings: [SortingInput!]!
   $alterations: [AlterationInput!]!
   $items: [ItemAdditionInput!]!
@@ -10,6 +11,7 @@ mutation SaveModification(
   saveModification(
     recipe: $recipe
     user: $user
+    removals: $removals
     sortings: $sortings
     alterations: $alterations
     items: $items
