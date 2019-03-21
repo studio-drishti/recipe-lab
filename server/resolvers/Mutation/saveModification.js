@@ -1,5 +1,15 @@
 module.exports = async (parent, args, ctx) => {
-  const { user, recipe, sortings, alterations, removals, items } = args;
+  const {
+    user,
+    recipe,
+    sortings,
+    alterations,
+    removals,
+    items,
+    steps,
+    ingredients
+  } = args;
+
   const mod = await ctx.prisma
     .modifications({
       where: { recipe: { id: recipe }, user: { id: user } }
@@ -28,6 +38,18 @@ module.exports = async (parent, args, ctx) => {
         itemAdditions: {
           deleteMany: {
             uid_not_in: items.filter(item => item.uid).map(item => item.uid)
+          }
+        },
+        stepAdditions: {
+          deleteMany: {
+            uid_not_in: steps.filter(step => step.uid).map(step => step.uid)
+          }
+        },
+        ingredientAdditions: {
+          deleteMany: {
+            uid_not_in: ingredients
+              .filter(ingredient => ingredient.uid)
+              .map(ingredient => ingredient.uid)
           }
         }
       }
@@ -71,6 +93,30 @@ module.exports = async (parent, args, ctx) => {
                 name: item.name
               }
             }))
+        },
+        stepAdditions: {
+          update: steps
+            .filter(step => step.uid)
+            .map(step => ({
+              where: { uid: step.uid },
+              data: {
+                directions: step.directions,
+                notes: step.notes
+              }
+            }))
+        },
+        ingredientAdditions: {
+          update: ingredients
+            .filter(ingredient => ingredient.uid)
+            .map(ingredient => ({
+              where: { uid: ingredient.uid },
+              data: {
+                name: ingredient.name,
+                quantity: ingredient.quantity,
+                unit: ingredient.unit,
+                processing: ingredient.processing
+              }
+            }))
         }
       }
     });
@@ -106,6 +152,28 @@ module.exports = async (parent, args, ctx) => {
               parentId: item.parentId,
               name: item.name
             }))
+        },
+        stepAdditions: {
+          create: steps
+            .filter(step => !step.uid)
+            .map(step => ({
+              clientId: step.id,
+              parentId: step.parentId,
+              directions: step.directions,
+              notes: step.notes
+            }))
+        },
+        ingredientAdditions: {
+          create: ingredients
+            .filter(ingredient => !ingredient.uid)
+            .map(ingredient => ({
+              clientId: ingredient.id,
+              parentId: ingredient.parentId,
+              name: ingredient.name,
+              quantity: ingredient.quantity,
+              unit: ingredient.unit,
+              processing: ingredient.processing
+            }))
         }
       }
     });
@@ -140,6 +208,24 @@ module.exports = async (parent, args, ctx) => {
           clientId: item.id,
           parentId: item.parentId,
           name: item.name
+        }))
+      },
+      stepAdditions: {
+        create: steps.map(step => ({
+          clientId: step.id,
+          parentId: step.parentId,
+          directions: step.directions,
+          notes: step.notes
+        }))
+      },
+      ingredientAdditions: {
+        create: ingredients.map(ingredient => ({
+          clientId: ingredient.id,
+          parentId: ingredient.parentId,
+          name: ingredient.name,
+          quantity: ingredient.quantity,
+          unit: ingredient.unit,
+          processing: ingredient.processing
         }))
       }
     });

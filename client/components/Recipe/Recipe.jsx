@@ -123,7 +123,7 @@ export default class Recipe extends Component {
   };
 
   updateAddition = (source, field, value) => {
-    const { modification, localStoreId } = this.state;
+    const { modification } = this.state;
 
     const index = modification.additions.findIndex(
       addition => addition.id === source.id
@@ -181,7 +181,7 @@ export default class Recipe extends Component {
       );
       modification.additions.splice(index, 1);
     });
-    this.setState({ modification });
+    this.setModification(modification);
   };
 
   removeIngredient = ingredient => {
@@ -304,7 +304,7 @@ export default class Recipe extends Component {
   };
 
   createStep = itemId => {
-    const { modification, localStoreId } = this.state;
+    const { modification } = this.state;
 
     const addition = {
       id: generateId(),
@@ -315,12 +315,13 @@ export default class Recipe extends Component {
     };
 
     modification.additions.push(addition);
-    localStorage.setItem(localStoreId, JSON.stringify(modification));
-    this.setState({ modification, autoFocusId: addition.id });
+
+    this.setState({ autoFocusId: addition.id });
+    this.setModification(modification);
   };
 
   createIngredient = async stepId => {
-    const { modification, localStoreId } = this.state;
+    const { modification } = this.state;
 
     const addition = {
       id: generateId(),
@@ -333,8 +334,8 @@ export default class Recipe extends Component {
     };
 
     modification.additions.push(addition);
-    localStorage.setItem(localStoreId, JSON.stringify(modification));
-    await this.setState({ modification });
+
+    await this.setModification(modification);
     setTimeout(() => {
       this.setState({ activeIngredient: addition });
     }, 200);

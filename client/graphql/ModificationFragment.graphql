@@ -15,8 +15,19 @@ fragment ModificationInfo on Modification {
     uid
     id
     parentId
+    kind
     ... on ItemAddition {
       name
+    }
+    ... on StepAddition {
+      directions
+      notes
+    }
+    ... on IngredientAddition {
+      name
+      quantity
+      unit
+      processing
     }
   }
 }

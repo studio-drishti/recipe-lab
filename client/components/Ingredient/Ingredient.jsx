@@ -50,11 +50,10 @@ export default class Ingredient extends Component {
   }
 
   getIngredientValue = fieldName => {
+    const { edits } = this.state;
+    if (edits[fieldName] !== undefined) return edits[fieldName];
+
     const { ingredient, ingredientMods } = this.props;
-
-    // Always prefer the current state's value
-    if (this.state.edits[fieldName] !== undefined) return this.state[fieldName];
-
     const mod = ingredientMods.find(
       mod => mod.sourceId === ingredient.id && mod.field === fieldName
     );

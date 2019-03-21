@@ -43,12 +43,14 @@ interface Addition {
   uid: ID!
   id: ID!
   parentId: ID!
+  kind: String!
 }
 
 type ItemAddition implements Addition {
   uid: ID!
   id: ID!
   parentId: ID!
+  kind: String!
   name: String!
 }
 
@@ -63,6 +65,15 @@ type StepAddition implements Addition {
   uid: ID!
   id: ID!
   parentId: ID!
+  kind: String!
+  directions: String!
+  notes: String!
+}
+
+input StepAdditionInput {
+  uid: ID
+  id: ID!
+  parentId: ID!
   directions: String!
   notes: String!
 }
@@ -71,8 +82,19 @@ type IngredientAddition implements Addition {
   uid: ID!
   id: ID!
   parentId: ID!
+  kind: String!
   name: String!
-  quantity: Float!
+  quantity: String!
+  unit: String
+  processing: String
+}
+
+input IngredientAdditionInput {
+  uid: ID
+  id: ID!
+  parentId: ID!
+  name: String!
+  quantity: String!
   unit: String
   processing: String
 }

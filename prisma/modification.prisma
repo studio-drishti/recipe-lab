@@ -34,7 +34,7 @@ type ItemAddition @embedded {
 
 type StepAddition @embedded {
   uid: ID! @id
-  id: ID!
+  clientId: ID!
   parentId: ID!
   directions: String!
   notes: String!
@@ -42,7 +42,7 @@ type StepAddition @embedded {
 
 type IngredientAddition @embedded {
   uid: ID! @id
-  id: ID!
+  clientId: ID!
   parentId: ID!
   name: String!
   quantity: String!

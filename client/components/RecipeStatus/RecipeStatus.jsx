@@ -71,6 +71,25 @@ export default withApollo(
                 id: item.id,
                 parentId: item.parentId,
                 name: item.name
+              })),
+            steps: modification.additions
+              .filter(addition => addition.kind === 'Step')
+              .map(step => ({
+                uid: step.uid,
+                id: step.id,
+                parentId: step.parentId,
+                directions: step.directions,
+                notes: step.notes
+              })),
+            ingredients: modification.additions
+              .filter(addition => addition.kind === 'Ingredient')
+              .map(ingredient => ({
+                uid: ingredient.uid,
+                id: ingredient.id,
+                parentId: ingredient.parentId,
+                name: ingredient.name,
+                quantity: ingredient.quantity,
+                unit: ingredient.unit
               }))
           }
         })
