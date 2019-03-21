@@ -56,7 +56,7 @@ export default class Recipe extends Component {
   };
 
   componentDidMount() {
-    const { localStoreId } = this.state;
+    // const { localStoreId } = this.state;
     let { modification, recipe } = this.state;
 
     if (recipe.modification) {
