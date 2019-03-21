@@ -1,19 +1,9 @@
 import React, { Component } from 'react';
 import Link from 'next/link';
 import { Query } from 'react-apollo';
-import gql from 'graphql-tag';
 
 import Page from '../layouts/Main';
-
-const GET_RECIPES = gql`
-  {
-    recipes {
-      id
-      title
-      description
-    }
-  }
-`;
+import RecipesQuery from '../graphql/Recipes.graphql';
 
 export default class RecipesPage extends Component {
   static displayName = 'RecipesPage';
@@ -21,7 +11,7 @@ export default class RecipesPage extends Component {
   render() {
     return (
       <Page>
-        <Query query={GET_RECIPES}>
+        <Query query={RecipesQuery}>
           {({ loading, error, data }) => {
             if (loading) return 'Loading...';
             if (error) return `Error! ${error.message}`;

@@ -2,62 +2,12 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { MdSchool, MdTimer } from 'react-icons/md';
 import { Query } from 'react-apollo';
-import gql from 'graphql-tag';
 
 import UserContext from '../../utils/UserContext';
 import Page from '../../layouts/Main';
 import Recipe from '../../components/Recipe';
 import css from './recipe.css';
-
-const GET_RECIPE = gql`
-  query recipe($id: ID!, $user: ID) {
-    recipe(id: $id) {
-      id
-      title
-      items {
-        id
-        name
-        steps {
-          id
-          directions
-          notes
-          ingredients {
-            id
-            name
-            quantity
-            unit
-            processing
-          }
-        }
-      }
-      author {
-        name
-        avatar
-      }
-      modification(user: $user) {
-        sortings {
-          uid
-          parentId
-          order
-        }
-        alterations {
-          uid
-          sourceId
-          field
-          value
-        }
-        additions {
-          uid
-          id
-          parentId
-          ... on ItemAddition {
-            name
-          }
-        }
-      }
-    }
-  }
-`;
+import RecipeWithModificationQuery from '../../graphql/RecipeWithModification.graphql';
 
 export default class IndexPage extends Component {
   static displayName = 'IndexPage';
@@ -78,7 +28,7 @@ export default class IndexPage extends Component {
     return (
       <Page>
         <Query
-          query={GET_RECIPE}
+          query={RecipeWithModificationQuery}
           variables={{ id: this.props.recipeId, user: user ? user.id : null }}
         >
           {({ loading, error, data }) => {

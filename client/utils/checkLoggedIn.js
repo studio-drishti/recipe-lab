@@ -1,17 +1,9 @@
-import gql from 'graphql-tag';
+import SessionUserQuery from '../graphql/SessionUser.graphql';
 
 export default (apolloClient, fetchPolicy = 'cache-first') =>
   apolloClient
     .query({
-      query: gql`
-        {
-          sessionUser {
-            id
-            name
-            avatar
-          }
-        }
-      `,
+      query: SessionUserQuery,
       fetchPolicy
     })
     .then(({ data }) => {

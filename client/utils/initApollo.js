@@ -31,7 +31,7 @@ function create(initialState, { getToken }) {
     connectToDevTools: process.browser,
     ssrMode: !process.browser, // Disables forceFetch on the server (so queries are only run once)
     link: authLink.concat(httpLink),
-    cache: new InMemoryCache({ addTypename: false }).restore(initialState || {})
+    cache: new InMemoryCache().restore(initialState || {})
   });
 }
 

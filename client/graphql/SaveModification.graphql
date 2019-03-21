@@ -1,0 +1,19 @@
+#import './ModificationFragment.graphql'
+
+mutation SaveModification(
+  $recipe: ID!
+  $user: ID!
+  $sortings: [SortingInput!]!
+  $alterations: [AlterationInput!]!
+  $items: [ItemAdditionInput!]!
+) {
+  saveModification(
+    recipe: $recipe
+    user: $user
+    sortings: $sortings
+    alterations: $alterations
+    items: $items
+  ) {
+    ...ModificationInfo
+  }
+}

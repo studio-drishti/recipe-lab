@@ -1,0 +1,21 @@
+fragment ModificationInfo on Modification {
+  sortings {
+    uid
+    parentId
+    order
+  }
+  alterations {
+    uid
+    sourceId
+    field
+    value
+  }
+  additions {
+    uid
+    id
+    parentId
+    ... on ItemAddition {
+      name
+    }
+  }
+}

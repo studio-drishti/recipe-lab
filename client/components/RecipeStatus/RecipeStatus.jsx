@@ -1,12 +1,12 @@
 import React from 'react';
 import { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import gql from 'graphql-tag';
 import { withApollo } from 'react-apollo';
 import { ApolloClient } from 'apollo-boost';
 
 import UserContext from '../../utils/UserContext';
 import css from './RecipeStatus.css';
+import SaveModificationMutation from '../../graphql/saveModification.graphql';
 
 export default withApollo(
   class RecipeStatus extends PureComponent {
@@ -48,44 +48,7 @@ export default withApollo(
       this.setState({ isSaving: true, timeoutId: undefined });
       client
         .mutate({
-          mutation: gql`
-            mutation saveModification(
-              $recipe: ID!
-              $user: ID!
-              $sortings: [SortingInput!]!
-              $alterations: [AlterationInput!]!
-              $items: [ItemAdditionInput!]!
-            ) {
-              saveModification(
-                recipe: $recipe
-                user: $user
-                sortings: $sortings
-                alterations: $alterations
-                items: $items
-              ) {
-                id
-                sortings {
-                  uid
-                  parentId
-                  order
-                }
-                alterations {
-                  uid
-                  sourceId
-                  field
-                  value
-                }
-                additions {
-                  uid
-                  id
-                  parentId
-                  ... on ItemAddition {
-                    name
-                  }
-                }
-              }
-            }
-          `,
+          mutation: SaveModificationMutation,
           variables: {
             recipe: recipe.id,
             user: user.id,
