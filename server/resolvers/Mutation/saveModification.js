@@ -7,6 +7,7 @@ module.exports = async (parent, args, ctx) => {
     .then(mods => mods.shift());
 
   if (mod) {
+    // Remove all entries which were removed on the frontend
     await ctx.prisma.updateModification({
       where: { id: mod.id },
       data: {
@@ -32,7 +33,8 @@ module.exports = async (parent, args, ctx) => {
       }
     });
 
-    return await ctx.prisma.updateModification({
+    // Update all existing entries
+    await ctx.prisma.updateModification({
       where: { id: mod.id },
       data: {
         sortings: {
@@ -45,14 +47,6 @@ module.exports = async (parent, args, ctx) => {
                   set: sorting.order
                 }
               }
-            })),
-          create: sortings
-            .filter(sorting => !sorting.uid)
-            .map(sorting => ({
-              parentId: sorting.parentId,
-              order: {
-                set: sorting.order
-              }
             }))
         },
         alterations: {
@@ -63,13 +57,6 @@ module.exports = async (parent, args, ctx) => {
               data: {
                 value: alteration.value
               }
-            })),
-          create: alterations
-            .filter(alteration => !alteration.uid)
-            .map(alteration => ({
-              sourceId: alteration.sourceId,
-              field: alteration.field,
-              value: alteration.value
             }))
         },
         itemAdditions: {
@@ -80,7 +67,35 @@ module.exports = async (parent, args, ctx) => {
               data: {
                 name: item.name
               }
-            })),
+            }))
+        }
+      }
+    });
+
+    // Create any new entries
+    return await ctx.prisma.updateModification({
+      where: { id: mod.id },
+      data: {
+        sortings: {
+          create: sortings
+            .filter(sorting => !sorting.uid)
+            .map(sorting => ({
+              parentId: sorting.parentId,
+              order: {
+                set: sorting.order
+              }
+            }))
+        },
+        alterations: {
+          create: alterations
+            .filter(alteration => !alteration.uid)
+            .map(alteration => ({
+              sourceId: alteration.sourceId,
+              field: alteration.field,
+              value: alteration.value
+            }))
+        },
+        itemAdditions: {
           create: items
             .filter(item => !item.uid)
             .map(item => ({
