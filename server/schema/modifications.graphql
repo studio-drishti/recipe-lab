@@ -2,7 +2,7 @@ type Modification {
   id: ID!
   createdAt: DateTime!
   updatedAt: DateTime!
-  author: User!
+  user: User!
   recipe: Recipe!
   sortings: [Sorting!]!
   alterations: [Alteration!]!
@@ -14,38 +14,87 @@ type Modification {
 }
 
 type Sorting {
+  uid: ID!
   parentId: ID!
   order: [ID!]!
 }
 
 input SortingInput {
+  uid: ID
   parentId: ID!
   order: [ID!]!
 }
 
 type Alteration {
+  uid: ID!
   sourceId: ID!
   field: String!
   value: String!
 }
 
-union Addition = ItemAddition | StepAddition | IngredientAddition
+input AlterationInput {
+  uid: ID
+  sourceId: ID!
+  field: String!
+  value: String!
+}
 
-type ItemAddition {
+interface Addition {
+  uid: ID!
   id: ID!
+  parentId: ID!
+  kind: String!
+}
+
+type ItemAddition implements Addition {
+  uid: ID!
+  id: ID!
+  parentId: ID!
+  kind: String!
   name: String!
 }
 
-type StepAddition {
+input ItemAdditionInput {
+  uid: ID
   id: ID!
+  parentId: ID!
+  name: String!
+}
+
+type StepAddition implements Addition {
+  uid: ID!
+  id: ID!
+  parentId: ID!
+  kind: String!
   directions: String!
   notes: String!
 }
 
-type IngredientAddition {
+input StepAdditionInput {
+  uid: ID
   id: ID!
+  parentId: ID!
+  directions: String!
+  notes: String!
+}
+
+type IngredientAddition implements Addition {
+  uid: ID!
+  id: ID!
+  parentId: ID!
+  kind: String!
   name: String!
-  quantity: Float!
+  quantity: String!
+  unit: String
+  processing: String
+}
+
+input IngredientAdditionInput {
+  uid: ID
+  id: ID!
+  parentId: ID!
+  name: String!
+  quantity: String!
   unit: String
   processing: String
 }

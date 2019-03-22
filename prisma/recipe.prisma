@@ -31,7 +31,7 @@ type Ingredient {
   id: ID! @id
   index: Int!
   name: String!
-  quantity: Float!
+  quantity: String!
   unit: String
   processing: String
 }

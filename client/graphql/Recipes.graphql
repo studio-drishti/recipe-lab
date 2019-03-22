@@ -1,0 +1,7 @@
+{
+  recipes {
+    id
+    title
+    description
+  }
+}

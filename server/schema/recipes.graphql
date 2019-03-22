@@ -9,6 +9,7 @@ type Recipe {
   course: String!
   description: String!
   items: [Item!]!
+  modification(user: ID): Modification
 }
 
 type Item {
@@ -27,7 +28,7 @@ type Step {
 type Ingredient {
   id: ID!
   name: String!
-  quantity: Float!
+  quantity: String!
   unit: String
   processing: String
 }

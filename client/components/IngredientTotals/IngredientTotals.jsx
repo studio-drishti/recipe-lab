@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
+import addFractions from '../../utils/addFractions';
+
 import css from './IngredientTotals.css';
 import { MEASURE_UNITS } from '../../config';
 
@@ -37,8 +39,10 @@ export default class IngredientTotals extends Component {
         if (
           totals[ingredient.name].quantities.hasOwnProperty(ingredient.unit)
         ) {
-          totals[ingredient.name].quantities[ingredient.unit] +=
-            ingredient.quantity;
+          totals[ingredient.name].quantities[ingredient.unit] = addFractions(
+            totals[ingredient.name].quantities[ingredient.unit],
+            ingredient.quantity
+          );
         } else {
           totals[ingredient.name].quantities = Object.assign(
             { [ingredient.unit]: ingredient.quantity },

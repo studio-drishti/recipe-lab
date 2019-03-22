@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Mutation, withApollo } from 'react-apollo';
 import { ApolloClient } from 'apollo-boost';
-import gql from 'graphql-tag';
 import cookie from 'cookie';
 import redirect from '../../utils/redirect';
 
@@ -11,14 +10,8 @@ import UserContext from '../../utils/UserContext';
 import css from './Login.css';
 import FormInput from '../FormInput';
 import FormButton from '../FormButton';
+import SignInMutation from '../../graphql/SignIn.graphql';
 
-const SIGN_IN = gql`
-  mutation Signin($email: String!, $password: String!) {
-    login(email: $email, password: $password) {
-      token
-    }
-  }
-`;
 class Login extends Component {
   static displayName = 'Login';
   static contextType = UserContext;
@@ -48,7 +41,7 @@ class Login extends Component {
     const { refreshUser } = this.context;
     return (
       <Mutation
-        mutation={SIGN_IN}
+        mutation={SignInMutation}
         onCompleted={data => {
           // Store the token in cookie
           document.cookie = cookie.serialize('token', data.login.token, {

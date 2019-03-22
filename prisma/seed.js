@@ -33,13 +33,13 @@ async function main() {
                           {
                             index: 0,
                             name: 'avocado oil',
-                            quantity: 2,
+                            quantity: '2',
                             unit: 'tbsp'
                           },
                           {
                             index: 1,
                             name: 'medium onion',
-                            quantity: 1,
+                            quantity: '1',
                             processing: 'chopped'
                           }
                         ]
@@ -55,13 +55,13 @@ async function main() {
                           {
                             index: 0,
                             name: 'garlic cloves',
-                            quantity: 2,
+                            quantity: '2',
                             processing: 'minced'
                           },
                           {
                             index: 1,
                             name: 'italian seasoning',
-                            quantity: 2,
+                            quantity: '2',
                             unit: 'tsp'
                           }
                         ]
@@ -77,7 +77,7 @@ async function main() {
                           {
                             index: 0,
                             name: 'red wine',
-                            quantity: 1,
+                            quantity: '1',
                             unit: 'cup'
                           }
                         ]
@@ -93,19 +93,19 @@ async function main() {
                           {
                             index: 0,
                             name: 'red wine',
-                            quantity: 1,
+                            quantity: '1',
                             unit: 'cup'
                           },
                           {
                             index: 1,
                             name: 'chicken stock',
-                            quantity: 0.5,
+                            quantity: '1/2',
                             unit: 'cup'
                           },
                           {
                             index: 2,
                             name: '28-ounce can whole peeled tomatoes',
-                            quantity: 1,
+                            quantity: '1',
                             processing: 'blended into a puree'
                           }
                         ]
@@ -121,7 +121,7 @@ async function main() {
                           {
                             index: 0,
                             name: 'gulten-free spaghetti',
-                            quantity: 1,
+                            quantity: '1',
                             unit: 'lb'
                           }
                         ]
@@ -147,49 +147,49 @@ async function main() {
                         create: [
                           {
                             index: 0,
-                            quantity: 1,
+                            quantity: '1',
                             unit: 'lb',
                             name: 'ground beef'
                           },
                           {
                             index: 1,
-                            quantity: 0.25,
+                            quantity: '1/4',
                             unit: 'cup',
                             name: 'onion',
                             processing: 'minced'
                           },
                           {
                             index: 2,
-                            quantity: 1,
+                            quantity: '1',
                             name: 'egg'
                           },
                           {
                             index: 3,
-                            quantity: 1,
+                            quantity: '1',
                             unit: 'tbsp',
                             name: 'chia seeds'
                           },
                           {
                             index: 4,
-                            quantity: 2,
+                            quantity: '2',
                             unit: 'tbsp',
                             name: 'almond flour'
                           },
                           {
                             index: 5,
-                            quantity: 0.25,
+                            quantity: '1/4',
                             unit: 'cup',
                             name: 'parsley'
                           },
                           {
                             index: 6,
-                            quantity: 2,
+                            quantity: '2',
                             unit: 'tsp',
                             name: 'sea salt'
                           },
                           {
                             index: 7,
-                            quantity: 0.25,
+                            quantity: '1/4',
                             unit: 'tsp',
                             name: 'black pepper',
                             processing: 'freshly ground'
@@ -205,7 +205,7 @@ async function main() {
                         create: [
                           {
                             index: 0,
-                            quantity: 2,
+                            quantity: '2',
                             unit: 'tbsp',
                             name: 'avocado oil'
                           }

@@ -12,13 +12,13 @@ beforeEach(() => {
       {
         id: cuid(),
         name: 'wine',
-        quantity: 1,
+        quantity: '1',
         unit: 'cup'
       },
       {
         id: cuid(),
         name: 'wine',
-        quantity: 1,
+        quantity: '1',
         unit: 'cup'
       }
     ]
@@ -37,7 +37,7 @@ describe('Calculating ingredient totals', () => {
           quantities: [
             {
               unit: 'cup',
-              quantity: 2
+              quantity: '2'
             }
           ]
         })
@@ -54,11 +54,11 @@ describe('Calculating ingredient totals', () => {
         expect.objectContaining({
           quantities: [
             {
-              quantity: 1,
+              quantity: '1',
               unit: 'cup'
             },
             {
-              quantity: 1,
+              quantity: '1',
               unit: 'tbsp'
             }
           ]
@@ -77,7 +77,7 @@ describe('Calculating ingredient totals', () => {
       {
         sourceId: props.ingredients[0].id,
         field: 'quantity',
-        value: 2
+        value: '2'
       },
       {
         sourceId: props.ingredients[0].id,
@@ -93,7 +93,7 @@ describe('Calculating ingredient totals', () => {
           quantities: [
             {
               unit: 'gal',
-              quantity: 2
+              quantity: '2'
             }
           ]
         })

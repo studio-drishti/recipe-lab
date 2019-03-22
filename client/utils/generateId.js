@@ -1,4 +1,2 @@
-import mongoose from 'mongoose/browser';
-const ObjectId = mongoose.Types.ObjectId;
-
+import { ObjectId } from 'bson';
 export default () => new ObjectId().toString();

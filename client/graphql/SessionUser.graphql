@@ -1,0 +1,7 @@
+{
+  sessionUser {
+    id
+    name
+    avatar
+  }
+}

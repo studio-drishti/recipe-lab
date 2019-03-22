@@ -1,8 +1,8 @@
 module.exports = {
   __resolveType(obj) {
-    if (obj.unit) {
+    if ('unit' in obj) {
       return 'IngredientAddition';
-    } else if (obj.directions) {
+    } else if ('directions' in obj) {
       return 'StepAddition';
     } else {
       return 'ItemAddition';

@@ -2,7 +2,7 @@ type Modification {
   id: ID! @id
   createdAt: DateTime! @createdAt
   updatedAt: DateTime! @updatedAt
-  author: User!
+  user: User!
   recipe: Recipe!
   sortings: [Sorting!]!
   alterations: [Alteration!]!
@@ -13,31 +13,39 @@ type Modification {
 }
 
 type Sorting @embedded {
+  uid: ID! @id
   parentId: ID!
   order: [ID!]!
 }
 
 type Alteration @embedded {
+  uid: ID! @id
   sourceId: ID!
   field: String!
   value: String!
 }
 
 type ItemAddition @embedded {
-  id: ID!
+  uid: ID! @id
+  clientId: ID!
+  parentId: ID!
   name: String!
 }
 
 type StepAddition @embedded {
-  id: ID!
+  uid: ID! @id
+  clientId: ID!
+  parentId: ID!
   directions: String!
   notes: String!
 }
 
 type IngredientAddition @embedded {
-  id: ID!
+  uid: ID! @id
+  clientId: ID!
+  parentId: ID!
   name: String!
-  quantity: Float!
+  quantity: String!
   unit: String
   processing: String
 }

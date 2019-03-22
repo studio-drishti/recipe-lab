@@ -2,44 +2,16 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { MdSchool, MdTimer } from 'react-icons/md';
 import { Query } from 'react-apollo';
-import gql from 'graphql-tag';
 
+import UserContext from '../../utils/UserContext';
 import Page from '../../layouts/Main';
 import Recipe from '../../components/Recipe';
 import css from './recipe.css';
-
-const GET_RECIPE = gql`
-  query recipe($id: ID!) {
-    recipe(id: $id) {
-      id
-      title
-      items {
-        id
-        name
-        steps {
-          id
-          directions
-          notes
-          ingredients {
-            id
-            name
-            quantity
-            unit
-            processing
-          }
-        }
-      }
-      author {
-        name
-        avatar
-      }
-    }
-  }
-`;
+import RecipeWithModificationQuery from '../../graphql/RecipeWithModification.graphql';
 
 export default class IndexPage extends Component {
   static displayName = 'IndexPage';
-
+  static contextType = UserContext;
   static propTypes = {
     recipeId: PropTypes.string
   };
@@ -52,9 +24,13 @@ export default class IndexPage extends Component {
   }
 
   render() {
+    const { user } = this.context;
     return (
       <Page>
-        <Query query={GET_RECIPE} variables={{ id: this.props.recipeId }}>
+        <Query
+          query={RecipeWithModificationQuery}
+          variables={{ id: this.props.recipeId, user: user ? user.id : null }}
+        >
           {({ loading, error, data }) => {
             if (loading) return 'Loading...';
             if (error) return `Error! ${error.message}`;

@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import gql from 'graphql-tag';
 import { Mutation } from 'react-apollo';
 import { FilePond, registerPlugin } from 'react-filepond';
 import FilePondPluginImageCrop from 'filepond-plugin-image-crop';
@@ -9,20 +8,13 @@ import FilePondPluginImageTransform from 'filepond-plugin-image-transform';
 import withAuthGuard from '../utils/withAuthGuard';
 import Page from '../layouts/Main';
 import UserContext from '../utils/UserContext';
+import AvatarUploadMutation from '../graphql/AvatarUpload.graphql';
 
 registerPlugin(
   FilePondPluginImageTransform,
   FilePondPluginImageCrop,
   FilePondPluginImageResize
 );
-
-export const UPLOAD_FILE = gql`
-  mutation uploadFile($file: Upload!) {
-    avatarUpload(file: $file) {
-      filename
-    }
-  }
-`;
 
 class ProfilePage extends Component {
   static displayName = 'ProfilePage';
@@ -41,7 +33,7 @@ class ProfilePage extends Component {
     return (
       <Page>
         <h1>{`${user.name}'s`} Profile</h1>
-        <Mutation mutation={UPLOAD_FILE}>
+        <Mutation mutation={AvatarUploadMutation}>
           {uploadFile => (
             <FilePond
               name="avatar"
