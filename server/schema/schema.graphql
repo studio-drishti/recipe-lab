@@ -9,8 +9,8 @@ scalar Upload
 type Query {
   sessionUser: User
   recipes: [Recipe!]!
-  recipe(id: ID!): Recipe
-  modification(id: ID!): Modification
+  recipe(uid: ID!): Recipe
+  modification(uid: ID!): Modification
 }
 
 type Mutation {

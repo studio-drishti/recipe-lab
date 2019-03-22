@@ -325,14 +325,13 @@ type Ingredient {
   index: Int!
   name: String!
   quantity: String!
-  unit: String
-  processing: String
+  unit: String!
+  processing: String!
   step: Step!
 }
 
 type IngredientAddition {
   uid: ID!
-  clientId: ID!
   parentId: ID!
   name: String!
   quantity: String!
@@ -349,7 +348,6 @@ type IngredientAdditionConnection {
 
 input IngredientAdditionCreateInput {
   uid: ID!
-  clientId: ID!
   parentId: ID!
   name: String!
   quantity: String!
@@ -365,7 +363,6 @@ input IngredientAdditionCreateManyWithoutModificationInput {
 
 input IngredientAdditionCreateWithoutModificationInput {
   uid: ID!
-  clientId: ID!
   parentId: ID!
   name: String!
   quantity: String!
@@ -381,8 +378,6 @@ type IngredientAdditionEdge {
 enum IngredientAdditionOrderByInput {
   uid_ASC
   uid_DESC
-  clientId_ASC
-  clientId_DESC
   parentId_ASC
   parentId_DESC
   name_ASC
@@ -403,7 +398,6 @@ enum IngredientAdditionOrderByInput {
 
 type IngredientAdditionPreviousValues {
   uid: ID!
-  clientId: ID!
   parentId: ID!
   name: String!
   quantity: String!
@@ -426,20 +420,6 @@ input IngredientAdditionScalarWhereInput {
   uid_not_starts_with: ID
   uid_ends_with: ID
   uid_not_ends_with: ID
-  clientId: ID
-  clientId_not: ID
-  clientId_in: [ID!]
-  clientId_not_in: [ID!]
-  clientId_lt: ID
-  clientId_lte: ID
-  clientId_gt: ID
-  clientId_gte: ID
-  clientId_contains: ID
-  clientId_not_contains: ID
-  clientId_starts_with: ID
-  clientId_not_starts_with: ID
-  clientId_ends_with: ID
-  clientId_not_ends_with: ID
   parentId: ID
   parentId_not: ID
   parentId_in: [ID!]
@@ -535,7 +515,6 @@ input IngredientAdditionSubscriptionWhereInput {
 
 input IngredientAdditionUpdateInput {
   uid: ID
-  clientId: ID
   parentId: ID
   name: String
   quantity: String
@@ -546,7 +525,6 @@ input IngredientAdditionUpdateInput {
 
 input IngredientAdditionUpdateManyDataInput {
   uid: ID
-  clientId: ID
   parentId: ID
   name: String
   quantity: String
@@ -556,7 +534,6 @@ input IngredientAdditionUpdateManyDataInput {
 
 input IngredientAdditionUpdateManyMutationInput {
   uid: ID
-  clientId: ID
   parentId: ID
   name: String
   quantity: String
@@ -583,7 +560,6 @@ input IngredientAdditionUpdateManyWithWhereNestedInput {
 
 input IngredientAdditionUpdateWithoutModificationDataInput {
   uid: ID
-  clientId: ID
   parentId: ID
   name: String
   quantity: String
@@ -617,20 +593,6 @@ input IngredientAdditionWhereInput {
   uid_not_starts_with: ID
   uid_ends_with: ID
   uid_not_ends_with: ID
-  clientId: ID
-  clientId_not: ID
-  clientId_in: [ID!]
-  clientId_not_in: [ID!]
-  clientId_lt: ID
-  clientId_lte: ID
-  clientId_gt: ID
-  clientId_gte: ID
-  clientId_contains: ID
-  clientId_not_contains: ID
-  clientId_starts_with: ID
-  clientId_not_starts_with: ID
-  clientId_ends_with: ID
-  clientId_not_ends_with: ID
   parentId: ID
   parentId_not: ID
   parentId_in: [ID!]
@@ -720,8 +682,8 @@ type IngredientConnection {
 input IngredientCreateInput {
   uid: ID!
   index: Int!
-  name: String!
-  quantity: String!
+  name: String
+  quantity: String
   unit: String
   processing: String
   step: StepCreateOneWithoutIngredientsInput!
@@ -735,8 +697,8 @@ input IngredientCreateManyWithoutStepInput {
 input IngredientCreateWithoutStepInput {
   uid: ID!
   index: Int!
-  name: String!
-  quantity: String!
+  name: String
+  quantity: String
   unit: String
   processing: String
 }
@@ -772,8 +734,8 @@ type IngredientPreviousValues {
   index: Int!
   name: String!
   quantity: String!
-  unit: String
-  processing: String
+  unit: String!
+  processing: String!
 }
 
 input IngredientScalarWhereInput {
@@ -1042,7 +1004,6 @@ type Item {
 
 type ItemAddition {
   uid: ID!
-  clientId: ID!
   parentId: ID!
   name: String!
   modification: Modification!
@@ -1056,7 +1017,6 @@ type ItemAdditionConnection {
 
 input ItemAdditionCreateInput {
   uid: ID!
-  clientId: ID!
   parentId: ID!
   name: String!
   modification: ModificationCreateOneWithoutItemAdditionsInput!
@@ -1069,7 +1029,6 @@ input ItemAdditionCreateManyWithoutModificationInput {
 
 input ItemAdditionCreateWithoutModificationInput {
   uid: ID!
-  clientId: ID!
   parentId: ID!
   name: String!
 }
@@ -1082,8 +1041,6 @@ type ItemAdditionEdge {
 enum ItemAdditionOrderByInput {
   uid_ASC
   uid_DESC
-  clientId_ASC
-  clientId_DESC
   parentId_ASC
   parentId_DESC
   name_ASC
@@ -1098,7 +1055,6 @@ enum ItemAdditionOrderByInput {
 
 type ItemAdditionPreviousValues {
   uid: ID!
-  clientId: ID!
   parentId: ID!
   name: String!
 }
@@ -1118,20 +1074,6 @@ input ItemAdditionScalarWhereInput {
   uid_not_starts_with: ID
   uid_ends_with: ID
   uid_not_ends_with: ID
-  clientId: ID
-  clientId_not: ID
-  clientId_in: [ID!]
-  clientId_not_in: [ID!]
-  clientId_lt: ID
-  clientId_lte: ID
-  clientId_gt: ID
-  clientId_gte: ID
-  clientId_contains: ID
-  clientId_not_contains: ID
-  clientId_starts_with: ID
-  clientId_not_starts_with: ID
-  clientId_ends_with: ID
-  clientId_not_ends_with: ID
   parentId: ID
   parentId_not: ID
   parentId_in: [ID!]
@@ -1185,7 +1127,6 @@ input ItemAdditionSubscriptionWhereInput {
 
 input ItemAdditionUpdateInput {
   uid: ID
-  clientId: ID
   parentId: ID
   name: String
   modification: ModificationUpdateOneRequiredWithoutItemAdditionsInput
@@ -1193,14 +1134,12 @@ input ItemAdditionUpdateInput {
 
 input ItemAdditionUpdateManyDataInput {
   uid: ID
-  clientId: ID
   parentId: ID
   name: String
 }
 
 input ItemAdditionUpdateManyMutationInput {
   uid: ID
-  clientId: ID
   parentId: ID
   name: String
 }
@@ -1224,7 +1163,6 @@ input ItemAdditionUpdateManyWithWhereNestedInput {
 
 input ItemAdditionUpdateWithoutModificationDataInput {
   uid: ID
-  clientId: ID
   parentId: ID
   name: String
 }
@@ -1255,20 +1193,6 @@ input ItemAdditionWhereInput {
   uid_not_starts_with: ID
   uid_ends_with: ID
   uid_not_ends_with: ID
-  clientId: ID
-  clientId_not: ID
-  clientId_in: [ID!]
-  clientId_not_in: [ID!]
-  clientId_lt: ID
-  clientId_lte: ID
-  clientId_gt: ID
-  clientId_gte: ID
-  clientId_contains: ID
-  clientId_not_contains: ID
-  clientId_starts_with: ID
-  clientId_not_starts_with: ID
-  clientId_ends_with: ID
-  clientId_not_ends_with: ID
   parentId: ID
   parentId_not: ID
   parentId_in: [ID!]
@@ -1316,7 +1240,7 @@ type ItemConnection {
 input ItemCreateInput {
   uid: ID!
   index: Int!
-  name: String!
+  name: String
   recipe: RecipeCreateOneWithoutItemsInput!
   steps: StepCreateManyWithoutItemInput
 }
@@ -1334,14 +1258,14 @@ input ItemCreateOneWithoutStepsInput {
 input ItemCreateWithoutRecipeInput {
   uid: ID!
   index: Int!
-  name: String!
+  name: String
   steps: StepCreateManyWithoutItemInput
 }
 
 input ItemCreateWithoutStepsInput {
   uid: ID!
   index: Int!
-  name: String!
+  name: String
   recipe: RecipeCreateOneWithoutItemsInput!
 }
 
@@ -1558,7 +1482,7 @@ input ItemWhereUniqueInput {
 scalar Long
 
 type Modification {
-  uid: ID!
+  id: ID!
   createdAt: DateTime!
   updatedAt: DateTime!
   user: User!
@@ -1578,7 +1502,6 @@ type ModificationConnection {
 }
 
 input ModificationCreateInput {
-  uid: ID!
   user: UserCreateOneWithoutModificationsInput!
   recipe: RecipeCreateOneWithoutModificationsInput!
   sortings: SortingCreateManyWithoutModificationInput
@@ -1629,7 +1552,6 @@ input ModificationCreateremovalsInput {
 }
 
 input ModificationCreateWithoutAlterationsInput {
-  uid: ID!
   user: UserCreateOneWithoutModificationsInput!
   recipe: RecipeCreateOneWithoutModificationsInput!
   sortings: SortingCreateManyWithoutModificationInput
@@ -1640,7 +1562,6 @@ input ModificationCreateWithoutAlterationsInput {
 }
 
 input ModificationCreateWithoutIngredientAdditionsInput {
-  uid: ID!
   user: UserCreateOneWithoutModificationsInput!
   recipe: RecipeCreateOneWithoutModificationsInput!
   sortings: SortingCreateManyWithoutModificationInput
@@ -1651,7 +1572,6 @@ input ModificationCreateWithoutIngredientAdditionsInput {
 }
 
 input ModificationCreateWithoutItemAdditionsInput {
-  uid: ID!
   user: UserCreateOneWithoutModificationsInput!
   recipe: RecipeCreateOneWithoutModificationsInput!
   sortings: SortingCreateManyWithoutModificationInput
@@ -1662,7 +1582,6 @@ input ModificationCreateWithoutItemAdditionsInput {
 }
 
 input ModificationCreateWithoutRecipeInput {
-  uid: ID!
   user: UserCreateOneWithoutModificationsInput!
   sortings: SortingCreateManyWithoutModificationInput
   alterations: AlterationCreateManyWithoutModificationInput
@@ -1673,7 +1592,6 @@ input ModificationCreateWithoutRecipeInput {
 }
 
 input ModificationCreateWithoutSortingsInput {
-  uid: ID!
   user: UserCreateOneWithoutModificationsInput!
   recipe: RecipeCreateOneWithoutModificationsInput!
   alterations: AlterationCreateManyWithoutModificationInput
@@ -1684,7 +1602,6 @@ input ModificationCreateWithoutSortingsInput {
 }
 
 input ModificationCreateWithoutStepAdditionsInput {
-  uid: ID!
   user: UserCreateOneWithoutModificationsInput!
   recipe: RecipeCreateOneWithoutModificationsInput!
   sortings: SortingCreateManyWithoutModificationInput
@@ -1695,7 +1612,6 @@ input ModificationCreateWithoutStepAdditionsInput {
 }
 
 input ModificationCreateWithoutUserInput {
-  uid: ID!
   recipe: RecipeCreateOneWithoutModificationsInput!
   sortings: SortingCreateManyWithoutModificationInput
   alterations: AlterationCreateManyWithoutModificationInput
@@ -1711,38 +1627,36 @@ type ModificationEdge {
 }
 
 enum ModificationOrderByInput {
-  uid_ASC
-  uid_DESC
+  id_ASC
+  id_DESC
   createdAt_ASC
   createdAt_DESC
   updatedAt_ASC
   updatedAt_DESC
-  id_ASC
-  id_DESC
 }
 
 type ModificationPreviousValues {
-  uid: ID!
+  id: ID!
   createdAt: DateTime!
   updatedAt: DateTime!
   removals: [ID!]!
 }
 
 input ModificationScalarWhereInput {
-  uid: ID
-  uid_not: ID
-  uid_in: [ID!]
-  uid_not_in: [ID!]
-  uid_lt: ID
-  uid_lte: ID
-  uid_gt: ID
-  uid_gte: ID
-  uid_contains: ID
-  uid_not_contains: ID
-  uid_starts_with: ID
-  uid_not_starts_with: ID
-  uid_ends_with: ID
-  uid_not_ends_with: ID
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
   createdAt: DateTime
   createdAt_not: DateTime
   createdAt_in: [DateTime!]
@@ -1783,7 +1697,6 @@ input ModificationSubscriptionWhereInput {
 }
 
 input ModificationUpdateInput {
-  uid: ID
   user: UserUpdateOneRequiredWithoutModificationsInput
   recipe: RecipeUpdateOneRequiredWithoutModificationsInput
   sortings: SortingUpdateManyWithoutModificationInput
@@ -1795,12 +1708,10 @@ input ModificationUpdateInput {
 }
 
 input ModificationUpdateManyDataInput {
-  uid: ID
   removals: ModificationUpdateremovalsInput
 }
 
 input ModificationUpdateManyMutationInput {
-  uid: ID
   removals: ModificationUpdateremovalsInput
 }
 
@@ -1873,7 +1784,6 @@ input ModificationUpdateremovalsInput {
 }
 
 input ModificationUpdateWithoutAlterationsDataInput {
-  uid: ID
   user: UserUpdateOneRequiredWithoutModificationsInput
   recipe: RecipeUpdateOneRequiredWithoutModificationsInput
   sortings: SortingUpdateManyWithoutModificationInput
@@ -1884,7 +1794,6 @@ input ModificationUpdateWithoutAlterationsDataInput {
 }
 
 input ModificationUpdateWithoutIngredientAdditionsDataInput {
-  uid: ID
   user: UserUpdateOneRequiredWithoutModificationsInput
   recipe: RecipeUpdateOneRequiredWithoutModificationsInput
   sortings: SortingUpdateManyWithoutModificationInput
@@ -1895,7 +1804,6 @@ input ModificationUpdateWithoutIngredientAdditionsDataInput {
 }
 
 input ModificationUpdateWithoutItemAdditionsDataInput {
-  uid: ID
   user: UserUpdateOneRequiredWithoutModificationsInput
   recipe: RecipeUpdateOneRequiredWithoutModificationsInput
   sortings: SortingUpdateManyWithoutModificationInput
@@ -1906,7 +1814,6 @@ input ModificationUpdateWithoutItemAdditionsDataInput {
 }
 
 input ModificationUpdateWithoutRecipeDataInput {
-  uid: ID
   user: UserUpdateOneRequiredWithoutModificationsInput
   sortings: SortingUpdateManyWithoutModificationInput
   alterations: AlterationUpdateManyWithoutModificationInput
@@ -1917,7 +1824,6 @@ input ModificationUpdateWithoutRecipeDataInput {
 }
 
 input ModificationUpdateWithoutSortingsDataInput {
-  uid: ID
   user: UserUpdateOneRequiredWithoutModificationsInput
   recipe: RecipeUpdateOneRequiredWithoutModificationsInput
   alterations: AlterationUpdateManyWithoutModificationInput
@@ -1928,7 +1834,6 @@ input ModificationUpdateWithoutSortingsDataInput {
 }
 
 input ModificationUpdateWithoutStepAdditionsDataInput {
-  uid: ID
   user: UserUpdateOneRequiredWithoutModificationsInput
   recipe: RecipeUpdateOneRequiredWithoutModificationsInput
   sortings: SortingUpdateManyWithoutModificationInput
@@ -1939,7 +1844,6 @@ input ModificationUpdateWithoutStepAdditionsDataInput {
 }
 
 input ModificationUpdateWithoutUserDataInput {
-  uid: ID
   recipe: RecipeUpdateOneRequiredWithoutModificationsInput
   sortings: SortingUpdateManyWithoutModificationInput
   alterations: AlterationUpdateManyWithoutModificationInput
@@ -1997,20 +1901,20 @@ input ModificationUpsertWithWhereUniqueWithoutUserInput {
 }
 
 input ModificationWhereInput {
-  uid: ID
-  uid_not: ID
-  uid_in: [ID!]
-  uid_not_in: [ID!]
-  uid_lt: ID
-  uid_lte: ID
-  uid_gt: ID
-  uid_gte: ID
-  uid_contains: ID
-  uid_not_contains: ID
-  uid_starts_with: ID
-  uid_not_starts_with: ID
-  uid_ends_with: ID
-  uid_not_ends_with: ID
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
   createdAt: DateTime
   createdAt_not: DateTime
   createdAt_in: [DateTime!]
@@ -2050,7 +1954,7 @@ input ModificationWhereInput {
 }
 
 input ModificationWhereUniqueInput {
-  uid: ID
+  id: ID
 }
 
 type Mutation {
@@ -2199,11 +2103,11 @@ type RecipeConnection {
 input RecipeCreateInput {
   uid: ID!
   author: UserCreateOneWithoutRecipesInput!
-  title: String!
-  time: String!
-  skill: String!
-  course: String!
-  description: String!
+  title: String
+  time: String
+  skill: String
+  course: String
+  description: String
   items: ItemCreateManyWithoutRecipeInput
   modifications: ModificationCreateManyWithoutRecipeInput
 }
@@ -2225,11 +2129,11 @@ input RecipeCreateOneWithoutModificationsInput {
 
 input RecipeCreateWithoutAuthorInput {
   uid: ID!
-  title: String!
-  time: String!
-  skill: String!
-  course: String!
-  description: String!
+  title: String
+  time: String
+  skill: String
+  course: String
+  description: String
   items: ItemCreateManyWithoutRecipeInput
   modifications: ModificationCreateManyWithoutRecipeInput
 }
@@ -2237,22 +2141,22 @@ input RecipeCreateWithoutAuthorInput {
 input RecipeCreateWithoutItemsInput {
   uid: ID!
   author: UserCreateOneWithoutRecipesInput!
-  title: String!
-  time: String!
-  skill: String!
-  course: String!
-  description: String!
+  title: String
+  time: String
+  skill: String
+  course: String
+  description: String
   modifications: ModificationCreateManyWithoutRecipeInput
 }
 
 input RecipeCreateWithoutModificationsInput {
   uid: ID!
   author: UserCreateOneWithoutRecipesInput!
-  title: String!
-  time: String!
-  skill: String!
-  course: String!
-  description: String!
+  title: String
+  time: String
+  skill: String
+  course: String
+  description: String
   items: ItemCreateManyWithoutRecipeInput
 }
 
@@ -2860,14 +2764,13 @@ type Step {
   uid: ID!
   index: Int!
   directions: String!
-  notes: String
+  notes: String!
   item: Item!
   ingredients(where: IngredientWhereInput, orderBy: IngredientOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Ingredient!]
 }
 
 type StepAddition {
   uid: ID!
-  clientId: ID!
   parentId: ID!
   directions: String!
   notes: String!
@@ -2882,7 +2785,6 @@ type StepAdditionConnection {
 
 input StepAdditionCreateInput {
   uid: ID!
-  clientId: ID!
   parentId: ID!
   directions: String!
   notes: String!
@@ -2896,7 +2798,6 @@ input StepAdditionCreateManyWithoutModificationInput {
 
 input StepAdditionCreateWithoutModificationInput {
   uid: ID!
-  clientId: ID!
   parentId: ID!
   directions: String!
   notes: String!
@@ -2910,8 +2811,6 @@ type StepAdditionEdge {
 enum StepAdditionOrderByInput {
   uid_ASC
   uid_DESC
-  clientId_ASC
-  clientId_DESC
   parentId_ASC
   parentId_DESC
   directions_ASC
@@ -2928,7 +2827,6 @@ enum StepAdditionOrderByInput {
 
 type StepAdditionPreviousValues {
   uid: ID!
-  clientId: ID!
   parentId: ID!
   directions: String!
   notes: String!
@@ -2949,20 +2847,6 @@ input StepAdditionScalarWhereInput {
   uid_not_starts_with: ID
   uid_ends_with: ID
   uid_not_ends_with: ID
-  clientId: ID
-  clientId_not: ID
-  clientId_in: [ID!]
-  clientId_not_in: [ID!]
-  clientId_lt: ID
-  clientId_lte: ID
-  clientId_gt: ID
-  clientId_gte: ID
-  clientId_contains: ID
-  clientId_not_contains: ID
-  clientId_starts_with: ID
-  clientId_not_starts_with: ID
-  clientId_ends_with: ID
-  clientId_not_ends_with: ID
   parentId: ID
   parentId_not: ID
   parentId_in: [ID!]
@@ -3030,7 +2914,6 @@ input StepAdditionSubscriptionWhereInput {
 
 input StepAdditionUpdateInput {
   uid: ID
-  clientId: ID
   parentId: ID
   directions: String
   notes: String
@@ -3039,7 +2922,6 @@ input StepAdditionUpdateInput {
 
 input StepAdditionUpdateManyDataInput {
   uid: ID
-  clientId: ID
   parentId: ID
   directions: String
   notes: String
@@ -3047,7 +2929,6 @@ input StepAdditionUpdateManyDataInput {
 
 input StepAdditionUpdateManyMutationInput {
   uid: ID
-  clientId: ID
   parentId: ID
   directions: String
   notes: String
@@ -3072,7 +2953,6 @@ input StepAdditionUpdateManyWithWhereNestedInput {
 
 input StepAdditionUpdateWithoutModificationDataInput {
   uid: ID
-  clientId: ID
   parentId: ID
   directions: String
   notes: String
@@ -3104,20 +2984,6 @@ input StepAdditionWhereInput {
   uid_not_starts_with: ID
   uid_ends_with: ID
   uid_not_ends_with: ID
-  clientId: ID
-  clientId_not: ID
-  clientId_in: [ID!]
-  clientId_not_in: [ID!]
-  clientId_lt: ID
-  clientId_lte: ID
-  clientId_gt: ID
-  clientId_gte: ID
-  clientId_contains: ID
-  clientId_not_contains: ID
-  clientId_starts_with: ID
-  clientId_not_starts_with: ID
-  clientId_ends_with: ID
-  clientId_not_ends_with: ID
   parentId: ID
   parentId_not: ID
   parentId_in: [ID!]
@@ -3179,7 +3045,7 @@ type StepConnection {
 input StepCreateInput {
   uid: ID!
   index: Int!
-  directions: String!
+  directions: String
   notes: String
   item: ItemCreateOneWithoutStepsInput!
   ingredients: IngredientCreateManyWithoutStepInput
@@ -3198,7 +3064,7 @@ input StepCreateOneWithoutIngredientsInput {
 input StepCreateWithoutIngredientsInput {
   uid: ID!
   index: Int!
-  directions: String!
+  directions: String
   notes: String
   item: ItemCreateOneWithoutStepsInput!
 }
@@ -3206,7 +3072,7 @@ input StepCreateWithoutIngredientsInput {
 input StepCreateWithoutItemInput {
   uid: ID!
   index: Int!
-  directions: String!
+  directions: String
   notes: String
   ingredients: IngredientCreateManyWithoutStepInput
 }
@@ -3237,7 +3103,7 @@ type StepPreviousValues {
   uid: ID!
   index: Int!
   directions: String!
-  notes: String
+  notes: String!
 }
 
 input StepScalarWhereInput {

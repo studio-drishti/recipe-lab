@@ -1,5 +1,5 @@
 type Modification {
-  uid: ID! @unique
+  id: ID! @unique
   createdAt: DateTime! @createdAt
   updatedAt: DateTime! @updatedAt
   user: User! @relation(name: "ModificationOwner")
@@ -32,7 +32,6 @@ type Alteration {
 
 type ItemAddition {
   uid: ID! @unique
-  clientId: ID!
   parentId: ID!
   name: String!
   modification: Modification! @relation(name: "ItemAdditions")
@@ -40,7 +39,6 @@ type ItemAddition {
 
 type StepAddition {
   uid: ID! @unique
-  clientId: ID!
   parentId: ID!
   directions: String!
   notes: String!
@@ -49,7 +47,6 @@ type StepAddition {
 
 type IngredientAddition {
   uid: ID! @unique
-  clientId: ID!
   parentId: ID!
   name: String!
   quantity: String!

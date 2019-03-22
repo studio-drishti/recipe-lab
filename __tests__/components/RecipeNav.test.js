@@ -9,22 +9,22 @@ let props = {};
 beforeEach(() => {
   props.recipeItems = [
     {
-      id: cuid(),
+      uid: cuid(),
       name: 'Boozy Drink'
     },
     {
-      id: cuid(),
+      uid: cuid(),
       name: 'Moar Booze'
     }
   ];
   props.recipeSteps = [
     [
       {
-        id: cuid(),
+        uid: cuid(),
         directions: 'Do the first thing',
         ingredients: [
           {
-            id: cuid(),
+            uid: cuid(),
             name: 'wine',
             quantity: 1,
             unit: 'cup'
@@ -32,11 +32,11 @@ beforeEach(() => {
         ]
       },
       {
-        id: cuid(),
+        uid: cuid(),
         directions: 'Do the second thing',
         ingredients: [
           {
-            id: cuid(),
+            uid: cuid(),
             name: 'whiskey',
             quantity: 1,
             unit: 'gallon'
@@ -46,11 +46,11 @@ beforeEach(() => {
     ],
     [
       {
-        id: cuid(),
+        uid: cuid(),
         directions: 'Do the third',
         ingredients: [
           {
-            id: cuid(),
+            uid: cuid(),
             name: 'gin',
             quantity: 1,
             unit: 'tsp'

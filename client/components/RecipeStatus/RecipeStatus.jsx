@@ -50,7 +50,7 @@ export default withApollo(
         .mutate({
           mutation: SaveModificationMutation,
           variables: {
-            recipe: recipe.id,
+            recipe: recipe.uid,
             user: user.id,
             removals: modification.removals,
             sortings: modification.sortings.map(sorting => ({
@@ -68,7 +68,6 @@ export default withApollo(
               .filter(addition => addition.kind === 'Item')
               .map(item => ({
                 uid: item.uid,
-                id: item.id,
                 parentId: item.parentId,
                 name: item.name
               })),
@@ -76,7 +75,6 @@ export default withApollo(
               .filter(addition => addition.kind === 'Step')
               .map(step => ({
                 uid: step.uid,
-                id: step.id,
                 parentId: step.parentId,
                 directions: step.directions,
                 notes: step.notes
@@ -85,11 +83,11 @@ export default withApollo(
               .filter(addition => addition.kind === 'Ingredient')
               .map(ingredient => ({
                 uid: ingredient.uid,
-                id: ingredient.id,
                 parentId: ingredient.parentId,
                 name: ingredient.name,
                 quantity: ingredient.quantity,
-                unit: ingredient.unit
+                unit: ingredient.unit,
+                processing: ingredient.processing
               }))
           }
         })

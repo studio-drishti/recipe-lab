@@ -1,5 +1,5 @@
 type Recipe {
-  id: ID!
+  uid: ID!
   createdAt: DateTime!
   updatedAt: DateTime!
   author: User!
@@ -13,22 +13,22 @@ type Recipe {
 }
 
 type Item {
-  id: ID!
+  uid: ID!
   name: String!
   steps: [Step!]!
 }
 
 type Step {
-  id: ID!
+  uid: ID!
   directions: String!
-  notes: String
+  notes: String!
   ingredients: [Ingredient!]!
 }
 
 type Ingredient {
-  id: ID!
+  uid: ID!
   name: String!
   quantity: String!
-  unit: String
-  processing: String
+  unit: String!
+  processing: String!
 }

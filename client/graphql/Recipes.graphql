@@ -1,6 +1,6 @@
 {
   recipes {
-    id
+    uid
     title
     description
   }

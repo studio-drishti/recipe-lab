@@ -33,7 +33,7 @@ type Alteration {
 }
 
 input AlterationInput {
-  uid: ID
+  uid: ID!
   sourceId: ID!
   field: String!
   value: String!
@@ -41,29 +41,25 @@ input AlterationInput {
 
 interface Addition {
   uid: ID!
-  id: ID!
   parentId: ID!
   kind: String!
 }
 
 type ItemAddition implements Addition {
   uid: ID!
-  id: ID!
   parentId: ID!
   kind: String!
   name: String!
 }
 
 input ItemAdditionInput {
-  uid: ID
-  id: ID!
+  uid: ID!
   parentId: ID!
   name: String!
 }
 
 type StepAddition implements Addition {
   uid: ID!
-  id: ID!
   parentId: ID!
   kind: String!
   directions: String!
@@ -72,7 +68,6 @@ type StepAddition implements Addition {
 
 input StepAdditionInput {
   uid: ID
-  id: ID!
   parentId: ID!
   directions: String!
   notes: String!
@@ -80,21 +75,19 @@ input StepAdditionInput {
 
 type IngredientAddition implements Addition {
   uid: ID!
-  id: ID!
   parentId: ID!
   kind: String!
   name: String!
   quantity: String!
-  unit: String
-  processing: String
+  unit: String!
+  processing: String!
 }
 
 input IngredientAdditionInput {
   uid: ID
-  id: ID!
   parentId: ID!
   name: String!
   quantity: String!
-  unit: String
-  processing: String
+  unit: String!
+  processing: String!
 }

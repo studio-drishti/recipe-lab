@@ -1,15 +1,15 @@
 module.exports = {
-  author: ({ id }, args, ctx) => {
-    return ctx.prisma.recipe({ id }).author();
+  author: ({ uid }, args, ctx) => {
+    return ctx.prisma.recipe({ uid }).author();
   },
-  items: ({ id }, args, ctx) => {
-    return ctx.prisma.recipe({ id }).items({ orderBy: 'index_ASC' });
+  items: ({ uid }, args, ctx) => {
+    return ctx.prisma.recipe({ uid }).items({ orderBy: 'index_ASC' });
   },
-  modification: ({ id }, { user }, ctx) => {
+  modification: ({ uid }, { user }, ctx) => {
     if (!user) return undefined;
     return ctx.prisma
       .modifications({
-        where: { recipe: { id }, user: { id: user } }
+        where: { recipe: { uid }, user: { id: user } }
       })
       .then(mods => mods.shift());
   }

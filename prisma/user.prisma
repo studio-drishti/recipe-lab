@@ -8,7 +8,7 @@ type User {
   avatar: String
   slug: String
   emailVerified: Boolean! @default(value: false)
-  recipes: [Recipe!]! @relation(name: "RecipesAuthor", onDelete: CASCADE)
+  recipes: [Recipe!]! @relation(name: "RecipeAuthor", onDelete: CASCADE)
   modifications: [Modification!]!
     @relation(name: "ModificationOwner", onDelete: CASCADE)
 }

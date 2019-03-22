@@ -3,11 +3,11 @@ type Recipe {
   createdAt: DateTime! @createdAt
   updatedAt: DateTime! @updatedAt
   author: User! @relation(name: "RecipeAuthor")
-  title: String!
-  time: String!
-  skill: String!
-  course: String!
-  description: String!
+  title: String! @default(value: "")
+  time: String! @default(value: "")
+  skill: String! @default(value: "")
+  course: String! @default(value: "")
+  description: String! @default(value: "")
   items: [Item!]! @relation(name: "RecipeItems", onDelete: CASCADE)
   modifications: [Modification!]!
     @relation(name: "RecipeModifications", onDelete: CASCADE)
@@ -16,7 +16,7 @@ type Recipe {
 type Item {
   uid: ID! @unique
   index: Int!
-  name: String!
+  name: String! @default(value: "")
   recipe: Recipe! @relation(name: "RecipeItems")
   steps: [Step!]! @relation(name: "RecipeSteps", onDelete: CASCADE)
 }
@@ -24,8 +24,8 @@ type Item {
 type Step {
   uid: ID! @unique
   index: Int!
-  directions: String!
-  notes: String
+  directions: String! @default(value: "")
+  notes: String! @default(value: "")
   item: Item! @relation(name: "RecipeSteps")
   ingredients: [Ingredient!]!
     @relation(name: "RecipeIngredients", onDelete: CASCADE)
@@ -34,9 +34,9 @@ type Step {
 type Ingredient {
   uid: ID! @unique
   index: Int!
-  name: String!
-  quantity: String!
-  unit: String
-  processing: String
+  name: String! @default(value: "")
+  quantity: String! @default(value: "")
+  unit: String! @default(value: "")
+  processing: String! @default(value: "")
   step: Step! @relation(name: "RecipeIngredients")
 }
