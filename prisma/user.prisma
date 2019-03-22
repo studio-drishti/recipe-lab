@@ -1,5 +1,5 @@
 type User {
-  id: ID! @id
+  id: ID! @unique
   createdAt: DateTime! @createdAt
   updatedAt: DateTime! @updatedAt
   email: String! @unique
@@ -8,6 +8,7 @@ type User {
   avatar: String
   slug: String
   emailVerified: Boolean! @default(value: false)
-  recipes: [Recipe!]! @relation(link: INLINE, onDelete: CASCADE)
-  modifications: [Modification!]! @relation(link: INLINE, onDelete: CASCADE)
+  recipes: [Recipe!]! @relation(name: "RecipesAuthor", onDelete: CASCADE)
+  modifications: [Modification!]!
+    @relation(name: "ModificationOwner", onDelete: CASCADE)
 }

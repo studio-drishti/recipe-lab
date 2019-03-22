@@ -1,37 +1,42 @@
 type Recipe {
-  id: ID! @id
+  uid: ID! @unique
   createdAt: DateTime! @createdAt
   updatedAt: DateTime! @updatedAt
-  author: User!
+  author: User! @relation(name: "RecipeAuthor")
   title: String!
   time: String!
   skill: String!
   course: String!
   description: String!
-  items: [Item!]! @relation(link: INLINE, onDelete: CASCADE)
-  modifications: [Modification!]! @relation(link: INLINE, onDelete: CASCADE)
+  items: [Item!]! @relation(name: "RecipeItems", onDelete: CASCADE)
+  modifications: [Modification!]!
+    @relation(name: "RecipeModifications", onDelete: CASCADE)
 }
 
 type Item {
-  id: ID! @id
+  uid: ID! @unique
   index: Int!
   name: String!
-  steps: [Step!]! @relation(link: INLINE, onDelete: CASCADE)
+  recipe: Recipe! @relation(name: "RecipeItems")
+  steps: [Step!]! @relation(name: "RecipeSteps", onDelete: CASCADE)
 }
 
 type Step {
-  id: ID! @id
+  uid: ID! @unique
   index: Int!
   directions: String!
   notes: String
-  ingredients: [Ingredient!]! @relation(link: INLINE, onDelete: CASCADE)
+  item: Item! @relation(name: "RecipeSteps")
+  ingredients: [Ingredient!]!
+    @relation(name: "RecipeIngredients", onDelete: CASCADE)
 }
 
 type Ingredient {
-  id: ID! @id
+  uid: ID! @unique
   index: Int!
   name: String!
   quantity: String!
   unit: String
   processing: String
+  step: Step! @relation(name: "RecipeIngredients")
 }
