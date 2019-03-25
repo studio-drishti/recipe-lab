@@ -2,7 +2,6 @@ version: '3'
 
 services:
   node:
-    user: 'root'
     build:
       context: .
       args:
@@ -18,27 +17,23 @@ services:
       - '9229:9229'
       - '9230:9230'
     volumes:
-      - .:/opt/app:delegated
+      - .:/opt/node_app/app:delegated
       # bind-mounting these two files in will let you add packages during development without rebuilding
       # for example, to add bower to your app while developing, just install it inside the container
       # and then nodemon will restart. Your changes will last until you "docker-compose down" and will
       # be saved on host for next build
+      # NOTE: this won't work on Docker Toolbox (virtualbox) which doesn't bind-mount single files
       # docker-compose exec node npm install --save bower
-      - ./package.json:/opt/package.json
-      - ./package-lock.json:/opt/package-lock.json
+      - ./package.json:/opt/node_app/package.json
+      - ./package-lock.json:/opt/node_app/package-lock.json
       # this is a workaround to prevent host node_modules from accidently getting mounted in container
       # in case you want to use node/npm both outside container for test/lint etc. and also inside container
       # this will overwrite the default node_modules dir in container so it won't conflict with our
-      # /opt/node_modules location. Thanks to PR from @brnluiz
-      - notused:/opt/app/node_modules
+      # /opt/node_app/node_modules location. Thanks to PR from @brnluiz
+      - notused:/opt/node_app/app/node_modules
     environment:
-      - APP_SECRET=secret1234
       - NODE_ENV=development
-      - MONGO_USERNAME=root
-      - MONGO_PASSWORD=sch0013d
-      - MONGO_HOSTNAME=mongo
-      - MONGO_PORT=27017
-      - MONGO_DATABASE_NAME=schooled-lunch
+      - APP_SECRET=secret1234
       - EMAIL_FROM=no-reply@schooledlunch.club
     depends_on:
       - prisma

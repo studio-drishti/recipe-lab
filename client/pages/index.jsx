@@ -7,7 +7,7 @@ export default class IndexPage extends Component {
   render() {
     return (
       <Page>
-        <h1>Welcome to Schooled Lunch!</h1>
+        <h1>Welcome to Recipe Lab!</h1>
         <p>Play with your food.</p>
       </Page>
     );

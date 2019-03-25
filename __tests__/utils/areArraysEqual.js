@@ -1,4 +1,4 @@
-import areArraysEqual from 'schooled-lunch/client/utils/areArraysEqual';
+import areArraysEqual from 'recipe-lab/client/utils/areArraysEqual';
 
 describe('are arrays equal', () => {
   test('false when not the same order', () => {

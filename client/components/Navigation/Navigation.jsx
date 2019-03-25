@@ -13,7 +13,7 @@ export default class Navigation extends Component {
     return (
       <nav className={css.nav}>
         <Link href="/">
-          <a className={css.logo}>Schooled Lunch</a>
+          <a className={css.logo}>Recipe Lab</a>
         </Link>
         <div className={css.links}>
           <Link href="/recipes">

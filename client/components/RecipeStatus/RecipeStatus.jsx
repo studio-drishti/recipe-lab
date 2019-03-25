@@ -6,7 +6,7 @@ import { ApolloClient } from 'apollo-boost';
 
 import UserContext from '../../utils/UserContext';
 import css from './RecipeStatus.css';
-import SaveModificationMutation from '../../graphql/saveModification.graphql';
+import SaveModificationMutation from '../../graphql/SaveModification.graphql';
 
 export default withApollo(
   class RecipeStatus extends PureComponent {

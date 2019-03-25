@@ -1,4 +1,4 @@
-# Schooled Lunch
+# Recipe Lab
 
 Play with your food.
 

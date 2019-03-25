@@ -8,7 +8,7 @@ export default class Footer extends Component {
     return (
       <footer className={css.footer}>
         <div className={css.copyright}>
-          Copyright &copy; {new Date().getFullYear()} Schooled Lunch
+          Copyright &copy; {new Date().getFullYear()} Recipe Lab
         </div>
         <div className={css.social}>
           <a href="#">Instagram</a> |<a href="#">Facebook</a> |
