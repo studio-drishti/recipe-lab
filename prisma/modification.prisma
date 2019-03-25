@@ -1,51 +1,56 @@
 type Modification {
-  id: ID! @id
+  id: ID! @unique
   createdAt: DateTime! @createdAt
   updatedAt: DateTime! @updatedAt
-  user: User!
-  recipe: Recipe!
-  sortings: [Sorting!]!
-  alterations: [Alteration!]!
+  user: User! @relation(name: "ModificationOwner")
+  recipe: Recipe! @relation(name: "RecipeModifications")
+  sortings: [Sorting!]! @relation(name: "Sortings", onDelete: CASCADE)
+  alterations: [Alteration!]! @relation(name: "Alterations", onDelete: CASCADE)
   removals: [ID!]!
   itemAdditions: [ItemAddition!]!
+    @relation(name: "ItemAdditions", onDelete: CASCADE)
   stepAdditions: [StepAddition!]!
+    @relation(name: "StepAdditions", onDelete: CASCADE)
   ingredientAdditions: [IngredientAddition!]!
+    @relation(name: "IngredientAdditions", onDelete: CASCADE)
 }
 
-type Sorting @embedded {
-  uid: ID! @id
+type Sorting {
+  uid: ID! @unique
   parentId: ID!
   order: [ID!]!
+  modification: Modification! @relation(name: "Sortings")
 }
 
-type Alteration @embedded {
-  uid: ID! @id
+type Alteration {
+  uid: ID! @unique
   sourceId: ID!
   field: String!
   value: String!
+  modification: Modification! @relation(name: "Alterations")
 }
 
-type ItemAddition @embedded {
-  uid: ID! @id
-  clientId: ID!
+type ItemAddition {
+  uid: ID! @unique
   parentId: ID!
   name: String!
+  modification: Modification! @relation(name: "ItemAdditions")
 }
 
-type StepAddition @embedded {
-  uid: ID! @id
-  clientId: ID!
+type StepAddition {
+  uid: ID! @unique
   parentId: ID!
   directions: String!
   notes: String!
+  modification: Modification! @relation(name: "StepAdditions")
 }
 
-type IngredientAddition @embedded {
-  uid: ID! @id
-  clientId: ID!
+type IngredientAddition {
+  uid: ID! @unique
   parentId: ID!
   name: String!
   quantity: String!
-  unit: String
-  processing: String
+  unit: String!
+  processing: String!
+  modification: Modification! @relation(name: "IngredientAdditions")
 }

@@ -8,7 +8,7 @@ module.exports = {
   recipes: (parent, args, ctx) => {
     return ctx.prisma.recipes();
   },
-  recipe: (parent, { id }, ctx) => {
-    return ctx.prisma.recipe({ id });
+  recipe: (parent, { uid }, ctx) => {
+    return ctx.prisma.recipe({ uid });
   }
 };

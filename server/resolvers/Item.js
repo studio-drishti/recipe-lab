@@ -1,5 +1,5 @@
 module.exports = {
-  steps: ({ id }, args, ctx) => {
-    return ctx.prisma.item({ id }).steps({ orderBy: 'index_ASC' });
+  steps: ({ uid }, args, ctx) => {
+    return ctx.prisma.item({ uid }).steps({ orderBy: 'index_ASC' });
   }
 };

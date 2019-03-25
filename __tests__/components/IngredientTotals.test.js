@@ -10,13 +10,13 @@ beforeEach(() => {
   props = {
     ingredients: [
       {
-        id: cuid(),
+        uid: cuid(),
         name: 'wine',
         quantity: '1',
         unit: 'cup'
       },
       {
-        id: cuid(),
+        uid: cuid(),
         name: 'wine',
         quantity: '1',
         unit: 'cup'
@@ -70,17 +70,17 @@ describe('Calculating ingredient totals', () => {
   test('rewrites modified ingredients', () => {
     props.alterations = [
       {
-        sourceId: props.ingredients[0].id,
+        sourceId: props.ingredients[0].uid,
         field: 'name',
         value: 'whiskey'
       },
       {
-        sourceId: props.ingredients[0].id,
+        sourceId: props.ingredients[0].uid,
         field: 'quantity',
         value: '2'
       },
       {
-        sourceId: props.ingredients[0].id,
+        sourceId: props.ingredients[0].uid,
         field: 'unit',
         value: 'gal'
       }

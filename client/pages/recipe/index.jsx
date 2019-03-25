@@ -29,7 +29,7 @@ export default class IndexPage extends Component {
       <Page>
         <Query
           query={RecipeWithModificationQuery}
-          variables={{ id: this.props.recipeId, user: user ? user.id : null }}
+          variables={{ uid: this.props.recipeId, user: user ? user.id : null }}
         >
           {({ loading, error, data }) => {
             if (loading) return 'Loading...';

@@ -1,17 +1,17 @@
 #import './ModificationFragment.graphql'
-query recipe($id: ID!, $user: ID) {
-  recipe(id: $id) {
-    id
+query recipe($uid: ID!, $user: ID) {
+  recipe(uid: $uid) {
+    uid
     title
     items {
-      id
+      uid
       name
       steps {
-        id
+        uid
         directions
         notes
         ingredients {
-          id
+          uid
           name
           quantity
           unit

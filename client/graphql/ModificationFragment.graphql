@@ -13,7 +13,6 @@ fragment ModificationInfo on Modification {
   }
   additions {
     uid
-    id
     parentId
     kind
     ... on ItemAddition {

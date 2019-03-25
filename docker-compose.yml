@@ -55,20 +55,23 @@ services:
         port: 4466
         databases:
           default:
-            connector: mongo
-            uri: mongodb://prisma:prisma@mongo
+            connector: mysql
+            host: mysql
+            port: 3306
+            user: root
+            password: prisma
+            migrations: true
 
-  mongo:
-    image: mongo
+  mysql:
+    image: mysql:5.7
     restart: always
     environment:
-      MONGO_INITDB_ROOT_USERNAME: prisma
-      MONGO_INITDB_ROOT_PASSWORD: prisma
+      MYSQL_ROOT_PASSWORD: prisma
     ports:
-      - '27017:27017'
+      - '3306:3306'
     volumes:
-      - mongo:/var/lib/mongo
+      - mysql:/var/lib/mysql
 
 volumes:
   notused:
-  mongo:
+  mysql:

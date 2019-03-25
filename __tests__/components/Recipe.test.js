@@ -9,10 +9,10 @@ let props, localStoreId;
 beforeEach(() => {
   props = {
     recipe: {
-      id: cuid(),
+      uid: cuid(),
       title: 'Spaghetti and Meatballs',
       author: {
-        id: cuid(),
+        uid: cuid(),
         name: 'Test McTester'
       },
       time: 'medium',
@@ -21,15 +21,15 @@ beforeEach(() => {
       course: 'main',
       items: [
         {
-          id: cuid(),
+          uid: cuid(),
           name: 'Food thingy',
           steps: [
             {
-              id: cuid(),
+              uid: cuid(),
               directions: 'Do the first thing',
               ingredients: [
                 {
-                  id: cuid(),
+                  uid: cuid(),
                   name: 'wine',
                   quantity: 1,
                   unit: 'cup'
@@ -37,11 +37,11 @@ beforeEach(() => {
               ]
             },
             {
-              id: cuid(),
+              uid: cuid(),
               directions: 'Do the second thing',
               ingredients: [
                 {
-                  id: cuid(),
+                  uid: cuid(),
                   name: 'wine',
                   quantity: 1,
                   unit: 'cup'
@@ -51,14 +51,14 @@ beforeEach(() => {
           ]
         },
         {
-          id: cuid(),
+          uid: cuid(),
           name: 'Sauce',
           steps: []
         }
       ]
     }
   };
-  localStoreId = `MOD-${props.recipe.id}`;
+  localStoreId = `MOD-${props.recipe.uid}`;
   localStorage.clear();
   localStorage.setItem.mockClear();
 });
@@ -73,7 +73,7 @@ describe('It saves alterations', () => {
       expect.objectContaining({
         alterations: expect.arrayContaining([
           expect.objectContaining({
-            sourceId: props.recipe.id,
+            sourceId: props.recipe.uid,
             field: 'title',
             value: 'Milk Steak'
           })
@@ -115,7 +115,7 @@ describe('It saves removals', () => {
     expect(localStorage.setItem).toHaveBeenCalled();
     expect(JSON.parse(localStorage.__STORE__[localStoreId])).toEqual(
       expect.objectContaining({
-        removals: expect.arrayContaining([props.recipe.items[0].id])
+        removals: expect.arrayContaining([props.recipe.items[0].uid])
       })
     );
   });
@@ -127,11 +127,11 @@ describe('It saves sorting', () => {
     const instance = wrapper.instance();
     const { recipe } = instance.state;
 
-    instance.saveSorting(recipe.id, recipe.items, recipe.items.length - 1, 0);
+    instance.saveSorting(recipe.uid, recipe.items, recipe.items.length - 1, 0);
     expect(localStorage.setItem).toHaveBeenCalled();
     expect(
       JSON.parse(localStorage.__STORE__[localStoreId]).sortings[0].order[0]
-    ).toEqual(recipe.items[recipe.items.length - 1].id);
+    ).toEqual(recipe.items[recipe.items.length - 1].uid);
   });
 
   test('removes sorting mod if same as source', () => {
@@ -139,12 +139,12 @@ describe('It saves sorting', () => {
     const instance = wrapper.instance();
     const { recipe } = instance.state;
 
-    instance.saveSorting(recipe.id, recipe.items, recipe.items.length - 1, 0);
+    instance.saveSorting(recipe.uid, recipe.items, recipe.items.length - 1, 0);
     expect(
       JSON.parse(localStorage.__STORE__[localStoreId]).sortings
     ).toHaveLength(1);
 
-    instance.saveSorting(recipe.id, recipe.items, 0, recipe.items.length - 1);
+    instance.saveSorting(recipe.uid, recipe.items, 0, recipe.items.length - 1);
     expect(
       JSON.parse(localStorage.__STORE__[localStoreId]).sortings
     ).toHaveLength(0);
@@ -157,13 +157,13 @@ describe('It creates additions', () => {
     const instance = wrapper.instance();
     const { additions } = instance.state.modification;
 
-    instance.createIngredient(props.recipe.items[0].steps[0].id);
+    instance.createIngredient(props.recipe.items[0].steps[0].uid);
 
     expect(additions).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
-          id: expect.any(String),
-          parentId: props.recipe.items[0].steps[0].id,
+          uid: expect.any(String),
+          parentId: props.recipe.items[0].steps[0].uid,
           kind: 'Ingredient'
         })
       ])
@@ -175,13 +175,13 @@ describe('It creates additions', () => {
     const instance = wrapper.instance();
     const { additions } = instance.state.modification;
 
-    instance.createStep(props.recipe.items[0].id);
+    instance.createStep(props.recipe.items[0].uid);
 
     expect(additions).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
-          id: expect.any(String),
-          parentId: props.recipe.items[0].id,
+          uid: expect.any(String),
+          parentId: props.recipe.items[0].uid,
           kind: 'Step'
         })
       ])
@@ -198,8 +198,8 @@ describe('It creates additions', () => {
     expect(additions).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
-          id: expect.any(String),
-          parentId: props.recipe.id,
+          uid: expect.any(String),
+          parentId: props.recipe.uid,
           kind: 'Item'
         })
       ])
