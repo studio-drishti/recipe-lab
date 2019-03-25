@@ -24,9 +24,14 @@ export default class Navigation extends Component {
           </Link>
 
           {user && (
-            <Link href="/profile">
-              <a>My Profile</a>
-            </Link>
+            <>
+              <Link href="/profile">
+                <a>My Profile</a>
+              </Link>
+              <Link href="/new-recipe">
+                <a>+ New Recipe</a>
+              </Link>
+            </>
           )}
 
           {!user && (
