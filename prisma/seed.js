@@ -3,7 +3,7 @@ const cuid = require('cuid');
 
 async function main() {
   await prisma.createUser({
-    email: 'jay@schooledlunch.club',
+    email: 'jay@recipelab.io',
     emailVerified: true,
     name: 'Jay',
     password: '$2b$10$dqyYw5XovLjpmkYNiRDEWuwKaRAvLaG45fnXE5b3KTccKZcRPka2m', // "secret42"
@@ -253,7 +253,7 @@ async function main() {
   });
 
   await prisma.createUser({
-    email: 'emma@schooledlunch.club',
+    email: 'emma@recipelab.io',
     emailVerified: true,
     name: 'Emma',
     password: '$2b$10$dqyYw5XovLjpmkYNiRDEWuwKaRAvLaG45fnXE5b3KTccKZcRPka2m' // "secret42"
