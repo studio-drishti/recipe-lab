@@ -9,6 +9,8 @@ import css from './Recipe.css';
 import reorder from '../../utils/reorder';
 import areArraysEqual from '../../utils/areArraysEqual';
 
+import RecipeHeader from '../RecipeHeader';
+import RecipeBio from '../RecipeBio';
 import StepList from '../StepList';
 import Step from '../Step';
 import ItemList from '../ItemList';
@@ -438,6 +440,7 @@ export default class Recipe extends Component {
 
     return (
       <>
+        <RecipeHeader recipe={recipe} />
         <RecipeStatus
           recipe={recipe}
           modification={modification}
@@ -622,6 +625,7 @@ export default class Recipe extends Component {
             </div>
           </aside>
         </article>
+        <RecipeBio author={recipe.author} />
       </>
     );
   }

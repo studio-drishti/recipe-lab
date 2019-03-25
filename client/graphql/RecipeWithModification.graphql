@@ -3,6 +3,10 @@ query recipe($uid: ID!, $user: ID) {
   recipe(uid: $uid) {
     uid
     title
+    description
+    course
+    time
+    skill
     items {
       uid
       name
