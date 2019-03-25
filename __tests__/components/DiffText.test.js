@@ -1,7 +1,7 @@
 import { shallow } from 'enzyme';
 import React from 'react';
 
-import DiffText from 'schooled-lunch/client/components/DiffText';
+import DiffText from 'recipe-lab/client/components/DiffText';
 
 const setup = propOverrides => {
   const props = Object.assign(

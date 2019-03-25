@@ -1,7 +1,7 @@
 import { shallow } from 'enzyme';
 import React from 'react';
 
-import RecipeNav from 'schooled-lunch/client/components/RecipeNav';
+import RecipeNav from 'recipe-lab/client/components/RecipeNav';
 import cuid from 'cuid';
 
 let props = {};

@@ -1,7 +1,7 @@
 import { shallow } from 'enzyme';
 import React from 'react';
 
-import StepHeader from 'schooled-lunch/client/components/StepHeader';
+import StepHeader from 'recipe-lab/client/components/StepHeader';
 
 const setup = () => {
   const wrapper = shallow(<StepHeader />);

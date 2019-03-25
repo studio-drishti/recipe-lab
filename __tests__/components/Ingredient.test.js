@@ -1,7 +1,7 @@
 import { shallow } from 'enzyme';
 import React from 'react';
 
-import Ingredient from 'schooled-lunch/client/components/Ingredient';
+import Ingredient from 'recipe-lab/client/components/Ingredient';
 
 const setup = propOverrides => {
   const props = Object.assign(

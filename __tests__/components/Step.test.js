@@ -2,7 +2,7 @@ import { mount } from 'enzyme';
 import React from 'react';
 import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 
-import Step from 'schooled-lunch/client/components/Step';
+import Step from 'recipe-lab/client/components/Step';
 import cuid from 'cuid';
 
 let props;

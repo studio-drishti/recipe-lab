@@ -1,10 +1,10 @@
 {
-  "name": "schooled-lunch",
+  "name": "recipe-lab",
   "description": "Play with your food.",
   "version": "0.0.1",
   "main": "server/index.js",
   "license": "GPL-3.0-or-later",
-  "repository": "https://github.com/jayarnielsen/schooled-lunch",
+  "repository": "https://github.com/jayarnielsen/recipe-lab",
   "bin": {
     "www": "./bin/www.js"
   },

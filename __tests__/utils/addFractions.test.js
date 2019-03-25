@@ -1,4 +1,4 @@
-import addFractions from 'schooled-lunch/client/utils/addFractions';
+import addFractions from 'recipe-lab/client/utils/addFractions';
 
 describe('are arrays equal', () => {
   test('2 whole numbers results in a whole number', () => {

@@ -34,11 +34,6 @@ services:
     environment:
       - APP_SECRET=secret1234
       - NODE_ENV=development
-      - MONGO_USERNAME=root
-      - MONGO_PASSWORD=sch0013d
-      - MONGO_HOSTNAME=mongo
-      - MONGO_PORT=27017
-      - MONGO_DATABASE_NAME=schooled-lunch
       - EMAIL_FROM=no-reply@schooledlunch.club
     depends_on:
       - prisma
