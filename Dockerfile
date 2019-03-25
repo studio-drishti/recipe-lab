@@ -17,28 +17,30 @@ EXPOSE $PORT 9229 9230
 RUN npm i npm@latest -g
 
 # install dependencies first, in a different location for easier app bind mounting for local development
-WORKDIR /opt
+# due to default /opt permissions we have to create the dir with root and change perms
+RUN mkdir /opt/node_app && chown node:node /opt/node_app
+WORKDIR /opt/node_app
+# the official node image provides an unprivileged user as a security best practice
+# but we have to manually enable it. We put it here so npm installs dependencies as the same
+# user who runs the app.
+# https://github.com/nodejs/docker-node/blob/master/docs/BestPractices.md#non-root-user
+USER node
 COPY package.json package-lock.json* ./
 RUN npm install --no-optional && npm cache clean --force
-ENV PATH /opt/node_modules/.bin:$PATH
+ENV PATH /opt/node_app/node_modules/.bin:$PATH
 
 # next.js depends on this cache directory for building the app
-RUN mkdir -p /opt/app/node_modules/.cache
-RUN chown node:node /opt/app/node_modules/.cache
+RUN mkdir -p /opt/node_app/app/node_modules/.cache
 
 # check every 30s to ensure this service returns HTTP 200
 HEALTHCHECK --interval=30s CMD node server/healthcheck.js
 
 # copy in our source code last, as it changes the most
-WORKDIR /opt/app
-COPY . /opt/app
+WORKDIR /opt/node_app/app
+COPY . .
 
 COPY docker-entrypoint.sh /usr/local/bin/
 ENTRYPOINT ["docker-entrypoint.sh"]
-
-# the official node image provides an unprivileged user as a security best practice
-# https://github.com/nodejs/docker-node/blob/master/docs/BestPractices.md#non-root-user
-USER node
 
 # if you want to use npm start instead, then use `docker run --init in production`
 # so that signals are passed properly. Note the code in index.js is needed to catch Docker signals
