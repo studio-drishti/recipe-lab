@@ -1,19 +1,19 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import Textarea from 'react-textarea-autosize';
 
 import css from './Directions.css';
 import DiffText from '../DiffText';
 
-export default class Ingredient extends Component {
+export default class Ingredient extends PureComponent {
   static displayName = 'Directions';
 
   static propTypes = {
-    directions: PropTypes.string,
+    step: PropTypes.object,
     mod: PropTypes.string,
     editing: PropTypes.bool,
     removed: PropTypes.bool,
-    handleStepChange: PropTypes.func,
+    saveOrUpdateField: PropTypes.func,
     restoreStep: PropTypes.func,
     inputRef: PropTypes.shape({
       current: PropTypes.any
@@ -27,27 +27,28 @@ export default class Ingredient extends Component {
   };
 
   renderDirectionsWithMods = () => {
-    const { mod, directions } = this.props;
+    const { mod, step } = this.props;
     if (mod !== undefined) {
-      return <DiffText original={directions} modified={mod} />;
+      return <DiffText original={step.directions} modified={mod} />;
     } else {
-      return directions;
+      return step.directions;
     }
   };
 
   getDirectionsValue = () => {
-    const { mod, directions } = this.props;
-    return mod !== undefined ? mod : directions;
+    const { mod, step } = this.props;
+    return mod !== undefined ? mod : step.directions;
   };
 
   handleStepChange = e => {
-    const { removed, handleStepChange, restoreStep } = this.props;
+    const { name, value } = e.target;
+    const { step, removed, saveOrUpdateField, restoreStep } = this.props;
     if (removed) restoreStep();
-    handleStepChange(e);
+    saveOrUpdateField(step, name, value);
   };
 
   render() {
-    const { editing, removed, directions, inputRef } = this.props;
+    const { editing, removed, step, inputRef } = this.props;
 
     return (
       <form className={css.directions}>
@@ -61,7 +62,7 @@ export default class Ingredient extends Component {
           />
         )}
 
-        {!editing && removed && <del>{directions}</del>}
+        {!editing && removed && <del>{step.directions}</del>}
 
         {!editing && !removed && <p>{this.renderDirectionsWithMods()}</p>}
       </form>

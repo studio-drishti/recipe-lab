@@ -152,12 +152,6 @@ export default class Recipe extends Component {
     this.saveOrUpdateField(source, name, value);
   };
 
-  handleStepChange = e => {
-    const { name, value } = e.target;
-    const { activeStep } = this.state;
-    this.saveOrUpdateField(activeStep, name, value);
-  };
-
   saveRemoval = source => {
     const { modification } = this.state;
 
@@ -535,9 +529,9 @@ export default class Recipe extends Component {
                               }
                               directions={
                                 <Directions
-                                  directions={step.directions}
+                                  step={step}
                                   mod={this.getAlteration(step, 'directions')}
-                                  handleStepChange={this.handleStepChange}
+                                  saveOrUpdateField={this.saveOrUpdateField}
                                 />
                               }
                             />
@@ -580,9 +574,9 @@ export default class Recipe extends Component {
                 }
                 directions={
                   <Directions
-                    directions={activeStep.directions}
+                    step={activeStep}
                     mod={this.getAlteration(activeStep, 'directions')}
-                    handleStepChange={this.handleStepChange}
+                    saveOrUpdateField={this.saveOrUpdateField}
                   />
                 }
               />
