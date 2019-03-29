@@ -83,7 +83,7 @@
 
 .statsForm {
   display: grid;
-  grid-template-columns: auto auto auto;
+  grid-template-columns: auto auto;
   grid-column-gap: 1rem;
   justify-content: end;
 

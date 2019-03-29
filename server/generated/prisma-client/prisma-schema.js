@@ -2087,7 +2087,6 @@ type Recipe {
   author: User!
   title: String!
   time: String!
-  skill: String!
   servingAmount: String!
   servingType: String!
   description: String!
@@ -2106,7 +2105,6 @@ input RecipeCreateInput {
   author: UserCreateOneWithoutRecipesInput!
   title: String
   time: String
-  skill: String
   servingAmount: String
   servingType: String
   description: String
@@ -2133,7 +2131,6 @@ input RecipeCreateWithoutAuthorInput {
   uid: ID!
   title: String
   time: String
-  skill: String
   servingAmount: String
   servingType: String
   description: String
@@ -2146,7 +2143,6 @@ input RecipeCreateWithoutItemsInput {
   author: UserCreateOneWithoutRecipesInput!
   title: String
   time: String
-  skill: String
   servingAmount: String
   servingType: String
   description: String
@@ -2158,7 +2154,6 @@ input RecipeCreateWithoutModificationsInput {
   author: UserCreateOneWithoutRecipesInput!
   title: String
   time: String
-  skill: String
   servingAmount: String
   servingType: String
   description: String
@@ -2181,8 +2176,6 @@ enum RecipeOrderByInput {
   title_DESC
   time_ASC
   time_DESC
-  skill_ASC
-  skill_DESC
   servingAmount_ASC
   servingAmount_DESC
   servingType_ASC
@@ -2199,7 +2192,6 @@ type RecipePreviousValues {
   updatedAt: DateTime!
   title: String!
   time: String!
-  skill: String!
   servingAmount: String!
   servingType: String!
   description: String!
@@ -2264,20 +2256,6 @@ input RecipeScalarWhereInput {
   time_not_starts_with: String
   time_ends_with: String
   time_not_ends_with: String
-  skill: String
-  skill_not: String
-  skill_in: [String!]
-  skill_not_in: [String!]
-  skill_lt: String
-  skill_lte: String
-  skill_gt: String
-  skill_gte: String
-  skill_contains: String
-  skill_not_contains: String
-  skill_starts_with: String
-  skill_not_starts_with: String
-  skill_ends_with: String
-  skill_not_ends_with: String
   servingAmount: String
   servingAmount_not: String
   servingAmount_in: [String!]
@@ -2348,7 +2326,6 @@ input RecipeUpdateInput {
   author: UserUpdateOneRequiredWithoutRecipesInput
   title: String
   time: String
-  skill: String
   servingAmount: String
   servingType: String
   description: String
@@ -2360,7 +2337,6 @@ input RecipeUpdateManyDataInput {
   uid: ID
   title: String
   time: String
-  skill: String
   servingAmount: String
   servingType: String
   description: String
@@ -2370,7 +2346,6 @@ input RecipeUpdateManyMutationInput {
   uid: ID
   title: String
   time: String
-  skill: String
   servingAmount: String
   servingType: String
   description: String
@@ -2411,7 +2386,6 @@ input RecipeUpdateWithoutAuthorDataInput {
   uid: ID
   title: String
   time: String
-  skill: String
   servingAmount: String
   servingType: String
   description: String
@@ -2424,7 +2398,6 @@ input RecipeUpdateWithoutItemsDataInput {
   author: UserUpdateOneRequiredWithoutRecipesInput
   title: String
   time: String
-  skill: String
   servingAmount: String
   servingType: String
   description: String
@@ -2436,7 +2409,6 @@ input RecipeUpdateWithoutModificationsDataInput {
   author: UserUpdateOneRequiredWithoutRecipesInput
   title: String
   time: String
-  skill: String
   servingAmount: String
   servingType: String
   description: String
@@ -2524,20 +2496,6 @@ input RecipeWhereInput {
   time_not_starts_with: String
   time_ends_with: String
   time_not_ends_with: String
-  skill: String
-  skill_not: String
-  skill_in: [String!]
-  skill_not_in: [String!]
-  skill_lt: String
-  skill_lte: String
-  skill_gt: String
-  skill_gte: String
-  skill_contains: String
-  skill_not_contains: String
-  skill_starts_with: String
-  skill_not_starts_with: String
-  skill_ends_with: String
-  skill_not_ends_with: String
   servingAmount: String
   servingAmount_not: String
   servingAmount_in: [String!]

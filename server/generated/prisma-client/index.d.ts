@@ -603,8 +603,6 @@ export type RecipeOrderByInput =
   | "title_DESC"
   | "time_ASC"
   | "time_DESC"
-  | "skill_ASC"
-  | "skill_DESC"
   | "servingAmount_ASC"
   | "servingAmount_DESC"
   | "servingType_ASC"
@@ -1985,7 +1983,6 @@ export interface RecipeUpdateManyMutationInput {
   uid?: ID_Input;
   title?: String;
   time?: String;
-  skill?: String;
   servingAmount?: String;
   servingType?: String;
   description?: String;
@@ -2002,7 +1999,6 @@ export interface RecipeUpdateInput {
   author?: UserUpdateOneRequiredWithoutRecipesInput;
   title?: String;
   time?: String;
-  skill?: String;
   servingAmount?: String;
   servingType?: String;
   description?: String;
@@ -2387,20 +2383,6 @@ export interface RecipeWhereInput {
   time_not_starts_with?: String;
   time_ends_with?: String;
   time_not_ends_with?: String;
-  skill?: String;
-  skill_not?: String;
-  skill_in?: String[] | String;
-  skill_not_in?: String[] | String;
-  skill_lt?: String;
-  skill_lte?: String;
-  skill_gt?: String;
-  skill_gte?: String;
-  skill_contains?: String;
-  skill_not_contains?: String;
-  skill_starts_with?: String;
-  skill_not_starts_with?: String;
-  skill_ends_with?: String;
-  skill_not_ends_with?: String;
   servingAmount?: String;
   servingAmount_not?: String;
   servingAmount_in?: String[] | String;
@@ -3060,20 +3042,6 @@ export interface RecipeScalarWhereInput {
   time_not_starts_with?: String;
   time_ends_with?: String;
   time_not_ends_with?: String;
-  skill?: String;
-  skill_not?: String;
-  skill_in?: String[] | String;
-  skill_not_in?: String[] | String;
-  skill_lt?: String;
-  skill_lte?: String;
-  skill_gt?: String;
-  skill_gte?: String;
-  skill_contains?: String;
-  skill_not_contains?: String;
-  skill_starts_with?: String;
-  skill_not_starts_with?: String;
-  skill_ends_with?: String;
-  skill_not_ends_with?: String;
   servingAmount?: String;
   servingAmount_not?: String;
   servingAmount_in?: String[] | String;
@@ -3144,7 +3112,6 @@ export interface RecipeUpdateManyDataInput {
   uid?: ID_Input;
   title?: String;
   time?: String;
-  skill?: String;
   servingAmount?: String;
   servingType?: String;
   description?: String;
@@ -3181,7 +3148,6 @@ export interface RecipeCreateInput {
   author: UserCreateOneWithoutRecipesInput;
   title?: String;
   time?: String;
-  skill?: String;
   servingAmount?: String;
   servingType?: String;
   description?: String;
@@ -3194,7 +3160,6 @@ export interface RecipeUpdateWithoutModificationsDataInput {
   author?: UserUpdateOneRequiredWithoutRecipesInput;
   title?: String;
   time?: String;
-  skill?: String;
   servingAmount?: String;
   servingType?: String;
   description?: String;
@@ -3336,7 +3301,6 @@ export interface RecipeCreateWithoutModificationsInput {
   author: UserCreateOneWithoutRecipesInput;
   title?: String;
   time?: String;
-  skill?: String;
   servingAmount?: String;
   servingType?: String;
   description?: String;
@@ -3384,7 +3348,6 @@ export interface RecipeUpdateWithoutAuthorDataInput {
   uid?: ID_Input;
   title?: String;
   time?: String;
-  skill?: String;
   servingAmount?: String;
   servingType?: String;
   description?: String;
@@ -3501,7 +3464,6 @@ export interface RecipeCreateWithoutItemsInput {
   author: UserCreateOneWithoutRecipesInput;
   title?: String;
   time?: String;
-  skill?: String;
   servingAmount?: String;
   servingType?: String;
   description?: String;
@@ -3610,7 +3572,6 @@ export interface RecipeUpdateWithoutItemsDataInput {
   author?: UserUpdateOneRequiredWithoutRecipesInput;
   title?: String;
   time?: String;
-  skill?: String;
   servingAmount?: String;
   servingType?: String;
   description?: String;
@@ -3790,7 +3751,6 @@ export interface RecipeCreateWithoutAuthorInput {
   uid: ID_Input;
   title?: String;
   time?: String;
-  skill?: String;
   servingAmount?: String;
   servingType?: String;
   description?: String;
@@ -5196,7 +5156,6 @@ export interface RecipePreviousValues {
   updatedAt: DateTimeOutput;
   title: String;
   time: String;
-  skill: String;
   servingAmount: String;
   servingType: String;
   description: String;
@@ -5210,7 +5169,6 @@ export interface RecipePreviousValuesPromise
   updatedAt: () => Promise<DateTimeOutput>;
   title: () => Promise<String>;
   time: () => Promise<String>;
-  skill: () => Promise<String>;
   servingAmount: () => Promise<String>;
   servingType: () => Promise<String>;
   description: () => Promise<String>;
@@ -5224,7 +5182,6 @@ export interface RecipePreviousValuesSubscription
   updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
   title: () => Promise<AsyncIterator<String>>;
   time: () => Promise<AsyncIterator<String>>;
-  skill: () => Promise<AsyncIterator<String>>;
   servingAmount: () => Promise<AsyncIterator<String>>;
   servingType: () => Promise<AsyncIterator<String>>;
   description: () => Promise<AsyncIterator<String>>;
@@ -5236,7 +5193,6 @@ export interface Recipe {
   updatedAt: DateTimeOutput;
   title: String;
   time: String;
-  skill: String;
   servingAmount: String;
   servingType: String;
   description: String;
@@ -5249,7 +5205,6 @@ export interface RecipePromise extends Promise<Recipe>, Fragmentable {
   author: <T = UserPromise>() => T;
   title: () => Promise<String>;
   time: () => Promise<String>;
-  skill: () => Promise<String>;
   servingAmount: () => Promise<String>;
   servingType: () => Promise<String>;
   description: () => Promise<String>;
@@ -5286,7 +5241,6 @@ export interface RecipeSubscription
   author: <T = UserSubscription>() => T;
   title: () => Promise<AsyncIterator<String>>;
   time: () => Promise<AsyncIterator<String>>;
-  skill: () => Promise<AsyncIterator<String>>;
   servingAmount: () => Promise<AsyncIterator<String>>;
   servingType: () => Promise<AsyncIterator<String>>;
   description: () => Promise<AsyncIterator<String>>;

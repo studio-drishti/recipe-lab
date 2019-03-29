@@ -155,12 +155,6 @@ export default class Navigation extends PureComponent {
                 </i>
                 {this.getRecipeValue('time')}
               </a>
-              <a onClick={this.enableEditingSkill}>
-                <i>
-                  <MdSchool />
-                </i>
-                {this.getRecipeValue('skill')}
-              </a>
               <a onClick={this.enableEditingServing}>
                 <i>
                   <MdLocalDining />
@@ -186,23 +180,6 @@ export default class Navigation extends PureComponent {
                   {TIME_OPTIONS.map(time => (
                     <option key={time} value={time}>
                       {time}
-                    </option>
-                  ))}
-                </select>
-              </label>
-              <label>
-                <i>
-                  <MdSchool />
-                </i>
-                <select
-                  name="skill"
-                  onChange={this.handleRecipeChange}
-                  ref={this.skillInputRef}
-                  value={this.getRecipeValue('skill')}
-                >
-                  {SKILL_OPTIONS.map(skill => (
-                    <option key={skill} value={skill}>
-                      {skill}
                     </option>
                   ))}
                 </select>

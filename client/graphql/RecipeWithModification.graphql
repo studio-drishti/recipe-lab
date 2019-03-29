@@ -7,7 +7,6 @@ query recipe($uid: ID!, $user: ID) {
     servingAmount
     servingType
     time
-    skill
     items {
       uid
       name

@@ -5,7 +5,6 @@ type Recipe {
   author: User!
   title: String!
   time: String!
-  skill: String!
   servingAmount: String!
   servingType: String!
   description: String!
