@@ -440,7 +440,12 @@ export default class Recipe extends Component {
 
     return (
       <>
-        <RecipeHeader recipe={recipe} />
+        <RecipeHeader
+          recipe={recipe}
+          recipeMods={modification.alterations.filter(
+            alteration => alteration.sourceId === recipe.uid
+          )}
+        />
         <RecipeStatus
           recipe={recipe}
           modification={modification}

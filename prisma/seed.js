@@ -12,8 +12,8 @@ async function main() {
         {
           uid: cuid(),
           title: 'Spaghetti and Meatballs',
-          time: 'medium',
-          skill: 'easy',
+          time: 'Moderate',
+          skill: 'Easy',
           description:
             "It's spaghett! This super easy recipe is delcious, nutritious, and sure to be a crowd pleaser. Rice noodles done right are practically indistinguishable from their glutenfull counterparts.",
           course: 'main',
