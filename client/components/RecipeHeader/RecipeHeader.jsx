@@ -1,9 +1,9 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import { MdSchool, MdTimer, MdLocalDining } from 'react-icons/md';
+import { MdTimer, MdLocalDining } from 'react-icons/md';
 import Textarea from 'react-textarea-autosize';
 
-import { TIME_OPTIONS, SKILL_OPTIONS } from '../../config';
+import { TIME_OPTIONS } from '../../config';
 import DiffText from '../DiffText';
 import css from './RecipeHeader.css';
 
