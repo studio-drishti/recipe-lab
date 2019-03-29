@@ -36,7 +36,8 @@ export default class Recipe extends Component {
       time: PropTypes.string,
       skill: PropTypes.string,
       description: PropTypes.string,
-      course: PropTypes.string,
+      servingAmount: PropTypes.string,
+      servingType: PropTypes.string,
       items: PropTypes.arrayOf(PropTypes.object)
     })
   };

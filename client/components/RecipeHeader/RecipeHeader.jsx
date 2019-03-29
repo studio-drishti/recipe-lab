@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import { MdSchool, MdTimer } from 'react-icons/md';
+import { MdSchool, MdTimer, MdLocalDining } from 'react-icons/md';
 import Textarea from 'react-textarea-autosize';
 
 import { TIME_OPTIONS, SKILL_OPTIONS } from '../../config';
@@ -24,6 +24,7 @@ export default class Navigation extends PureComponent {
   descriptionInputRef = React.createRef();
   timeInputRef = React.createRef();
   skillInputRef = React.createRef();
+  servingInputRef = React.createRef();
 
   componentWillUnmount() {
     document.removeEventListener('mousedown', this.handleClick);
@@ -70,6 +71,11 @@ export default class Navigation extends PureComponent {
   enableEditingSkill = async () => {
     await this.enableEditing();
     if (this.skillInputRef.current) this.skillInputRef.current.focus();
+  };
+
+  enableEditingServing = async () => {
+    await this.enableEditing();
+    if (this.servingInputRef.current) this.servingInputRef.current.focus();
   };
 
   disableEditing = () => {
@@ -155,6 +161,13 @@ export default class Navigation extends PureComponent {
                 </i>
                 {this.getRecipeValue('skill')}
               </a>
+              <a onClick={this.enableEditingServing}>
+                <i>
+                  <MdLocalDining />
+                </i>
+                {this.getRecipeValue('servingAmount')}{' '}
+                {this.getRecipeValue('servingType')}
+              </a>
             </>
           )}
 
@@ -194,6 +207,31 @@ export default class Navigation extends PureComponent {
                   ))}
                 </select>
               </label>
+              <span className={css.servingInput}>
+                <label htmlFor="recipeServingAmount">
+                  <i>
+                    <MdLocalDining />
+                  </i>
+                </label>
+                <input
+                  ref={this.servingInputRef}
+                  id="recipeServingAmount"
+                  name="servingAmount"
+                  className={css.servingAmount}
+                  type="text"
+                  value={this.getRecipeValue('servingAmount')}
+                  placeholder="Amnt"
+                  onChange={this.handleRecipeChange}
+                />
+                <input
+                  name="servingType"
+                  className={css.servingType}
+                  type="text"
+                  value={this.getRecipeValue('servingType')}
+                  placeholder="Servings"
+                  onChange={this.handleRecipeChange}
+                />
+              </span>
             </form>
           )}
         </div>

@@ -14,9 +14,10 @@ async function main() {
           title: 'Spaghetti and Meatballs',
           time: 'Moderate',
           skill: 'Easy',
+          servingAmount: '4',
+          servingType: 'plates',
           description:
             "It's spaghett! This super easy recipe is delcious, nutritious, and sure to be a crowd pleaser. Rice noodles done right are practically indistinguishable from their glutenfull counterparts.",
-          course: 'main',
           items: {
             create: [
               {

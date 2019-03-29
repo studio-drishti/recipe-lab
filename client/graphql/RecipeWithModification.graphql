@@ -4,7 +4,8 @@ query recipe($uid: ID!, $user: ID) {
     uid
     title
     description
-    course
+    servingAmount
+    servingType
     time
     skill
     items {

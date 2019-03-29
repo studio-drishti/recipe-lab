@@ -6,7 +6,8 @@ type Recipe {
   title: String!
   time: String!
   skill: String!
-  course: String!
+  servingAmount: String!
+  servingType: String!
   description: String!
   items: [Item!]!
   modification(user: ID): Modification

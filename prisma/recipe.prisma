@@ -6,7 +6,8 @@ type Recipe {
   title: String! @default(value: "")
   time: String! @default(value: "")
   skill: String! @default(value: "")
-  course: String! @default(value: "")
+  servingAmount: String! @default(value: "")
+  servingType: String! @default(value: "")
   description: String! @default(value: "")
   items: [Item!]! @relation(name: "RecipeItems", onDelete: CASCADE)
   modifications: [Modification!]!

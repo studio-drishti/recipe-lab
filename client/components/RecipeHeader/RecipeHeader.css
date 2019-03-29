@@ -65,7 +65,6 @@
 
 .stats {
   z-index: 1;
-  text-transform: capitalize;
   text-align: right;
 
   & i {
@@ -84,7 +83,7 @@
 
 .statsForm {
   display: grid;
-  grid-template-columns: auto auto;
+  grid-template-columns: auto auto auto;
   grid-column-gap: 1rem;
   justify-content: end;
 
@@ -96,8 +95,19 @@
     margin: 0 0.25rem;
   }
 
-  & > label {
+  & > label,
+  & .servingInput {
     background: var(--color-medium-gray);
     color: var(--color-dark-gray);
+  }
+}
+
+.servingInput {
+  & .servingAmount {
+    width: 4em;
+  }
+
+  & .servingType {
+    width: 6em;
   }
 }
