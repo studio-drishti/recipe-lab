@@ -12,7 +12,7 @@ export default class Ingredient extends Component {
     mod: PropTypes.string,
     editing: PropTypes.bool,
     removed: PropTypes.bool,
-    handleItemChange: PropTypes.func,
+    saveOrUpdateField: PropTypes.func,
     restoreItem: PropTypes.func,
     inputRef: PropTypes.shape({
       current: PropTypes.any
@@ -42,9 +42,10 @@ export default class Ingredient extends Component {
   };
 
   handleItemChange = e => {
-    const { removed, restoreItem, handleItemChange, item } = this.props;
+    const { name, value } = e.target;
+    const { removed, restoreItem, saveOrUpdateField, item } = this.props;
     if (removed) restoreItem();
-    handleItemChange(e, item);
+    saveOrUpdateField(item, name, value);
   };
 
   render() {

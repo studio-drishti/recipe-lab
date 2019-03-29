@@ -145,13 +145,6 @@ export default class Recipe extends Component {
     }
   };
 
-  handleItemChange = (e, item) => {
-    const { name, value } = e.target;
-    const { activeItem } = this.state;
-    const source = item !== undefined ? item : activeItem;
-    this.saveOrUpdateField(source, name, value);
-  };
-
   saveRemoval = source => {
     const { modification } = this.state;
 
@@ -439,6 +432,7 @@ export default class Recipe extends Component {
           recipeMods={modification.alterations.filter(
             alteration => alteration.sourceId === recipe.uid
           )}
+          saveAlteration={this.saveAlteration}
         />
         <RecipeStatus
           recipe={recipe}
@@ -496,7 +490,7 @@ export default class Recipe extends Component {
                           item={item}
                           prefix="Directions for"
                           mod={this.getAlteration(item, 'name')}
-                          handleItemChange={this.handleItemChange}
+                          saveOrUpdateField={this.saveOrUpdateField}
                         />
                       }
                     >
@@ -560,7 +554,7 @@ export default class Recipe extends Component {
                     restoreItem={() => this.undoRemoval(activeItem)}
                     suffix={`> Step ${this.getActiveStepNumber()}`}
                     mod={this.getAlteration(activeItem, 'name')}
-                    handleItemChange={this.handleItemChange}
+                    saveOrUpdateField={this.saveOrUpdateField}
                   />
                 }
                 navigation={

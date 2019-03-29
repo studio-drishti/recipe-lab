@@ -4,13 +4,15 @@ import { MdSchool, MdTimer } from 'react-icons/md';
 import Textarea from 'react-textarea-autosize';
 
 import { TIME_OPTIONS, SKILL_OPTIONS } from '../../config';
+import DiffText from '../DiffText';
 import css from './RecipeHeader.css';
 
 export default class Navigation extends PureComponent {
   static displayName = 'RecipeHeader';
   static propTypes = {
     recipe: PropTypes.object,
-    recipeMods: PropTypes.arrayOf(PropTypes.object)
+    recipeMods: PropTypes.arrayOf(PropTypes.object),
+    saveAlteration: PropTypes.func
   };
 
   state = {
@@ -28,6 +30,16 @@ export default class Navigation extends PureComponent {
   componentWillUnmount() {
     document.removeEventListener('mousedown', this.handleClick);
   }
+
+  renderWithMods = fieldName => {
+    const { recipeMods, recipe } = this.props;
+    const mod = recipeMods.find(mod => mod.field === fieldName);
+    if (mod !== undefined) {
+      return <DiffText original={recipe[fieldName]} modified={mod.value} />;
+    } else {
+      return recipe[fieldName];
+    }
+  };
 
   getRecipeValue = fieldName => {
     const { edits } = this.state;
@@ -77,9 +89,19 @@ export default class Navigation extends PureComponent {
     this.disableEditing();
   };
 
+  handleRecipeChange = e => {
+    const { name, value } = e.target;
+    const { recipe, saveAlteration } = this.props;
+    saveAlteration(recipe, name, value);
+  };
+
+  handleSubmit = e => {
+    e.preventDefault();
+    this.disableEditing();
+  };
+
   render() {
     const { editing } = this.state;
-    const { recipe } = this.props;
     return (
       <header
         ref={this.headerRef}
@@ -93,31 +115,35 @@ export default class Navigation extends PureComponent {
           {!editing && (
             <>
               <h1>
-                <a onClick={this.enableEditingTitle}>{recipe.title}</a>
+                <a onClick={this.enableEditingTitle}>
+                  {this.renderWithMods('title')}
+                </a>
               </h1>
               {/* <h2>By {recipe.author.name}</h2> */}
               <p>
                 <a onClick={this.enableEditingDescription}>
-                  {recipe.description}
+                  {this.renderWithMods('description')}
                 </a>
               </p>
             </>
           )}
 
           {editing && (
-            <form className={css.titleForm}>
+            <form onSubmit={this.handleSubmit} className={css.titleForm}>
               <input
                 type="text"
+                name="title"
                 ref={this.titleInputRef}
                 placeholder="Recipe title"
                 value={this.getRecipeValue('title')}
+                onChange={this.handleRecipeChange}
               />
               <Textarea
                 inputRef={this.descriptionInputRef}
-                name="directions"
+                name="description"
                 value={this.getRecipeValue('description')}
                 placeholder="Recipe description"
-                onChange={this.handleStepChange}
+                onChange={this.handleRecipeChange}
               />
             </form>
           )}
@@ -129,24 +155,29 @@ export default class Navigation extends PureComponent {
                 <i>
                   <MdTimer />
                 </i>
-                {recipe.time}
+                {this.getRecipeValue('time')}
               </a>
               <a onClick={this.enableEditingSkill}>
                 <i>
                   <MdSchool />
                 </i>
-                {recipe.skill}
+                {this.getRecipeValue('skill')}
               </a>
             </>
           )}
 
           {editing && (
-            <form className={css.statsForm}>
+            <form onSubmit={this.handleSubmit} className={css.statsForm}>
               <label>
                 <i>
                   <MdTimer />
                 </i>
-                <select ref={this.timeInputRef}>
+                <select
+                  name="time"
+                  onChange={this.handleRecipeChange}
+                  ref={this.timeInputRef}
+                  value={this.getRecipeValue('time')}
+                >
                   {TIME_OPTIONS.map(time => (
                     <option key={time} value={time}>
                       {time}
@@ -158,7 +189,12 @@ export default class Navigation extends PureComponent {
                 <i>
                   <MdSchool />
                 </i>
-                <select ref={this.skillInputRef}>
+                <select
+                  name="skill"
+                  onChange={this.handleRecipeChange}
+                  ref={this.skillInputRef}
+                  value={this.getRecipeValue('skill')}
+                >
                   {SKILL_OPTIONS.map(skill => (
                     <option key={skill} value={skill}>
                       {skill}
