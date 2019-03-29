@@ -18,7 +18,6 @@ beforeEach(() => {
       time: 'medium',
       skill: 'easy',
       description: "It's food!",
-      course: 'main',
       items: [
         {
           uid: cuid(),

@@ -3,7 +3,7 @@ const cuid = require('cuid');
 
 async function main() {
   await prisma.createUser({
-    email: 'jay@schooledlunch.club',
+    email: 'jay@recipelab.io',
     emailVerified: true,
     name: 'Jay',
     password: '$2b$10$dqyYw5XovLjpmkYNiRDEWuwKaRAvLaG45fnXE5b3KTccKZcRPka2m', // "secret42"
@@ -12,11 +12,12 @@ async function main() {
         {
           uid: cuid(),
           title: 'Spaghetti and Meatballs',
-          time: 'medium',
-          skill: 'easy',
+          time: 'Moderate',
+          skill: 'Easy',
+          servingAmount: '4',
+          servingType: 'plates',
           description:
             "It's spaghett! This super easy recipe is delcious, nutritious, and sure to be a crowd pleaser. Rice noodles done right are practically indistinguishable from their glutenfull counterparts.",
-          course: 'main',
           items: {
             create: [
               {
@@ -253,7 +254,7 @@ async function main() {
   });
 
   await prisma.createUser({
-    email: 'emma@schooledlunch.club',
+    email: 'emma@recipelab.io',
     emailVerified: true,
     name: 'Emma',
     password: '$2b$10$dqyYw5XovLjpmkYNiRDEWuwKaRAvLaG45fnXE5b3KTccKZcRPka2m' // "secret42"

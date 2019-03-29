@@ -9,6 +9,8 @@ import css from './Recipe.css';
 import reorder from '../../utils/reorder';
 import areArraysEqual from '../../utils/areArraysEqual';
 
+import RecipeHeader from '../RecipeHeader';
+import RecipeBio from '../RecipeBio';
 import StepList from '../StepList';
 import Step from '../Step';
 import ItemList from '../ItemList';
@@ -34,7 +36,8 @@ export default class Recipe extends Component {
       time: PropTypes.string,
       skill: PropTypes.string,
       description: PropTypes.string,
-      course: PropTypes.string,
+      servingAmount: PropTypes.string,
+      servingType: PropTypes.string,
       items: PropTypes.arrayOf(PropTypes.object)
     })
   };
@@ -141,19 +144,6 @@ export default class Recipe extends Component {
     } else {
       this.saveAlteration(source, fieldName, value);
     }
-  };
-
-  handleItemChange = (e, item) => {
-    const { name, value } = e.target;
-    const { activeItem } = this.state;
-    const source = item !== undefined ? item : activeItem;
-    this.saveOrUpdateField(source, name, value);
-  };
-
-  handleStepChange = e => {
-    const { name, value } = e.target;
-    const { activeStep } = this.state;
-    this.saveOrUpdateField(activeStep, name, value);
   };
 
   saveRemoval = source => {
@@ -438,6 +428,13 @@ export default class Recipe extends Component {
 
     return (
       <>
+        <RecipeHeader
+          recipe={recipe}
+          recipeMods={modification.alterations.filter(
+            alteration => alteration.sourceId === recipe.uid
+          )}
+          saveAlteration={this.saveAlteration}
+        />
         <RecipeStatus
           recipe={recipe}
           modification={modification}
@@ -494,7 +491,7 @@ export default class Recipe extends Component {
                           item={item}
                           prefix="Directions for"
                           mod={this.getAlteration(item, 'name')}
-                          handleItemChange={this.handleItemChange}
+                          saveOrUpdateField={this.saveOrUpdateField}
                         />
                       }
                     >
@@ -527,9 +524,9 @@ export default class Recipe extends Component {
                               }
                               directions={
                                 <Directions
-                                  directions={step.directions}
+                                  step={step}
                                   mod={this.getAlteration(step, 'directions')}
-                                  handleStepChange={this.handleStepChange}
+                                  saveOrUpdateField={this.saveOrUpdateField}
                                 />
                               }
                             />
@@ -558,7 +555,7 @@ export default class Recipe extends Component {
                     restoreItem={() => this.undoRemoval(activeItem)}
                     suffix={`> Step ${this.getActiveStepNumber()}`}
                     mod={this.getAlteration(activeItem, 'name')}
-                    handleItemChange={this.handleItemChange}
+                    saveOrUpdateField={this.saveOrUpdateField}
                   />
                 }
                 navigation={
@@ -572,9 +569,9 @@ export default class Recipe extends Component {
                 }
                 directions={
                   <Directions
-                    directions={activeStep.directions}
+                    step={activeStep}
                     mod={this.getAlteration(activeStep, 'directions')}
-                    handleStepChange={this.handleStepChange}
+                    saveOrUpdateField={this.saveOrUpdateField}
                   />
                 }
               />
@@ -622,6 +619,7 @@ export default class Recipe extends Component {
             </div>
           </aside>
         </article>
+        <RecipeBio author={recipe.author} />
       </>
     );
   }
