@@ -16,9 +16,7 @@ export default class Navigation extends PureComponent {
   };
 
   state = {
-    editing: false,
-    errors: {},
-    edits: {}
+    editing: false
   };
 
   headerRef = React.createRef();
@@ -42,13 +40,8 @@ export default class Navigation extends PureComponent {
   };
 
   getRecipeValue = fieldName => {
-    const { edits } = this.state;
-    if (edits[fieldName] !== undefined) return edits[fieldName];
-
     const { recipe, recipeMods } = this.props;
-    const mod = recipeMods.find(
-      mod => mod.sourceId === recipe.uid && mod.field === fieldName
-    );
+    const mod = recipeMods.find(mod => mod.field === fieldName);
 
     return mod !== undefined ? mod.value : recipe[fieldName];
   };
@@ -119,7 +112,6 @@ export default class Navigation extends PureComponent {
                   {this.renderWithMods('title')}
                 </a>
               </h1>
-              {/* <h2>By {recipe.author.name}</h2> */}
               <p>
                 <a onClick={this.enableEditingDescription}>
                   {this.renderWithMods('description')}
