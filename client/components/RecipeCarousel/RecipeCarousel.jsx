@@ -1,15 +1,14 @@
 import React, { PureComponent } from 'react';
-import Swiper from 'react-id-swiper';
+import Swiper from 'react-id-swiper/lib/ReactIdSwiper.full';
 
 export default class Step extends PureComponent {
-  static displayName = 'StepCarousel';
+  static displayName = 'RecipeCarousel';
 
   render() {
     const swiperParams = {
       pagination: {
         el: '.swiper-pagination',
-        type: 'bullets',
-        clickable: true
+        type: 'fraction'
       },
       navigation: {
         nextEl: '.swiper-button-next',

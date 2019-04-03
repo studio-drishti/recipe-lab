@@ -20,7 +20,6 @@ import IngredientList from '../IngredientList';
 import Ingredient from '../Ingredient';
 import IngredientTotals from '../IngredientTotals';
 import StepHeader from '../StepHeader';
-// import StepCarousel from '../StepCarousel';
 import RecipeNav from '../RecipeNav';
 import Directions from '../Directions';
 import RecipeStatus from '../RecipeStatus';
@@ -576,8 +575,6 @@ export default class Recipe extends Component {
                 }
               />
               <div className={css.recipeDetailContent}>
-                {/* <StepCarousel /> */}
-
                 <h3>Ingredients Used</h3>
                 <IngredientList
                   createIngredient={() => this.createIngredient(activeStep.uid)}

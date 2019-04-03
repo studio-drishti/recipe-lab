@@ -1,10 +1,12 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import { MdTimer, MdLocalDining } from 'react-icons/md';
+import { MdEdit, MdCheck, MdTimer, MdLocalDining } from 'react-icons/md';
 import Textarea from 'react-textarea-autosize';
 
 import { TIME_OPTIONS } from '../../config';
 import DiffText from '../DiffText';
+import TextButton from '../TextButton';
+import RecipeCarousel from '../RecipeCarousel';
 import css from './RecipeHeader.css';
 
 export default class Navigation extends PureComponent {
@@ -101,16 +103,10 @@ export default class Navigation extends PureComponent {
 
   render() {
     const { editing } = this.state;
+    const { recipe } = this.props;
     return (
-      <header
-        ref={this.headerRef}
-        style={{
-          backgroundImage:
-            'url(https://loremflickr.com/1200/600/food,cooking,spaghetti)'
-        }}
-        className={css.header}
-      >
-        <div className={css.title}>
+      <header ref={this.headerRef} className={css.header}>
+        <form onSubmit={this.handleSubmit} className={css.title}>
           {!editing && (
             <>
               <h1>
@@ -118,6 +114,7 @@ export default class Navigation extends PureComponent {
                   {this.renderWithMods('title')}
                 </a>
               </h1>
+              <h3>Recipe by {recipe.author.name}</h3>
               <p>
                 <a onClick={this.enableEditingDescription}>
                   {this.renderWithMods('description')}
@@ -127,7 +124,7 @@ export default class Navigation extends PureComponent {
           )}
 
           {editing && (
-            <form onSubmit={this.handleSubmit} className={css.titleForm}>
+            <div className={css.titleForm}>
               <input
                 type="text"
                 name="title"
@@ -143,74 +140,95 @@ export default class Navigation extends PureComponent {
                 placeholder="Recipe description"
                 onChange={this.handleRecipeChange}
               />
-            </form>
+            </div>
           )}
-        </div>
-        <div className={css.stats}>
+          <div className={css.stats}>
+            {!editing && (
+              <>
+                <a onClick={this.enableEditingTime}>
+                  <i>
+                    <MdTimer />
+                  </i>
+                  {this.getRecipeValue('time')}
+                </a>
+                <a onClick={this.enableEditingServing}>
+                  <i>
+                    <MdLocalDining />
+                  </i>
+                  {this.getRecipeValue('servingAmount')}{' '}
+                  {this.getRecipeValue('servingType')}
+                </a>
+              </>
+            )}
+
+            {editing && (
+              <div className={css.statsForm}>
+                <label>
+                  <i>
+                    <MdTimer />
+                  </i>
+                  <select
+                    name="time"
+                    onChange={this.handleRecipeChange}
+                    ref={this.timeInputRef}
+                    value={this.getRecipeValue('time')}
+                  >
+                    {TIME_OPTIONS.map(time => (
+                      <option key={time} value={time}>
+                        {time}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+                <span className={css.servingInput}>
+                  <label htmlFor="recipeServingAmount">
+                    <i>
+                      <MdLocalDining />
+                    </i>
+                  </label>
+                  <input
+                    ref={this.servingInputRef}
+                    id="recipeServingAmount"
+                    name="servingAmount"
+                    className={css.servingAmount}
+                    type="text"
+                    value={this.getRecipeValue('servingAmount')}
+                    placeholder="Amnt"
+                    onChange={this.handleRecipeChange}
+                  />
+                  <input
+                    name="servingType"
+                    className={css.servingType}
+                    type="text"
+                    value={this.getRecipeValue('servingType')}
+                    placeholder="Servings"
+                    onChange={this.handleRecipeChange}
+                  />
+                </span>
+              </div>
+            )}
+          </div>
           {!editing && (
             <>
-              <a onClick={this.enableEditingTime}>
-                <i>
-                  <MdTimer />
-                </i>
-                {this.getRecipeValue('time')}
-              </a>
-              <a onClick={this.enableEditingServing}>
-                <i>
-                  <MdLocalDining />
-                </i>
-                {this.getRecipeValue('servingAmount')}{' '}
-                {this.getRecipeValue('servingType')}
-              </a>
+              <TextButton
+                className={css.editBtn}
+                onClick={this.enableEditingTitle}
+              >
+                <MdEdit />
+                edit details
+              </TextButton>
             </>
           )}
 
           {editing && (
-            <form onSubmit={this.handleSubmit} className={css.statsForm}>
-              <label>
-                <i>
-                  <MdTimer />
-                </i>
-                <select
-                  name="time"
-                  onChange={this.handleRecipeChange}
-                  ref={this.timeInputRef}
-                  value={this.getRecipeValue('time')}
-                >
-                  {TIME_OPTIONS.map(time => (
-                    <option key={time} value={time}>
-                      {time}
-                    </option>
-                  ))}
-                </select>
-              </label>
-              <span className={css.servingInput}>
-                <label htmlFor="recipeServingAmount">
-                  <i>
-                    <MdLocalDining />
-                  </i>
-                </label>
-                <input
-                  ref={this.servingInputRef}
-                  id="recipeServingAmount"
-                  name="servingAmount"
-                  className={css.servingAmount}
-                  type="text"
-                  value={this.getRecipeValue('servingAmount')}
-                  placeholder="Amnt"
-                  onChange={this.handleRecipeChange}
-                />
-                <input
-                  name="servingType"
-                  className={css.servingType}
-                  type="text"
-                  value={this.getRecipeValue('servingType')}
-                  placeholder="Servings"
-                  onChange={this.handleRecipeChange}
-                />
-              </span>
-            </form>
+            <TextButton onClick={this.disableEditing}>
+              <MdCheck />
+              save changes
+            </TextButton>
           )}
+        </form>
+        <div className={css.carousel}>
+          <RecipeCarousel />
         </div>
       </header>
     );
