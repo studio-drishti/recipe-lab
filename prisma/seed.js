@@ -13,7 +13,6 @@ async function main() {
           uid: cuid(),
           title: 'Spaghetti and Meatballs',
           time: 'Moderate',
-          skill: 'Easy',
           servingAmount: '4',
           servingType: 'plates',
           description:
