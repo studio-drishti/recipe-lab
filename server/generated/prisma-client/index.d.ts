@@ -23,6 +23,7 @@ export interface Exists {
   itemAddition: (where?: ItemAdditionWhereInput) => Promise<boolean>;
   modification: (where?: ModificationWhereInput) => Promise<boolean>;
   recipe: (where?: RecipeWhereInput) => Promise<boolean>;
+  recipePhoto: (where?: RecipePhotoWhereInput) => Promise<boolean>;
   sorting: (where?: SortingWhereInput) => Promise<boolean>;
   step: (where?: StepWhereInput) => Promise<boolean>;
   stepAddition: (where?: StepAdditionWhereInput) => Promise<boolean>;
@@ -211,6 +212,29 @@ export interface Prisma {
       last?: Int;
     }
   ) => RecipeConnectionPromise;
+  recipePhoto: (where: RecipePhotoWhereUniqueInput) => RecipePhotoPromise;
+  recipePhotos: (
+    args?: {
+      where?: RecipePhotoWhereInput;
+      orderBy?: RecipePhotoOrderByInput;
+      skip?: Int;
+      after?: String;
+      before?: String;
+      first?: Int;
+      last?: Int;
+    }
+  ) => FragmentableArray<RecipePhoto>;
+  recipePhotosConnection: (
+    args?: {
+      where?: RecipePhotoWhereInput;
+      orderBy?: RecipePhotoOrderByInput;
+      skip?: Int;
+      after?: String;
+      before?: String;
+      first?: Int;
+      last?: Int;
+    }
+  ) => RecipePhotoConnectionPromise;
   sorting: (where: SortingWhereUniqueInput) => SortingPromise;
   sortings: (
     args?: {
@@ -453,6 +477,27 @@ export interface Prisma {
   ) => RecipePromise;
   deleteRecipe: (where: RecipeWhereUniqueInput) => RecipePromise;
   deleteManyRecipes: (where?: RecipeWhereInput) => BatchPayloadPromise;
+  createRecipePhoto: (data: RecipePhotoCreateInput) => RecipePhotoPromise;
+  updateRecipePhoto: (
+    args: { data: RecipePhotoUpdateInput; where: RecipePhotoWhereUniqueInput }
+  ) => RecipePhotoPromise;
+  updateManyRecipePhotos: (
+    args: {
+      data: RecipePhotoUpdateManyMutationInput;
+      where?: RecipePhotoWhereInput;
+    }
+  ) => BatchPayloadPromise;
+  upsertRecipePhoto: (
+    args: {
+      where: RecipePhotoWhereUniqueInput;
+      create: RecipePhotoCreateInput;
+      update: RecipePhotoUpdateInput;
+    }
+  ) => RecipePhotoPromise;
+  deleteRecipePhoto: (where: RecipePhotoWhereUniqueInput) => RecipePhotoPromise;
+  deleteManyRecipePhotos: (
+    where?: RecipePhotoWhereInput
+  ) => BatchPayloadPromise;
   createSorting: (data: SortingCreateInput) => SortingPromise;
   updateSorting: (
     args: { data: SortingUpdateInput; where: SortingWhereUniqueInput }
@@ -554,6 +599,9 @@ export interface Subscription {
   recipe: (
     where?: RecipeSubscriptionWhereInput
   ) => RecipeSubscriptionPayloadSubscription;
+  recipePhoto: (
+    where?: RecipePhotoSubscriptionWhereInput
+  ) => RecipePhotoSubscriptionPayloadSubscription;
   sorting: (
     where?: SortingSubscriptionWhereInput
   ) => SortingSubscriptionPayloadSubscription;
@@ -576,15 +624,11 @@ export interface ClientConstructor<T> {
  * Types
  */
 
-export type AlterationOrderByInput =
+export type SortingOrderByInput =
   | "uid_ASC"
   | "uid_DESC"
-  | "sourceId_ASC"
-  | "sourceId_DESC"
-  | "field_ASC"
-  | "field_DESC"
-  | "value_ASC"
-  | "value_DESC"
+  | "parentId_ASC"
+  | "parentId_DESC"
   | "id_ASC"
   | "id_DESC"
   | "createdAt_ASC"
@@ -612,13 +656,13 @@ export type RecipeOrderByInput =
   | "id_ASC"
   | "id_DESC";
 
-export type SortingOrderByInput =
-  | "uid_ASC"
-  | "uid_DESC"
-  | "parentId_ASC"
-  | "parentId_DESC"
+export type RecipePhotoOrderByInput =
   | "id_ASC"
   | "id_DESC"
+  | "filename_ASC"
+  | "filename_DESC"
+  | "url_ASC"
+  | "url_DESC"
   | "createdAt_ASC"
   | "createdAt_DESC"
   | "updatedAt_ASC"
@@ -724,6 +768,22 @@ export type IngredientAdditionOrderByInput =
 
 export type MutationType = "CREATED" | "UPDATED" | "DELETED";
 
+export type AlterationOrderByInput =
+  | "uid_ASC"
+  | "uid_DESC"
+  | "sourceId_ASC"
+  | "sourceId_DESC"
+  | "field_ASC"
+  | "field_DESC"
+  | "value_ASC"
+  | "value_DESC"
+  | "id_ASC"
+  | "id_DESC"
+  | "createdAt_ASC"
+  | "createdAt_DESC"
+  | "updatedAt_ASC"
+  | "updatedAt_DESC";
+
 export type ItemAdditionOrderByInput =
   | "uid_ASC"
   | "uid_DESC"
@@ -754,429 +814,21 @@ export type StepAdditionOrderByInput =
   | "updatedAt_ASC"
   | "updatedAt_DESC";
 
-export interface SortingScalarWhereInput {
-  uid?: ID_Input;
-  uid_not?: ID_Input;
-  uid_in?: ID_Input[] | ID_Input;
-  uid_not_in?: ID_Input[] | ID_Input;
-  uid_lt?: ID_Input;
-  uid_lte?: ID_Input;
-  uid_gt?: ID_Input;
-  uid_gte?: ID_Input;
-  uid_contains?: ID_Input;
-  uid_not_contains?: ID_Input;
-  uid_starts_with?: ID_Input;
-  uid_not_starts_with?: ID_Input;
-  uid_ends_with?: ID_Input;
-  uid_not_ends_with?: ID_Input;
-  parentId?: ID_Input;
-  parentId_not?: ID_Input;
-  parentId_in?: ID_Input[] | ID_Input;
-  parentId_not_in?: ID_Input[] | ID_Input;
-  parentId_lt?: ID_Input;
-  parentId_lte?: ID_Input;
-  parentId_gt?: ID_Input;
-  parentId_gte?: ID_Input;
-  parentId_contains?: ID_Input;
-  parentId_not_contains?: ID_Input;
-  parentId_starts_with?: ID_Input;
-  parentId_not_starts_with?: ID_Input;
-  parentId_ends_with?: ID_Input;
-  parentId_not_ends_with?: ID_Input;
-  AND?: SortingScalarWhereInput[] | SortingScalarWhereInput;
-  OR?: SortingScalarWhereInput[] | SortingScalarWhereInput;
-  NOT?: SortingScalarWhereInput[] | SortingScalarWhereInput;
+export interface AlterationUpdateWithWhereUniqueWithoutModificationInput {
+  where: AlterationWhereUniqueInput;
+  data: AlterationUpdateWithoutModificationDataInput;
 }
 
 export type AlterationWhereUniqueInput = AtLeastOne<{
   uid: ID_Input;
 }>;
 
-export interface AlterationScalarWhereInput {
-  uid?: ID_Input;
-  uid_not?: ID_Input;
-  uid_in?: ID_Input[] | ID_Input;
-  uid_not_in?: ID_Input[] | ID_Input;
-  uid_lt?: ID_Input;
-  uid_lte?: ID_Input;
-  uid_gt?: ID_Input;
-  uid_gte?: ID_Input;
-  uid_contains?: ID_Input;
-  uid_not_contains?: ID_Input;
-  uid_starts_with?: ID_Input;
-  uid_not_starts_with?: ID_Input;
-  uid_ends_with?: ID_Input;
-  uid_not_ends_with?: ID_Input;
-  sourceId?: ID_Input;
-  sourceId_not?: ID_Input;
-  sourceId_in?: ID_Input[] | ID_Input;
-  sourceId_not_in?: ID_Input[] | ID_Input;
-  sourceId_lt?: ID_Input;
-  sourceId_lte?: ID_Input;
-  sourceId_gt?: ID_Input;
-  sourceId_gte?: ID_Input;
-  sourceId_contains?: ID_Input;
-  sourceId_not_contains?: ID_Input;
-  sourceId_starts_with?: ID_Input;
-  sourceId_not_starts_with?: ID_Input;
-  sourceId_ends_with?: ID_Input;
-  sourceId_not_ends_with?: ID_Input;
-  field?: String;
-  field_not?: String;
-  field_in?: String[] | String;
-  field_not_in?: String[] | String;
-  field_lt?: String;
-  field_lte?: String;
-  field_gt?: String;
-  field_gte?: String;
-  field_contains?: String;
-  field_not_contains?: String;
-  field_starts_with?: String;
-  field_not_starts_with?: String;
-  field_ends_with?: String;
-  field_not_ends_with?: String;
-  value?: String;
-  value_not?: String;
-  value_in?: String[] | String;
-  value_not_in?: String[] | String;
-  value_lt?: String;
-  value_lte?: String;
-  value_gt?: String;
-  value_gte?: String;
-  value_contains?: String;
-  value_not_contains?: String;
-  value_starts_with?: String;
-  value_not_starts_with?: String;
-  value_ends_with?: String;
-  value_not_ends_with?: String;
-  AND?: AlterationScalarWhereInput[] | AlterationScalarWhereInput;
-  OR?: AlterationScalarWhereInput[] | AlterationScalarWhereInput;
-  NOT?: AlterationScalarWhereInput[] | AlterationScalarWhereInput;
-}
-
-export interface StepAdditionWhereInput {
-  uid?: ID_Input;
-  uid_not?: ID_Input;
-  uid_in?: ID_Input[] | ID_Input;
-  uid_not_in?: ID_Input[] | ID_Input;
-  uid_lt?: ID_Input;
-  uid_lte?: ID_Input;
-  uid_gt?: ID_Input;
-  uid_gte?: ID_Input;
-  uid_contains?: ID_Input;
-  uid_not_contains?: ID_Input;
-  uid_starts_with?: ID_Input;
-  uid_not_starts_with?: ID_Input;
-  uid_ends_with?: ID_Input;
-  uid_not_ends_with?: ID_Input;
-  parentId?: ID_Input;
-  parentId_not?: ID_Input;
-  parentId_in?: ID_Input[] | ID_Input;
-  parentId_not_in?: ID_Input[] | ID_Input;
-  parentId_lt?: ID_Input;
-  parentId_lte?: ID_Input;
-  parentId_gt?: ID_Input;
-  parentId_gte?: ID_Input;
-  parentId_contains?: ID_Input;
-  parentId_not_contains?: ID_Input;
-  parentId_starts_with?: ID_Input;
-  parentId_not_starts_with?: ID_Input;
-  parentId_ends_with?: ID_Input;
-  parentId_not_ends_with?: ID_Input;
-  directions?: String;
-  directions_not?: String;
-  directions_in?: String[] | String;
-  directions_not_in?: String[] | String;
-  directions_lt?: String;
-  directions_lte?: String;
-  directions_gt?: String;
-  directions_gte?: String;
-  directions_contains?: String;
-  directions_not_contains?: String;
-  directions_starts_with?: String;
-  directions_not_starts_with?: String;
-  directions_ends_with?: String;
-  directions_not_ends_with?: String;
-  notes?: String;
-  notes_not?: String;
-  notes_in?: String[] | String;
-  notes_not_in?: String[] | String;
-  notes_lt?: String;
-  notes_lte?: String;
-  notes_gt?: String;
-  notes_gte?: String;
-  notes_contains?: String;
-  notes_not_contains?: String;
-  notes_starts_with?: String;
-  notes_not_starts_with?: String;
-  notes_ends_with?: String;
-  notes_not_ends_with?: String;
-  modification?: ModificationWhereInput;
-  AND?: StepAdditionWhereInput[] | StepAdditionWhereInput;
-  OR?: StepAdditionWhereInput[] | StepAdditionWhereInput;
-  NOT?: StepAdditionWhereInput[] | StepAdditionWhereInput;
-}
-
-export interface AlterationUpdateManyWithWhereNestedInput {
-  where: AlterationScalarWhereInput;
-  data: AlterationUpdateManyDataInput;
-}
-
-export interface ItemWhereInput {
-  uid?: ID_Input;
-  uid_not?: ID_Input;
-  uid_in?: ID_Input[] | ID_Input;
-  uid_not_in?: ID_Input[] | ID_Input;
-  uid_lt?: ID_Input;
-  uid_lte?: ID_Input;
-  uid_gt?: ID_Input;
-  uid_gte?: ID_Input;
-  uid_contains?: ID_Input;
-  uid_not_contains?: ID_Input;
-  uid_starts_with?: ID_Input;
-  uid_not_starts_with?: ID_Input;
-  uid_ends_with?: ID_Input;
-  uid_not_ends_with?: ID_Input;
-  index?: Int;
-  index_not?: Int;
-  index_in?: Int[] | Int;
-  index_not_in?: Int[] | Int;
-  index_lt?: Int;
-  index_lte?: Int;
-  index_gt?: Int;
-  index_gte?: Int;
-  name?: String;
-  name_not?: String;
-  name_in?: String[] | String;
-  name_not_in?: String[] | String;
-  name_lt?: String;
-  name_lte?: String;
-  name_gt?: String;
-  name_gte?: String;
-  name_contains?: String;
-  name_not_contains?: String;
-  name_starts_with?: String;
-  name_not_starts_with?: String;
-  name_ends_with?: String;
-  name_not_ends_with?: String;
-  recipe?: RecipeWhereInput;
-  steps_every?: StepWhereInput;
-  steps_some?: StepWhereInput;
-  steps_none?: StepWhereInput;
-  AND?: ItemWhereInput[] | ItemWhereInput;
-  OR?: ItemWhereInput[] | ItemWhereInput;
-  NOT?: ItemWhereInput[] | ItemWhereInput;
-}
-
-export interface AlterationUpdateManyDataInput {
-  uid?: ID_Input;
-  sourceId?: ID_Input;
-  field?: String;
-  value?: String;
-}
-
-export interface StepWhereInput {
-  uid?: ID_Input;
-  uid_not?: ID_Input;
-  uid_in?: ID_Input[] | ID_Input;
-  uid_not_in?: ID_Input[] | ID_Input;
-  uid_lt?: ID_Input;
-  uid_lte?: ID_Input;
-  uid_gt?: ID_Input;
-  uid_gte?: ID_Input;
-  uid_contains?: ID_Input;
-  uid_not_contains?: ID_Input;
-  uid_starts_with?: ID_Input;
-  uid_not_starts_with?: ID_Input;
-  uid_ends_with?: ID_Input;
-  uid_not_ends_with?: ID_Input;
-  index?: Int;
-  index_not?: Int;
-  index_in?: Int[] | Int;
-  index_not_in?: Int[] | Int;
-  index_lt?: Int;
-  index_lte?: Int;
-  index_gt?: Int;
-  index_gte?: Int;
-  directions?: String;
-  directions_not?: String;
-  directions_in?: String[] | String;
-  directions_not_in?: String[] | String;
-  directions_lt?: String;
-  directions_lte?: String;
-  directions_gt?: String;
-  directions_gte?: String;
-  directions_contains?: String;
-  directions_not_contains?: String;
-  directions_starts_with?: String;
-  directions_not_starts_with?: String;
-  directions_ends_with?: String;
-  directions_not_ends_with?: String;
-  notes?: String;
-  notes_not?: String;
-  notes_in?: String[] | String;
-  notes_not_in?: String[] | String;
-  notes_lt?: String;
-  notes_lte?: String;
-  notes_gt?: String;
-  notes_gte?: String;
-  notes_contains?: String;
-  notes_not_contains?: String;
-  notes_starts_with?: String;
-  notes_not_starts_with?: String;
-  notes_ends_with?: String;
-  notes_not_ends_with?: String;
-  item?: ItemWhereInput;
-  ingredients_every?: IngredientWhereInput;
-  ingredients_some?: IngredientWhereInput;
-  ingredients_none?: IngredientWhereInput;
-  AND?: StepWhereInput[] | StepWhereInput;
-  OR?: StepWhereInput[] | StepWhereInput;
-  NOT?: StepWhereInput[] | StepWhereInput;
-}
-
-export interface ModificationUpdateremovalsInput {
-  set?: ID_Input[] | ID_Input;
-}
-
-export interface ItemAdditionWhereInput {
-  uid?: ID_Input;
-  uid_not?: ID_Input;
-  uid_in?: ID_Input[] | ID_Input;
-  uid_not_in?: ID_Input[] | ID_Input;
-  uid_lt?: ID_Input;
-  uid_lte?: ID_Input;
-  uid_gt?: ID_Input;
-  uid_gte?: ID_Input;
-  uid_contains?: ID_Input;
-  uid_not_contains?: ID_Input;
-  uid_starts_with?: ID_Input;
-  uid_not_starts_with?: ID_Input;
-  uid_ends_with?: ID_Input;
-  uid_not_ends_with?: ID_Input;
-  parentId?: ID_Input;
-  parentId_not?: ID_Input;
-  parentId_in?: ID_Input[] | ID_Input;
-  parentId_not_in?: ID_Input[] | ID_Input;
-  parentId_lt?: ID_Input;
-  parentId_lte?: ID_Input;
-  parentId_gt?: ID_Input;
-  parentId_gte?: ID_Input;
-  parentId_contains?: ID_Input;
-  parentId_not_contains?: ID_Input;
-  parentId_starts_with?: ID_Input;
-  parentId_not_starts_with?: ID_Input;
-  parentId_ends_with?: ID_Input;
-  parentId_not_ends_with?: ID_Input;
-  name?: String;
-  name_not?: String;
-  name_in?: String[] | String;
-  name_not_in?: String[] | String;
-  name_lt?: String;
-  name_lte?: String;
-  name_gt?: String;
-  name_gte?: String;
-  name_contains?: String;
-  name_not_contains?: String;
-  name_starts_with?: String;
-  name_not_starts_with?: String;
-  name_ends_with?: String;
-  name_not_ends_with?: String;
-  modification?: ModificationWhereInput;
-  AND?: ItemAdditionWhereInput[] | ItemAdditionWhereInput;
-  OR?: ItemAdditionWhereInput[] | ItemAdditionWhereInput;
-  NOT?: ItemAdditionWhereInput[] | ItemAdditionWhereInput;
-}
-
-export interface ItemAdditionUpdateManyWithoutModificationInput {
-  create?:
-    | ItemAdditionCreateWithoutModificationInput[]
-    | ItemAdditionCreateWithoutModificationInput;
-  delete?: ItemAdditionWhereUniqueInput[] | ItemAdditionWhereUniqueInput;
-  connect?: ItemAdditionWhereUniqueInput[] | ItemAdditionWhereUniqueInput;
-  set?: ItemAdditionWhereUniqueInput[] | ItemAdditionWhereUniqueInput;
-  disconnect?: ItemAdditionWhereUniqueInput[] | ItemAdditionWhereUniqueInput;
-  update?:
-    | ItemAdditionUpdateWithWhereUniqueWithoutModificationInput[]
-    | ItemAdditionUpdateWithWhereUniqueWithoutModificationInput;
-  upsert?:
-    | ItemAdditionUpsertWithWhereUniqueWithoutModificationInput[]
-    | ItemAdditionUpsertWithWhereUniqueWithoutModificationInput;
-  deleteMany?: ItemAdditionScalarWhereInput[] | ItemAdditionScalarWhereInput;
-  updateMany?:
-    | ItemAdditionUpdateManyWithWhereNestedInput[]
-    | ItemAdditionUpdateManyWithWhereNestedInput;
-}
-
-export interface AlterationWhereInput {
-  uid?: ID_Input;
-  uid_not?: ID_Input;
-  uid_in?: ID_Input[] | ID_Input;
-  uid_not_in?: ID_Input[] | ID_Input;
-  uid_lt?: ID_Input;
-  uid_lte?: ID_Input;
-  uid_gt?: ID_Input;
-  uid_gte?: ID_Input;
-  uid_contains?: ID_Input;
-  uid_not_contains?: ID_Input;
-  uid_starts_with?: ID_Input;
-  uid_not_starts_with?: ID_Input;
-  uid_ends_with?: ID_Input;
-  uid_not_ends_with?: ID_Input;
-  sourceId?: ID_Input;
-  sourceId_not?: ID_Input;
-  sourceId_in?: ID_Input[] | ID_Input;
-  sourceId_not_in?: ID_Input[] | ID_Input;
-  sourceId_lt?: ID_Input;
-  sourceId_lte?: ID_Input;
-  sourceId_gt?: ID_Input;
-  sourceId_gte?: ID_Input;
-  sourceId_contains?: ID_Input;
-  sourceId_not_contains?: ID_Input;
-  sourceId_starts_with?: ID_Input;
-  sourceId_not_starts_with?: ID_Input;
-  sourceId_ends_with?: ID_Input;
-  sourceId_not_ends_with?: ID_Input;
-  field?: String;
-  field_not?: String;
-  field_in?: String[] | String;
-  field_not_in?: String[] | String;
-  field_lt?: String;
-  field_lte?: String;
-  field_gt?: String;
-  field_gte?: String;
-  field_contains?: String;
-  field_not_contains?: String;
-  field_starts_with?: String;
-  field_not_starts_with?: String;
-  field_ends_with?: String;
-  field_not_ends_with?: String;
-  value?: String;
-  value_not?: String;
-  value_in?: String[] | String;
-  value_not_in?: String[] | String;
-  value_lt?: String;
-  value_lte?: String;
-  value_gt?: String;
-  value_gte?: String;
-  value_contains?: String;
-  value_not_contains?: String;
-  value_starts_with?: String;
-  value_not_starts_with?: String;
-  value_ends_with?: String;
-  value_not_ends_with?: String;
-  modification?: ModificationWhereInput;
-  AND?: AlterationWhereInput[] | AlterationWhereInput;
-  OR?: AlterationWhereInput[] | AlterationWhereInput;
-  NOT?: AlterationWhereInput[] | AlterationWhereInput;
-}
-
 export interface ItemAdditionUpdateWithWhereUniqueWithoutModificationInput {
   where: ItemAdditionWhereUniqueInput;
   data: ItemAdditionUpdateWithoutModificationDataInput;
 }
 
-export interface SortingWhereInput {
+export interface IngredientAdditionWhereInput {
   uid?: ID_Input;
   uid_not?: ID_Input;
   uid_in?: ID_Input[] | ID_Input;
@@ -1205,10 +857,94 @@ export interface SortingWhereInput {
   parentId_not_starts_with?: ID_Input;
   parentId_ends_with?: ID_Input;
   parentId_not_ends_with?: ID_Input;
+  name?: String;
+  name_not?: String;
+  name_in?: String[] | String;
+  name_not_in?: String[] | String;
+  name_lt?: String;
+  name_lte?: String;
+  name_gt?: String;
+  name_gte?: String;
+  name_contains?: String;
+  name_not_contains?: String;
+  name_starts_with?: String;
+  name_not_starts_with?: String;
+  name_ends_with?: String;
+  name_not_ends_with?: String;
+  quantity?: String;
+  quantity_not?: String;
+  quantity_in?: String[] | String;
+  quantity_not_in?: String[] | String;
+  quantity_lt?: String;
+  quantity_lte?: String;
+  quantity_gt?: String;
+  quantity_gte?: String;
+  quantity_contains?: String;
+  quantity_not_contains?: String;
+  quantity_starts_with?: String;
+  quantity_not_starts_with?: String;
+  quantity_ends_with?: String;
+  quantity_not_ends_with?: String;
+  unit?: String;
+  unit_not?: String;
+  unit_in?: String[] | String;
+  unit_not_in?: String[] | String;
+  unit_lt?: String;
+  unit_lte?: String;
+  unit_gt?: String;
+  unit_gte?: String;
+  unit_contains?: String;
+  unit_not_contains?: String;
+  unit_starts_with?: String;
+  unit_not_starts_with?: String;
+  unit_ends_with?: String;
+  unit_not_ends_with?: String;
+  processing?: String;
+  processing_not?: String;
+  processing_in?: String[] | String;
+  processing_not_in?: String[] | String;
+  processing_lt?: String;
+  processing_lte?: String;
+  processing_gt?: String;
+  processing_gte?: String;
+  processing_contains?: String;
+  processing_not_contains?: String;
+  processing_starts_with?: String;
+  processing_not_starts_with?: String;
+  processing_ends_with?: String;
+  processing_not_ends_with?: String;
   modification?: ModificationWhereInput;
-  AND?: SortingWhereInput[] | SortingWhereInput;
-  OR?: SortingWhereInput[] | SortingWhereInput;
-  NOT?: SortingWhereInput[] | SortingWhereInput;
+  AND?: IngredientAdditionWhereInput[] | IngredientAdditionWhereInput;
+  OR?: IngredientAdditionWhereInput[] | IngredientAdditionWhereInput;
+  NOT?: IngredientAdditionWhereInput[] | IngredientAdditionWhereInput;
+}
+
+export interface StepUpdateManyWithoutItemInput {
+  create?: StepCreateWithoutItemInput[] | StepCreateWithoutItemInput;
+  delete?: StepWhereUniqueInput[] | StepWhereUniqueInput;
+  connect?: StepWhereUniqueInput[] | StepWhereUniqueInput;
+  set?: StepWhereUniqueInput[] | StepWhereUniqueInput;
+  disconnect?: StepWhereUniqueInput[] | StepWhereUniqueInput;
+  update?:
+    | StepUpdateWithWhereUniqueWithoutItemInput[]
+    | StepUpdateWithWhereUniqueWithoutItemInput;
+  upsert?:
+    | StepUpsertWithWhereUniqueWithoutItemInput[]
+    | StepUpsertWithWhereUniqueWithoutItemInput;
+  deleteMany?: StepScalarWhereInput[] | StepScalarWhereInput;
+  updateMany?:
+    | StepUpdateManyWithWhereNestedInput[]
+    | StepUpdateManyWithWhereNestedInput;
+}
+
+export interface ModificationCreateOneWithoutItemAdditionsInput {
+  create?: ModificationCreateWithoutItemAdditionsInput;
+  connect?: ModificationWhereUniqueInput;
+}
+
+export interface StepUpdateWithWhereUniqueWithoutItemInput {
+  where: StepWhereUniqueInput;
+  data: StepUpdateWithoutItemDataInput;
 }
 
 export interface ItemAdditionUpdateWithoutModificationDataInput {
@@ -1217,7 +953,15 @@ export interface ItemAdditionUpdateWithoutModificationDataInput {
   name?: String;
 }
 
-export interface ModificationWhereInput {
+export interface StepUpdateWithoutItemDataInput {
+  uid?: ID_Input;
+  index?: Int;
+  directions?: String;
+  notes?: String;
+  ingredients?: IngredientUpdateManyWithoutStepInput;
+}
+
+export interface RecipePhotoWhereInput {
   id?: ID_Input;
   id_not?: ID_Input;
   id_in?: ID_Input[] | ID_Input;
@@ -1232,48 +976,212 @@ export interface ModificationWhereInput {
   id_not_starts_with?: ID_Input;
   id_ends_with?: ID_Input;
   id_not_ends_with?: ID_Input;
-  createdAt?: DateTimeInput;
-  createdAt_not?: DateTimeInput;
-  createdAt_in?: DateTimeInput[] | DateTimeInput;
-  createdAt_not_in?: DateTimeInput[] | DateTimeInput;
-  createdAt_lt?: DateTimeInput;
-  createdAt_lte?: DateTimeInput;
-  createdAt_gt?: DateTimeInput;
-  createdAt_gte?: DateTimeInput;
-  updatedAt?: DateTimeInput;
-  updatedAt_not?: DateTimeInput;
-  updatedAt_in?: DateTimeInput[] | DateTimeInput;
-  updatedAt_not_in?: DateTimeInput[] | DateTimeInput;
-  updatedAt_lt?: DateTimeInput;
-  updatedAt_lte?: DateTimeInput;
-  updatedAt_gt?: DateTimeInput;
-  updatedAt_gte?: DateTimeInput;
-  user?: UserWhereInput;
+  filename?: String;
+  filename_not?: String;
+  filename_in?: String[] | String;
+  filename_not_in?: String[] | String;
+  filename_lt?: String;
+  filename_lte?: String;
+  filename_gt?: String;
+  filename_gte?: String;
+  filename_contains?: String;
+  filename_not_contains?: String;
+  filename_starts_with?: String;
+  filename_not_starts_with?: String;
+  filename_ends_with?: String;
+  filename_not_ends_with?: String;
+  url?: String;
+  url_not?: String;
+  url_in?: String[] | String;
+  url_not_in?: String[] | String;
+  url_lt?: String;
+  url_lte?: String;
+  url_gt?: String;
+  url_gte?: String;
+  url_contains?: String;
+  url_not_contains?: String;
+  url_starts_with?: String;
+  url_not_starts_with?: String;
+  url_ends_with?: String;
+  url_not_ends_with?: String;
   recipe?: RecipeWhereInput;
-  sortings_every?: SortingWhereInput;
-  sortings_some?: SortingWhereInput;
-  sortings_none?: SortingWhereInput;
-  alterations_every?: AlterationWhereInput;
-  alterations_some?: AlterationWhereInput;
-  alterations_none?: AlterationWhereInput;
-  itemAdditions_every?: ItemAdditionWhereInput;
-  itemAdditions_some?: ItemAdditionWhereInput;
-  itemAdditions_none?: ItemAdditionWhereInput;
-  stepAdditions_every?: StepAdditionWhereInput;
-  stepAdditions_some?: StepAdditionWhereInput;
-  stepAdditions_none?: StepAdditionWhereInput;
-  ingredientAdditions_every?: IngredientAdditionWhereInput;
-  ingredientAdditions_some?: IngredientAdditionWhereInput;
-  ingredientAdditions_none?: IngredientAdditionWhereInput;
-  AND?: ModificationWhereInput[] | ModificationWhereInput;
-  OR?: ModificationWhereInput[] | ModificationWhereInput;
-  NOT?: ModificationWhereInput[] | ModificationWhereInput;
+  AND?: RecipePhotoWhereInput[] | RecipePhotoWhereInput;
+  OR?: RecipePhotoWhereInput[] | RecipePhotoWhereInput;
+  NOT?: RecipePhotoWhereInput[] | RecipePhotoWhereInput;
 }
 
-export interface ItemAdditionUpsertWithWhereUniqueWithoutModificationInput {
-  where: ItemAdditionWhereUniqueInput;
-  update: ItemAdditionUpdateWithoutModificationDataInput;
-  create: ItemAdditionCreateWithoutModificationInput;
+export interface IngredientUpdateManyWithoutStepInput {
+  create?:
+    | IngredientCreateWithoutStepInput[]
+    | IngredientCreateWithoutStepInput;
+  delete?: IngredientWhereUniqueInput[] | IngredientWhereUniqueInput;
+  connect?: IngredientWhereUniqueInput[] | IngredientWhereUniqueInput;
+  set?: IngredientWhereUniqueInput[] | IngredientWhereUniqueInput;
+  disconnect?: IngredientWhereUniqueInput[] | IngredientWhereUniqueInput;
+  update?:
+    | IngredientUpdateWithWhereUniqueWithoutStepInput[]
+    | IngredientUpdateWithWhereUniqueWithoutStepInput;
+  upsert?:
+    | IngredientUpsertWithWhereUniqueWithoutStepInput[]
+    | IngredientUpsertWithWhereUniqueWithoutStepInput;
+  deleteMany?: IngredientScalarWhereInput[] | IngredientScalarWhereInput;
+  updateMany?:
+    | IngredientUpdateManyWithWhereNestedInput[]
+    | IngredientUpdateManyWithWhereNestedInput;
+}
+
+export interface UserSubscriptionWhereInput {
+  mutation_in?: MutationType[] | MutationType;
+  updatedFields_contains?: String;
+  updatedFields_contains_every?: String[] | String;
+  updatedFields_contains_some?: String[] | String;
+  node?: UserWhereInput;
+  AND?: UserSubscriptionWhereInput[] | UserSubscriptionWhereInput;
+  OR?: UserSubscriptionWhereInput[] | UserSubscriptionWhereInput;
+  NOT?: UserSubscriptionWhereInput[] | UserSubscriptionWhereInput;
+}
+
+export interface IngredientUpdateWithWhereUniqueWithoutStepInput {
+  where: IngredientWhereUniqueInput;
+  data: IngredientUpdateWithoutStepDataInput;
+}
+
+export interface StepAdditionSubscriptionWhereInput {
+  mutation_in?: MutationType[] | MutationType;
+  updatedFields_contains?: String;
+  updatedFields_contains_every?: String[] | String;
+  updatedFields_contains_some?: String[] | String;
+  node?: StepAdditionWhereInput;
+  AND?:
+    | StepAdditionSubscriptionWhereInput[]
+    | StepAdditionSubscriptionWhereInput;
+  OR?:
+    | StepAdditionSubscriptionWhereInput[]
+    | StepAdditionSubscriptionWhereInput;
+  NOT?:
+    | StepAdditionSubscriptionWhereInput[]
+    | StepAdditionSubscriptionWhereInput;
+}
+
+export interface IngredientUpdateWithoutStepDataInput {
+  uid?: ID_Input;
+  index?: Int;
+  name?: String;
+  quantity?: String;
+  unit?: String;
+  processing?: String;
+}
+
+export interface StepSubscriptionWhereInput {
+  mutation_in?: MutationType[] | MutationType;
+  updatedFields_contains?: String;
+  updatedFields_contains_every?: String[] | String;
+  updatedFields_contains_some?: String[] | String;
+  node?: StepWhereInput;
+  AND?: StepSubscriptionWhereInput[] | StepSubscriptionWhereInput;
+  OR?: StepSubscriptionWhereInput[] | StepSubscriptionWhereInput;
+  NOT?: StepSubscriptionWhereInput[] | StepSubscriptionWhereInput;
+}
+
+export interface IngredientUpsertWithWhereUniqueWithoutStepInput {
+  where: IngredientWhereUniqueInput;
+  update: IngredientUpdateWithoutStepDataInput;
+  create: IngredientCreateWithoutStepInput;
+}
+
+export interface SortingSubscriptionWhereInput {
+  mutation_in?: MutationType[] | MutationType;
+  updatedFields_contains?: String;
+  updatedFields_contains_every?: String[] | String;
+  updatedFields_contains_some?: String[] | String;
+  node?: SortingWhereInput;
+  AND?: SortingSubscriptionWhereInput[] | SortingSubscriptionWhereInput;
+  OR?: SortingSubscriptionWhereInput[] | SortingSubscriptionWhereInput;
+  NOT?: SortingSubscriptionWhereInput[] | SortingSubscriptionWhereInput;
+}
+
+export interface IngredientScalarWhereInput {
+  uid?: ID_Input;
+  uid_not?: ID_Input;
+  uid_in?: ID_Input[] | ID_Input;
+  uid_not_in?: ID_Input[] | ID_Input;
+  uid_lt?: ID_Input;
+  uid_lte?: ID_Input;
+  uid_gt?: ID_Input;
+  uid_gte?: ID_Input;
+  uid_contains?: ID_Input;
+  uid_not_contains?: ID_Input;
+  uid_starts_with?: ID_Input;
+  uid_not_starts_with?: ID_Input;
+  uid_ends_with?: ID_Input;
+  uid_not_ends_with?: ID_Input;
+  index?: Int;
+  index_not?: Int;
+  index_in?: Int[] | Int;
+  index_not_in?: Int[] | Int;
+  index_lt?: Int;
+  index_lte?: Int;
+  index_gt?: Int;
+  index_gte?: Int;
+  name?: String;
+  name_not?: String;
+  name_in?: String[] | String;
+  name_not_in?: String[] | String;
+  name_lt?: String;
+  name_lte?: String;
+  name_gt?: String;
+  name_gte?: String;
+  name_contains?: String;
+  name_not_contains?: String;
+  name_starts_with?: String;
+  name_not_starts_with?: String;
+  name_ends_with?: String;
+  name_not_ends_with?: String;
+  quantity?: String;
+  quantity_not?: String;
+  quantity_in?: String[] | String;
+  quantity_not_in?: String[] | String;
+  quantity_lt?: String;
+  quantity_lte?: String;
+  quantity_gt?: String;
+  quantity_gte?: String;
+  quantity_contains?: String;
+  quantity_not_contains?: String;
+  quantity_starts_with?: String;
+  quantity_not_starts_with?: String;
+  quantity_ends_with?: String;
+  quantity_not_ends_with?: String;
+  unit?: String;
+  unit_not?: String;
+  unit_in?: String[] | String;
+  unit_not_in?: String[] | String;
+  unit_lt?: String;
+  unit_lte?: String;
+  unit_gt?: String;
+  unit_gte?: String;
+  unit_contains?: String;
+  unit_not_contains?: String;
+  unit_starts_with?: String;
+  unit_not_starts_with?: String;
+  unit_ends_with?: String;
+  unit_not_ends_with?: String;
+  processing?: String;
+  processing_not?: String;
+  processing_in?: String[] | String;
+  processing_not_in?: String[] | String;
+  processing_lt?: String;
+  processing_lte?: String;
+  processing_gt?: String;
+  processing_gte?: String;
+  processing_contains?: String;
+  processing_not_contains?: String;
+  processing_starts_with?: String;
+  processing_not_starts_with?: String;
+  processing_ends_with?: String;
+  processing_not_ends_with?: String;
+  AND?: IngredientScalarWhereInput[] | IngredientScalarWhereInput;
+  OR?: IngredientScalarWhereInput[] | IngredientScalarWhereInput;
+  NOT?: IngredientScalarWhereInput[] | IngredientScalarWhereInput;
 }
 
 export interface UserWhereInput {
@@ -1390,193 +1298,125 @@ export interface UserWhereInput {
   NOT?: UserWhereInput[] | UserWhereInput;
 }
 
-export interface IngredientUpdateWithoutStepDataInput {
-  uid?: ID_Input;
-  index?: Int;
-  name?: String;
-  quantity?: String;
-  unit?: String;
-  processing?: String;
-}
-
-export interface IngredientAdditionUpdateManyMutationInput {
-  uid?: ID_Input;
-  parentId?: ID_Input;
-  name?: String;
-  quantity?: String;
-  unit?: String;
-  processing?: String;
-}
-
-export interface IngredientUpsertWithWhereUniqueWithoutStepInput {
-  where: IngredientWhereUniqueInput;
-  update: IngredientUpdateWithoutStepDataInput;
-  create: IngredientCreateWithoutStepInput;
-}
-
-export interface ItemAdditionScalarWhereInput {
-  uid?: ID_Input;
-  uid_not?: ID_Input;
-  uid_in?: ID_Input[] | ID_Input;
-  uid_not_in?: ID_Input[] | ID_Input;
-  uid_lt?: ID_Input;
-  uid_lte?: ID_Input;
-  uid_gt?: ID_Input;
-  uid_gte?: ID_Input;
-  uid_contains?: ID_Input;
-  uid_not_contains?: ID_Input;
-  uid_starts_with?: ID_Input;
-  uid_not_starts_with?: ID_Input;
-  uid_ends_with?: ID_Input;
-  uid_not_ends_with?: ID_Input;
-  parentId?: ID_Input;
-  parentId_not?: ID_Input;
-  parentId_in?: ID_Input[] | ID_Input;
-  parentId_not_in?: ID_Input[] | ID_Input;
-  parentId_lt?: ID_Input;
-  parentId_lte?: ID_Input;
-  parentId_gt?: ID_Input;
-  parentId_gte?: ID_Input;
-  parentId_contains?: ID_Input;
-  parentId_not_contains?: ID_Input;
-  parentId_starts_with?: ID_Input;
-  parentId_not_starts_with?: ID_Input;
-  parentId_ends_with?: ID_Input;
-  parentId_not_ends_with?: ID_Input;
-  name?: String;
-  name_not?: String;
-  name_in?: String[] | String;
-  name_not_in?: String[] | String;
-  name_lt?: String;
-  name_lte?: String;
-  name_gt?: String;
-  name_gte?: String;
-  name_contains?: String;
-  name_not_contains?: String;
-  name_starts_with?: String;
-  name_not_starts_with?: String;
-  name_ends_with?: String;
-  name_not_ends_with?: String;
-  AND?: ItemAdditionScalarWhereInput[] | ItemAdditionScalarWhereInput;
-  OR?: ItemAdditionScalarWhereInput[] | ItemAdditionScalarWhereInput;
-  NOT?: ItemAdditionScalarWhereInput[] | ItemAdditionScalarWhereInput;
-}
-
-export interface IngredientScalarWhereInput {
-  uid?: ID_Input;
-  uid_not?: ID_Input;
-  uid_in?: ID_Input[] | ID_Input;
-  uid_not_in?: ID_Input[] | ID_Input;
-  uid_lt?: ID_Input;
-  uid_lte?: ID_Input;
-  uid_gt?: ID_Input;
-  uid_gte?: ID_Input;
-  uid_contains?: ID_Input;
-  uid_not_contains?: ID_Input;
-  uid_starts_with?: ID_Input;
-  uid_not_starts_with?: ID_Input;
-  uid_ends_with?: ID_Input;
-  uid_not_ends_with?: ID_Input;
-  index?: Int;
-  index_not?: Int;
-  index_in?: Int[] | Int;
-  index_not_in?: Int[] | Int;
-  index_lt?: Int;
-  index_lte?: Int;
-  index_gt?: Int;
-  index_gte?: Int;
-  name?: String;
-  name_not?: String;
-  name_in?: String[] | String;
-  name_not_in?: String[] | String;
-  name_lt?: String;
-  name_lte?: String;
-  name_gt?: String;
-  name_gte?: String;
-  name_contains?: String;
-  name_not_contains?: String;
-  name_starts_with?: String;
-  name_not_starts_with?: String;
-  name_ends_with?: String;
-  name_not_ends_with?: String;
-  quantity?: String;
-  quantity_not?: String;
-  quantity_in?: String[] | String;
-  quantity_not_in?: String[] | String;
-  quantity_lt?: String;
-  quantity_lte?: String;
-  quantity_gt?: String;
-  quantity_gte?: String;
-  quantity_contains?: String;
-  quantity_not_contains?: String;
-  quantity_starts_with?: String;
-  quantity_not_starts_with?: String;
-  quantity_ends_with?: String;
-  quantity_not_ends_with?: String;
-  unit?: String;
-  unit_not?: String;
-  unit_in?: String[] | String;
-  unit_not_in?: String[] | String;
-  unit_lt?: String;
-  unit_lte?: String;
-  unit_gt?: String;
-  unit_gte?: String;
-  unit_contains?: String;
-  unit_not_contains?: String;
-  unit_starts_with?: String;
-  unit_not_starts_with?: String;
-  unit_ends_with?: String;
-  unit_not_ends_with?: String;
-  processing?: String;
-  processing_not?: String;
-  processing_in?: String[] | String;
-  processing_not_in?: String[] | String;
-  processing_lt?: String;
-  processing_lte?: String;
-  processing_gt?: String;
-  processing_gte?: String;
-  processing_contains?: String;
-  processing_not_contains?: String;
-  processing_starts_with?: String;
-  processing_not_starts_with?: String;
-  processing_ends_with?: String;
-  processing_not_ends_with?: String;
-  AND?: IngredientScalarWhereInput[] | IngredientScalarWhereInput;
-  OR?: IngredientScalarWhereInput[] | IngredientScalarWhereInput;
-  NOT?: IngredientScalarWhereInput[] | IngredientScalarWhereInput;
-}
-
-export interface StepAdditionSubscriptionWhereInput {
-  mutation_in?: MutationType[] | MutationType;
-  updatedFields_contains?: String;
-  updatedFields_contains_every?: String[] | String;
-  updatedFields_contains_some?: String[] | String;
-  node?: StepAdditionWhereInput;
-  AND?:
-    | StepAdditionSubscriptionWhereInput[]
-    | StepAdditionSubscriptionWhereInput;
-  OR?:
-    | StepAdditionSubscriptionWhereInput[]
-    | StepAdditionSubscriptionWhereInput;
-  NOT?:
-    | StepAdditionSubscriptionWhereInput[]
-    | StepAdditionSubscriptionWhereInput;
-}
-
 export interface IngredientUpdateManyWithWhereNestedInput {
   where: IngredientScalarWhereInput;
   data: IngredientUpdateManyDataInput;
 }
 
-export interface SortingSubscriptionWhereInput {
-  mutation_in?: MutationType[] | MutationType;
-  updatedFields_contains?: String;
-  updatedFields_contains_every?: String[] | String;
-  updatedFields_contains_some?: String[] | String;
-  node?: SortingWhereInput;
-  AND?: SortingSubscriptionWhereInput[] | SortingSubscriptionWhereInput;
-  OR?: SortingSubscriptionWhereInput[] | SortingSubscriptionWhereInput;
-  NOT?: SortingSubscriptionWhereInput[] | SortingSubscriptionWhereInput;
+export interface RecipeWhereInput {
+  uid?: ID_Input;
+  uid_not?: ID_Input;
+  uid_in?: ID_Input[] | ID_Input;
+  uid_not_in?: ID_Input[] | ID_Input;
+  uid_lt?: ID_Input;
+  uid_lte?: ID_Input;
+  uid_gt?: ID_Input;
+  uid_gte?: ID_Input;
+  uid_contains?: ID_Input;
+  uid_not_contains?: ID_Input;
+  uid_starts_with?: ID_Input;
+  uid_not_starts_with?: ID_Input;
+  uid_ends_with?: ID_Input;
+  uid_not_ends_with?: ID_Input;
+  createdAt?: DateTimeInput;
+  createdAt_not?: DateTimeInput;
+  createdAt_in?: DateTimeInput[] | DateTimeInput;
+  createdAt_not_in?: DateTimeInput[] | DateTimeInput;
+  createdAt_lt?: DateTimeInput;
+  createdAt_lte?: DateTimeInput;
+  createdAt_gt?: DateTimeInput;
+  createdAt_gte?: DateTimeInput;
+  updatedAt?: DateTimeInput;
+  updatedAt_not?: DateTimeInput;
+  updatedAt_in?: DateTimeInput[] | DateTimeInput;
+  updatedAt_not_in?: DateTimeInput[] | DateTimeInput;
+  updatedAt_lt?: DateTimeInput;
+  updatedAt_lte?: DateTimeInput;
+  updatedAt_gt?: DateTimeInput;
+  updatedAt_gte?: DateTimeInput;
+  author?: UserWhereInput;
+  title?: String;
+  title_not?: String;
+  title_in?: String[] | String;
+  title_not_in?: String[] | String;
+  title_lt?: String;
+  title_lte?: String;
+  title_gt?: String;
+  title_gte?: String;
+  title_contains?: String;
+  title_not_contains?: String;
+  title_starts_with?: String;
+  title_not_starts_with?: String;
+  title_ends_with?: String;
+  title_not_ends_with?: String;
+  time?: String;
+  time_not?: String;
+  time_in?: String[] | String;
+  time_not_in?: String[] | String;
+  time_lt?: String;
+  time_lte?: String;
+  time_gt?: String;
+  time_gte?: String;
+  time_contains?: String;
+  time_not_contains?: String;
+  time_starts_with?: String;
+  time_not_starts_with?: String;
+  time_ends_with?: String;
+  time_not_ends_with?: String;
+  servingAmount?: String;
+  servingAmount_not?: String;
+  servingAmount_in?: String[] | String;
+  servingAmount_not_in?: String[] | String;
+  servingAmount_lt?: String;
+  servingAmount_lte?: String;
+  servingAmount_gt?: String;
+  servingAmount_gte?: String;
+  servingAmount_contains?: String;
+  servingAmount_not_contains?: String;
+  servingAmount_starts_with?: String;
+  servingAmount_not_starts_with?: String;
+  servingAmount_ends_with?: String;
+  servingAmount_not_ends_with?: String;
+  servingType?: String;
+  servingType_not?: String;
+  servingType_in?: String[] | String;
+  servingType_not_in?: String[] | String;
+  servingType_lt?: String;
+  servingType_lte?: String;
+  servingType_gt?: String;
+  servingType_gte?: String;
+  servingType_contains?: String;
+  servingType_not_contains?: String;
+  servingType_starts_with?: String;
+  servingType_not_starts_with?: String;
+  servingType_ends_with?: String;
+  servingType_not_ends_with?: String;
+  description?: String;
+  description_not?: String;
+  description_in?: String[] | String;
+  description_not_in?: String[] | String;
+  description_lt?: String;
+  description_lte?: String;
+  description_gt?: String;
+  description_gte?: String;
+  description_contains?: String;
+  description_not_contains?: String;
+  description_starts_with?: String;
+  description_not_starts_with?: String;
+  description_ends_with?: String;
+  description_not_ends_with?: String;
+  items_every?: ItemWhereInput;
+  items_some?: ItemWhereInput;
+  items_none?: ItemWhereInput;
+  modifications_every?: ModificationWhereInput;
+  modifications_some?: ModificationWhereInput;
+  modifications_none?: ModificationWhereInput;
+  photos_every?: RecipePhotoWhereInput;
+  photos_some?: RecipePhotoWhereInput;
+  photos_none?: RecipePhotoWhereInput;
+  AND?: RecipeWhereInput[] | RecipeWhereInput;
+  OR?: RecipeWhereInput[] | RecipeWhereInput;
+  NOT?: RecipeWhereInput[] | RecipeWhereInput;
 }
 
 export interface IngredientUpdateManyDataInput {
@@ -1694,15 +1534,13 @@ export interface StepUpdateManyWithWhereNestedInput {
   data: StepUpdateManyDataInput;
 }
 
-export interface AlterationSubscriptionWhereInput {
-  mutation_in?: MutationType[] | MutationType;
-  updatedFields_contains?: String;
-  updatedFields_contains_every?: String[] | String;
-  updatedFields_contains_some?: String[] | String;
-  node?: AlterationWhereInput;
-  AND?: AlterationSubscriptionWhereInput[] | AlterationSubscriptionWhereInput;
-  OR?: AlterationSubscriptionWhereInput[] | AlterationSubscriptionWhereInput;
-  NOT?: AlterationSubscriptionWhereInput[] | AlterationSubscriptionWhereInput;
+export interface UserUpdateManyMutationInput {
+  email?: String;
+  password?: String;
+  name?: String;
+  avatar?: String;
+  slug?: String;
+  emailVerified?: Boolean;
 }
 
 export interface StepUpdateManyDataInput {
@@ -1710,23 +1548,6 @@ export interface StepUpdateManyDataInput {
   index?: Int;
   directions?: String;
   notes?: String;
-}
-
-export interface UserUpdateInput {
-  email?: String;
-  password?: String;
-  name?: String;
-  avatar?: String;
-  slug?: String;
-  emailVerified?: Boolean;
-  recipes?: RecipeUpdateManyWithoutAuthorInput;
-  modifications?: ModificationUpdateManyWithoutUserInput;
-}
-
-export interface ItemUpsertWithWhereUniqueWithoutRecipeInput {
-  where: ItemWhereUniqueInput;
-  update: ItemUpdateWithoutRecipeDataInput;
-  create: ItemCreateWithoutRecipeInput;
 }
 
 export interface UserCreateInput {
@@ -1738,6 +1559,17 @@ export interface UserCreateInput {
   emailVerified?: Boolean;
   recipes?: RecipeCreateManyWithoutAuthorInput;
   modifications?: ModificationCreateManyWithoutUserInput;
+}
+
+export interface ItemUpsertWithWhereUniqueWithoutRecipeInput {
+  where: ItemWhereUniqueInput;
+  update: ItemUpdateWithoutRecipeDataInput;
+  create: ItemCreateWithoutRecipeInput;
+}
+
+export interface ModificationUpsertWithoutStepAdditionsInput {
+  update: ModificationUpdateWithoutStepAdditionsDataInput;
+  create: ModificationCreateWithoutStepAdditionsInput;
 }
 
 export interface ItemScalarWhereInput {
@@ -1782,16 +1614,6 @@ export interface ItemScalarWhereInput {
   NOT?: ItemScalarWhereInput[] | ItemScalarWhereInput;
 }
 
-export interface ModificationUpsertWithoutStepAdditionsInput {
-  update: ModificationUpdateWithoutStepAdditionsDataInput;
-  create: ModificationCreateWithoutStepAdditionsInput;
-}
-
-export interface ItemUpdateManyWithWhereNestedInput {
-  where: ItemScalarWhereInput;
-  data: ItemUpdateManyDataInput;
-}
-
 export interface ModificationUpdateWithoutStepAdditionsDataInput {
   user?: UserUpdateOneRequiredWithoutModificationsInput;
   recipe?: RecipeUpdateOneRequiredWithoutModificationsInput;
@@ -1802,10 +1624,9 @@ export interface ModificationUpdateWithoutStepAdditionsDataInput {
   ingredientAdditions?: IngredientAdditionUpdateManyWithoutModificationInput;
 }
 
-export interface ItemUpdateManyDataInput {
-  uid?: ID_Input;
-  index?: Int;
-  name?: String;
+export interface ItemUpdateManyWithWhereNestedInput {
+  where: ItemScalarWhereInput;
+  data: ItemUpdateManyDataInput;
 }
 
 export interface StepAdditionUpdateInput {
@@ -1814,6 +1635,22 @@ export interface StepAdditionUpdateInput {
   directions?: String;
   notes?: String;
   modification?: ModificationUpdateOneRequiredWithoutStepAdditionsInput;
+}
+
+export interface ItemUpdateManyDataInput {
+  uid?: ID_Input;
+  index?: Int;
+  name?: String;
+}
+
+export interface ModificationCreateWithoutStepAdditionsInput {
+  user: UserCreateOneWithoutModificationsInput;
+  recipe: RecipeCreateOneWithoutModificationsInput;
+  sortings?: SortingCreateManyWithoutModificationInput;
+  alterations?: AlterationCreateManyWithoutModificationInput;
+  removals?: ModificationCreateremovalsInput;
+  itemAdditions?: ItemAdditionCreateManyWithoutModificationInput;
+  ingredientAdditions?: IngredientAdditionCreateManyWithoutModificationInput;
 }
 
 export interface ModificationUpdateManyWithoutRecipeInput {
@@ -1836,14 +1673,12 @@ export interface ModificationUpdateManyWithoutRecipeInput {
     | ModificationUpdateManyWithWhereNestedInput;
 }
 
-export interface ModificationCreateWithoutStepAdditionsInput {
-  user: UserCreateOneWithoutModificationsInput;
-  recipe: RecipeCreateOneWithoutModificationsInput;
-  sortings?: SortingCreateManyWithoutModificationInput;
-  alterations?: AlterationCreateManyWithoutModificationInput;
-  removals?: ModificationCreateremovalsInput;
-  itemAdditions?: ItemAdditionCreateManyWithoutModificationInput;
-  ingredientAdditions?: IngredientAdditionCreateManyWithoutModificationInput;
+export interface StepAdditionCreateInput {
+  uid: ID_Input;
+  parentId: ID_Input;
+  directions: String;
+  notes: String;
+  modification: ModificationCreateOneWithoutStepAdditionsInput;
 }
 
 export interface ModificationUpdateWithWhereUniqueWithoutRecipeInput {
@@ -1851,12 +1686,11 @@ export interface ModificationUpdateWithWhereUniqueWithoutRecipeInput {
   data: ModificationUpdateWithoutRecipeDataInput;
 }
 
-export interface StepAdditionCreateInput {
-  uid: ID_Input;
-  parentId: ID_Input;
-  directions: String;
-  notes: String;
-  modification: ModificationCreateOneWithoutStepAdditionsInput;
+export interface StepUpdateManyMutationInput {
+  uid?: ID_Input;
+  index?: Int;
+  directions?: String;
+  notes?: String;
 }
 
 export interface ModificationUpdateWithoutRecipeDataInput {
@@ -1869,11 +1703,13 @@ export interface ModificationUpdateWithoutRecipeDataInput {
   ingredientAdditions?: IngredientAdditionUpdateManyWithoutModificationInput;
 }
 
-export interface StepUpdateManyMutationInput {
-  uid?: ID_Input;
-  index?: Int;
+export interface StepCreateInput {
+  uid: ID_Input;
+  index: Int;
   directions?: String;
   notes?: String;
+  item: ItemCreateOneWithoutStepsInput;
+  ingredients?: IngredientCreateManyWithoutStepInput;
 }
 
 export interface SortingUpdateManyWithoutModificationInput {
@@ -1896,30 +1732,15 @@ export interface SortingUpdateManyWithoutModificationInput {
     | SortingUpdateManyWithWhereNestedInput;
 }
 
-export interface StepCreateInput {
-  uid: ID_Input;
-  index: Int;
-  directions?: String;
-  notes?: String;
-  item: ItemCreateOneWithoutStepsInput;
-  ingredients?: IngredientCreateManyWithoutStepInput;
-}
-
-export interface SortingUpdateWithWhereUniqueWithoutModificationInput {
-  where: SortingWhereUniqueInput;
-  data: SortingUpdateWithoutModificationDataInput;
-}
-
 export interface SortingUpdateManyMutationInput {
   uid?: ID_Input;
   parentId?: ID_Input;
   order?: SortingUpdateorderInput;
 }
 
-export interface SortingUpdateWithoutModificationDataInput {
-  uid?: ID_Input;
-  parentId?: ID_Input;
-  order?: SortingUpdateorderInput;
+export interface SortingUpdateWithWhereUniqueWithoutModificationInput {
+  where: SortingWhereUniqueInput;
+  data: SortingUpdateWithoutModificationDataInput;
 }
 
 export interface ModificationUpdateWithoutSortingsDataInput {
@@ -1932,8 +1753,10 @@ export interface ModificationUpdateWithoutSortingsDataInput {
   ingredientAdditions?: IngredientAdditionUpdateManyWithoutModificationInput;
 }
 
-export interface SortingUpdateorderInput {
-  set?: ID_Input[] | ID_Input;
+export interface SortingUpdateWithoutModificationDataInput {
+  uid?: ID_Input;
+  parentId?: ID_Input;
+  order?: SortingUpdateorderInput;
 }
 
 export interface ModificationUpdateOneRequiredWithoutSortingsInput {
@@ -1943,10 +1766,8 @@ export interface ModificationUpdateOneRequiredWithoutSortingsInput {
   connect?: ModificationWhereUniqueInput;
 }
 
-export interface SortingUpsertWithWhereUniqueWithoutModificationInput {
-  where: SortingWhereUniqueInput;
-  update: SortingUpdateWithoutModificationDataInput;
-  create: SortingCreateWithoutModificationInput;
+export interface SortingUpdateorderInput {
+  set?: ID_Input[] | ID_Input;
 }
 
 export interface ModificationCreateWithoutSortingsInput {
@@ -1959,14 +1780,10 @@ export interface ModificationCreateWithoutSortingsInput {
   ingredientAdditions?: IngredientAdditionCreateManyWithoutModificationInput;
 }
 
-export interface ModificationUpdateWithoutItemAdditionsDataInput {
-  user?: UserUpdateOneRequiredWithoutModificationsInput;
-  recipe?: RecipeUpdateOneRequiredWithoutModificationsInput;
-  sortings?: SortingUpdateManyWithoutModificationInput;
-  alterations?: AlterationUpdateManyWithoutModificationInput;
-  removals?: ModificationUpdateremovalsInput;
-  stepAdditions?: StepAdditionUpdateManyWithoutModificationInput;
-  ingredientAdditions?: IngredientAdditionUpdateManyWithoutModificationInput;
+export interface SortingUpsertWithWhereUniqueWithoutModificationInput {
+  where: SortingWhereUniqueInput;
+  update: SortingUpdateWithoutModificationDataInput;
+  create: SortingCreateWithoutModificationInput;
 }
 
 export interface ModificationCreateOneWithoutSortingsInput {
@@ -1974,18 +1791,53 @@ export interface ModificationCreateOneWithoutSortingsInput {
   connect?: ModificationWhereUniqueInput;
 }
 
+export interface SortingScalarWhereInput {
+  uid?: ID_Input;
+  uid_not?: ID_Input;
+  uid_in?: ID_Input[] | ID_Input;
+  uid_not_in?: ID_Input[] | ID_Input;
+  uid_lt?: ID_Input;
+  uid_lte?: ID_Input;
+  uid_gt?: ID_Input;
+  uid_gte?: ID_Input;
+  uid_contains?: ID_Input;
+  uid_not_contains?: ID_Input;
+  uid_starts_with?: ID_Input;
+  uid_not_starts_with?: ID_Input;
+  uid_ends_with?: ID_Input;
+  uid_not_ends_with?: ID_Input;
+  parentId?: ID_Input;
+  parentId_not?: ID_Input;
+  parentId_in?: ID_Input[] | ID_Input;
+  parentId_not_in?: ID_Input[] | ID_Input;
+  parentId_lt?: ID_Input;
+  parentId_lte?: ID_Input;
+  parentId_gt?: ID_Input;
+  parentId_gte?: ID_Input;
+  parentId_contains?: ID_Input;
+  parentId_not_contains?: ID_Input;
+  parentId_starts_with?: ID_Input;
+  parentId_not_starts_with?: ID_Input;
+  parentId_ends_with?: ID_Input;
+  parentId_not_ends_with?: ID_Input;
+  AND?: SortingScalarWhereInput[] | SortingScalarWhereInput;
+  OR?: SortingScalarWhereInput[] | SortingScalarWhereInput;
+  NOT?: SortingScalarWhereInput[] | SortingScalarWhereInput;
+}
+
+export interface RecipePhotoUpdateManyMutationInput {
+  filename?: String;
+  url?: String;
+}
+
 export interface SortingUpdateManyWithWhereNestedInput {
   where: SortingScalarWhereInput;
   data: SortingUpdateManyDataInput;
 }
 
-export interface RecipeUpdateManyMutationInput {
-  uid?: ID_Input;
-  title?: String;
-  time?: String;
-  servingAmount?: String;
-  servingType?: String;
-  description?: String;
+export interface RecipeUpsertWithoutPhotosInput {
+  update: RecipeUpdateWithoutPhotosDataInput;
+  create: RecipeCreateWithoutPhotosInput;
 }
 
 export interface SortingUpdateManyDataInput {
@@ -1994,16 +1846,11 @@ export interface SortingUpdateManyDataInput {
   order?: SortingUpdateorderInput;
 }
 
-export interface RecipeUpdateInput {
-  uid?: ID_Input;
-  author?: UserUpdateOneRequiredWithoutRecipesInput;
-  title?: String;
-  time?: String;
-  servingAmount?: String;
-  servingType?: String;
-  description?: String;
-  items?: ItemUpdateManyWithoutRecipeInput;
-  modifications?: ModificationUpdateManyWithoutRecipeInput;
+export interface RecipeUpdateOneRequiredWithoutPhotosInput {
+  create?: RecipeCreateWithoutPhotosInput;
+  update?: RecipeUpdateWithoutPhotosDataInput;
+  upsert?: RecipeUpsertWithoutPhotosInput;
+  connect?: RecipeWhereUniqueInput;
 }
 
 export interface AlterationUpdateManyWithoutModificationInput {
@@ -2026,13 +1873,134 @@ export interface AlterationUpdateManyWithoutModificationInput {
     | AlterationUpdateManyWithWhereNestedInput;
 }
 
-export interface ModificationUpdateManyMutationInput {
-  removals?: ModificationUpdateremovalsInput;
+export interface RecipePhotoUpdateInput {
+  filename?: String;
+  url?: String;
+  recipe?: RecipeUpdateOneRequiredWithoutPhotosInput;
 }
 
-export interface AlterationUpdateWithWhereUniqueWithoutModificationInput {
+export interface ModificationUpdateOneRequiredWithoutItemAdditionsInput {
+  create?: ModificationCreateWithoutItemAdditionsInput;
+  update?: ModificationUpdateWithoutItemAdditionsDataInput;
+  upsert?: ModificationUpsertWithoutItemAdditionsInput;
+  connect?: ModificationWhereUniqueInput;
+}
+
+export interface RecipeCreateOneWithoutPhotosInput {
+  create?: RecipeCreateWithoutPhotosInput;
+  connect?: RecipeWhereUniqueInput;
+}
+
+export interface AlterationUpdateWithoutModificationDataInput {
+  uid?: ID_Input;
+  sourceId?: ID_Input;
+  field?: String;
+  value?: String;
+}
+
+export interface RecipePhotoCreateInput {
+  filename: String;
+  url: String;
+  recipe: RecipeCreateOneWithoutPhotosInput;
+}
+
+export interface AlterationUpsertWithWhereUniqueWithoutModificationInput {
   where: AlterationWhereUniqueInput;
-  data: AlterationUpdateWithoutModificationDataInput;
+  update: AlterationUpdateWithoutModificationDataInput;
+  create: AlterationCreateWithoutModificationInput;
+}
+
+export interface RecipeUpdateInput {
+  uid?: ID_Input;
+  author?: UserUpdateOneRequiredWithoutRecipesInput;
+  title?: String;
+  time?: String;
+  servingAmount?: String;
+  servingType?: String;
+  description?: String;
+  items?: ItemUpdateManyWithoutRecipeInput;
+  modifications?: ModificationUpdateManyWithoutRecipeInput;
+  photos?: RecipePhotoUpdateManyWithoutRecipeInput;
+}
+
+export interface AlterationScalarWhereInput {
+  uid?: ID_Input;
+  uid_not?: ID_Input;
+  uid_in?: ID_Input[] | ID_Input;
+  uid_not_in?: ID_Input[] | ID_Input;
+  uid_lt?: ID_Input;
+  uid_lte?: ID_Input;
+  uid_gt?: ID_Input;
+  uid_gte?: ID_Input;
+  uid_contains?: ID_Input;
+  uid_not_contains?: ID_Input;
+  uid_starts_with?: ID_Input;
+  uid_not_starts_with?: ID_Input;
+  uid_ends_with?: ID_Input;
+  uid_not_ends_with?: ID_Input;
+  sourceId?: ID_Input;
+  sourceId_not?: ID_Input;
+  sourceId_in?: ID_Input[] | ID_Input;
+  sourceId_not_in?: ID_Input[] | ID_Input;
+  sourceId_lt?: ID_Input;
+  sourceId_lte?: ID_Input;
+  sourceId_gt?: ID_Input;
+  sourceId_gte?: ID_Input;
+  sourceId_contains?: ID_Input;
+  sourceId_not_contains?: ID_Input;
+  sourceId_starts_with?: ID_Input;
+  sourceId_not_starts_with?: ID_Input;
+  sourceId_ends_with?: ID_Input;
+  sourceId_not_ends_with?: ID_Input;
+  field?: String;
+  field_not?: String;
+  field_in?: String[] | String;
+  field_not_in?: String[] | String;
+  field_lt?: String;
+  field_lte?: String;
+  field_gt?: String;
+  field_gte?: String;
+  field_contains?: String;
+  field_not_contains?: String;
+  field_starts_with?: String;
+  field_not_starts_with?: String;
+  field_ends_with?: String;
+  field_not_ends_with?: String;
+  value?: String;
+  value_not?: String;
+  value_in?: String[] | String;
+  value_not_in?: String[] | String;
+  value_lt?: String;
+  value_lte?: String;
+  value_gt?: String;
+  value_gte?: String;
+  value_contains?: String;
+  value_not_contains?: String;
+  value_starts_with?: String;
+  value_not_starts_with?: String;
+  value_ends_with?: String;
+  value_not_ends_with?: String;
+  AND?: AlterationScalarWhereInput[] | AlterationScalarWhereInput;
+  OR?: AlterationScalarWhereInput[] | AlterationScalarWhereInput;
+  NOT?: AlterationScalarWhereInput[] | AlterationScalarWhereInput;
+}
+
+export interface RecipeCreateInput {
+  uid: ID_Input;
+  author: UserCreateOneWithoutRecipesInput;
+  title?: String;
+  time?: String;
+  servingAmount?: String;
+  servingType?: String;
+  description?: String;
+  items?: ItemCreateManyWithoutRecipeInput;
+  modifications?: ModificationCreateManyWithoutRecipeInput;
+  photos?: RecipePhotoCreateManyWithoutRecipeInput;
+}
+
+export interface AlterationUpdateManyWithWhereNestedInput {
+  where: AlterationScalarWhereInput;
+  data: AlterationUpdateManyDataInput;
 }
 
 export interface ModificationUpdateInput {
@@ -2046,23 +2014,51 @@ export interface ModificationUpdateInput {
   ingredientAdditions?: IngredientAdditionUpdateManyWithoutModificationInput;
 }
 
-export interface AlterationUpdateWithoutModificationDataInput {
+export interface AlterationUpdateManyDataInput {
   uid?: ID_Input;
   sourceId?: ID_Input;
   field?: String;
   value?: String;
 }
 
-export interface ItemAdditionUpdateManyMutationInput {
-  uid?: ID_Input;
-  parentId?: ID_Input;
-  name?: String;
+export interface ModificationCreateInput {
+  user: UserCreateOneWithoutModificationsInput;
+  recipe: RecipeCreateOneWithoutModificationsInput;
+  sortings?: SortingCreateManyWithoutModificationInput;
+  alterations?: AlterationCreateManyWithoutModificationInput;
+  removals?: ModificationCreateremovalsInput;
+  itemAdditions?: ItemAdditionCreateManyWithoutModificationInput;
+  stepAdditions?: StepAdditionCreateManyWithoutModificationInput;
+  ingredientAdditions?: IngredientAdditionCreateManyWithoutModificationInput;
 }
 
-export interface AlterationUpsertWithWhereUniqueWithoutModificationInput {
-  where: AlterationWhereUniqueInput;
-  update: AlterationUpdateWithoutModificationDataInput;
-  create: AlterationCreateWithoutModificationInput;
+export interface ModificationUpdateremovalsInput {
+  set?: ID_Input[] | ID_Input;
+}
+
+export interface ModificationUpsertWithoutItemAdditionsInput {
+  update: ModificationUpdateWithoutItemAdditionsDataInput;
+  create: ModificationCreateWithoutItemAdditionsInput;
+}
+
+export interface ItemAdditionUpdateManyWithoutModificationInput {
+  create?:
+    | ItemAdditionCreateWithoutModificationInput[]
+    | ItemAdditionCreateWithoutModificationInput;
+  delete?: ItemAdditionWhereUniqueInput[] | ItemAdditionWhereUniqueInput;
+  connect?: ItemAdditionWhereUniqueInput[] | ItemAdditionWhereUniqueInput;
+  set?: ItemAdditionWhereUniqueInput[] | ItemAdditionWhereUniqueInput;
+  disconnect?: ItemAdditionWhereUniqueInput[] | ItemAdditionWhereUniqueInput;
+  update?:
+    | ItemAdditionUpdateWithWhereUniqueWithoutModificationInput[]
+    | ItemAdditionUpdateWithWhereUniqueWithoutModificationInput;
+  upsert?:
+    | ItemAdditionUpsertWithWhereUniqueWithoutModificationInput[]
+    | ItemAdditionUpsertWithWhereUniqueWithoutModificationInput;
+  deleteMany?: ItemAdditionScalarWhereInput[] | ItemAdditionScalarWhereInput;
+  updateMany?:
+    | ItemAdditionUpdateManyWithWhereNestedInput[]
+    | ItemAdditionUpdateManyWithWhereNestedInput;
 }
 
 export interface ModificationCreateOneWithoutAlterationsInput {
@@ -2070,7 +2066,134 @@ export interface ModificationCreateOneWithoutAlterationsInput {
   connect?: ModificationWhereUniqueInput;
 }
 
-export interface IngredientAdditionWhereInput {
+export interface ItemWhereInput {
+  uid?: ID_Input;
+  uid_not?: ID_Input;
+  uid_in?: ID_Input[] | ID_Input;
+  uid_not_in?: ID_Input[] | ID_Input;
+  uid_lt?: ID_Input;
+  uid_lte?: ID_Input;
+  uid_gt?: ID_Input;
+  uid_gte?: ID_Input;
+  uid_contains?: ID_Input;
+  uid_not_contains?: ID_Input;
+  uid_starts_with?: ID_Input;
+  uid_not_starts_with?: ID_Input;
+  uid_ends_with?: ID_Input;
+  uid_not_ends_with?: ID_Input;
+  index?: Int;
+  index_not?: Int;
+  index_in?: Int[] | Int;
+  index_not_in?: Int[] | Int;
+  index_lt?: Int;
+  index_lte?: Int;
+  index_gt?: Int;
+  index_gte?: Int;
+  name?: String;
+  name_not?: String;
+  name_in?: String[] | String;
+  name_not_in?: String[] | String;
+  name_lt?: String;
+  name_lte?: String;
+  name_gt?: String;
+  name_gte?: String;
+  name_contains?: String;
+  name_not_contains?: String;
+  name_starts_with?: String;
+  name_not_starts_with?: String;
+  name_ends_with?: String;
+  name_not_ends_with?: String;
+  recipe?: RecipeWhereInput;
+  steps_every?: StepWhereInput;
+  steps_some?: StepWhereInput;
+  steps_none?: StepWhereInput;
+  AND?: ItemWhereInput[] | ItemWhereInput;
+  OR?: ItemWhereInput[] | ItemWhereInput;
+  NOT?: ItemWhereInput[] | ItemWhereInput;
+}
+
+export interface UserCreateOneWithoutModificationsInput {
+  create?: UserCreateWithoutModificationsInput;
+  connect?: UserWhereUniqueInput;
+}
+
+export interface StepWhereInput {
+  uid?: ID_Input;
+  uid_not?: ID_Input;
+  uid_in?: ID_Input[] | ID_Input;
+  uid_not_in?: ID_Input[] | ID_Input;
+  uid_lt?: ID_Input;
+  uid_lte?: ID_Input;
+  uid_gt?: ID_Input;
+  uid_gte?: ID_Input;
+  uid_contains?: ID_Input;
+  uid_not_contains?: ID_Input;
+  uid_starts_with?: ID_Input;
+  uid_not_starts_with?: ID_Input;
+  uid_ends_with?: ID_Input;
+  uid_not_ends_with?: ID_Input;
+  index?: Int;
+  index_not?: Int;
+  index_in?: Int[] | Int;
+  index_not_in?: Int[] | Int;
+  index_lt?: Int;
+  index_lte?: Int;
+  index_gt?: Int;
+  index_gte?: Int;
+  directions?: String;
+  directions_not?: String;
+  directions_in?: String[] | String;
+  directions_not_in?: String[] | String;
+  directions_lt?: String;
+  directions_lte?: String;
+  directions_gt?: String;
+  directions_gte?: String;
+  directions_contains?: String;
+  directions_not_contains?: String;
+  directions_starts_with?: String;
+  directions_not_starts_with?: String;
+  directions_ends_with?: String;
+  directions_not_ends_with?: String;
+  notes?: String;
+  notes_not?: String;
+  notes_in?: String[] | String;
+  notes_not_in?: String[] | String;
+  notes_lt?: String;
+  notes_lte?: String;
+  notes_gt?: String;
+  notes_gte?: String;
+  notes_contains?: String;
+  notes_not_contains?: String;
+  notes_starts_with?: String;
+  notes_not_starts_with?: String;
+  notes_ends_with?: String;
+  notes_not_ends_with?: String;
+  item?: ItemWhereInput;
+  ingredients_every?: IngredientWhereInput;
+  ingredients_some?: IngredientWhereInput;
+  ingredients_none?: IngredientWhereInput;
+  AND?: StepWhereInput[] | StepWhereInput;
+  OR?: StepWhereInput[] | StepWhereInput;
+  NOT?: StepWhereInput[] | StepWhereInput;
+}
+
+export interface RecipeCreateManyWithoutAuthorInput {
+  create?: RecipeCreateWithoutAuthorInput[] | RecipeCreateWithoutAuthorInput;
+  connect?: RecipeWhereUniqueInput[] | RecipeWhereUniqueInput;
+}
+
+export interface ItemAdditionUpsertWithWhereUniqueWithoutModificationInput {
+  where: ItemAdditionWhereUniqueInput;
+  update: ItemAdditionUpdateWithoutModificationDataInput;
+  create: ItemAdditionCreateWithoutModificationInput;
+}
+
+export interface ItemCreateManyWithoutRecipeInput {
+  create?: ItemCreateWithoutRecipeInput[] | ItemCreateWithoutRecipeInput;
+  connect?: ItemWhereUniqueInput[] | ItemWhereUniqueInput;
+}
+
+export interface ItemAdditionScalarWhereInput {
   uid?: ID_Input;
   uid_not?: ID_Input;
   uid_in?: ID_Input[] | ID_Input;
@@ -2113,166 +2236,9 @@ export interface IngredientAdditionWhereInput {
   name_not_starts_with?: String;
   name_ends_with?: String;
   name_not_ends_with?: String;
-  quantity?: String;
-  quantity_not?: String;
-  quantity_in?: String[] | String;
-  quantity_not_in?: String[] | String;
-  quantity_lt?: String;
-  quantity_lte?: String;
-  quantity_gt?: String;
-  quantity_gte?: String;
-  quantity_contains?: String;
-  quantity_not_contains?: String;
-  quantity_starts_with?: String;
-  quantity_not_starts_with?: String;
-  quantity_ends_with?: String;
-  quantity_not_ends_with?: String;
-  unit?: String;
-  unit_not?: String;
-  unit_in?: String[] | String;
-  unit_not_in?: String[] | String;
-  unit_lt?: String;
-  unit_lte?: String;
-  unit_gt?: String;
-  unit_gte?: String;
-  unit_contains?: String;
-  unit_not_contains?: String;
-  unit_starts_with?: String;
-  unit_not_starts_with?: String;
-  unit_ends_with?: String;
-  unit_not_ends_with?: String;
-  processing?: String;
-  processing_not?: String;
-  processing_in?: String[] | String;
-  processing_not_in?: String[] | String;
-  processing_lt?: String;
-  processing_lte?: String;
-  processing_gt?: String;
-  processing_gte?: String;
-  processing_contains?: String;
-  processing_not_contains?: String;
-  processing_starts_with?: String;
-  processing_not_starts_with?: String;
-  processing_ends_with?: String;
-  processing_not_ends_with?: String;
-  modification?: ModificationWhereInput;
-  AND?: IngredientAdditionWhereInput[] | IngredientAdditionWhereInput;
-  OR?: IngredientAdditionWhereInput[] | IngredientAdditionWhereInput;
-  NOT?: IngredientAdditionWhereInput[] | IngredientAdditionWhereInput;
-}
-
-export interface UserCreateOneWithoutModificationsInput {
-  create?: UserCreateWithoutModificationsInput;
-  connect?: UserWhereUniqueInput;
-}
-
-export interface ModificationUpdateOneRequiredWithoutItemAdditionsInput {
-  create?: ModificationCreateWithoutItemAdditionsInput;
-  update?: ModificationUpdateWithoutItemAdditionsDataInput;
-  upsert?: ModificationUpsertWithoutItemAdditionsInput;
-  connect?: ModificationWhereUniqueInput;
-}
-
-export interface RecipeCreateManyWithoutAuthorInput {
-  create?: RecipeCreateWithoutAuthorInput[] | RecipeCreateWithoutAuthorInput;
-  connect?: RecipeWhereUniqueInput[] | RecipeWhereUniqueInput;
-}
-
-export interface IngredientWhereInput {
-  uid?: ID_Input;
-  uid_not?: ID_Input;
-  uid_in?: ID_Input[] | ID_Input;
-  uid_not_in?: ID_Input[] | ID_Input;
-  uid_lt?: ID_Input;
-  uid_lte?: ID_Input;
-  uid_gt?: ID_Input;
-  uid_gte?: ID_Input;
-  uid_contains?: ID_Input;
-  uid_not_contains?: ID_Input;
-  uid_starts_with?: ID_Input;
-  uid_not_starts_with?: ID_Input;
-  uid_ends_with?: ID_Input;
-  uid_not_ends_with?: ID_Input;
-  index?: Int;
-  index_not?: Int;
-  index_in?: Int[] | Int;
-  index_not_in?: Int[] | Int;
-  index_lt?: Int;
-  index_lte?: Int;
-  index_gt?: Int;
-  index_gte?: Int;
-  name?: String;
-  name_not?: String;
-  name_in?: String[] | String;
-  name_not_in?: String[] | String;
-  name_lt?: String;
-  name_lte?: String;
-  name_gt?: String;
-  name_gte?: String;
-  name_contains?: String;
-  name_not_contains?: String;
-  name_starts_with?: String;
-  name_not_starts_with?: String;
-  name_ends_with?: String;
-  name_not_ends_with?: String;
-  quantity?: String;
-  quantity_not?: String;
-  quantity_in?: String[] | String;
-  quantity_not_in?: String[] | String;
-  quantity_lt?: String;
-  quantity_lte?: String;
-  quantity_gt?: String;
-  quantity_gte?: String;
-  quantity_contains?: String;
-  quantity_not_contains?: String;
-  quantity_starts_with?: String;
-  quantity_not_starts_with?: String;
-  quantity_ends_with?: String;
-  quantity_not_ends_with?: String;
-  unit?: String;
-  unit_not?: String;
-  unit_in?: String[] | String;
-  unit_not_in?: String[] | String;
-  unit_lt?: String;
-  unit_lte?: String;
-  unit_gt?: String;
-  unit_gte?: String;
-  unit_contains?: String;
-  unit_not_contains?: String;
-  unit_starts_with?: String;
-  unit_not_starts_with?: String;
-  unit_ends_with?: String;
-  unit_not_ends_with?: String;
-  processing?: String;
-  processing_not?: String;
-  processing_in?: String[] | String;
-  processing_not_in?: String[] | String;
-  processing_lt?: String;
-  processing_lte?: String;
-  processing_gt?: String;
-  processing_gte?: String;
-  processing_contains?: String;
-  processing_not_contains?: String;
-  processing_starts_with?: String;
-  processing_not_starts_with?: String;
-  processing_ends_with?: String;
-  processing_not_ends_with?: String;
-  step?: StepWhereInput;
-  AND?: IngredientWhereInput[] | IngredientWhereInput;
-  OR?: IngredientWhereInput[] | IngredientWhereInput;
-  NOT?: IngredientWhereInput[] | IngredientWhereInput;
-}
-
-export interface ItemCreateManyWithoutRecipeInput {
-  create?: ItemCreateWithoutRecipeInput[] | ItemCreateWithoutRecipeInput;
-  connect?: ItemWhereUniqueInput[] | ItemWhereUniqueInput;
-}
-
-export interface ItemAdditionUpdateInput {
-  uid?: ID_Input;
-  parentId?: ID_Input;
-  name?: String;
-  modification?: ModificationUpdateOneRequiredWithoutItemAdditionsInput;
+  AND?: ItemAdditionScalarWhereInput[] | ItemAdditionScalarWhereInput;
+  OR?: ItemAdditionScalarWhereInput[] | ItemAdditionScalarWhereInput;
+  NOT?: ItemAdditionScalarWhereInput[] | ItemAdditionScalarWhereInput;
 }
 
 export interface StepCreateManyWithoutItemInput {
@@ -2280,14 +2246,9 @@ export interface StepCreateManyWithoutItemInput {
   connect?: StepWhereUniqueInput[] | StepWhereUniqueInput;
 }
 
-export interface ModificationCreateWithoutItemAdditionsInput {
-  user: UserCreateOneWithoutModificationsInput;
-  recipe: RecipeCreateOneWithoutModificationsInput;
-  sortings?: SortingCreateManyWithoutModificationInput;
-  alterations?: AlterationCreateManyWithoutModificationInput;
-  removals?: ModificationCreateremovalsInput;
-  stepAdditions?: StepAdditionCreateManyWithoutModificationInput;
-  ingredientAdditions?: IngredientAdditionCreateManyWithoutModificationInput;
+export interface ItemAdditionUpdateManyWithWhereNestedInput {
+  where: ItemAdditionScalarWhereInput;
+  data: ItemAdditionUpdateManyDataInput;
 }
 
 export interface IngredientCreateManyWithoutStepInput {
@@ -2297,9 +2258,10 @@ export interface IngredientCreateManyWithoutStepInput {
   connect?: IngredientWhereUniqueInput[] | IngredientWhereUniqueInput;
 }
 
-export interface ModificationCreateOneWithoutItemAdditionsInput {
-  create?: ModificationCreateWithoutItemAdditionsInput;
-  connect?: ModificationWhereUniqueInput;
+export interface ItemAdditionUpdateManyDataInput {
+  uid?: ID_Input;
+  parentId?: ID_Input;
+  name?: String;
 }
 
 export interface ModificationCreateManyWithoutRecipeInput {
@@ -2307,175 +2269,6 @@ export interface ModificationCreateManyWithoutRecipeInput {
     | ModificationCreateWithoutRecipeInput[]
     | ModificationCreateWithoutRecipeInput;
   connect?: ModificationWhereUniqueInput[] | ModificationWhereUniqueInput;
-}
-
-export interface ItemAdditionCreateInput {
-  uid: ID_Input;
-  parentId: ID_Input;
-  name: String;
-  modification: ModificationCreateOneWithoutItemAdditionsInput;
-}
-
-export interface SortingCreateManyWithoutModificationInput {
-  create?:
-    | SortingCreateWithoutModificationInput[]
-    | SortingCreateWithoutModificationInput;
-  connect?: SortingWhereUniqueInput[] | SortingWhereUniqueInput;
-}
-
-export interface RecipeWhereInput {
-  uid?: ID_Input;
-  uid_not?: ID_Input;
-  uid_in?: ID_Input[] | ID_Input;
-  uid_not_in?: ID_Input[] | ID_Input;
-  uid_lt?: ID_Input;
-  uid_lte?: ID_Input;
-  uid_gt?: ID_Input;
-  uid_gte?: ID_Input;
-  uid_contains?: ID_Input;
-  uid_not_contains?: ID_Input;
-  uid_starts_with?: ID_Input;
-  uid_not_starts_with?: ID_Input;
-  uid_ends_with?: ID_Input;
-  uid_not_ends_with?: ID_Input;
-  createdAt?: DateTimeInput;
-  createdAt_not?: DateTimeInput;
-  createdAt_in?: DateTimeInput[] | DateTimeInput;
-  createdAt_not_in?: DateTimeInput[] | DateTimeInput;
-  createdAt_lt?: DateTimeInput;
-  createdAt_lte?: DateTimeInput;
-  createdAt_gt?: DateTimeInput;
-  createdAt_gte?: DateTimeInput;
-  updatedAt?: DateTimeInput;
-  updatedAt_not?: DateTimeInput;
-  updatedAt_in?: DateTimeInput[] | DateTimeInput;
-  updatedAt_not_in?: DateTimeInput[] | DateTimeInput;
-  updatedAt_lt?: DateTimeInput;
-  updatedAt_lte?: DateTimeInput;
-  updatedAt_gt?: DateTimeInput;
-  updatedAt_gte?: DateTimeInput;
-  author?: UserWhereInput;
-  title?: String;
-  title_not?: String;
-  title_in?: String[] | String;
-  title_not_in?: String[] | String;
-  title_lt?: String;
-  title_lte?: String;
-  title_gt?: String;
-  title_gte?: String;
-  title_contains?: String;
-  title_not_contains?: String;
-  title_starts_with?: String;
-  title_not_starts_with?: String;
-  title_ends_with?: String;
-  title_not_ends_with?: String;
-  time?: String;
-  time_not?: String;
-  time_in?: String[] | String;
-  time_not_in?: String[] | String;
-  time_lt?: String;
-  time_lte?: String;
-  time_gt?: String;
-  time_gte?: String;
-  time_contains?: String;
-  time_not_contains?: String;
-  time_starts_with?: String;
-  time_not_starts_with?: String;
-  time_ends_with?: String;
-  time_not_ends_with?: String;
-  servingAmount?: String;
-  servingAmount_not?: String;
-  servingAmount_in?: String[] | String;
-  servingAmount_not_in?: String[] | String;
-  servingAmount_lt?: String;
-  servingAmount_lte?: String;
-  servingAmount_gt?: String;
-  servingAmount_gte?: String;
-  servingAmount_contains?: String;
-  servingAmount_not_contains?: String;
-  servingAmount_starts_with?: String;
-  servingAmount_not_starts_with?: String;
-  servingAmount_ends_with?: String;
-  servingAmount_not_ends_with?: String;
-  servingType?: String;
-  servingType_not?: String;
-  servingType_in?: String[] | String;
-  servingType_not_in?: String[] | String;
-  servingType_lt?: String;
-  servingType_lte?: String;
-  servingType_gt?: String;
-  servingType_gte?: String;
-  servingType_contains?: String;
-  servingType_not_contains?: String;
-  servingType_starts_with?: String;
-  servingType_not_starts_with?: String;
-  servingType_ends_with?: String;
-  servingType_not_ends_with?: String;
-  description?: String;
-  description_not?: String;
-  description_in?: String[] | String;
-  description_not_in?: String[] | String;
-  description_lt?: String;
-  description_lte?: String;
-  description_gt?: String;
-  description_gte?: String;
-  description_contains?: String;
-  description_not_contains?: String;
-  description_starts_with?: String;
-  description_not_starts_with?: String;
-  description_ends_with?: String;
-  description_not_ends_with?: String;
-  items_every?: ItemWhereInput;
-  items_some?: ItemWhereInput;
-  items_none?: ItemWhereInput;
-  modifications_every?: ModificationWhereInput;
-  modifications_some?: ModificationWhereInput;
-  modifications_none?: ModificationWhereInput;
-  AND?: RecipeWhereInput[] | RecipeWhereInput;
-  OR?: RecipeWhereInput[] | RecipeWhereInput;
-  NOT?: RecipeWhereInput[] | RecipeWhereInput;
-}
-
-export interface SortingCreateorderInput {
-  set?: ID_Input[] | ID_Input;
-}
-
-export interface ItemUpdateManyMutationInput {
-  uid?: ID_Input;
-  index?: Int;
-  name?: String;
-}
-
-export interface AlterationCreateWithoutModificationInput {
-  uid: ID_Input;
-  sourceId: ID_Input;
-  field: String;
-  value: String;
-}
-
-export interface ItemAdditionUpdateManyWithWhereNestedInput {
-  where: ItemAdditionScalarWhereInput;
-  data: ItemAdditionUpdateManyDataInput;
-}
-
-export interface ItemAdditionCreateManyWithoutModificationInput {
-  create?:
-    | ItemAdditionCreateWithoutModificationInput[]
-    | ItemAdditionCreateWithoutModificationInput;
-  connect?: ItemAdditionWhereUniqueInput[] | ItemAdditionWhereUniqueInput;
-}
-
-export interface ItemAdditionUpdateManyDataInput {
-  uid?: ID_Input;
-  parentId?: ID_Input;
-  name?: String;
-}
-
-export interface StepAdditionCreateManyWithoutModificationInput {
-  create?:
-    | StepAdditionCreateWithoutModificationInput[]
-    | StepAdditionCreateWithoutModificationInput;
-  connect?: StepAdditionWhereUniqueInput[] | StepAdditionWhereUniqueInput;
 }
 
 export interface StepAdditionUpdateManyWithoutModificationInput {
@@ -2498,13 +2291,11 @@ export interface StepAdditionUpdateManyWithoutModificationInput {
     | StepAdditionUpdateManyWithWhereNestedInput;
 }
 
-export interface IngredientAdditionCreateManyWithoutModificationInput {
+export interface SortingCreateManyWithoutModificationInput {
   create?:
-    | IngredientAdditionCreateWithoutModificationInput[]
-    | IngredientAdditionCreateWithoutModificationInput;
-  connect?:
-    | IngredientAdditionWhereUniqueInput[]
-    | IngredientAdditionWhereUniqueInput;
+    | SortingCreateWithoutModificationInput[]
+    | SortingCreateWithoutModificationInput;
+  connect?: SortingWhereUniqueInput[] | SortingWhereUniqueInput;
 }
 
 export interface StepAdditionUpdateWithWhereUniqueWithoutModificationInput {
@@ -2512,9 +2303,8 @@ export interface StepAdditionUpdateWithWhereUniqueWithoutModificationInput {
   data: StepAdditionUpdateWithoutModificationDataInput;
 }
 
-export interface RecipeCreateOneWithoutModificationsInput {
-  create?: RecipeCreateWithoutModificationsInput;
-  connect?: RecipeWhereUniqueInput;
+export interface SortingCreateorderInput {
+  set?: ID_Input[] | ID_Input;
 }
 
 export interface StepAdditionUpdateWithoutModificationDataInput {
@@ -2524,9 +2314,11 @@ export interface StepAdditionUpdateWithoutModificationDataInput {
   notes?: String;
 }
 
-export interface UserCreateOneWithoutRecipesInput {
-  create?: UserCreateWithoutRecipesInput;
-  connect?: UserWhereUniqueInput;
+export interface AlterationCreateWithoutModificationInput {
+  uid: ID_Input;
+  sourceId: ID_Input;
+  field: String;
+  value: String;
 }
 
 export interface StepAdditionUpsertWithWhereUniqueWithoutModificationInput {
@@ -2535,11 +2327,11 @@ export interface StepAdditionUpsertWithWhereUniqueWithoutModificationInput {
   create: StepAdditionCreateWithoutModificationInput;
 }
 
-export interface ModificationCreateManyWithoutUserInput {
+export interface ItemAdditionCreateManyWithoutModificationInput {
   create?:
-    | ModificationCreateWithoutUserInput[]
-    | ModificationCreateWithoutUserInput;
-  connect?: ModificationWhereUniqueInput[] | ModificationWhereUniqueInput;
+    | ItemAdditionCreateWithoutModificationInput[]
+    | ItemAdditionCreateWithoutModificationInput;
+  connect?: ItemAdditionWhereUniqueInput[] | ItemAdditionWhereUniqueInput;
 }
 
 export interface StepAdditionScalarWhereInput {
@@ -2604,12 +2396,11 @@ export interface StepAdditionScalarWhereInput {
   NOT?: StepAdditionScalarWhereInput[] | StepAdditionScalarWhereInput;
 }
 
-export interface AlterationUpdateInput {
-  uid?: ID_Input;
-  sourceId?: ID_Input;
-  field?: String;
-  value?: String;
-  modification?: ModificationUpdateOneRequiredWithoutAlterationsInput;
+export interface StepAdditionCreateManyWithoutModificationInput {
+  create?:
+    | StepAdditionCreateWithoutModificationInput[]
+    | StepAdditionCreateWithoutModificationInput;
+  connect?: StepAdditionWhereUniqueInput[] | StepAdditionWhereUniqueInput;
 }
 
 export interface StepAdditionUpdateManyWithWhereNestedInput {
@@ -2617,14 +2408,13 @@ export interface StepAdditionUpdateManyWithWhereNestedInput {
   data: StepAdditionUpdateManyDataInput;
 }
 
-export interface ModificationUpdateWithoutAlterationsDataInput {
-  user?: UserUpdateOneRequiredWithoutModificationsInput;
-  recipe?: RecipeUpdateOneRequiredWithoutModificationsInput;
-  sortings?: SortingUpdateManyWithoutModificationInput;
-  removals?: ModificationUpdateremovalsInput;
-  itemAdditions?: ItemAdditionUpdateManyWithoutModificationInput;
-  stepAdditions?: StepAdditionUpdateManyWithoutModificationInput;
-  ingredientAdditions?: IngredientAdditionUpdateManyWithoutModificationInput;
+export interface IngredientAdditionCreateManyWithoutModificationInput {
+  create?:
+    | IngredientAdditionCreateWithoutModificationInput[]
+    | IngredientAdditionCreateWithoutModificationInput;
+  connect?:
+    | IngredientAdditionWhereUniqueInput[]
+    | IngredientAdditionWhereUniqueInput;
 }
 
 export interface StepAdditionUpdateManyDataInput {
@@ -2634,14 +2424,11 @@ export interface StepAdditionUpdateManyDataInput {
   notes?: String;
 }
 
-export interface UserUpdateWithoutModificationsDataInput {
-  email?: String;
-  password?: String;
-  name?: String;
-  avatar?: String;
-  slug?: String;
-  emailVerified?: Boolean;
-  recipes?: RecipeUpdateManyWithoutAuthorInput;
+export interface RecipePhotoCreateManyWithoutRecipeInput {
+  create?:
+    | RecipePhotoCreateWithoutRecipeInput[]
+    | RecipePhotoCreateWithoutRecipeInput;
+  connect?: RecipePhotoWhereUniqueInput[] | RecipePhotoWhereUniqueInput;
 }
 
 export interface IngredientAdditionUpdateManyWithoutModificationInput {
@@ -2674,9 +2461,9 @@ export interface IngredientAdditionUpdateManyWithoutModificationInput {
     | IngredientAdditionUpdateManyWithWhereNestedInput;
 }
 
-export interface RecipeUpdateWithWhereUniqueWithoutAuthorInput {
-  where: RecipeWhereUniqueInput;
-  data: RecipeUpdateWithoutAuthorDataInput;
+export interface RecipeCreateOneWithoutModificationsInput {
+  create?: RecipeCreateWithoutModificationsInput;
+  connect?: RecipeWhereUniqueInput;
 }
 
 export interface IngredientAdditionUpdateWithWhereUniqueWithoutModificationInput {
@@ -2684,22 +2471,9 @@ export interface IngredientAdditionUpdateWithWhereUniqueWithoutModificationInput
   data: IngredientAdditionUpdateWithoutModificationDataInput;
 }
 
-export interface ItemUpdateManyWithoutRecipeInput {
-  create?: ItemCreateWithoutRecipeInput[] | ItemCreateWithoutRecipeInput;
-  delete?: ItemWhereUniqueInput[] | ItemWhereUniqueInput;
-  connect?: ItemWhereUniqueInput[] | ItemWhereUniqueInput;
-  set?: ItemWhereUniqueInput[] | ItemWhereUniqueInput;
-  disconnect?: ItemWhereUniqueInput[] | ItemWhereUniqueInput;
-  update?:
-    | ItemUpdateWithWhereUniqueWithoutRecipeInput[]
-    | ItemUpdateWithWhereUniqueWithoutRecipeInput;
-  upsert?:
-    | ItemUpsertWithWhereUniqueWithoutRecipeInput[]
-    | ItemUpsertWithWhereUniqueWithoutRecipeInput;
-  deleteMany?: ItemScalarWhereInput[] | ItemScalarWhereInput;
-  updateMany?:
-    | ItemUpdateManyWithWhereNestedInput[]
-    | ItemUpdateManyWithWhereNestedInput;
+export interface UserCreateOneWithoutRecipesInput {
+  create?: UserCreateWithoutRecipesInput;
+  connect?: UserWhereUniqueInput;
 }
 
 export interface IngredientAdditionUpdateWithoutModificationDataInput {
@@ -2711,11 +2485,11 @@ export interface IngredientAdditionUpdateWithoutModificationDataInput {
   processing?: String;
 }
 
-export interface ItemUpdateWithoutRecipeDataInput {
-  uid?: ID_Input;
-  index?: Int;
-  name?: String;
-  steps?: StepUpdateManyWithoutItemInput;
+export interface ModificationCreateManyWithoutUserInput {
+  create?:
+    | ModificationCreateWithoutUserInput[]
+    | ModificationCreateWithoutUserInput;
+  connect?: ModificationWhereUniqueInput[] | ModificationWhereUniqueInput;
 }
 
 export interface IngredientAdditionUpsertWithWhereUniqueWithoutModificationInput {
@@ -2724,9 +2498,12 @@ export interface IngredientAdditionUpsertWithWhereUniqueWithoutModificationInput
   create: IngredientAdditionCreateWithoutModificationInput;
 }
 
-export interface StepUpdateWithWhereUniqueWithoutItemInput {
-  where: StepWhereUniqueInput;
-  data: StepUpdateWithoutItemDataInput;
+export interface AlterationUpdateInput {
+  uid?: ID_Input;
+  sourceId?: ID_Input;
+  field?: String;
+  value?: String;
+  modification?: ModificationUpdateOneRequiredWithoutAlterationsInput;
 }
 
 export interface IngredientAdditionScalarWhereInput {
@@ -2825,24 +2602,14 @@ export interface IngredientAdditionScalarWhereInput {
     | IngredientAdditionScalarWhereInput;
 }
 
-export interface IngredientUpdateManyWithoutStepInput {
-  create?:
-    | IngredientCreateWithoutStepInput[]
-    | IngredientCreateWithoutStepInput;
-  delete?: IngredientWhereUniqueInput[] | IngredientWhereUniqueInput;
-  connect?: IngredientWhereUniqueInput[] | IngredientWhereUniqueInput;
-  set?: IngredientWhereUniqueInput[] | IngredientWhereUniqueInput;
-  disconnect?: IngredientWhereUniqueInput[] | IngredientWhereUniqueInput;
-  update?:
-    | IngredientUpdateWithWhereUniqueWithoutStepInput[]
-    | IngredientUpdateWithWhereUniqueWithoutStepInput;
-  upsert?:
-    | IngredientUpsertWithWhereUniqueWithoutStepInput[]
-    | IngredientUpsertWithWhereUniqueWithoutStepInput;
-  deleteMany?: IngredientScalarWhereInput[] | IngredientScalarWhereInput;
-  updateMany?:
-    | IngredientUpdateManyWithWhereNestedInput[]
-    | IngredientUpdateManyWithWhereNestedInput;
+export interface ModificationUpdateWithoutAlterationsDataInput {
+  user?: UserUpdateOneRequiredWithoutModificationsInput;
+  recipe?: RecipeUpdateOneRequiredWithoutModificationsInput;
+  sortings?: SortingUpdateManyWithoutModificationInput;
+  removals?: ModificationUpdateremovalsInput;
+  itemAdditions?: ItemAdditionUpdateManyWithoutModificationInput;
+  stepAdditions?: StepAdditionUpdateManyWithoutModificationInput;
+  ingredientAdditions?: IngredientAdditionUpdateManyWithoutModificationInput;
 }
 
 export interface IngredientAdditionUpdateManyWithWhereNestedInput {
@@ -2850,15 +2617,14 @@ export interface IngredientAdditionUpdateManyWithWhereNestedInput {
   data: IngredientAdditionUpdateManyDataInput;
 }
 
-export interface UserSubscriptionWhereInput {
-  mutation_in?: MutationType[] | MutationType;
-  updatedFields_contains?: String;
-  updatedFields_contains_every?: String[] | String;
-  updatedFields_contains_some?: String[] | String;
-  node?: UserWhereInput;
-  AND?: UserSubscriptionWhereInput[] | UserSubscriptionWhereInput;
-  OR?: UserSubscriptionWhereInput[] | UserSubscriptionWhereInput;
-  NOT?: UserSubscriptionWhereInput[] | UserSubscriptionWhereInput;
+export interface UserUpdateWithoutModificationsDataInput {
+  email?: String;
+  password?: String;
+  name?: String;
+  avatar?: String;
+  slug?: String;
+  emailVerified?: Boolean;
+  recipes?: RecipeUpdateManyWithoutAuthorInput;
 }
 
 export interface IngredientAdditionUpdateManyDataInput {
@@ -2870,15 +2636,9 @@ export interface IngredientAdditionUpdateManyDataInput {
   processing?: String;
 }
 
-export interface RecipeSubscriptionWhereInput {
-  mutation_in?: MutationType[] | MutationType;
-  updatedFields_contains?: String;
-  updatedFields_contains_every?: String[] | String;
-  updatedFields_contains_some?: String[] | String;
-  node?: RecipeWhereInput;
-  AND?: RecipeSubscriptionWhereInput[] | RecipeSubscriptionWhereInput;
-  OR?: RecipeSubscriptionWhereInput[] | RecipeSubscriptionWhereInput;
-  NOT?: RecipeSubscriptionWhereInput[] | RecipeSubscriptionWhereInput;
+export interface RecipeUpdateWithWhereUniqueWithoutAuthorInput {
+  where: RecipeWhereUniqueInput;
+  data: RecipeUpdateWithoutAuthorDataInput;
 }
 
 export interface ModificationUpsertWithWhereUniqueWithoutRecipeInput {
@@ -2887,21 +2647,22 @@ export interface ModificationUpsertWithWhereUniqueWithoutRecipeInput {
   create: ModificationCreateWithoutRecipeInput;
 }
 
-export interface IngredientAdditionSubscriptionWhereInput {
-  mutation_in?: MutationType[] | MutationType;
-  updatedFields_contains?: String;
-  updatedFields_contains_every?: String[] | String;
-  updatedFields_contains_some?: String[] | String;
-  node?: IngredientAdditionWhereInput;
-  AND?:
-    | IngredientAdditionSubscriptionWhereInput[]
-    | IngredientAdditionSubscriptionWhereInput;
-  OR?:
-    | IngredientAdditionSubscriptionWhereInput[]
-    | IngredientAdditionSubscriptionWhereInput;
-  NOT?:
-    | IngredientAdditionSubscriptionWhereInput[]
-    | IngredientAdditionSubscriptionWhereInput;
+export interface ItemUpdateManyWithoutRecipeInput {
+  create?: ItemCreateWithoutRecipeInput[] | ItemCreateWithoutRecipeInput;
+  delete?: ItemWhereUniqueInput[] | ItemWhereUniqueInput;
+  connect?: ItemWhereUniqueInput[] | ItemWhereUniqueInput;
+  set?: ItemWhereUniqueInput[] | ItemWhereUniqueInput;
+  disconnect?: ItemWhereUniqueInput[] | ItemWhereUniqueInput;
+  update?:
+    | ItemUpdateWithWhereUniqueWithoutRecipeInput[]
+    | ItemUpdateWithWhereUniqueWithoutRecipeInput;
+  upsert?:
+    | ItemUpsertWithWhereUniqueWithoutRecipeInput[]
+    | ItemUpsertWithWhereUniqueWithoutRecipeInput;
+  deleteMany?: ItemScalarWhereInput[] | ItemScalarWhereInput;
+  updateMany?:
+    | ItemUpdateManyWithWhereNestedInput[]
+    | ItemUpdateManyWithWhereNestedInput;
 }
 
 export interface ModificationScalarWhereInput {
@@ -2940,13 +2701,11 @@ export interface ModificationScalarWhereInput {
   NOT?: ModificationScalarWhereInput[] | ModificationScalarWhereInput;
 }
 
-export interface UserUpdateManyMutationInput {
-  email?: String;
-  password?: String;
+export interface ItemUpdateWithoutRecipeDataInput {
+  uid?: ID_Input;
+  index?: Int;
   name?: String;
-  avatar?: String;
-  slug?: String;
-  emailVerified?: Boolean;
+  steps?: StepUpdateManyWithoutItemInput;
 }
 
 export interface ModificationUpdateManyWithWhereNestedInput {
@@ -2954,23 +2713,333 @@ export interface ModificationUpdateManyWithWhereNestedInput {
   data: ModificationUpdateManyDataInput;
 }
 
-export interface StepAdditionUpdateManyMutationInput {
+export interface StepAdditionWhereInput {
   uid?: ID_Input;
+  uid_not?: ID_Input;
+  uid_in?: ID_Input[] | ID_Input;
+  uid_not_in?: ID_Input[] | ID_Input;
+  uid_lt?: ID_Input;
+  uid_lte?: ID_Input;
+  uid_gt?: ID_Input;
+  uid_gte?: ID_Input;
+  uid_contains?: ID_Input;
+  uid_not_contains?: ID_Input;
+  uid_starts_with?: ID_Input;
+  uid_not_starts_with?: ID_Input;
+  uid_ends_with?: ID_Input;
+  uid_not_ends_with?: ID_Input;
   parentId?: ID_Input;
+  parentId_not?: ID_Input;
+  parentId_in?: ID_Input[] | ID_Input;
+  parentId_not_in?: ID_Input[] | ID_Input;
+  parentId_lt?: ID_Input;
+  parentId_lte?: ID_Input;
+  parentId_gt?: ID_Input;
+  parentId_gte?: ID_Input;
+  parentId_contains?: ID_Input;
+  parentId_not_contains?: ID_Input;
+  parentId_starts_with?: ID_Input;
+  parentId_not_starts_with?: ID_Input;
+  parentId_ends_with?: ID_Input;
+  parentId_not_ends_with?: ID_Input;
   directions?: String;
+  directions_not?: String;
+  directions_in?: String[] | String;
+  directions_not_in?: String[] | String;
+  directions_lt?: String;
+  directions_lte?: String;
+  directions_gt?: String;
+  directions_gte?: String;
+  directions_contains?: String;
+  directions_not_contains?: String;
+  directions_starts_with?: String;
+  directions_not_starts_with?: String;
+  directions_ends_with?: String;
+  directions_not_ends_with?: String;
   notes?: String;
+  notes_not?: String;
+  notes_in?: String[] | String;
+  notes_not_in?: String[] | String;
+  notes_lt?: String;
+  notes_lte?: String;
+  notes_gt?: String;
+  notes_gte?: String;
+  notes_contains?: String;
+  notes_not_contains?: String;
+  notes_starts_with?: String;
+  notes_not_starts_with?: String;
+  notes_ends_with?: String;
+  notes_not_ends_with?: String;
+  modification?: ModificationWhereInput;
+  AND?: StepAdditionWhereInput[] | StepAdditionWhereInput;
+  OR?: StepAdditionWhereInput[] | StepAdditionWhereInput;
+  NOT?: StepAdditionWhereInput[] | StepAdditionWhereInput;
 }
 
 export interface ModificationUpdateManyDataInput {
   removals?: ModificationUpdateremovalsInput;
 }
 
-export interface ModificationUpdateOneRequiredWithoutStepAdditionsInput {
-  create?: ModificationCreateWithoutStepAdditionsInput;
-  update?: ModificationUpdateWithoutStepAdditionsDataInput;
-  upsert?: ModificationUpsertWithoutStepAdditionsInput;
-  connect?: ModificationWhereUniqueInput;
+export interface AlterationWhereInput {
+  uid?: ID_Input;
+  uid_not?: ID_Input;
+  uid_in?: ID_Input[] | ID_Input;
+  uid_not_in?: ID_Input[] | ID_Input;
+  uid_lt?: ID_Input;
+  uid_lte?: ID_Input;
+  uid_gt?: ID_Input;
+  uid_gte?: ID_Input;
+  uid_contains?: ID_Input;
+  uid_not_contains?: ID_Input;
+  uid_starts_with?: ID_Input;
+  uid_not_starts_with?: ID_Input;
+  uid_ends_with?: ID_Input;
+  uid_not_ends_with?: ID_Input;
+  sourceId?: ID_Input;
+  sourceId_not?: ID_Input;
+  sourceId_in?: ID_Input[] | ID_Input;
+  sourceId_not_in?: ID_Input[] | ID_Input;
+  sourceId_lt?: ID_Input;
+  sourceId_lte?: ID_Input;
+  sourceId_gt?: ID_Input;
+  sourceId_gte?: ID_Input;
+  sourceId_contains?: ID_Input;
+  sourceId_not_contains?: ID_Input;
+  sourceId_starts_with?: ID_Input;
+  sourceId_not_starts_with?: ID_Input;
+  sourceId_ends_with?: ID_Input;
+  sourceId_not_ends_with?: ID_Input;
+  field?: String;
+  field_not?: String;
+  field_in?: String[] | String;
+  field_not_in?: String[] | String;
+  field_lt?: String;
+  field_lte?: String;
+  field_gt?: String;
+  field_gte?: String;
+  field_contains?: String;
+  field_not_contains?: String;
+  field_starts_with?: String;
+  field_not_starts_with?: String;
+  field_ends_with?: String;
+  field_not_ends_with?: String;
+  value?: String;
+  value_not?: String;
+  value_in?: String[] | String;
+  value_not_in?: String[] | String;
+  value_lt?: String;
+  value_lte?: String;
+  value_gt?: String;
+  value_gte?: String;
+  value_contains?: String;
+  value_not_contains?: String;
+  value_starts_with?: String;
+  value_not_starts_with?: String;
+  value_ends_with?: String;
+  value_not_ends_with?: String;
+  modification?: ModificationWhereInput;
+  AND?: AlterationWhereInput[] | AlterationWhereInput;
+  OR?: AlterationWhereInput[] | AlterationWhereInput;
+  NOT?: AlterationWhereInput[] | AlterationWhereInput;
 }
+
+export interface RecipePhotoUpdateManyWithoutRecipeInput {
+  create?:
+    | RecipePhotoCreateWithoutRecipeInput[]
+    | RecipePhotoCreateWithoutRecipeInput;
+  delete?: RecipePhotoWhereUniqueInput[] | RecipePhotoWhereUniqueInput;
+  connect?: RecipePhotoWhereUniqueInput[] | RecipePhotoWhereUniqueInput;
+  set?: RecipePhotoWhereUniqueInput[] | RecipePhotoWhereUniqueInput;
+  disconnect?: RecipePhotoWhereUniqueInput[] | RecipePhotoWhereUniqueInput;
+  update?:
+    | RecipePhotoUpdateWithWhereUniqueWithoutRecipeInput[]
+    | RecipePhotoUpdateWithWhereUniqueWithoutRecipeInput;
+  upsert?:
+    | RecipePhotoUpsertWithWhereUniqueWithoutRecipeInput[]
+    | RecipePhotoUpsertWithWhereUniqueWithoutRecipeInput;
+  deleteMany?: RecipePhotoScalarWhereInput[] | RecipePhotoScalarWhereInput;
+  updateMany?:
+    | RecipePhotoUpdateManyWithWhereNestedInput[]
+    | RecipePhotoUpdateManyWithWhereNestedInput;
+}
+
+export interface ModificationWhereInput {
+  id?: ID_Input;
+  id_not?: ID_Input;
+  id_in?: ID_Input[] | ID_Input;
+  id_not_in?: ID_Input[] | ID_Input;
+  id_lt?: ID_Input;
+  id_lte?: ID_Input;
+  id_gt?: ID_Input;
+  id_gte?: ID_Input;
+  id_contains?: ID_Input;
+  id_not_contains?: ID_Input;
+  id_starts_with?: ID_Input;
+  id_not_starts_with?: ID_Input;
+  id_ends_with?: ID_Input;
+  id_not_ends_with?: ID_Input;
+  createdAt?: DateTimeInput;
+  createdAt_not?: DateTimeInput;
+  createdAt_in?: DateTimeInput[] | DateTimeInput;
+  createdAt_not_in?: DateTimeInput[] | DateTimeInput;
+  createdAt_lt?: DateTimeInput;
+  createdAt_lte?: DateTimeInput;
+  createdAt_gt?: DateTimeInput;
+  createdAt_gte?: DateTimeInput;
+  updatedAt?: DateTimeInput;
+  updatedAt_not?: DateTimeInput;
+  updatedAt_in?: DateTimeInput[] | DateTimeInput;
+  updatedAt_not_in?: DateTimeInput[] | DateTimeInput;
+  updatedAt_lt?: DateTimeInput;
+  updatedAt_lte?: DateTimeInput;
+  updatedAt_gt?: DateTimeInput;
+  updatedAt_gte?: DateTimeInput;
+  user?: UserWhereInput;
+  recipe?: RecipeWhereInput;
+  sortings_every?: SortingWhereInput;
+  sortings_some?: SortingWhereInput;
+  sortings_none?: SortingWhereInput;
+  alterations_every?: AlterationWhereInput;
+  alterations_some?: AlterationWhereInput;
+  alterations_none?: AlterationWhereInput;
+  itemAdditions_every?: ItemAdditionWhereInput;
+  itemAdditions_some?: ItemAdditionWhereInput;
+  itemAdditions_none?: ItemAdditionWhereInput;
+  stepAdditions_every?: StepAdditionWhereInput;
+  stepAdditions_some?: StepAdditionWhereInput;
+  stepAdditions_none?: StepAdditionWhereInput;
+  ingredientAdditions_every?: IngredientAdditionWhereInput;
+  ingredientAdditions_some?: IngredientAdditionWhereInput;
+  ingredientAdditions_none?: IngredientAdditionWhereInput;
+  AND?: ModificationWhereInput[] | ModificationWhereInput;
+  OR?: ModificationWhereInput[] | ModificationWhereInput;
+  NOT?: ModificationWhereInput[] | ModificationWhereInput;
+}
+
+export interface RecipePhotoUpdateWithWhereUniqueWithoutRecipeInput {
+  where: RecipePhotoWhereUniqueInput;
+  data: RecipePhotoUpdateWithoutRecipeDataInput;
+}
+
+export interface RecipeSubscriptionWhereInput {
+  mutation_in?: MutationType[] | MutationType;
+  updatedFields_contains?: String;
+  updatedFields_contains_every?: String[] | String;
+  updatedFields_contains_some?: String[] | String;
+  node?: RecipeWhereInput;
+  AND?: RecipeSubscriptionWhereInput[] | RecipeSubscriptionWhereInput;
+  OR?: RecipeSubscriptionWhereInput[] | RecipeSubscriptionWhereInput;
+  NOT?: RecipeSubscriptionWhereInput[] | RecipeSubscriptionWhereInput;
+}
+
+export interface RecipePhotoUpdateWithoutRecipeDataInput {
+  filename?: String;
+  url?: String;
+}
+
+export interface IngredientAdditionSubscriptionWhereInput {
+  mutation_in?: MutationType[] | MutationType;
+  updatedFields_contains?: String;
+  updatedFields_contains_every?: String[] | String;
+  updatedFields_contains_some?: String[] | String;
+  node?: IngredientAdditionWhereInput;
+  AND?:
+    | IngredientAdditionSubscriptionWhereInput[]
+    | IngredientAdditionSubscriptionWhereInput;
+  OR?:
+    | IngredientAdditionSubscriptionWhereInput[]
+    | IngredientAdditionSubscriptionWhereInput;
+  NOT?:
+    | IngredientAdditionSubscriptionWhereInput[]
+    | IngredientAdditionSubscriptionWhereInput;
+}
+
+export interface RecipePhotoUpsertWithWhereUniqueWithoutRecipeInput {
+  where: RecipePhotoWhereUniqueInput;
+  update: RecipePhotoUpdateWithoutRecipeDataInput;
+  create: RecipePhotoCreateWithoutRecipeInput;
+}
+
+export interface UserUpdateInput {
+  email?: String;
+  password?: String;
+  name?: String;
+  avatar?: String;
+  slug?: String;
+  emailVerified?: Boolean;
+  recipes?: RecipeUpdateManyWithoutAuthorInput;
+  modifications?: ModificationUpdateManyWithoutUserInput;
+}
+
+export interface RecipePhotoScalarWhereInput {
+  id?: ID_Input;
+  id_not?: ID_Input;
+  id_in?: ID_Input[] | ID_Input;
+  id_not_in?: ID_Input[] | ID_Input;
+  id_lt?: ID_Input;
+  id_lte?: ID_Input;
+  id_gt?: ID_Input;
+  id_gte?: ID_Input;
+  id_contains?: ID_Input;
+  id_not_contains?: ID_Input;
+  id_starts_with?: ID_Input;
+  id_not_starts_with?: ID_Input;
+  id_ends_with?: ID_Input;
+  id_not_ends_with?: ID_Input;
+  filename?: String;
+  filename_not?: String;
+  filename_in?: String[] | String;
+  filename_not_in?: String[] | String;
+  filename_lt?: String;
+  filename_lte?: String;
+  filename_gt?: String;
+  filename_gte?: String;
+  filename_contains?: String;
+  filename_not_contains?: String;
+  filename_starts_with?: String;
+  filename_not_starts_with?: String;
+  filename_ends_with?: String;
+  filename_not_ends_with?: String;
+  url?: String;
+  url_not?: String;
+  url_in?: String[] | String;
+  url_not_in?: String[] | String;
+  url_lt?: String;
+  url_lte?: String;
+  url_gt?: String;
+  url_gte?: String;
+  url_contains?: String;
+  url_not_contains?: String;
+  url_starts_with?: String;
+  url_not_starts_with?: String;
+  url_ends_with?: String;
+  url_not_ends_with?: String;
+  AND?: RecipePhotoScalarWhereInput[] | RecipePhotoScalarWhereInput;
+  OR?: RecipePhotoScalarWhereInput[] | RecipePhotoScalarWhereInput;
+  NOT?: RecipePhotoScalarWhereInput[] | RecipePhotoScalarWhereInput;
+}
+
+export type IngredientWhereUniqueInput = AtLeastOne<{
+  uid: ID_Input;
+}>;
+
+export interface RecipePhotoUpdateManyWithWhereNestedInput {
+  where: RecipePhotoScalarWhereInput;
+  data: RecipePhotoUpdateManyDataInput;
+}
+
+export type IngredientAdditionWhereUniqueInput = AtLeastOne<{
+  uid: ID_Input;
+}>;
+
+export interface RecipePhotoUpdateManyDataInput {
+  filename?: String;
+  url?: String;
+}
+
+export type ItemWhereUniqueInput = AtLeastOne<{
+  uid: ID_Input;
+}>;
 
 export interface RecipeUpsertWithWhereUniqueWithoutAuthorInput {
   where: RecipeWhereUniqueInput;
@@ -2978,10 +3047,9 @@ export interface RecipeUpsertWithWhereUniqueWithoutAuthorInput {
   create: RecipeCreateWithoutAuthorInput;
 }
 
-export interface ModificationCreateOneWithoutStepAdditionsInput {
-  create?: ModificationCreateWithoutStepAdditionsInput;
-  connect?: ModificationWhereUniqueInput;
-}
+export type ItemAdditionWhereUniqueInput = AtLeastOne<{
+  uid: ID_Input;
+}>;
 
 export interface RecipeScalarWhereInput {
   uid?: ID_Input;
@@ -3089,24 +3157,18 @@ export interface RecipeScalarWhereInput {
   NOT?: RecipeScalarWhereInput[] | RecipeScalarWhereInput;
 }
 
-export interface StepUpdateInput {
-  uid?: ID_Input;
-  index?: Int;
-  directions?: String;
-  notes?: String;
-  item?: ItemUpdateOneRequiredWithoutStepsInput;
-  ingredients?: IngredientUpdateManyWithoutStepInput;
-}
+export type ModificationWhereUniqueInput = AtLeastOne<{
+  id: ID_Input;
+}>;
 
 export interface RecipeUpdateManyWithWhereNestedInput {
   where: RecipeScalarWhereInput;
   data: RecipeUpdateManyDataInput;
 }
 
-export interface ModificationUpsertWithoutSortingsInput {
-  update: ModificationUpdateWithoutSortingsDataInput;
-  create: ModificationCreateWithoutSortingsInput;
-}
+export type RecipeWhereUniqueInput = AtLeastOne<{
+  uid: ID_Input;
+}>;
 
 export interface RecipeUpdateManyDataInput {
   uid?: ID_Input;
@@ -3117,24 +3179,18 @@ export interface RecipeUpdateManyDataInput {
   description?: String;
 }
 
-export interface SortingUpdateInput {
-  uid?: ID_Input;
-  parentId?: ID_Input;
-  order?: SortingUpdateorderInput;
-  modification?: ModificationUpdateOneRequiredWithoutSortingsInput;
-}
+export type RecipePhotoWhereUniqueInput = AtLeastOne<{
+  id: ID_Input;
+}>;
 
 export interface UserUpsertWithoutModificationsInput {
   update: UserUpdateWithoutModificationsDataInput;
   create: UserCreateWithoutModificationsInput;
 }
 
-export interface SortingCreateInput {
+export type SortingWhereUniqueInput = AtLeastOne<{
   uid: ID_Input;
-  parentId: ID_Input;
-  order?: SortingCreateorderInput;
-  modification: ModificationCreateOneWithoutSortingsInput;
-}
+}>;
 
 export interface RecipeUpdateOneRequiredWithoutModificationsInput {
   create?: RecipeCreateWithoutModificationsInput;
@@ -3143,17 +3199,9 @@ export interface RecipeUpdateOneRequiredWithoutModificationsInput {
   connect?: RecipeWhereUniqueInput;
 }
 
-export interface RecipeCreateInput {
+export type StepWhereUniqueInput = AtLeastOne<{
   uid: ID_Input;
-  author: UserCreateOneWithoutRecipesInput;
-  title?: String;
-  time?: String;
-  servingAmount?: String;
-  servingType?: String;
-  description?: String;
-  items?: ItemCreateManyWithoutRecipeInput;
-  modifications?: ModificationCreateManyWithoutRecipeInput;
-}
+}>;
 
 export interface RecipeUpdateWithoutModificationsDataInput {
   uid?: ID_Input;
@@ -3164,18 +3212,12 @@ export interface RecipeUpdateWithoutModificationsDataInput {
   servingType?: String;
   description?: String;
   items?: ItemUpdateManyWithoutRecipeInput;
+  photos?: RecipePhotoUpdateManyWithoutRecipeInput;
 }
 
-export interface ModificationCreateInput {
-  user: UserCreateOneWithoutModificationsInput;
-  recipe: RecipeCreateOneWithoutModificationsInput;
-  sortings?: SortingCreateManyWithoutModificationInput;
-  alterations?: AlterationCreateManyWithoutModificationInput;
-  removals?: ModificationCreateremovalsInput;
-  itemAdditions?: ItemAdditionCreateManyWithoutModificationInput;
-  stepAdditions?: StepAdditionCreateManyWithoutModificationInput;
-  ingredientAdditions?: IngredientAdditionCreateManyWithoutModificationInput;
-}
+export type StepAdditionWhereUniqueInput = AtLeastOne<{
+  uid: ID_Input;
+}>;
 
 export interface UserUpdateOneRequiredWithoutRecipesInput {
   create?: UserCreateWithoutRecipesInput;
@@ -3184,13 +3226,10 @@ export interface UserUpdateOneRequiredWithoutRecipesInput {
   connect?: UserWhereUniqueInput;
 }
 
-export interface AlterationCreateInput {
-  uid: ID_Input;
-  sourceId: ID_Input;
-  field: String;
-  value: String;
-  modification: ModificationCreateOneWithoutAlterationsInput;
-}
+export type UserWhereUniqueInput = AtLeastOne<{
+  id: ID_Input;
+  email?: String;
+}>;
 
 export interface UserUpdateWithoutRecipesDataInput {
   email?: String;
@@ -3202,14 +3241,14 @@ export interface UserUpdateWithoutRecipesDataInput {
   modifications?: ModificationUpdateManyWithoutUserInput;
 }
 
-export interface UserCreateWithoutModificationsInput {
-  email: String;
-  password: String;
-  name: String;
-  avatar?: String;
-  slug?: String;
-  emailVerified?: Boolean;
-  recipes?: RecipeCreateManyWithoutAuthorInput;
+export interface ModificationUpdateWithoutItemAdditionsDataInput {
+  user?: UserUpdateOneRequiredWithoutModificationsInput;
+  recipe?: RecipeUpdateOneRequiredWithoutModificationsInput;
+  sortings?: SortingUpdateManyWithoutModificationInput;
+  alterations?: AlterationUpdateManyWithoutModificationInput;
+  removals?: ModificationUpdateremovalsInput;
+  stepAdditions?: StepAdditionUpdateManyWithoutModificationInput;
+  ingredientAdditions?: IngredientAdditionUpdateManyWithoutModificationInput;
 }
 
 export interface ModificationUpdateManyWithoutUserInput {
@@ -3232,11 +3271,14 @@ export interface ModificationUpdateManyWithoutUserInput {
     | ModificationUpdateManyWithWhereNestedInput;
 }
 
-export interface ItemCreateWithoutRecipeInput {
-  uid: ID_Input;
-  index: Int;
-  name?: String;
-  steps?: StepCreateManyWithoutItemInput;
+export interface ModificationCreateWithoutAlterationsInput {
+  user: UserCreateOneWithoutModificationsInput;
+  recipe: RecipeCreateOneWithoutModificationsInput;
+  sortings?: SortingCreateManyWithoutModificationInput;
+  removals?: ModificationCreateremovalsInput;
+  itemAdditions?: ItemAdditionCreateManyWithoutModificationInput;
+  stepAdditions?: StepAdditionCreateManyWithoutModificationInput;
+  ingredientAdditions?: IngredientAdditionCreateManyWithoutModificationInput;
 }
 
 export interface ModificationUpdateWithWhereUniqueWithoutUserInput {
@@ -3244,13 +3286,16 @@ export interface ModificationUpdateWithWhereUniqueWithoutUserInput {
   data: ModificationUpdateWithoutUserDataInput;
 }
 
-export interface IngredientCreateWithoutStepInput {
+export interface RecipeCreateWithoutAuthorInput {
   uid: ID_Input;
-  index: Int;
-  name?: String;
-  quantity?: String;
-  unit?: String;
-  processing?: String;
+  title?: String;
+  time?: String;
+  servingAmount?: String;
+  servingType?: String;
+  description?: String;
+  items?: ItemCreateManyWithoutRecipeInput;
+  modifications?: ModificationCreateManyWithoutRecipeInput;
+  photos?: RecipePhotoCreateManyWithoutRecipeInput;
 }
 
 export interface ModificationUpdateWithoutUserDataInput {
@@ -3263,10 +3308,12 @@ export interface ModificationUpdateWithoutUserDataInput {
   ingredientAdditions?: IngredientAdditionUpdateManyWithoutModificationInput;
 }
 
-export interface SortingCreateWithoutModificationInput {
+export interface StepCreateWithoutItemInput {
   uid: ID_Input;
-  parentId: ID_Input;
-  order?: SortingCreateorderInput;
+  index: Int;
+  directions?: String;
+  notes?: String;
+  ingredients?: IngredientCreateManyWithoutStepInput;
 }
 
 export interface ModificationUpsertWithWhereUniqueWithoutUserInput {
@@ -3275,8 +3322,14 @@ export interface ModificationUpsertWithWhereUniqueWithoutUserInput {
   create: ModificationCreateWithoutUserInput;
 }
 
-export interface ModificationCreateremovalsInput {
-  set?: ID_Input[] | ID_Input;
+export interface ModificationCreateWithoutRecipeInput {
+  user: UserCreateOneWithoutModificationsInput;
+  sortings?: SortingCreateManyWithoutModificationInput;
+  alterations?: AlterationCreateManyWithoutModificationInput;
+  removals?: ModificationCreateremovalsInput;
+  itemAdditions?: ItemAdditionCreateManyWithoutModificationInput;
+  stepAdditions?: StepAdditionCreateManyWithoutModificationInput;
+  ingredientAdditions?: IngredientAdditionCreateManyWithoutModificationInput;
 }
 
 export interface UserUpsertWithoutRecipesInput {
@@ -3284,16 +3337,43 @@ export interface UserUpsertWithoutRecipesInput {
   create: UserCreateWithoutRecipesInput;
 }
 
-export interface StepAdditionCreateWithoutModificationInput {
-  uid: ID_Input;
-  parentId: ID_Input;
-  directions: String;
-  notes: String;
+export interface AlterationCreateManyWithoutModificationInput {
+  create?:
+    | AlterationCreateWithoutModificationInput[]
+    | AlterationCreateWithoutModificationInput;
+  connect?: AlterationWhereUniqueInput[] | AlterationWhereUniqueInput;
 }
 
 export interface RecipeUpsertWithoutModificationsInput {
   update: RecipeUpdateWithoutModificationsDataInput;
   create: RecipeCreateWithoutModificationsInput;
+}
+
+export interface ItemAdditionCreateWithoutModificationInput {
+  uid: ID_Input;
+  parentId: ID_Input;
+  name: String;
+}
+
+export interface ModificationUpsertWithoutAlterationsInput {
+  update: ModificationUpdateWithoutAlterationsDataInput;
+  create: ModificationCreateWithoutAlterationsInput;
+}
+
+export interface IngredientAdditionCreateWithoutModificationInput {
+  uid: ID_Input;
+  parentId: ID_Input;
+  name: String;
+  quantity: String;
+  unit: String;
+  processing: String;
+}
+
+export interface AlterationUpdateManyMutationInput {
+  uid?: ID_Input;
+  sourceId?: ID_Input;
+  field?: String;
+  value?: String;
 }
 
 export interface RecipeCreateWithoutModificationsInput {
@@ -3305,11 +3385,14 @@ export interface RecipeCreateWithoutModificationsInput {
   servingType?: String;
   description?: String;
   items?: ItemCreateManyWithoutRecipeInput;
+  photos?: RecipePhotoCreateManyWithoutRecipeInput;
 }
 
-export interface ModificationUpsertWithoutAlterationsInput {
-  update: ModificationUpdateWithoutAlterationsDataInput;
-  create: ModificationCreateWithoutAlterationsInput;
+export interface ItemAdditionUpdateInput {
+  uid?: ID_Input;
+  parentId?: ID_Input;
+  name?: String;
+  modification?: ModificationUpdateOneRequiredWithoutItemAdditionsInput;
 }
 
 export interface ModificationCreateWithoutUserInput {
@@ -3322,11 +3405,14 @@ export interface ModificationCreateWithoutUserInput {
   ingredientAdditions?: IngredientAdditionCreateManyWithoutModificationInput;
 }
 
-export interface AlterationUpdateManyMutationInput {
-  uid?: ID_Input;
-  sourceId?: ID_Input;
-  field?: String;
-  value?: String;
+export interface ModificationCreateWithoutItemAdditionsInput {
+  user: UserCreateOneWithoutModificationsInput;
+  recipe: RecipeCreateOneWithoutModificationsInput;
+  sortings?: SortingCreateManyWithoutModificationInput;
+  alterations?: AlterationCreateManyWithoutModificationInput;
+  removals?: ModificationCreateremovalsInput;
+  stepAdditions?: StepAdditionCreateManyWithoutModificationInput;
+  ingredientAdditions?: IngredientAdditionCreateManyWithoutModificationInput;
 }
 
 export interface UserUpdateOneRequiredWithoutModificationsInput {
@@ -3334,51 +3420,6 @@ export interface UserUpdateOneRequiredWithoutModificationsInput {
   update?: UserUpdateWithoutModificationsDataInput;
   upsert?: UserUpsertWithoutModificationsInput;
   connect?: UserWhereUniqueInput;
-}
-
-export interface ItemUpdateInput {
-  uid?: ID_Input;
-  index?: Int;
-  name?: String;
-  recipe?: RecipeUpdateOneRequiredWithoutItemsInput;
-  steps?: StepUpdateManyWithoutItemInput;
-}
-
-export interface RecipeUpdateWithoutAuthorDataInput {
-  uid?: ID_Input;
-  title?: String;
-  time?: String;
-  servingAmount?: String;
-  servingType?: String;
-  description?: String;
-  items?: ItemUpdateManyWithoutRecipeInput;
-  modifications?: ModificationUpdateManyWithoutRecipeInput;
-}
-
-export interface ItemCreateInput {
-  uid: ID_Input;
-  index: Int;
-  name?: String;
-  recipe: RecipeCreateOneWithoutItemsInput;
-  steps?: StepCreateManyWithoutItemInput;
-}
-
-export interface StepUpdateManyWithoutItemInput {
-  create?: StepCreateWithoutItemInput[] | StepCreateWithoutItemInput;
-  delete?: StepWhereUniqueInput[] | StepWhereUniqueInput;
-  connect?: StepWhereUniqueInput[] | StepWhereUniqueInput;
-  set?: StepWhereUniqueInput[] | StepWhereUniqueInput;
-  disconnect?: StepWhereUniqueInput[] | StepWhereUniqueInput;
-  update?:
-    | StepUpdateWithWhereUniqueWithoutItemInput[]
-    | StepUpdateWithWhereUniqueWithoutItemInput;
-  upsert?:
-    | StepUpsertWithWhereUniqueWithoutItemInput[]
-    | StepUpsertWithWhereUniqueWithoutItemInput;
-  deleteMany?: StepScalarWhereInput[] | StepScalarWhereInput;
-  updateMany?:
-    | StepUpdateManyWithWhereNestedInput[]
-    | StepUpdateManyWithWhereNestedInput;
 }
 
 export interface IngredientCreateInput {
@@ -3391,14 +3432,154 @@ export interface IngredientCreateInput {
   step: StepCreateOneWithoutIngredientsInput;
 }
 
-export interface IngredientUpdateWithWhereUniqueWithoutStepInput {
-  where: IngredientWhereUniqueInput;
-  data: IngredientUpdateWithoutStepDataInput;
+export interface RecipeUpdateWithoutAuthorDataInput {
+  uid?: ID_Input;
+  title?: String;
+  time?: String;
+  servingAmount?: String;
+  servingType?: String;
+  description?: String;
+  items?: ItemUpdateManyWithoutRecipeInput;
+  modifications?: ModificationUpdateManyWithoutRecipeInput;
+  photos?: RecipePhotoUpdateManyWithoutRecipeInput;
 }
 
 export interface StepCreateOneWithoutIngredientsInput {
   create?: StepCreateWithoutIngredientsInput;
   connect?: StepWhereUniqueInput;
+}
+
+export interface IngredientWhereInput {
+  uid?: ID_Input;
+  uid_not?: ID_Input;
+  uid_in?: ID_Input[] | ID_Input;
+  uid_not_in?: ID_Input[] | ID_Input;
+  uid_lt?: ID_Input;
+  uid_lte?: ID_Input;
+  uid_gt?: ID_Input;
+  uid_gte?: ID_Input;
+  uid_contains?: ID_Input;
+  uid_not_contains?: ID_Input;
+  uid_starts_with?: ID_Input;
+  uid_not_starts_with?: ID_Input;
+  uid_ends_with?: ID_Input;
+  uid_not_ends_with?: ID_Input;
+  index?: Int;
+  index_not?: Int;
+  index_in?: Int[] | Int;
+  index_not_in?: Int[] | Int;
+  index_lt?: Int;
+  index_lte?: Int;
+  index_gt?: Int;
+  index_gte?: Int;
+  name?: String;
+  name_not?: String;
+  name_in?: String[] | String;
+  name_not_in?: String[] | String;
+  name_lt?: String;
+  name_lte?: String;
+  name_gt?: String;
+  name_gte?: String;
+  name_contains?: String;
+  name_not_contains?: String;
+  name_starts_with?: String;
+  name_not_starts_with?: String;
+  name_ends_with?: String;
+  name_not_ends_with?: String;
+  quantity?: String;
+  quantity_not?: String;
+  quantity_in?: String[] | String;
+  quantity_not_in?: String[] | String;
+  quantity_lt?: String;
+  quantity_lte?: String;
+  quantity_gt?: String;
+  quantity_gte?: String;
+  quantity_contains?: String;
+  quantity_not_contains?: String;
+  quantity_starts_with?: String;
+  quantity_not_starts_with?: String;
+  quantity_ends_with?: String;
+  quantity_not_ends_with?: String;
+  unit?: String;
+  unit_not?: String;
+  unit_in?: String[] | String;
+  unit_not_in?: String[] | String;
+  unit_lt?: String;
+  unit_lte?: String;
+  unit_gt?: String;
+  unit_gte?: String;
+  unit_contains?: String;
+  unit_not_contains?: String;
+  unit_starts_with?: String;
+  unit_not_starts_with?: String;
+  unit_ends_with?: String;
+  unit_not_ends_with?: String;
+  processing?: String;
+  processing_not?: String;
+  processing_in?: String[] | String;
+  processing_not_in?: String[] | String;
+  processing_lt?: String;
+  processing_lte?: String;
+  processing_gt?: String;
+  processing_gte?: String;
+  processing_contains?: String;
+  processing_not_contains?: String;
+  processing_starts_with?: String;
+  processing_not_starts_with?: String;
+  processing_ends_with?: String;
+  processing_not_ends_with?: String;
+  step?: StepWhereInput;
+  AND?: IngredientWhereInput[] | IngredientWhereInput;
+  OR?: IngredientWhereInput[] | IngredientWhereInput;
+  NOT?: IngredientWhereInput[] | IngredientWhereInput;
+}
+
+export interface StepCreateWithoutIngredientsInput {
+  uid: ID_Input;
+  index: Int;
+  directions?: String;
+  notes?: String;
+  item: ItemCreateOneWithoutStepsInput;
+}
+
+export interface SortingWhereInput {
+  uid?: ID_Input;
+  uid_not?: ID_Input;
+  uid_in?: ID_Input[] | ID_Input;
+  uid_not_in?: ID_Input[] | ID_Input;
+  uid_lt?: ID_Input;
+  uid_lte?: ID_Input;
+  uid_gt?: ID_Input;
+  uid_gte?: ID_Input;
+  uid_contains?: ID_Input;
+  uid_not_contains?: ID_Input;
+  uid_starts_with?: ID_Input;
+  uid_not_starts_with?: ID_Input;
+  uid_ends_with?: ID_Input;
+  uid_not_ends_with?: ID_Input;
+  parentId?: ID_Input;
+  parentId_not?: ID_Input;
+  parentId_in?: ID_Input[] | ID_Input;
+  parentId_not_in?: ID_Input[] | ID_Input;
+  parentId_lt?: ID_Input;
+  parentId_lte?: ID_Input;
+  parentId_gt?: ID_Input;
+  parentId_gte?: ID_Input;
+  parentId_contains?: ID_Input;
+  parentId_not_contains?: ID_Input;
+  parentId_starts_with?: ID_Input;
+  parentId_not_starts_with?: ID_Input;
+  parentId_ends_with?: ID_Input;
+  parentId_not_ends_with?: ID_Input;
+  modification?: ModificationWhereInput;
+  AND?: SortingWhereInput[] | SortingWhereInput;
+  OR?: SortingWhereInput[] | SortingWhereInput;
+  NOT?: SortingWhereInput[] | SortingWhereInput;
+}
+
+export interface ItemCreateOneWithoutStepsInput {
+  create?: ItemCreateWithoutStepsInput;
+  connect?: ItemWhereUniqueInput;
 }
 
 export interface ItemAdditionSubscriptionWhereInput {
@@ -3418,27 +3599,6 @@ export interface ItemAdditionSubscriptionWhereInput {
     | ItemAdditionSubscriptionWhereInput;
 }
 
-export interface StepCreateWithoutIngredientsInput {
-  uid: ID_Input;
-  index: Int;
-  directions?: String;
-  notes?: String;
-  item: ItemCreateOneWithoutStepsInput;
-}
-
-export type IngredientAdditionWhereUniqueInput = AtLeastOne<{
-  uid: ID_Input;
-}>;
-
-export interface ItemCreateOneWithoutStepsInput {
-  create?: ItemCreateWithoutStepsInput;
-  connect?: ItemWhereUniqueInput;
-}
-
-export type ItemAdditionWhereUniqueInput = AtLeastOne<{
-  uid: ID_Input;
-}>;
-
 export interface ItemCreateWithoutStepsInput {
   uid: ID_Input;
   index: Int;
@@ -3446,18 +3606,22 @@ export interface ItemCreateWithoutStepsInput {
   recipe: RecipeCreateOneWithoutItemsInput;
 }
 
-export type RecipeWhereUniqueInput = AtLeastOne<{
-  uid: ID_Input;
-}>;
+export interface StepAdditionUpdateManyMutationInput {
+  uid?: ID_Input;
+  parentId?: ID_Input;
+  directions?: String;
+  notes?: String;
+}
 
 export interface RecipeCreateOneWithoutItemsInput {
   create?: RecipeCreateWithoutItemsInput;
   connect?: RecipeWhereUniqueInput;
 }
 
-export type StepWhereUniqueInput = AtLeastOne<{
-  uid: ID_Input;
-}>;
+export interface ModificationCreateOneWithoutStepAdditionsInput {
+  create?: ModificationCreateWithoutStepAdditionsInput;
+  connect?: ModificationWhereUniqueInput;
+}
 
 export interface RecipeCreateWithoutItemsInput {
   uid: ID_Input;
@@ -3468,12 +3632,13 @@ export interface RecipeCreateWithoutItemsInput {
   servingType?: String;
   description?: String;
   modifications?: ModificationCreateManyWithoutRecipeInput;
+  photos?: RecipePhotoCreateManyWithoutRecipeInput;
 }
 
-export type UserWhereUniqueInput = AtLeastOne<{
-  id: ID_Input;
-  email?: String;
-}>;
+export interface ModificationUpsertWithoutSortingsInput {
+  update: ModificationUpdateWithoutSortingsDataInput;
+  create: ModificationCreateWithoutSortingsInput;
+}
 
 export interface IngredientUpdateInput {
   uid?: ID_Input;
@@ -3485,14 +3650,11 @@ export interface IngredientUpdateInput {
   step?: StepUpdateOneRequiredWithoutIngredientsInput;
 }
 
-export interface ModificationCreateWithoutAlterationsInput {
-  user: UserCreateOneWithoutModificationsInput;
-  recipe: RecipeCreateOneWithoutModificationsInput;
-  sortings?: SortingCreateManyWithoutModificationInput;
-  removals?: ModificationCreateremovalsInput;
-  itemAdditions?: ItemAdditionCreateManyWithoutModificationInput;
-  stepAdditions?: StepAdditionCreateManyWithoutModificationInput;
-  ingredientAdditions?: IngredientAdditionCreateManyWithoutModificationInput;
+export interface SortingCreateInput {
+  uid: ID_Input;
+  parentId: ID_Input;
+  order?: SortingCreateorderInput;
+  modification: ModificationCreateOneWithoutSortingsInput;
 }
 
 export interface StepUpdateOneRequiredWithoutIngredientsInput {
@@ -3502,12 +3664,16 @@ export interface StepUpdateOneRequiredWithoutIngredientsInput {
   connect?: StepWhereUniqueInput;
 }
 
-export interface StepCreateWithoutItemInput {
+export interface RecipeCreateWithoutPhotosInput {
   uid: ID_Input;
-  index: Int;
-  directions?: String;
-  notes?: String;
-  ingredients?: IngredientCreateManyWithoutStepInput;
+  author: UserCreateOneWithoutRecipesInput;
+  title?: String;
+  time?: String;
+  servingAmount?: String;
+  servingType?: String;
+  description?: String;
+  items?: ItemCreateManyWithoutRecipeInput;
+  modifications?: ModificationCreateManyWithoutRecipeInput;
 }
 
 export interface StepUpdateWithoutIngredientsDataInput {
@@ -3518,11 +3684,8 @@ export interface StepUpdateWithoutIngredientsDataInput {
   item?: ItemUpdateOneRequiredWithoutStepsInput;
 }
 
-export interface AlterationCreateManyWithoutModificationInput {
-  create?:
-    | AlterationCreateWithoutModificationInput[]
-    | AlterationCreateWithoutModificationInput;
-  connect?: AlterationWhereUniqueInput[] | AlterationWhereUniqueInput;
+export interface ModificationUpdateManyMutationInput {
+  removals?: ModificationUpdateremovalsInput;
 }
 
 export interface ItemUpdateOneRequiredWithoutStepsInput {
@@ -3532,13 +3695,12 @@ export interface ItemUpdateOneRequiredWithoutStepsInput {
   connect?: ItemWhereUniqueInput;
 }
 
-export interface IngredientAdditionCreateWithoutModificationInput {
+export interface AlterationCreateInput {
   uid: ID_Input;
-  parentId: ID_Input;
-  name: String;
-  quantity: String;
-  unit: String;
-  processing: String;
+  sourceId: ID_Input;
+  field: String;
+  value: String;
+  modification: ModificationCreateOneWithoutAlterationsInput;
 }
 
 export interface ItemUpdateWithoutStepsDataInput {
@@ -3548,11 +3710,11 @@ export interface ItemUpdateWithoutStepsDataInput {
   recipe?: RecipeUpdateOneRequiredWithoutItemsInput;
 }
 
-export interface ModificationUpdateOneRequiredWithoutAlterationsInput {
-  create?: ModificationCreateWithoutAlterationsInput;
-  update?: ModificationUpdateWithoutAlterationsDataInput;
-  upsert?: ModificationUpsertWithoutAlterationsInput;
-  connect?: ModificationWhereUniqueInput;
+export interface ItemCreateWithoutRecipeInput {
+  uid: ID_Input;
+  index: Int;
+  name?: String;
+  steps?: StepCreateManyWithoutItemInput;
 }
 
 export interface RecipeUpdateOneRequiredWithoutItemsInput {
@@ -3562,9 +3724,10 @@ export interface RecipeUpdateOneRequiredWithoutItemsInput {
   connect?: RecipeWhereUniqueInput;
 }
 
-export interface ItemUpdateWithWhereUniqueWithoutRecipeInput {
-  where: ItemWhereUniqueInput;
-  data: ItemUpdateWithoutRecipeDataInput;
+export interface SortingCreateWithoutModificationInput {
+  uid: ID_Input;
+  parentId: ID_Input;
+  order?: SortingCreateorderInput;
 }
 
 export interface RecipeUpdateWithoutItemsDataInput {
@@ -3576,74 +3739,19 @@ export interface RecipeUpdateWithoutItemsDataInput {
   servingType?: String;
   description?: String;
   modifications?: ModificationUpdateManyWithoutRecipeInput;
+  photos?: RecipePhotoUpdateManyWithoutRecipeInput;
 }
 
-export interface StepSubscriptionWhereInput {
-  mutation_in?: MutationType[] | MutationType;
-  updatedFields_contains?: String;
-  updatedFields_contains_every?: String[] | String;
-  updatedFields_contains_some?: String[] | String;
-  node?: StepWhereInput;
-  AND?: StepSubscriptionWhereInput[] | StepSubscriptionWhereInput;
-  OR?: StepSubscriptionWhereInput[] | StepSubscriptionWhereInput;
-  NOT?: StepSubscriptionWhereInput[] | StepSubscriptionWhereInput;
+export interface StepAdditionCreateWithoutModificationInput {
+  uid: ID_Input;
+  parentId: ID_Input;
+  directions: String;
+  notes: String;
 }
 
 export interface RecipeUpsertWithoutItemsInput {
   update: RecipeUpdateWithoutItemsDataInput;
   create: RecipeCreateWithoutItemsInput;
-}
-
-export type ItemWhereUniqueInput = AtLeastOne<{
-  uid: ID_Input;
-}>;
-
-export interface ItemUpsertWithoutStepsInput {
-  update: ItemUpdateWithoutStepsDataInput;
-  create: ItemCreateWithoutStepsInput;
-}
-
-export type SortingWhereUniqueInput = AtLeastOne<{
-  uid: ID_Input;
-}>;
-
-export interface StepUpsertWithoutIngredientsInput {
-  update: StepUpdateWithoutIngredientsDataInput;
-  create: StepCreateWithoutIngredientsInput;
-}
-
-export interface ModificationUpsertWithoutItemAdditionsInput {
-  update: ModificationUpdateWithoutItemAdditionsDataInput;
-  create: ModificationCreateWithoutItemAdditionsInput;
-}
-
-export interface IngredientUpdateManyMutationInput {
-  uid?: ID_Input;
-  index?: Int;
-  name?: String;
-  quantity?: String;
-  unit?: String;
-  processing?: String;
-}
-
-export interface ModificationCreateWithoutRecipeInput {
-  user: UserCreateOneWithoutModificationsInput;
-  sortings?: SortingCreateManyWithoutModificationInput;
-  alterations?: AlterationCreateManyWithoutModificationInput;
-  removals?: ModificationCreateremovalsInput;
-  itemAdditions?: ItemAdditionCreateManyWithoutModificationInput;
-  stepAdditions?: StepAdditionCreateManyWithoutModificationInput;
-  ingredientAdditions?: IngredientAdditionCreateManyWithoutModificationInput;
-}
-
-export interface IngredientAdditionCreateInput {
-  uid: ID_Input;
-  parentId: ID_Input;
-  name: String;
-  quantity: String;
-  unit: String;
-  processing: String;
-  modification: ModificationCreateOneWithoutIngredientAdditionsInput;
 }
 
 export interface UserCreateWithoutRecipesInput {
@@ -3656,72 +3764,10 @@ export interface UserCreateWithoutRecipesInput {
   modifications?: ModificationCreateManyWithoutUserInput;
 }
 
-export interface ModificationCreateOneWithoutIngredientAdditionsInput {
-  create?: ModificationCreateWithoutIngredientAdditionsInput;
-  connect?: ModificationWhereUniqueInput;
+export interface ItemUpsertWithoutStepsInput {
+  update: ItemUpdateWithoutStepsDataInput;
+  create: ItemCreateWithoutStepsInput;
 }
-
-export interface StepUpdateWithoutItemDataInput {
-  uid?: ID_Input;
-  index?: Int;
-  directions?: String;
-  notes?: String;
-  ingredients?: IngredientUpdateManyWithoutStepInput;
-}
-
-export interface ModificationCreateWithoutIngredientAdditionsInput {
-  user: UserCreateOneWithoutModificationsInput;
-  recipe: RecipeCreateOneWithoutModificationsInput;
-  sortings?: SortingCreateManyWithoutModificationInput;
-  alterations?: AlterationCreateManyWithoutModificationInput;
-  removals?: ModificationCreateremovalsInput;
-  itemAdditions?: ItemAdditionCreateManyWithoutModificationInput;
-  stepAdditions?: StepAdditionCreateManyWithoutModificationInput;
-}
-
-export type ModificationWhereUniqueInput = AtLeastOne<{
-  id: ID_Input;
-}>;
-
-export interface ModificationUpsertWithoutIngredientAdditionsInput {
-  update: ModificationUpdateWithoutIngredientAdditionsDataInput;
-  create: ModificationCreateWithoutIngredientAdditionsInput;
-}
-
-export interface ModificationUpdateWithoutIngredientAdditionsDataInput {
-  user?: UserUpdateOneRequiredWithoutModificationsInput;
-  recipe?: RecipeUpdateOneRequiredWithoutModificationsInput;
-  sortings?: SortingUpdateManyWithoutModificationInput;
-  alterations?: AlterationUpdateManyWithoutModificationInput;
-  removals?: ModificationUpdateremovalsInput;
-  itemAdditions?: ItemAdditionUpdateManyWithoutModificationInput;
-  stepAdditions?: StepAdditionUpdateManyWithoutModificationInput;
-}
-
-export interface ModificationUpdateOneRequiredWithoutIngredientAdditionsInput {
-  create?: ModificationCreateWithoutIngredientAdditionsInput;
-  update?: ModificationUpdateWithoutIngredientAdditionsDataInput;
-  upsert?: ModificationUpsertWithoutIngredientAdditionsInput;
-  connect?: ModificationWhereUniqueInput;
-}
-
-export interface IngredientAdditionUpdateInput {
-  uid?: ID_Input;
-  parentId?: ID_Input;
-  name?: String;
-  quantity?: String;
-  unit?: String;
-  processing?: String;
-  modification?: ModificationUpdateOneRequiredWithoutIngredientAdditionsInput;
-}
-
-export type StepAdditionWhereUniqueInput = AtLeastOne<{
-  uid: ID_Input;
-}>;
-
-export type IngredientWhereUniqueInput = AtLeastOne<{
-  uid: ID_Input;
-}>;
 
 export interface RecipeUpdateManyWithoutAuthorInput {
   create?: RecipeCreateWithoutAuthorInput[] | RecipeCreateWithoutAuthorInput;
@@ -3741,21 +3787,274 @@ export interface RecipeUpdateManyWithoutAuthorInput {
     | RecipeUpdateManyWithWhereNestedInput;
 }
 
-export interface ItemAdditionCreateWithoutModificationInput {
+export interface StepUpsertWithoutIngredientsInput {
+  update: StepUpdateWithoutIngredientsDataInput;
+  create: StepCreateWithoutIngredientsInput;
+}
+
+export interface ItemAdditionWhereInput {
+  uid?: ID_Input;
+  uid_not?: ID_Input;
+  uid_in?: ID_Input[] | ID_Input;
+  uid_not_in?: ID_Input[] | ID_Input;
+  uid_lt?: ID_Input;
+  uid_lte?: ID_Input;
+  uid_gt?: ID_Input;
+  uid_gte?: ID_Input;
+  uid_contains?: ID_Input;
+  uid_not_contains?: ID_Input;
+  uid_starts_with?: ID_Input;
+  uid_not_starts_with?: ID_Input;
+  uid_ends_with?: ID_Input;
+  uid_not_ends_with?: ID_Input;
+  parentId?: ID_Input;
+  parentId_not?: ID_Input;
+  parentId_in?: ID_Input[] | ID_Input;
+  parentId_not_in?: ID_Input[] | ID_Input;
+  parentId_lt?: ID_Input;
+  parentId_lte?: ID_Input;
+  parentId_gt?: ID_Input;
+  parentId_gte?: ID_Input;
+  parentId_contains?: ID_Input;
+  parentId_not_contains?: ID_Input;
+  parentId_starts_with?: ID_Input;
+  parentId_not_starts_with?: ID_Input;
+  parentId_ends_with?: ID_Input;
+  parentId_not_ends_with?: ID_Input;
+  name?: String;
+  name_not?: String;
+  name_in?: String[] | String;
+  name_not_in?: String[] | String;
+  name_lt?: String;
+  name_lte?: String;
+  name_gt?: String;
+  name_gte?: String;
+  name_contains?: String;
+  name_not_contains?: String;
+  name_starts_with?: String;
+  name_not_starts_with?: String;
+  name_ends_with?: String;
+  name_not_ends_with?: String;
+  modification?: ModificationWhereInput;
+  AND?: ItemAdditionWhereInput[] | ItemAdditionWhereInput;
+  OR?: ItemAdditionWhereInput[] | ItemAdditionWhereInput;
+  NOT?: ItemAdditionWhereInput[] | ItemAdditionWhereInput;
+}
+
+export interface IngredientUpdateManyMutationInput {
+  uid?: ID_Input;
+  index?: Int;
+  name?: String;
+  quantity?: String;
+  unit?: String;
+  processing?: String;
+}
+
+export interface AlterationSubscriptionWhereInput {
+  mutation_in?: MutationType[] | MutationType;
+  updatedFields_contains?: String;
+  updatedFields_contains_every?: String[] | String;
+  updatedFields_contains_some?: String[] | String;
+  node?: AlterationWhereInput;
+  AND?: AlterationSubscriptionWhereInput[] | AlterationSubscriptionWhereInput;
+  OR?: AlterationSubscriptionWhereInput[] | AlterationSubscriptionWhereInput;
+  NOT?: AlterationSubscriptionWhereInput[] | AlterationSubscriptionWhereInput;
+}
+
+export interface IngredientAdditionCreateInput {
   uid: ID_Input;
   parentId: ID_Input;
   name: String;
+  quantity: String;
+  unit: String;
+  processing: String;
+  modification: ModificationCreateOneWithoutIngredientAdditionsInput;
 }
 
-export interface RecipeCreateWithoutAuthorInput {
-  uid: ID_Input;
+export interface StepUpdateInput {
+  uid?: ID_Input;
+  index?: Int;
+  directions?: String;
+  notes?: String;
+  item?: ItemUpdateOneRequiredWithoutStepsInput;
+  ingredients?: IngredientUpdateManyWithoutStepInput;
+}
+
+export interface ModificationCreateOneWithoutIngredientAdditionsInput {
+  create?: ModificationCreateWithoutIngredientAdditionsInput;
+  connect?: ModificationWhereUniqueInput;
+}
+
+export interface RecipeUpdateWithoutPhotosDataInput {
+  uid?: ID_Input;
+  author?: UserUpdateOneRequiredWithoutRecipesInput;
   title?: String;
   time?: String;
   servingAmount?: String;
   servingType?: String;
   description?: String;
-  items?: ItemCreateManyWithoutRecipeInput;
-  modifications?: ModificationCreateManyWithoutRecipeInput;
+  items?: ItemUpdateManyWithoutRecipeInput;
+  modifications?: ModificationUpdateManyWithoutRecipeInput;
+}
+
+export interface ModificationCreateWithoutIngredientAdditionsInput {
+  user: UserCreateOneWithoutModificationsInput;
+  recipe: RecipeCreateOneWithoutModificationsInput;
+  sortings?: SortingCreateManyWithoutModificationInput;
+  alterations?: AlterationCreateManyWithoutModificationInput;
+  removals?: ModificationCreateremovalsInput;
+  itemAdditions?: ItemAdditionCreateManyWithoutModificationInput;
+  stepAdditions?: StepAdditionCreateManyWithoutModificationInput;
+}
+
+export interface ItemAdditionUpdateManyMutationInput {
+  uid?: ID_Input;
+  parentId?: ID_Input;
+  name?: String;
+}
+
+export interface IngredientAdditionUpdateInput {
+  uid?: ID_Input;
+  parentId?: ID_Input;
+  name?: String;
+  quantity?: String;
+  unit?: String;
+  processing?: String;
+  modification?: ModificationUpdateOneRequiredWithoutIngredientAdditionsInput;
+}
+
+export interface IngredientCreateWithoutStepInput {
+  uid: ID_Input;
+  index: Int;
+  name?: String;
+  quantity?: String;
+  unit?: String;
+  processing?: String;
+}
+
+export interface ModificationUpdateOneRequiredWithoutIngredientAdditionsInput {
+  create?: ModificationCreateWithoutIngredientAdditionsInput;
+  update?: ModificationUpdateWithoutIngredientAdditionsDataInput;
+  upsert?: ModificationUpsertWithoutIngredientAdditionsInput;
+  connect?: ModificationWhereUniqueInput;
+}
+
+export interface RecipePhotoCreateWithoutRecipeInput {
+  filename: String;
+  url: String;
+}
+
+export interface ModificationUpdateWithoutIngredientAdditionsDataInput {
+  user?: UserUpdateOneRequiredWithoutModificationsInput;
+  recipe?: RecipeUpdateOneRequiredWithoutModificationsInput;
+  sortings?: SortingUpdateManyWithoutModificationInput;
+  alterations?: AlterationUpdateManyWithoutModificationInput;
+  removals?: ModificationUpdateremovalsInput;
+  itemAdditions?: ItemAdditionUpdateManyWithoutModificationInput;
+  stepAdditions?: StepAdditionUpdateManyWithoutModificationInput;
+}
+
+export interface ItemUpdateWithWhereUniqueWithoutRecipeInput {
+  where: ItemWhereUniqueInput;
+  data: ItemUpdateWithoutRecipeDataInput;
+}
+
+export interface ModificationUpsertWithoutIngredientAdditionsInput {
+  update: ModificationUpdateWithoutIngredientAdditionsDataInput;
+  create: ModificationCreateWithoutIngredientAdditionsInput;
+}
+
+export interface ModificationUpdateOneRequiredWithoutStepAdditionsInput {
+  create?: ModificationCreateWithoutStepAdditionsInput;
+  update?: ModificationUpdateWithoutStepAdditionsDataInput;
+  upsert?: ModificationUpsertWithoutStepAdditionsInput;
+  connect?: ModificationWhereUniqueInput;
+}
+
+export interface IngredientAdditionUpdateManyMutationInput {
+  uid?: ID_Input;
+  parentId?: ID_Input;
+  name?: String;
+  quantity?: String;
+  unit?: String;
+  processing?: String;
+}
+
+export interface RecipeUpdateManyMutationInput {
+  uid?: ID_Input;
+  title?: String;
+  time?: String;
+  servingAmount?: String;
+  servingType?: String;
+  description?: String;
+}
+
+export interface ItemAdditionCreateInput {
+  uid: ID_Input;
+  parentId: ID_Input;
+  name: String;
+  modification: ModificationCreateOneWithoutItemAdditionsInput;
+}
+
+export interface ItemUpdateManyMutationInput {
+  uid?: ID_Input;
+  index?: Int;
+  name?: String;
+}
+
+export interface ItemUpdateInput {
+  uid?: ID_Input;
+  index?: Int;
+  name?: String;
+  recipe?: RecipeUpdateOneRequiredWithoutItemsInput;
+  steps?: StepUpdateManyWithoutItemInput;
+}
+
+export interface ItemCreateInput {
+  uid: ID_Input;
+  index: Int;
+  name?: String;
+  recipe: RecipeCreateOneWithoutItemsInput;
+  steps?: StepCreateManyWithoutItemInput;
+}
+
+export interface UserCreateWithoutModificationsInput {
+  email: String;
+  password: String;
+  name: String;
+  avatar?: String;
+  slug?: String;
+  emailVerified?: Boolean;
+  recipes?: RecipeCreateManyWithoutAuthorInput;
+}
+
+export interface SortingUpdateInput {
+  uid?: ID_Input;
+  parentId?: ID_Input;
+  order?: SortingUpdateorderInput;
+  modification?: ModificationUpdateOneRequiredWithoutSortingsInput;
+}
+
+export interface RecipePhotoSubscriptionWhereInput {
+  mutation_in?: MutationType[] | MutationType;
+  updatedFields_contains?: String;
+  updatedFields_contains_every?: String[] | String;
+  updatedFields_contains_some?: String[] | String;
+  node?: RecipePhotoWhereInput;
+  AND?: RecipePhotoSubscriptionWhereInput[] | RecipePhotoSubscriptionWhereInput;
+  OR?: RecipePhotoSubscriptionWhereInput[] | RecipePhotoSubscriptionWhereInput;
+  NOT?: RecipePhotoSubscriptionWhereInput[] | RecipePhotoSubscriptionWhereInput;
+}
+
+export interface ModificationUpdateOneRequiredWithoutAlterationsInput {
+  create?: ModificationCreateWithoutAlterationsInput;
+  update?: ModificationUpdateWithoutAlterationsDataInput;
+  upsert?: ModificationUpsertWithoutAlterationsInput;
+  connect?: ModificationWhereUniqueInput;
+}
+
+export interface ModificationCreateremovalsInput {
+  set?: ID_Input[] | ID_Input;
 }
 
 export interface NodeNode {
@@ -3802,155 +4101,20 @@ export interface UserPreviousValuesSubscription
   emailVerified: () => Promise<AsyncIterator<Boolean>>;
 }
 
-export interface IngredientAdditionConnection {
-  pageInfo: PageInfo;
-  edges: IngredientAdditionEdge[];
-}
-
-export interface IngredientAdditionConnectionPromise
-  extends Promise<IngredientAdditionConnection>,
-    Fragmentable {
-  pageInfo: <T = PageInfoPromise>() => T;
-  edges: <T = FragmentableArray<IngredientAdditionEdge>>() => T;
-  aggregate: <T = AggregateIngredientAdditionPromise>() => T;
-}
-
-export interface IngredientAdditionConnectionSubscription
-  extends Promise<AsyncIterator<IngredientAdditionConnection>>,
-    Fragmentable {
-  pageInfo: <T = PageInfoSubscription>() => T;
-  edges: <
-    T = Promise<AsyncIterator<IngredientAdditionEdgeSubscription>>
-  >() => T;
-  aggregate: <T = AggregateIngredientAdditionSubscription>() => T;
-}
-
-export interface Sorting {
-  uid: ID_Output;
-  parentId: ID_Output;
-  order: ID_Output[];
-}
-
-export interface SortingPromise extends Promise<Sorting>, Fragmentable {
-  uid: () => Promise<ID_Output>;
-  parentId: () => Promise<ID_Output>;
-  order: () => Promise<ID_Output[]>;
-  modification: <T = ModificationPromise>() => T;
-}
-
-export interface SortingSubscription
-  extends Promise<AsyncIterator<Sorting>>,
-    Fragmentable {
-  uid: () => Promise<AsyncIterator<ID_Output>>;
-  parentId: () => Promise<AsyncIterator<ID_Output>>;
-  order: () => Promise<AsyncIterator<ID_Output[]>>;
-  modification: <T = ModificationSubscription>() => T;
-}
-
-export interface IngredientAdditionEdge {
-  node: IngredientAddition;
-  cursor: String;
-}
-
-export interface IngredientAdditionEdgePromise
-  extends Promise<IngredientAdditionEdge>,
-    Fragmentable {
-  node: <T = IngredientAdditionPromise>() => T;
-  cursor: () => Promise<String>;
-}
-
-export interface IngredientAdditionEdgeSubscription
-  extends Promise<AsyncIterator<IngredientAdditionEdge>>,
-    Fragmentable {
-  node: <T = IngredientAdditionSubscription>() => T;
-  cursor: () => Promise<AsyncIterator<String>>;
-}
-
-export interface ItemAddition {
-  uid: ID_Output;
-  parentId: ID_Output;
-  name: String;
-}
-
-export interface ItemAdditionPromise
-  extends Promise<ItemAddition>,
-    Fragmentable {
-  uid: () => Promise<ID_Output>;
-  parentId: () => Promise<ID_Output>;
-  name: () => Promise<String>;
-  modification: <T = ModificationPromise>() => T;
-}
-
-export interface ItemAdditionSubscription
-  extends Promise<AsyncIterator<ItemAddition>>,
-    Fragmentable {
-  uid: () => Promise<AsyncIterator<ID_Output>>;
-  parentId: () => Promise<AsyncIterator<ID_Output>>;
-  name: () => Promise<AsyncIterator<String>>;
-  modification: <T = ModificationSubscription>() => T;
-}
-
-export interface BatchPayload {
-  count: Long;
-}
-
-export interface BatchPayloadPromise
-  extends Promise<BatchPayload>,
-    Fragmentable {
-  count: () => Promise<Long>;
-}
-
-export interface BatchPayloadSubscription
-  extends Promise<AsyncIterator<BatchPayload>>,
-    Fragmentable {
-  count: () => Promise<AsyncIterator<Long>>;
-}
-
-export interface AggregateIngredient {
+export interface AggregateAlteration {
   count: Int;
 }
 
-export interface AggregateIngredientPromise
-  extends Promise<AggregateIngredient>,
+export interface AggregateAlterationPromise
+  extends Promise<AggregateAlteration>,
     Fragmentable {
   count: () => Promise<Int>;
 }
 
-export interface AggregateIngredientSubscription
-  extends Promise<AsyncIterator<AggregateIngredient>>,
+export interface AggregateAlterationSubscription
+  extends Promise<AsyncIterator<AggregateAlteration>>,
     Fragmentable {
   count: () => Promise<AsyncIterator<Int>>;
-}
-
-export interface Ingredient {
-  uid: ID_Output;
-  index: Int;
-  name: String;
-  quantity: String;
-  unit: String;
-  processing: String;
-}
-
-export interface IngredientPromise extends Promise<Ingredient>, Fragmentable {
-  uid: () => Promise<ID_Output>;
-  index: () => Promise<Int>;
-  name: () => Promise<String>;
-  quantity: () => Promise<String>;
-  unit: () => Promise<String>;
-  processing: () => Promise<String>;
-  step: <T = StepPromise>() => T;
-}
-
-export interface IngredientSubscription
-  extends Promise<AsyncIterator<Ingredient>>,
-    Fragmentable {
-  uid: () => Promise<AsyncIterator<ID_Output>>;
-  index: () => Promise<AsyncIterator<Int>>;
-  name: () => Promise<AsyncIterator<String>>;
-  quantity: () => Promise<AsyncIterator<String>>;
-  unit: () => Promise<AsyncIterator<String>>;
-  processing: () => Promise<AsyncIterator<String>>;
-  step: <T = StepSubscription>() => T;
 }
 
 export interface Item {
@@ -3997,346 +4161,6 @@ export interface ItemSubscription
   ) => T;
 }
 
-export interface IngredientEdge {
-  node: Ingredient;
-  cursor: String;
-}
-
-export interface IngredientEdgePromise
-  extends Promise<IngredientEdge>,
-    Fragmentable {
-  node: <T = IngredientPromise>() => T;
-  cursor: () => Promise<String>;
-}
-
-export interface IngredientEdgeSubscription
-  extends Promise<AsyncIterator<IngredientEdge>>,
-    Fragmentable {
-  node: <T = IngredientSubscription>() => T;
-  cursor: () => Promise<AsyncIterator<String>>;
-}
-
-export interface UserSubscriptionPayload {
-  mutation: MutationType;
-  node: User;
-  updatedFields: String[];
-  previousValues: UserPreviousValues;
-}
-
-export interface UserSubscriptionPayloadPromise
-  extends Promise<UserSubscriptionPayload>,
-    Fragmentable {
-  mutation: () => Promise<MutationType>;
-  node: <T = UserPromise>() => T;
-  updatedFields: () => Promise<String[]>;
-  previousValues: <T = UserPreviousValuesPromise>() => T;
-}
-
-export interface UserSubscriptionPayloadSubscription
-  extends Promise<AsyncIterator<UserSubscriptionPayload>>,
-    Fragmentable {
-  mutation: () => Promise<AsyncIterator<MutationType>>;
-  node: <T = UserSubscription>() => T;
-  updatedFields: () => Promise<AsyncIterator<String[]>>;
-  previousValues: <T = UserPreviousValuesSubscription>() => T;
-}
-
-export interface IngredientConnection {
-  pageInfo: PageInfo;
-  edges: IngredientEdge[];
-}
-
-export interface IngredientConnectionPromise
-  extends Promise<IngredientConnection>,
-    Fragmentable {
-  pageInfo: <T = PageInfoPromise>() => T;
-  edges: <T = FragmentableArray<IngredientEdge>>() => T;
-  aggregate: <T = AggregateIngredientPromise>() => T;
-}
-
-export interface IngredientConnectionSubscription
-  extends Promise<AsyncIterator<IngredientConnection>>,
-    Fragmentable {
-  pageInfo: <T = PageInfoSubscription>() => T;
-  edges: <T = Promise<AsyncIterator<IngredientEdgeSubscription>>>() => T;
-  aggregate: <T = AggregateIngredientSubscription>() => T;
-}
-
-export interface AggregateUser {
-  count: Int;
-}
-
-export interface AggregateUserPromise
-  extends Promise<AggregateUser>,
-    Fragmentable {
-  count: () => Promise<Int>;
-}
-
-export interface AggregateUserSubscription
-  extends Promise<AsyncIterator<AggregateUser>>,
-    Fragmentable {
-  count: () => Promise<AsyncIterator<Int>>;
-}
-
-export interface Alteration {
-  uid: ID_Output;
-  sourceId: ID_Output;
-  field: String;
-  value: String;
-}
-
-export interface AlterationPromise extends Promise<Alteration>, Fragmentable {
-  uid: () => Promise<ID_Output>;
-  sourceId: () => Promise<ID_Output>;
-  field: () => Promise<String>;
-  value: () => Promise<String>;
-  modification: <T = ModificationPromise>() => T;
-}
-
-export interface AlterationSubscription
-  extends Promise<AsyncIterator<Alteration>>,
-    Fragmentable {
-  uid: () => Promise<AsyncIterator<ID_Output>>;
-  sourceId: () => Promise<AsyncIterator<ID_Output>>;
-  field: () => Promise<AsyncIterator<String>>;
-  value: () => Promise<AsyncIterator<String>>;
-  modification: <T = ModificationSubscription>() => T;
-}
-
-export interface UserConnection {
-  pageInfo: PageInfo;
-  edges: UserEdge[];
-}
-
-export interface UserConnectionPromise
-  extends Promise<UserConnection>,
-    Fragmentable {
-  pageInfo: <T = PageInfoPromise>() => T;
-  edges: <T = FragmentableArray<UserEdge>>() => T;
-  aggregate: <T = AggregateUserPromise>() => T;
-}
-
-export interface UserConnectionSubscription
-  extends Promise<AsyncIterator<UserConnection>>,
-    Fragmentable {
-  pageInfo: <T = PageInfoSubscription>() => T;
-  edges: <T = Promise<AsyncIterator<UserEdgeSubscription>>>() => T;
-  aggregate: <T = AggregateUserSubscription>() => T;
-}
-
-export interface AlterationSubscriptionPayload {
-  mutation: MutationType;
-  node: Alteration;
-  updatedFields: String[];
-  previousValues: AlterationPreviousValues;
-}
-
-export interface AlterationSubscriptionPayloadPromise
-  extends Promise<AlterationSubscriptionPayload>,
-    Fragmentable {
-  mutation: () => Promise<MutationType>;
-  node: <T = AlterationPromise>() => T;
-  updatedFields: () => Promise<String[]>;
-  previousValues: <T = AlterationPreviousValuesPromise>() => T;
-}
-
-export interface AlterationSubscriptionPayloadSubscription
-  extends Promise<AsyncIterator<AlterationSubscriptionPayload>>,
-    Fragmentable {
-  mutation: () => Promise<AsyncIterator<MutationType>>;
-  node: <T = AlterationSubscription>() => T;
-  updatedFields: () => Promise<AsyncIterator<String[]>>;
-  previousValues: <T = AlterationPreviousValuesSubscription>() => T;
-}
-
-export interface AggregateStepAddition {
-  count: Int;
-}
-
-export interface AggregateStepAdditionPromise
-  extends Promise<AggregateStepAddition>,
-    Fragmentable {
-  count: () => Promise<Int>;
-}
-
-export interface AggregateStepAdditionSubscription
-  extends Promise<AsyncIterator<AggregateStepAddition>>,
-    Fragmentable {
-  count: () => Promise<AsyncIterator<Int>>;
-}
-
-export interface AlterationPreviousValues {
-  uid: ID_Output;
-  sourceId: ID_Output;
-  field: String;
-  value: String;
-}
-
-export interface AlterationPreviousValuesPromise
-  extends Promise<AlterationPreviousValues>,
-    Fragmentable {
-  uid: () => Promise<ID_Output>;
-  sourceId: () => Promise<ID_Output>;
-  field: () => Promise<String>;
-  value: () => Promise<String>;
-}
-
-export interface AlterationPreviousValuesSubscription
-  extends Promise<AsyncIterator<AlterationPreviousValues>>,
-    Fragmentable {
-  uid: () => Promise<AsyncIterator<ID_Output>>;
-  sourceId: () => Promise<AsyncIterator<ID_Output>>;
-  field: () => Promise<AsyncIterator<String>>;
-  value: () => Promise<AsyncIterator<String>>;
-}
-
-export interface StepAdditionConnection {
-  pageInfo: PageInfo;
-  edges: StepAdditionEdge[];
-}
-
-export interface StepAdditionConnectionPromise
-  extends Promise<StepAdditionConnection>,
-    Fragmentable {
-  pageInfo: <T = PageInfoPromise>() => T;
-  edges: <T = FragmentableArray<StepAdditionEdge>>() => T;
-  aggregate: <T = AggregateStepAdditionPromise>() => T;
-}
-
-export interface StepAdditionConnectionSubscription
-  extends Promise<AsyncIterator<StepAdditionConnection>>,
-    Fragmentable {
-  pageInfo: <T = PageInfoSubscription>() => T;
-  edges: <T = Promise<AsyncIterator<StepAdditionEdgeSubscription>>>() => T;
-  aggregate: <T = AggregateStepAdditionSubscription>() => T;
-}
-
-export interface AggregateAlteration {
-  count: Int;
-}
-
-export interface AggregateAlterationPromise
-  extends Promise<AggregateAlteration>,
-    Fragmentable {
-  count: () => Promise<Int>;
-}
-
-export interface AggregateAlterationSubscription
-  extends Promise<AsyncIterator<AggregateAlteration>>,
-    Fragmentable {
-  count: () => Promise<AsyncIterator<Int>>;
-}
-
-export interface StepEdge {
-  node: Step;
-  cursor: String;
-}
-
-export interface StepEdgePromise extends Promise<StepEdge>, Fragmentable {
-  node: <T = StepPromise>() => T;
-  cursor: () => Promise<String>;
-}
-
-export interface StepEdgeSubscription
-  extends Promise<AsyncIterator<StepEdge>>,
-    Fragmentable {
-  node: <T = StepSubscription>() => T;
-  cursor: () => Promise<AsyncIterator<String>>;
-}
-
-export interface IngredientSubscriptionPayload {
-  mutation: MutationType;
-  node: Ingredient;
-  updatedFields: String[];
-  previousValues: IngredientPreviousValues;
-}
-
-export interface IngredientSubscriptionPayloadPromise
-  extends Promise<IngredientSubscriptionPayload>,
-    Fragmentable {
-  mutation: () => Promise<MutationType>;
-  node: <T = IngredientPromise>() => T;
-  updatedFields: () => Promise<String[]>;
-  previousValues: <T = IngredientPreviousValuesPromise>() => T;
-}
-
-export interface IngredientSubscriptionPayloadSubscription
-  extends Promise<AsyncIterator<IngredientSubscriptionPayload>>,
-    Fragmentable {
-  mutation: () => Promise<AsyncIterator<MutationType>>;
-  node: <T = IngredientSubscription>() => T;
-  updatedFields: () => Promise<AsyncIterator<String[]>>;
-  previousValues: <T = IngredientPreviousValuesSubscription>() => T;
-}
-
-export interface AggregateSorting {
-  count: Int;
-}
-
-export interface AggregateSortingPromise
-  extends Promise<AggregateSorting>,
-    Fragmentable {
-  count: () => Promise<Int>;
-}
-
-export interface AggregateSortingSubscription
-  extends Promise<AsyncIterator<AggregateSorting>>,
-    Fragmentable {
-  count: () => Promise<AsyncIterator<Int>>;
-}
-
-export interface IngredientPreviousValues {
-  uid: ID_Output;
-  index: Int;
-  name: String;
-  quantity: String;
-  unit: String;
-  processing: String;
-}
-
-export interface IngredientPreviousValuesPromise
-  extends Promise<IngredientPreviousValues>,
-    Fragmentable {
-  uid: () => Promise<ID_Output>;
-  index: () => Promise<Int>;
-  name: () => Promise<String>;
-  quantity: () => Promise<String>;
-  unit: () => Promise<String>;
-  processing: () => Promise<String>;
-}
-
-export interface IngredientPreviousValuesSubscription
-  extends Promise<AsyncIterator<IngredientPreviousValues>>,
-    Fragmentable {
-  uid: () => Promise<AsyncIterator<ID_Output>>;
-  index: () => Promise<AsyncIterator<Int>>;
-  name: () => Promise<AsyncIterator<String>>;
-  quantity: () => Promise<AsyncIterator<String>>;
-  unit: () => Promise<AsyncIterator<String>>;
-  processing: () => Promise<AsyncIterator<String>>;
-}
-
-export interface SortingConnection {
-  pageInfo: PageInfo;
-  edges: SortingEdge[];
-}
-
-export interface SortingConnectionPromise
-  extends Promise<SortingConnection>,
-    Fragmentable {
-  pageInfo: <T = PageInfoPromise>() => T;
-  edges: <T = FragmentableArray<SortingEdge>>() => T;
-  aggregate: <T = AggregateSortingPromise>() => T;
-}
-
-export interface SortingConnectionSubscription
-  extends Promise<AsyncIterator<SortingConnection>>,
-    Fragmentable {
-  pageInfo: <T = PageInfoSubscription>() => T;
-  edges: <T = Promise<AsyncIterator<SortingEdgeSubscription>>>() => T;
-  aggregate: <T = AggregateSortingSubscription>() => T;
-}
-
 export interface AlterationEdge {
   node: Alteration;
   cursor: String;
@@ -4354,116 +4178,6 @@ export interface AlterationEdgeSubscription
     Fragmentable {
   node: <T = AlterationSubscription>() => T;
   cursor: () => Promise<AsyncIterator<String>>;
-}
-
-export interface RecipeEdge {
-  node: Recipe;
-  cursor: String;
-}
-
-export interface RecipeEdgePromise extends Promise<RecipeEdge>, Fragmentable {
-  node: <T = RecipePromise>() => T;
-  cursor: () => Promise<String>;
-}
-
-export interface RecipeEdgeSubscription
-  extends Promise<AsyncIterator<RecipeEdge>>,
-    Fragmentable {
-  node: <T = RecipeSubscription>() => T;
-  cursor: () => Promise<AsyncIterator<String>>;
-}
-
-export interface IngredientAdditionSubscriptionPayload {
-  mutation: MutationType;
-  node: IngredientAddition;
-  updatedFields: String[];
-  previousValues: IngredientAdditionPreviousValues;
-}
-
-export interface IngredientAdditionSubscriptionPayloadPromise
-  extends Promise<IngredientAdditionSubscriptionPayload>,
-    Fragmentable {
-  mutation: () => Promise<MutationType>;
-  node: <T = IngredientAdditionPromise>() => T;
-  updatedFields: () => Promise<String[]>;
-  previousValues: <T = IngredientAdditionPreviousValuesPromise>() => T;
-}
-
-export interface IngredientAdditionSubscriptionPayloadSubscription
-  extends Promise<AsyncIterator<IngredientAdditionSubscriptionPayload>>,
-    Fragmentable {
-  mutation: () => Promise<AsyncIterator<MutationType>>;
-  node: <T = IngredientAdditionSubscription>() => T;
-  updatedFields: () => Promise<AsyncIterator<String[]>>;
-  previousValues: <T = IngredientAdditionPreviousValuesSubscription>() => T;
-}
-
-export interface AggregateModification {
-  count: Int;
-}
-
-export interface AggregateModificationPromise
-  extends Promise<AggregateModification>,
-    Fragmentable {
-  count: () => Promise<Int>;
-}
-
-export interface AggregateModificationSubscription
-  extends Promise<AsyncIterator<AggregateModification>>,
-    Fragmentable {
-  count: () => Promise<AsyncIterator<Int>>;
-}
-
-export interface IngredientAdditionPreviousValues {
-  uid: ID_Output;
-  parentId: ID_Output;
-  name: String;
-  quantity: String;
-  unit: String;
-  processing: String;
-}
-
-export interface IngredientAdditionPreviousValuesPromise
-  extends Promise<IngredientAdditionPreviousValues>,
-    Fragmentable {
-  uid: () => Promise<ID_Output>;
-  parentId: () => Promise<ID_Output>;
-  name: () => Promise<String>;
-  quantity: () => Promise<String>;
-  unit: () => Promise<String>;
-  processing: () => Promise<String>;
-}
-
-export interface IngredientAdditionPreviousValuesSubscription
-  extends Promise<AsyncIterator<IngredientAdditionPreviousValues>>,
-    Fragmentable {
-  uid: () => Promise<AsyncIterator<ID_Output>>;
-  parentId: () => Promise<AsyncIterator<ID_Output>>;
-  name: () => Promise<AsyncIterator<String>>;
-  quantity: () => Promise<AsyncIterator<String>>;
-  unit: () => Promise<AsyncIterator<String>>;
-  processing: () => Promise<AsyncIterator<String>>;
-}
-
-export interface ModificationConnection {
-  pageInfo: PageInfo;
-  edges: ModificationEdge[];
-}
-
-export interface ModificationConnectionPromise
-  extends Promise<ModificationConnection>,
-    Fragmentable {
-  pageInfo: <T = PageInfoPromise>() => T;
-  edges: <T = FragmentableArray<ModificationEdge>>() => T;
-  aggregate: <T = AggregateModificationPromise>() => T;
-}
-
-export interface ModificationConnectionSubscription
-  extends Promise<AsyncIterator<ModificationConnection>>,
-    Fragmentable {
-  pageInfo: <T = PageInfoSubscription>() => T;
-  edges: <T = Promise<AsyncIterator<ModificationEdgeSubscription>>>() => T;
-  aggregate: <T = AggregateModificationSubscription>() => T;
 }
 
 export interface PageInfo {
@@ -4489,107 +4203,36 @@ export interface PageInfoSubscription
   endCursor: () => Promise<AsyncIterator<String>>;
 }
 
-export interface ItemAdditionEdge {
-  node: ItemAddition;
-  cursor: String;
+export interface BatchPayload {
+  count: Long;
 }
 
-export interface ItemAdditionEdgePromise
-  extends Promise<ItemAdditionEdge>,
+export interface BatchPayloadPromise
+  extends Promise<BatchPayload>,
     Fragmentable {
-  node: <T = ItemAdditionPromise>() => T;
-  cursor: () => Promise<String>;
+  count: () => Promise<Long>;
 }
 
-export interface ItemAdditionEdgeSubscription
-  extends Promise<AsyncIterator<ItemAdditionEdge>>,
+export interface BatchPayloadSubscription
+  extends Promise<AsyncIterator<BatchPayload>>,
     Fragmentable {
-  node: <T = ItemAdditionSubscription>() => T;
-  cursor: () => Promise<AsyncIterator<String>>;
+  count: () => Promise<AsyncIterator<Long>>;
 }
 
-export interface ItemSubscriptionPayload {
-  mutation: MutationType;
-  node: Item;
-  updatedFields: String[];
-  previousValues: ItemPreviousValues;
-}
-
-export interface ItemSubscriptionPayloadPromise
-  extends Promise<ItemSubscriptionPayload>,
-    Fragmentable {
-  mutation: () => Promise<MutationType>;
-  node: <T = ItemPromise>() => T;
-  updatedFields: () => Promise<String[]>;
-  previousValues: <T = ItemPreviousValuesPromise>() => T;
-}
-
-export interface ItemSubscriptionPayloadSubscription
-  extends Promise<AsyncIterator<ItemSubscriptionPayload>>,
-    Fragmentable {
-  mutation: () => Promise<AsyncIterator<MutationType>>;
-  node: <T = ItemSubscription>() => T;
-  updatedFields: () => Promise<AsyncIterator<String[]>>;
-  previousValues: <T = ItemPreviousValuesSubscription>() => T;
-}
-
-export interface AggregateItem {
+export interface AggregateUser {
   count: Int;
 }
 
-export interface AggregateItemPromise
-  extends Promise<AggregateItem>,
+export interface AggregateUserPromise
+  extends Promise<AggregateUser>,
     Fragmentable {
   count: () => Promise<Int>;
 }
 
-export interface AggregateItemSubscription
-  extends Promise<AsyncIterator<AggregateItem>>,
+export interface AggregateUserSubscription
+  extends Promise<AsyncIterator<AggregateUser>>,
     Fragmentable {
   count: () => Promise<AsyncIterator<Int>>;
-}
-
-export interface ItemPreviousValues {
-  uid: ID_Output;
-  index: Int;
-  name: String;
-}
-
-export interface ItemPreviousValuesPromise
-  extends Promise<ItemPreviousValues>,
-    Fragmentable {
-  uid: () => Promise<ID_Output>;
-  index: () => Promise<Int>;
-  name: () => Promise<String>;
-}
-
-export interface ItemPreviousValuesSubscription
-  extends Promise<AsyncIterator<ItemPreviousValues>>,
-    Fragmentable {
-  uid: () => Promise<AsyncIterator<ID_Output>>;
-  index: () => Promise<AsyncIterator<Int>>;
-  name: () => Promise<AsyncIterator<String>>;
-}
-
-export interface ItemConnection {
-  pageInfo: PageInfo;
-  edges: ItemEdge[];
-}
-
-export interface ItemConnectionPromise
-  extends Promise<ItemConnection>,
-    Fragmentable {
-  pageInfo: <T = PageInfoPromise>() => T;
-  edges: <T = FragmentableArray<ItemEdge>>() => T;
-  aggregate: <T = AggregateItemPromise>() => T;
-}
-
-export interface ItemConnectionSubscription
-  extends Promise<AsyncIterator<ItemConnection>>,
-    Fragmentable {
-  pageInfo: <T = PageInfoSubscription>() => T;
-  edges: <T = Promise<AsyncIterator<ItemEdgeSubscription>>>() => T;
-  aggregate: <T = AggregateItemSubscription>() => T;
 }
 
 export interface AlterationConnection {
@@ -4613,205 +4256,25 @@ export interface AlterationConnectionSubscription
   aggregate: <T = AggregateAlterationSubscription>() => T;
 }
 
-export interface Step {
-  uid: ID_Output;
-  index: Int;
-  directions: String;
-  notes: String;
+export interface UserConnection {
+  pageInfo: PageInfo;
+  edges: UserEdge[];
 }
 
-export interface StepPromise extends Promise<Step>, Fragmentable {
-  uid: () => Promise<ID_Output>;
-  index: () => Promise<Int>;
-  directions: () => Promise<String>;
-  notes: () => Promise<String>;
-  item: <T = ItemPromise>() => T;
-  ingredients: <T = FragmentableArray<Ingredient>>(
-    args?: {
-      where?: IngredientWhereInput;
-      orderBy?: IngredientOrderByInput;
-      skip?: Int;
-      after?: String;
-      before?: String;
-      first?: Int;
-      last?: Int;
-    }
-  ) => T;
-}
-
-export interface StepSubscription
-  extends Promise<AsyncIterator<Step>>,
+export interface UserConnectionPromise
+  extends Promise<UserConnection>,
     Fragmentable {
-  uid: () => Promise<AsyncIterator<ID_Output>>;
-  index: () => Promise<AsyncIterator<Int>>;
-  directions: () => Promise<AsyncIterator<String>>;
-  notes: () => Promise<AsyncIterator<String>>;
-  item: <T = ItemSubscription>() => T;
-  ingredients: <T = Promise<AsyncIterator<IngredientSubscription>>>(
-    args?: {
-      where?: IngredientWhereInput;
-      orderBy?: IngredientOrderByInput;
-      skip?: Int;
-      after?: String;
-      before?: String;
-      first?: Int;
-      last?: Int;
-    }
-  ) => T;
+  pageInfo: <T = PageInfoPromise>() => T;
+  edges: <T = FragmentableArray<UserEdge>>() => T;
+  aggregate: <T = AggregateUserPromise>() => T;
 }
 
-export interface ItemAdditionSubscriptionPayload {
-  mutation: MutationType;
-  node: ItemAddition;
-  updatedFields: String[];
-  previousValues: ItemAdditionPreviousValues;
-}
-
-export interface ItemAdditionSubscriptionPayloadPromise
-  extends Promise<ItemAdditionSubscriptionPayload>,
+export interface UserConnectionSubscription
+  extends Promise<AsyncIterator<UserConnection>>,
     Fragmentable {
-  mutation: () => Promise<MutationType>;
-  node: <T = ItemAdditionPromise>() => T;
-  updatedFields: () => Promise<String[]>;
-  previousValues: <T = ItemAdditionPreviousValuesPromise>() => T;
-}
-
-export interface ItemAdditionSubscriptionPayloadSubscription
-  extends Promise<AsyncIterator<ItemAdditionSubscriptionPayload>>,
-    Fragmentable {
-  mutation: () => Promise<AsyncIterator<MutationType>>;
-  node: <T = ItemAdditionSubscription>() => T;
-  updatedFields: () => Promise<AsyncIterator<String[]>>;
-  previousValues: <T = ItemAdditionPreviousValuesSubscription>() => T;
-}
-
-export interface User {
-  id: ID_Output;
-  createdAt: DateTimeOutput;
-  updatedAt: DateTimeOutput;
-  email: String;
-  password: String;
-  name: String;
-  avatar?: String;
-  slug?: String;
-  emailVerified: Boolean;
-}
-
-export interface UserPromise extends Promise<User>, Fragmentable {
-  id: () => Promise<ID_Output>;
-  createdAt: () => Promise<DateTimeOutput>;
-  updatedAt: () => Promise<DateTimeOutput>;
-  email: () => Promise<String>;
-  password: () => Promise<String>;
-  name: () => Promise<String>;
-  avatar: () => Promise<String>;
-  slug: () => Promise<String>;
-  emailVerified: () => Promise<Boolean>;
-  recipes: <T = FragmentableArray<Recipe>>(
-    args?: {
-      where?: RecipeWhereInput;
-      orderBy?: RecipeOrderByInput;
-      skip?: Int;
-      after?: String;
-      before?: String;
-      first?: Int;
-      last?: Int;
-    }
-  ) => T;
-  modifications: <T = FragmentableArray<Modification>>(
-    args?: {
-      where?: ModificationWhereInput;
-      orderBy?: ModificationOrderByInput;
-      skip?: Int;
-      after?: String;
-      before?: String;
-      first?: Int;
-      last?: Int;
-    }
-  ) => T;
-}
-
-export interface UserSubscription
-  extends Promise<AsyncIterator<User>>,
-    Fragmentable {
-  id: () => Promise<AsyncIterator<ID_Output>>;
-  createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
-  updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
-  email: () => Promise<AsyncIterator<String>>;
-  password: () => Promise<AsyncIterator<String>>;
-  name: () => Promise<AsyncIterator<String>>;
-  avatar: () => Promise<AsyncIterator<String>>;
-  slug: () => Promise<AsyncIterator<String>>;
-  emailVerified: () => Promise<AsyncIterator<Boolean>>;
-  recipes: <T = Promise<AsyncIterator<RecipeSubscription>>>(
-    args?: {
-      where?: RecipeWhereInput;
-      orderBy?: RecipeOrderByInput;
-      skip?: Int;
-      after?: String;
-      before?: String;
-      first?: Int;
-      last?: Int;
-    }
-  ) => T;
-  modifications: <T = Promise<AsyncIterator<ModificationSubscription>>>(
-    args?: {
-      where?: ModificationWhereInput;
-      orderBy?: ModificationOrderByInput;
-      skip?: Int;
-      after?: String;
-      before?: String;
-      first?: Int;
-      last?: Int;
-    }
-  ) => T;
-}
-
-export interface ItemAdditionPreviousValues {
-  uid: ID_Output;
-  parentId: ID_Output;
-  name: String;
-}
-
-export interface ItemAdditionPreviousValuesPromise
-  extends Promise<ItemAdditionPreviousValues>,
-    Fragmentable {
-  uid: () => Promise<ID_Output>;
-  parentId: () => Promise<ID_Output>;
-  name: () => Promise<String>;
-}
-
-export interface ItemAdditionPreviousValuesSubscription
-  extends Promise<AsyncIterator<ItemAdditionPreviousValues>>,
-    Fragmentable {
-  uid: () => Promise<AsyncIterator<ID_Output>>;
-  parentId: () => Promise<AsyncIterator<ID_Output>>;
-  name: () => Promise<AsyncIterator<String>>;
-}
-
-export interface StepAdditionPreviousValues {
-  uid: ID_Output;
-  parentId: ID_Output;
-  directions: String;
-  notes: String;
-}
-
-export interface StepAdditionPreviousValuesPromise
-  extends Promise<StepAdditionPreviousValues>,
-    Fragmentable {
-  uid: () => Promise<ID_Output>;
-  parentId: () => Promise<ID_Output>;
-  directions: () => Promise<String>;
-  notes: () => Promise<String>;
-}
-
-export interface StepAdditionPreviousValuesSubscription
-  extends Promise<AsyncIterator<StepAdditionPreviousValues>>,
-    Fragmentable {
-  uid: () => Promise<AsyncIterator<ID_Output>>;
-  parentId: () => Promise<AsyncIterator<ID_Output>>;
-  directions: () => Promise<AsyncIterator<String>>;
-  notes: () => Promise<AsyncIterator<String>>;
+  pageInfo: <T = PageInfoSubscription>() => T;
+  edges: <T = Promise<AsyncIterator<UserEdgeSubscription>>>() => T;
+  aggregate: <T = AggregateUserSubscription>() => T;
 }
 
 export interface IngredientAddition {
@@ -4847,108 +4310,20 @@ export interface IngredientAdditionSubscription
   modification: <T = ModificationSubscription>() => T;
 }
 
-export interface AggregateStep {
+export interface AggregateStepAddition {
   count: Int;
 }
 
-export interface AggregateStepPromise
-  extends Promise<AggregateStep>,
+export interface AggregateStepAdditionPromise
+  extends Promise<AggregateStepAddition>,
     Fragmentable {
   count: () => Promise<Int>;
 }
 
-export interface AggregateStepSubscription
-  extends Promise<AsyncIterator<AggregateStep>>,
+export interface AggregateStepAdditionSubscription
+  extends Promise<AsyncIterator<AggregateStepAddition>>,
     Fragmentable {
   count: () => Promise<AsyncIterator<Int>>;
-}
-
-export interface ModificationSubscriptionPayload {
-  mutation: MutationType;
-  node: Modification;
-  updatedFields: String[];
-  previousValues: ModificationPreviousValues;
-}
-
-export interface ModificationSubscriptionPayloadPromise
-  extends Promise<ModificationSubscriptionPayload>,
-    Fragmentable {
-  mutation: () => Promise<MutationType>;
-  node: <T = ModificationPromise>() => T;
-  updatedFields: () => Promise<String[]>;
-  previousValues: <T = ModificationPreviousValuesPromise>() => T;
-}
-
-export interface ModificationSubscriptionPayloadSubscription
-  extends Promise<AsyncIterator<ModificationSubscriptionPayload>>,
-    Fragmentable {
-  mutation: () => Promise<AsyncIterator<MutationType>>;
-  node: <T = ModificationSubscription>() => T;
-  updatedFields: () => Promise<AsyncIterator<String[]>>;
-  previousValues: <T = ModificationPreviousValuesSubscription>() => T;
-}
-
-export interface SortingEdge {
-  node: Sorting;
-  cursor: String;
-}
-
-export interface SortingEdgePromise extends Promise<SortingEdge>, Fragmentable {
-  node: <T = SortingPromise>() => T;
-  cursor: () => Promise<String>;
-}
-
-export interface SortingEdgeSubscription
-  extends Promise<AsyncIterator<SortingEdge>>,
-    Fragmentable {
-  node: <T = SortingSubscription>() => T;
-  cursor: () => Promise<AsyncIterator<String>>;
-}
-
-export interface ModificationPreviousValues {
-  id: ID_Output;
-  createdAt: DateTimeOutput;
-  updatedAt: DateTimeOutput;
-  removals: ID_Output[];
-}
-
-export interface ModificationPreviousValuesPromise
-  extends Promise<ModificationPreviousValues>,
-    Fragmentable {
-  id: () => Promise<ID_Output>;
-  createdAt: () => Promise<DateTimeOutput>;
-  updatedAt: () => Promise<DateTimeOutput>;
-  removals: () => Promise<ID_Output[]>;
-}
-
-export interface ModificationPreviousValuesSubscription
-  extends Promise<AsyncIterator<ModificationPreviousValues>>,
-    Fragmentable {
-  id: () => Promise<AsyncIterator<ID_Output>>;
-  createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
-  updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
-  removals: () => Promise<AsyncIterator<ID_Output[]>>;
-}
-
-export interface RecipeConnection {
-  pageInfo: PageInfo;
-  edges: RecipeEdge[];
-}
-
-export interface RecipeConnectionPromise
-  extends Promise<RecipeConnection>,
-    Fragmentable {
-  pageInfo: <T = PageInfoPromise>() => T;
-  edges: <T = FragmentableArray<RecipeEdge>>() => T;
-  aggregate: <T = AggregateRecipePromise>() => T;
-}
-
-export interface RecipeConnectionSubscription
-  extends Promise<AsyncIterator<RecipeConnection>>,
-    Fragmentable {
-  pageInfo: <T = PageInfoSubscription>() => T;
-  edges: <T = Promise<AsyncIterator<RecipeEdgeSubscription>>>() => T;
-  aggregate: <T = AggregateRecipeSubscription>() => T;
 }
 
 export interface Modification {
@@ -5092,6 +4467,364 @@ export interface ModificationSubscription
   ) => T;
 }
 
+export interface StepAdditionConnection {
+  pageInfo: PageInfo;
+  edges: StepAdditionEdge[];
+}
+
+export interface StepAdditionConnectionPromise
+  extends Promise<StepAdditionConnection>,
+    Fragmentable {
+  pageInfo: <T = PageInfoPromise>() => T;
+  edges: <T = FragmentableArray<StepAdditionEdge>>() => T;
+  aggregate: <T = AggregateStepAdditionPromise>() => T;
+}
+
+export interface StepAdditionConnectionSubscription
+  extends Promise<AsyncIterator<StepAdditionConnection>>,
+    Fragmentable {
+  pageInfo: <T = PageInfoSubscription>() => T;
+  edges: <T = Promise<AsyncIterator<StepAdditionEdgeSubscription>>>() => T;
+  aggregate: <T = AggregateStepAdditionSubscription>() => T;
+}
+
+export interface Alteration {
+  uid: ID_Output;
+  sourceId: ID_Output;
+  field: String;
+  value: String;
+}
+
+export interface AlterationPromise extends Promise<Alteration>, Fragmentable {
+  uid: () => Promise<ID_Output>;
+  sourceId: () => Promise<ID_Output>;
+  field: () => Promise<String>;
+  value: () => Promise<String>;
+  modification: <T = ModificationPromise>() => T;
+}
+
+export interface AlterationSubscription
+  extends Promise<AsyncIterator<Alteration>>,
+    Fragmentable {
+  uid: () => Promise<AsyncIterator<ID_Output>>;
+  sourceId: () => Promise<AsyncIterator<ID_Output>>;
+  field: () => Promise<AsyncIterator<String>>;
+  value: () => Promise<AsyncIterator<String>>;
+  modification: <T = ModificationSubscription>() => T;
+}
+
+export interface StepEdge {
+  node: Step;
+  cursor: String;
+}
+
+export interface StepEdgePromise extends Promise<StepEdge>, Fragmentable {
+  node: <T = StepPromise>() => T;
+  cursor: () => Promise<String>;
+}
+
+export interface StepEdgeSubscription
+  extends Promise<AsyncIterator<StepEdge>>,
+    Fragmentable {
+  node: <T = StepSubscription>() => T;
+  cursor: () => Promise<AsyncIterator<String>>;
+}
+
+export interface AlterationSubscriptionPayload {
+  mutation: MutationType;
+  node: Alteration;
+  updatedFields: String[];
+  previousValues: AlterationPreviousValues;
+}
+
+export interface AlterationSubscriptionPayloadPromise
+  extends Promise<AlterationSubscriptionPayload>,
+    Fragmentable {
+  mutation: () => Promise<MutationType>;
+  node: <T = AlterationPromise>() => T;
+  updatedFields: () => Promise<String[]>;
+  previousValues: <T = AlterationPreviousValuesPromise>() => T;
+}
+
+export interface AlterationSubscriptionPayloadSubscription
+  extends Promise<AsyncIterator<AlterationSubscriptionPayload>>,
+    Fragmentable {
+  mutation: () => Promise<AsyncIterator<MutationType>>;
+  node: <T = AlterationSubscription>() => T;
+  updatedFields: () => Promise<AsyncIterator<String[]>>;
+  previousValues: <T = AlterationPreviousValuesSubscription>() => T;
+}
+
+export interface AggregateSorting {
+  count: Int;
+}
+
+export interface AggregateSortingPromise
+  extends Promise<AggregateSorting>,
+    Fragmentable {
+  count: () => Promise<Int>;
+}
+
+export interface AggregateSortingSubscription
+  extends Promise<AsyncIterator<AggregateSorting>>,
+    Fragmentable {
+  count: () => Promise<AsyncIterator<Int>>;
+}
+
+export interface AlterationPreviousValues {
+  uid: ID_Output;
+  sourceId: ID_Output;
+  field: String;
+  value: String;
+}
+
+export interface AlterationPreviousValuesPromise
+  extends Promise<AlterationPreviousValues>,
+    Fragmentable {
+  uid: () => Promise<ID_Output>;
+  sourceId: () => Promise<ID_Output>;
+  field: () => Promise<String>;
+  value: () => Promise<String>;
+}
+
+export interface AlterationPreviousValuesSubscription
+  extends Promise<AsyncIterator<AlterationPreviousValues>>,
+    Fragmentable {
+  uid: () => Promise<AsyncIterator<ID_Output>>;
+  sourceId: () => Promise<AsyncIterator<ID_Output>>;
+  field: () => Promise<AsyncIterator<String>>;
+  value: () => Promise<AsyncIterator<String>>;
+}
+
+export interface SortingConnection {
+  pageInfo: PageInfo;
+  edges: SortingEdge[];
+}
+
+export interface SortingConnectionPromise
+  extends Promise<SortingConnection>,
+    Fragmentable {
+  pageInfo: <T = PageInfoPromise>() => T;
+  edges: <T = FragmentableArray<SortingEdge>>() => T;
+  aggregate: <T = AggregateSortingPromise>() => T;
+}
+
+export interface SortingConnectionSubscription
+  extends Promise<AsyncIterator<SortingConnection>>,
+    Fragmentable {
+  pageInfo: <T = PageInfoSubscription>() => T;
+  edges: <T = Promise<AsyncIterator<SortingEdgeSubscription>>>() => T;
+  aggregate: <T = AggregateSortingSubscription>() => T;
+}
+
+export interface StepAddition {
+  uid: ID_Output;
+  parentId: ID_Output;
+  directions: String;
+  notes: String;
+}
+
+export interface StepAdditionPromise
+  extends Promise<StepAddition>,
+    Fragmentable {
+  uid: () => Promise<ID_Output>;
+  parentId: () => Promise<ID_Output>;
+  directions: () => Promise<String>;
+  notes: () => Promise<String>;
+  modification: <T = ModificationPromise>() => T;
+}
+
+export interface StepAdditionSubscription
+  extends Promise<AsyncIterator<StepAddition>>,
+    Fragmentable {
+  uid: () => Promise<AsyncIterator<ID_Output>>;
+  parentId: () => Promise<AsyncIterator<ID_Output>>;
+  directions: () => Promise<AsyncIterator<String>>;
+  notes: () => Promise<AsyncIterator<String>>;
+  modification: <T = ModificationSubscription>() => T;
+}
+
+export interface RecipePhotoEdge {
+  node: RecipePhoto;
+  cursor: String;
+}
+
+export interface RecipePhotoEdgePromise
+  extends Promise<RecipePhotoEdge>,
+    Fragmentable {
+  node: <T = RecipePhotoPromise>() => T;
+  cursor: () => Promise<String>;
+}
+
+export interface RecipePhotoEdgeSubscription
+  extends Promise<AsyncIterator<RecipePhotoEdge>>,
+    Fragmentable {
+  node: <T = RecipePhotoSubscription>() => T;
+  cursor: () => Promise<AsyncIterator<String>>;
+}
+
+export interface IngredientSubscriptionPayload {
+  mutation: MutationType;
+  node: Ingredient;
+  updatedFields: String[];
+  previousValues: IngredientPreviousValues;
+}
+
+export interface IngredientSubscriptionPayloadPromise
+  extends Promise<IngredientSubscriptionPayload>,
+    Fragmentable {
+  mutation: () => Promise<MutationType>;
+  node: <T = IngredientPromise>() => T;
+  updatedFields: () => Promise<String[]>;
+  previousValues: <T = IngredientPreviousValuesPromise>() => T;
+}
+
+export interface IngredientSubscriptionPayloadSubscription
+  extends Promise<AsyncIterator<IngredientSubscriptionPayload>>,
+    Fragmentable {
+  mutation: () => Promise<AsyncIterator<MutationType>>;
+  node: <T = IngredientSubscription>() => T;
+  updatedFields: () => Promise<AsyncIterator<String[]>>;
+  previousValues: <T = IngredientPreviousValuesSubscription>() => T;
+}
+
+export interface AggregateRecipe {
+  count: Int;
+}
+
+export interface AggregateRecipePromise
+  extends Promise<AggregateRecipe>,
+    Fragmentable {
+  count: () => Promise<Int>;
+}
+
+export interface AggregateRecipeSubscription
+  extends Promise<AsyncIterator<AggregateRecipe>>,
+    Fragmentable {
+  count: () => Promise<AsyncIterator<Int>>;
+}
+
+export interface IngredientPreviousValues {
+  uid: ID_Output;
+  index: Int;
+  name: String;
+  quantity: String;
+  unit: String;
+  processing: String;
+}
+
+export interface IngredientPreviousValuesPromise
+  extends Promise<IngredientPreviousValues>,
+    Fragmentable {
+  uid: () => Promise<ID_Output>;
+  index: () => Promise<Int>;
+  name: () => Promise<String>;
+  quantity: () => Promise<String>;
+  unit: () => Promise<String>;
+  processing: () => Promise<String>;
+}
+
+export interface IngredientPreviousValuesSubscription
+  extends Promise<AsyncIterator<IngredientPreviousValues>>,
+    Fragmentable {
+  uid: () => Promise<AsyncIterator<ID_Output>>;
+  index: () => Promise<AsyncIterator<Int>>;
+  name: () => Promise<AsyncIterator<String>>;
+  quantity: () => Promise<AsyncIterator<String>>;
+  unit: () => Promise<AsyncIterator<String>>;
+  processing: () => Promise<AsyncIterator<String>>;
+}
+
+export interface RecipeConnection {
+  pageInfo: PageInfo;
+  edges: RecipeEdge[];
+}
+
+export interface RecipeConnectionPromise
+  extends Promise<RecipeConnection>,
+    Fragmentable {
+  pageInfo: <T = PageInfoPromise>() => T;
+  edges: <T = FragmentableArray<RecipeEdge>>() => T;
+  aggregate: <T = AggregateRecipePromise>() => T;
+}
+
+export interface RecipeConnectionSubscription
+  extends Promise<AsyncIterator<RecipeConnection>>,
+    Fragmentable {
+  pageInfo: <T = PageInfoSubscription>() => T;
+  edges: <T = Promise<AsyncIterator<RecipeEdgeSubscription>>>() => T;
+  aggregate: <T = AggregateRecipeSubscription>() => T;
+}
+
+export interface StepAdditionPreviousValues {
+  uid: ID_Output;
+  parentId: ID_Output;
+  directions: String;
+  notes: String;
+}
+
+export interface StepAdditionPreviousValuesPromise
+  extends Promise<StepAdditionPreviousValues>,
+    Fragmentable {
+  uid: () => Promise<ID_Output>;
+  parentId: () => Promise<ID_Output>;
+  directions: () => Promise<String>;
+  notes: () => Promise<String>;
+}
+
+export interface StepAdditionPreviousValuesSubscription
+  extends Promise<AsyncIterator<StepAdditionPreviousValues>>,
+    Fragmentable {
+  uid: () => Promise<AsyncIterator<ID_Output>>;
+  parentId: () => Promise<AsyncIterator<ID_Output>>;
+  directions: () => Promise<AsyncIterator<String>>;
+  notes: () => Promise<AsyncIterator<String>>;
+}
+
+export interface ModificationEdge {
+  node: Modification;
+  cursor: String;
+}
+
+export interface ModificationEdgePromise
+  extends Promise<ModificationEdge>,
+    Fragmentable {
+  node: <T = ModificationPromise>() => T;
+  cursor: () => Promise<String>;
+}
+
+export interface ModificationEdgeSubscription
+  extends Promise<AsyncIterator<ModificationEdge>>,
+    Fragmentable {
+  node: <T = ModificationSubscription>() => T;
+  cursor: () => Promise<AsyncIterator<String>>;
+}
+
+export interface IngredientAdditionSubscriptionPayload {
+  mutation: MutationType;
+  node: IngredientAddition;
+  updatedFields: String[];
+  previousValues: IngredientAdditionPreviousValues;
+}
+
+export interface IngredientAdditionSubscriptionPayloadPromise
+  extends Promise<IngredientAdditionSubscriptionPayload>,
+    Fragmentable {
+  mutation: () => Promise<MutationType>;
+  node: <T = IngredientAdditionPromise>() => T;
+  updatedFields: () => Promise<String[]>;
+  previousValues: <T = IngredientAdditionPreviousValuesPromise>() => T;
+}
+
+export interface IngredientAdditionSubscriptionPayloadSubscription
+  extends Promise<AsyncIterator<IngredientAdditionSubscriptionPayload>>,
+    Fragmentable {
+  mutation: () => Promise<AsyncIterator<MutationType>>;
+  node: <T = IngredientAdditionSubscription>() => T;
+  updatedFields: () => Promise<AsyncIterator<String[]>>;
+  previousValues: <T = IngredientAdditionPreviousValuesSubscription>() => T;
+}
+
 export interface AggregateItemAddition {
   count: Int;
 }
@@ -5108,29 +4841,80 @@ export interface AggregateItemAdditionSubscription
   count: () => Promise<AsyncIterator<Int>>;
 }
 
-export interface RecipeSubscriptionPayload {
-  mutation: MutationType;
-  node: Recipe;
-  updatedFields: String[];
-  previousValues: RecipePreviousValues;
+export interface IngredientAdditionPreviousValues {
+  uid: ID_Output;
+  parentId: ID_Output;
+  name: String;
+  quantity: String;
+  unit: String;
+  processing: String;
 }
 
-export interface RecipeSubscriptionPayloadPromise
-  extends Promise<RecipeSubscriptionPayload>,
+export interface IngredientAdditionPreviousValuesPromise
+  extends Promise<IngredientAdditionPreviousValues>,
     Fragmentable {
-  mutation: () => Promise<MutationType>;
-  node: <T = RecipePromise>() => T;
-  updatedFields: () => Promise<String[]>;
-  previousValues: <T = RecipePreviousValuesPromise>() => T;
+  uid: () => Promise<ID_Output>;
+  parentId: () => Promise<ID_Output>;
+  name: () => Promise<String>;
+  quantity: () => Promise<String>;
+  unit: () => Promise<String>;
+  processing: () => Promise<String>;
 }
 
-export interface RecipeSubscriptionPayloadSubscription
-  extends Promise<AsyncIterator<RecipeSubscriptionPayload>>,
+export interface IngredientAdditionPreviousValuesSubscription
+  extends Promise<AsyncIterator<IngredientAdditionPreviousValues>>,
     Fragmentable {
-  mutation: () => Promise<AsyncIterator<MutationType>>;
-  node: <T = RecipeSubscription>() => T;
-  updatedFields: () => Promise<AsyncIterator<String[]>>;
-  previousValues: <T = RecipePreviousValuesSubscription>() => T;
+  uid: () => Promise<AsyncIterator<ID_Output>>;
+  parentId: () => Promise<AsyncIterator<ID_Output>>;
+  name: () => Promise<AsyncIterator<String>>;
+  quantity: () => Promise<AsyncIterator<String>>;
+  unit: () => Promise<AsyncIterator<String>>;
+  processing: () => Promise<AsyncIterator<String>>;
+}
+
+export interface ItemAdditionConnection {
+  pageInfo: PageInfo;
+  edges: ItemAdditionEdge[];
+}
+
+export interface ItemAdditionConnectionPromise
+  extends Promise<ItemAdditionConnection>,
+    Fragmentable {
+  pageInfo: <T = PageInfoPromise>() => T;
+  edges: <T = FragmentableArray<ItemAdditionEdge>>() => T;
+  aggregate: <T = AggregateItemAdditionPromise>() => T;
+}
+
+export interface ItemAdditionConnectionSubscription
+  extends Promise<AsyncIterator<ItemAdditionConnection>>,
+    Fragmentable {
+  pageInfo: <T = PageInfoSubscription>() => T;
+  edges: <T = Promise<AsyncIterator<ItemAdditionEdgeSubscription>>>() => T;
+  aggregate: <T = AggregateItemAdditionSubscription>() => T;
+}
+
+export interface ItemAddition {
+  uid: ID_Output;
+  parentId: ID_Output;
+  name: String;
+}
+
+export interface ItemAdditionPromise
+  extends Promise<ItemAddition>,
+    Fragmentable {
+  uid: () => Promise<ID_Output>;
+  parentId: () => Promise<ID_Output>;
+  name: () => Promise<String>;
+  modification: <T = ModificationPromise>() => T;
+}
+
+export interface ItemAdditionSubscription
+  extends Promise<AsyncIterator<ItemAddition>>,
+    Fragmentable {
+  uid: () => Promise<AsyncIterator<ID_Output>>;
+  parentId: () => Promise<AsyncIterator<ID_Output>>;
+  name: () => Promise<AsyncIterator<String>>;
+  modification: <T = ModificationSubscription>() => T;
 }
 
 export interface ItemEdge {
@@ -5150,41 +4934,263 @@ export interface ItemEdgeSubscription
   cursor: () => Promise<AsyncIterator<String>>;
 }
 
-export interface RecipePreviousValues {
-  uid: ID_Output;
-  createdAt: DateTimeOutput;
-  updatedAt: DateTimeOutput;
-  title: String;
-  time: String;
-  servingAmount: String;
-  servingType: String;
-  description: String;
+export interface ItemSubscriptionPayload {
+  mutation: MutationType;
+  node: Item;
+  updatedFields: String[];
+  previousValues: ItemPreviousValues;
 }
 
-export interface RecipePreviousValuesPromise
-  extends Promise<RecipePreviousValues>,
+export interface ItemSubscriptionPayloadPromise
+  extends Promise<ItemSubscriptionPayload>,
+    Fragmentable {
+  mutation: () => Promise<MutationType>;
+  node: <T = ItemPromise>() => T;
+  updatedFields: () => Promise<String[]>;
+  previousValues: <T = ItemPreviousValuesPromise>() => T;
+}
+
+export interface ItemSubscriptionPayloadSubscription
+  extends Promise<AsyncIterator<ItemSubscriptionPayload>>,
+    Fragmentable {
+  mutation: () => Promise<AsyncIterator<MutationType>>;
+  node: <T = ItemSubscription>() => T;
+  updatedFields: () => Promise<AsyncIterator<String[]>>;
+  previousValues: <T = ItemPreviousValuesSubscription>() => T;
+}
+
+export interface AggregateIngredientAddition {
+  count: Int;
+}
+
+export interface AggregateIngredientAdditionPromise
+  extends Promise<AggregateIngredientAddition>,
+    Fragmentable {
+  count: () => Promise<Int>;
+}
+
+export interface AggregateIngredientAdditionSubscription
+  extends Promise<AsyncIterator<AggregateIngredientAddition>>,
+    Fragmentable {
+  count: () => Promise<AsyncIterator<Int>>;
+}
+
+export interface ItemPreviousValues {
+  uid: ID_Output;
+  index: Int;
+  name: String;
+}
+
+export interface ItemPreviousValuesPromise
+  extends Promise<ItemPreviousValues>,
     Fragmentable {
   uid: () => Promise<ID_Output>;
-  createdAt: () => Promise<DateTimeOutput>;
-  updatedAt: () => Promise<DateTimeOutput>;
-  title: () => Promise<String>;
-  time: () => Promise<String>;
-  servingAmount: () => Promise<String>;
-  servingType: () => Promise<String>;
-  description: () => Promise<String>;
+  index: () => Promise<Int>;
+  name: () => Promise<String>;
 }
 
-export interface RecipePreviousValuesSubscription
-  extends Promise<AsyncIterator<RecipePreviousValues>>,
+export interface ItemPreviousValuesSubscription
+  extends Promise<AsyncIterator<ItemPreviousValues>>,
     Fragmentable {
   uid: () => Promise<AsyncIterator<ID_Output>>;
+  index: () => Promise<AsyncIterator<Int>>;
+  name: () => Promise<AsyncIterator<String>>;
+}
+
+export interface IngredientAdditionConnection {
+  pageInfo: PageInfo;
+  edges: IngredientAdditionEdge[];
+}
+
+export interface IngredientAdditionConnectionPromise
+  extends Promise<IngredientAdditionConnection>,
+    Fragmentable {
+  pageInfo: <T = PageInfoPromise>() => T;
+  edges: <T = FragmentableArray<IngredientAdditionEdge>>() => T;
+  aggregate: <T = AggregateIngredientAdditionPromise>() => T;
+}
+
+export interface IngredientAdditionConnectionSubscription
+  extends Promise<AsyncIterator<IngredientAdditionConnection>>,
+    Fragmentable {
+  pageInfo: <T = PageInfoSubscription>() => T;
+  edges: <
+    T = Promise<AsyncIterator<IngredientAdditionEdgeSubscription>>
+  >() => T;
+  aggregate: <T = AggregateIngredientAdditionSubscription>() => T;
+}
+
+export interface User {
+  id: ID_Output;
+  createdAt: DateTimeOutput;
+  updatedAt: DateTimeOutput;
+  email: String;
+  password: String;
+  name: String;
+  avatar?: String;
+  slug?: String;
+  emailVerified: Boolean;
+}
+
+export interface UserPromise extends Promise<User>, Fragmentable {
+  id: () => Promise<ID_Output>;
+  createdAt: () => Promise<DateTimeOutput>;
+  updatedAt: () => Promise<DateTimeOutput>;
+  email: () => Promise<String>;
+  password: () => Promise<String>;
+  name: () => Promise<String>;
+  avatar: () => Promise<String>;
+  slug: () => Promise<String>;
+  emailVerified: () => Promise<Boolean>;
+  recipes: <T = FragmentableArray<Recipe>>(
+    args?: {
+      where?: RecipeWhereInput;
+      orderBy?: RecipeOrderByInput;
+      skip?: Int;
+      after?: String;
+      before?: String;
+      first?: Int;
+      last?: Int;
+    }
+  ) => T;
+  modifications: <T = FragmentableArray<Modification>>(
+    args?: {
+      where?: ModificationWhereInput;
+      orderBy?: ModificationOrderByInput;
+      skip?: Int;
+      after?: String;
+      before?: String;
+      first?: Int;
+      last?: Int;
+    }
+  ) => T;
+}
+
+export interface UserSubscription
+  extends Promise<AsyncIterator<User>>,
+    Fragmentable {
+  id: () => Promise<AsyncIterator<ID_Output>>;
   createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
   updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
-  title: () => Promise<AsyncIterator<String>>;
-  time: () => Promise<AsyncIterator<String>>;
-  servingAmount: () => Promise<AsyncIterator<String>>;
-  servingType: () => Promise<AsyncIterator<String>>;
-  description: () => Promise<AsyncIterator<String>>;
+  email: () => Promise<AsyncIterator<String>>;
+  password: () => Promise<AsyncIterator<String>>;
+  name: () => Promise<AsyncIterator<String>>;
+  avatar: () => Promise<AsyncIterator<String>>;
+  slug: () => Promise<AsyncIterator<String>>;
+  emailVerified: () => Promise<AsyncIterator<Boolean>>;
+  recipes: <T = Promise<AsyncIterator<RecipeSubscription>>>(
+    args?: {
+      where?: RecipeWhereInput;
+      orderBy?: RecipeOrderByInput;
+      skip?: Int;
+      after?: String;
+      before?: String;
+      first?: Int;
+      last?: Int;
+    }
+  ) => T;
+  modifications: <T = Promise<AsyncIterator<ModificationSubscription>>>(
+    args?: {
+      where?: ModificationWhereInput;
+      orderBy?: ModificationOrderByInput;
+      skip?: Int;
+      after?: String;
+      before?: String;
+      first?: Int;
+      last?: Int;
+    }
+  ) => T;
+}
+
+export interface IngredientEdge {
+  node: Ingredient;
+  cursor: String;
+}
+
+export interface IngredientEdgePromise
+  extends Promise<IngredientEdge>,
+    Fragmentable {
+  node: <T = IngredientPromise>() => T;
+  cursor: () => Promise<String>;
+}
+
+export interface IngredientEdgeSubscription
+  extends Promise<AsyncIterator<IngredientEdge>>,
+    Fragmentable {
+  node: <T = IngredientSubscription>() => T;
+  cursor: () => Promise<AsyncIterator<String>>;
+}
+
+export interface ItemAdditionSubscriptionPayload {
+  mutation: MutationType;
+  node: ItemAddition;
+  updatedFields: String[];
+  previousValues: ItemAdditionPreviousValues;
+}
+
+export interface ItemAdditionSubscriptionPayloadPromise
+  extends Promise<ItemAdditionSubscriptionPayload>,
+    Fragmentable {
+  mutation: () => Promise<MutationType>;
+  node: <T = ItemAdditionPromise>() => T;
+  updatedFields: () => Promise<String[]>;
+  previousValues: <T = ItemAdditionPreviousValuesPromise>() => T;
+}
+
+export interface ItemAdditionSubscriptionPayloadSubscription
+  extends Promise<AsyncIterator<ItemAdditionSubscriptionPayload>>,
+    Fragmentable {
+  mutation: () => Promise<AsyncIterator<MutationType>>;
+  node: <T = ItemAdditionSubscription>() => T;
+  updatedFields: () => Promise<AsyncIterator<String[]>>;
+  previousValues: <T = ItemAdditionPreviousValuesSubscription>() => T;
+}
+
+export interface UserSubscriptionPayload {
+  mutation: MutationType;
+  node: User;
+  updatedFields: String[];
+  previousValues: UserPreviousValues;
+}
+
+export interface UserSubscriptionPayloadPromise
+  extends Promise<UserSubscriptionPayload>,
+    Fragmentable {
+  mutation: () => Promise<MutationType>;
+  node: <T = UserPromise>() => T;
+  updatedFields: () => Promise<String[]>;
+  previousValues: <T = UserPreviousValuesPromise>() => T;
+}
+
+export interface UserSubscriptionPayloadSubscription
+  extends Promise<AsyncIterator<UserSubscriptionPayload>>,
+    Fragmentable {
+  mutation: () => Promise<AsyncIterator<MutationType>>;
+  node: <T = UserSubscription>() => T;
+  updatedFields: () => Promise<AsyncIterator<String[]>>;
+  previousValues: <T = UserPreviousValuesSubscription>() => T;
+}
+
+export interface ItemAdditionPreviousValues {
+  uid: ID_Output;
+  parentId: ID_Output;
+  name: String;
+}
+
+export interface ItemAdditionPreviousValuesPromise
+  extends Promise<ItemAdditionPreviousValues>,
+    Fragmentable {
+  uid: () => Promise<ID_Output>;
+  parentId: () => Promise<ID_Output>;
+  name: () => Promise<String>;
+}
+
+export interface ItemAdditionPreviousValuesSubscription
+  extends Promise<AsyncIterator<ItemAdditionPreviousValues>>,
+    Fragmentable {
+  uid: () => Promise<AsyncIterator<ID_Output>>;
+  parentId: () => Promise<AsyncIterator<ID_Output>>;
+  name: () => Promise<AsyncIterator<String>>;
 }
 
 export interface Recipe {
@@ -5230,6 +5236,17 @@ export interface RecipePromise extends Promise<Recipe>, Fragmentable {
       last?: Int;
     }
   ) => T;
+  photos: <T = FragmentableArray<RecipePhoto>>(
+    args?: {
+      where?: RecipePhotoWhereInput;
+      orderBy?: RecipePhotoOrderByInput;
+      skip?: Int;
+      after?: String;
+      before?: String;
+      first?: Int;
+      last?: Int;
+    }
+  ) => T;
 }
 
 export interface RecipeSubscription
@@ -5266,51 +5283,456 @@ export interface RecipeSubscription
       last?: Int;
     }
   ) => T;
+  photos: <T = Promise<AsyncIterator<RecipePhotoSubscription>>>(
+    args?: {
+      where?: RecipePhotoWhereInput;
+      orderBy?: RecipePhotoOrderByInput;
+      skip?: Int;
+      after?: String;
+      before?: String;
+      first?: Int;
+      last?: Int;
+    }
+  ) => T;
 }
 
-export interface StepAddition {
-  uid: ID_Output;
-  parentId: ID_Output;
-  directions: String;
-  notes: String;
-}
-
-export interface StepAdditionPromise
-  extends Promise<StepAddition>,
-    Fragmentable {
-  uid: () => Promise<ID_Output>;
-  parentId: () => Promise<ID_Output>;
-  directions: () => Promise<String>;
-  notes: () => Promise<String>;
-  modification: <T = ModificationPromise>() => T;
-}
-
-export interface StepAdditionSubscription
-  extends Promise<AsyncIterator<StepAddition>>,
-    Fragmentable {
-  uid: () => Promise<AsyncIterator<ID_Output>>;
-  parentId: () => Promise<AsyncIterator<ID_Output>>;
-  directions: () => Promise<AsyncIterator<String>>;
-  notes: () => Promise<AsyncIterator<String>>;
-  modification: <T = ModificationSubscription>() => T;
-}
-
-export interface StepAdditionEdge {
+export interface StepAdditionSubscriptionPayload {
+  mutation: MutationType;
   node: StepAddition;
+  updatedFields: String[];
+  previousValues: StepAdditionPreviousValues;
+}
+
+export interface StepAdditionSubscriptionPayloadPromise
+  extends Promise<StepAdditionSubscriptionPayload>,
+    Fragmentable {
+  mutation: () => Promise<MutationType>;
+  node: <T = StepAdditionPromise>() => T;
+  updatedFields: () => Promise<String[]>;
+  previousValues: <T = StepAdditionPreviousValuesPromise>() => T;
+}
+
+export interface StepAdditionSubscriptionPayloadSubscription
+  extends Promise<AsyncIterator<StepAdditionSubscriptionPayload>>,
+    Fragmentable {
+  mutation: () => Promise<AsyncIterator<MutationType>>;
+  node: <T = StepAdditionSubscription>() => T;
+  updatedFields: () => Promise<AsyncIterator<String[]>>;
+  previousValues: <T = StepAdditionPreviousValuesSubscription>() => T;
+}
+
+export interface AggregateStep {
+  count: Int;
+}
+
+export interface AggregateStepPromise
+  extends Promise<AggregateStep>,
+    Fragmentable {
+  count: () => Promise<Int>;
+}
+
+export interface AggregateStepSubscription
+  extends Promise<AsyncIterator<AggregateStep>>,
+    Fragmentable {
+  count: () => Promise<AsyncIterator<Int>>;
+}
+
+export interface ModificationSubscriptionPayload {
+  mutation: MutationType;
+  node: Modification;
+  updatedFields: String[];
+  previousValues: ModificationPreviousValues;
+}
+
+export interface ModificationSubscriptionPayloadPromise
+  extends Promise<ModificationSubscriptionPayload>,
+    Fragmentable {
+  mutation: () => Promise<MutationType>;
+  node: <T = ModificationPromise>() => T;
+  updatedFields: () => Promise<String[]>;
+  previousValues: <T = ModificationPreviousValuesPromise>() => T;
+}
+
+export interface ModificationSubscriptionPayloadSubscription
+  extends Promise<AsyncIterator<ModificationSubscriptionPayload>>,
+    Fragmentable {
+  mutation: () => Promise<AsyncIterator<MutationType>>;
+  node: <T = ModificationSubscription>() => T;
+  updatedFields: () => Promise<AsyncIterator<String[]>>;
+  previousValues: <T = ModificationPreviousValuesSubscription>() => T;
+}
+
+export interface SortingEdge {
+  node: Sorting;
   cursor: String;
 }
 
-export interface StepAdditionEdgePromise
-  extends Promise<StepAdditionEdge>,
-    Fragmentable {
-  node: <T = StepAdditionPromise>() => T;
+export interface SortingEdgePromise extends Promise<SortingEdge>, Fragmentable {
+  node: <T = SortingPromise>() => T;
   cursor: () => Promise<String>;
 }
 
-export interface StepAdditionEdgeSubscription
-  extends Promise<AsyncIterator<StepAdditionEdge>>,
+export interface SortingEdgeSubscription
+  extends Promise<AsyncIterator<SortingEdge>>,
     Fragmentable {
-  node: <T = StepAdditionSubscription>() => T;
+  node: <T = SortingSubscription>() => T;
+  cursor: () => Promise<AsyncIterator<String>>;
+}
+
+export interface ModificationPreviousValues {
+  id: ID_Output;
+  createdAt: DateTimeOutput;
+  updatedAt: DateTimeOutput;
+  removals: ID_Output[];
+}
+
+export interface ModificationPreviousValuesPromise
+  extends Promise<ModificationPreviousValues>,
+    Fragmentable {
+  id: () => Promise<ID_Output>;
+  createdAt: () => Promise<DateTimeOutput>;
+  updatedAt: () => Promise<DateTimeOutput>;
+  removals: () => Promise<ID_Output[]>;
+}
+
+export interface ModificationPreviousValuesSubscription
+  extends Promise<AsyncIterator<ModificationPreviousValues>>,
+    Fragmentable {
+  id: () => Promise<AsyncIterator<ID_Output>>;
+  createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  removals: () => Promise<AsyncIterator<ID_Output[]>>;
+}
+
+export interface RecipePhotoConnection {
+  pageInfo: PageInfo;
+  edges: RecipePhotoEdge[];
+}
+
+export interface RecipePhotoConnectionPromise
+  extends Promise<RecipePhotoConnection>,
+    Fragmentable {
+  pageInfo: <T = PageInfoPromise>() => T;
+  edges: <T = FragmentableArray<RecipePhotoEdge>>() => T;
+  aggregate: <T = AggregateRecipePhotoPromise>() => T;
+}
+
+export interface RecipePhotoConnectionSubscription
+  extends Promise<AsyncIterator<RecipePhotoConnection>>,
+    Fragmentable {
+  pageInfo: <T = PageInfoSubscription>() => T;
+  edges: <T = Promise<AsyncIterator<RecipePhotoEdgeSubscription>>>() => T;
+  aggregate: <T = AggregateRecipePhotoSubscription>() => T;
+}
+
+export interface Sorting {
+  uid: ID_Output;
+  parentId: ID_Output;
+  order: ID_Output[];
+}
+
+export interface SortingPromise extends Promise<Sorting>, Fragmentable {
+  uid: () => Promise<ID_Output>;
+  parentId: () => Promise<ID_Output>;
+  order: () => Promise<ID_Output[]>;
+  modification: <T = ModificationPromise>() => T;
+}
+
+export interface SortingSubscription
+  extends Promise<AsyncIterator<Sorting>>,
+    Fragmentable {
+  uid: () => Promise<AsyncIterator<ID_Output>>;
+  parentId: () => Promise<AsyncIterator<ID_Output>>;
+  order: () => Promise<AsyncIterator<ID_Output[]>>;
+  modification: <T = ModificationSubscription>() => T;
+}
+
+export interface AggregateModification {
+  count: Int;
+}
+
+export interface AggregateModificationPromise
+  extends Promise<AggregateModification>,
+    Fragmentable {
+  count: () => Promise<Int>;
+}
+
+export interface AggregateModificationSubscription
+  extends Promise<AsyncIterator<AggregateModification>>,
+    Fragmentable {
+  count: () => Promise<AsyncIterator<Int>>;
+}
+
+export interface RecipeSubscriptionPayload {
+  mutation: MutationType;
+  node: Recipe;
+  updatedFields: String[];
+  previousValues: RecipePreviousValues;
+}
+
+export interface RecipeSubscriptionPayloadPromise
+  extends Promise<RecipeSubscriptionPayload>,
+    Fragmentable {
+  mutation: () => Promise<MutationType>;
+  node: <T = RecipePromise>() => T;
+  updatedFields: () => Promise<String[]>;
+  previousValues: <T = RecipePreviousValuesPromise>() => T;
+}
+
+export interface RecipeSubscriptionPayloadSubscription
+  extends Promise<AsyncIterator<RecipeSubscriptionPayload>>,
+    Fragmentable {
+  mutation: () => Promise<AsyncIterator<MutationType>>;
+  node: <T = RecipeSubscription>() => T;
+  updatedFields: () => Promise<AsyncIterator<String[]>>;
+  previousValues: <T = RecipePreviousValuesSubscription>() => T;
+}
+
+export interface ItemAdditionEdge {
+  node: ItemAddition;
+  cursor: String;
+}
+
+export interface ItemAdditionEdgePromise
+  extends Promise<ItemAdditionEdge>,
+    Fragmentable {
+  node: <T = ItemAdditionPromise>() => T;
+  cursor: () => Promise<String>;
+}
+
+export interface ItemAdditionEdgeSubscription
+  extends Promise<AsyncIterator<ItemAdditionEdge>>,
+    Fragmentable {
+  node: <T = ItemAdditionSubscription>() => T;
+  cursor: () => Promise<AsyncIterator<String>>;
+}
+
+export interface RecipePreviousValues {
+  uid: ID_Output;
+  createdAt: DateTimeOutput;
+  updatedAt: DateTimeOutput;
+  title: String;
+  time: String;
+  servingAmount: String;
+  servingType: String;
+  description: String;
+}
+
+export interface RecipePreviousValuesPromise
+  extends Promise<RecipePreviousValues>,
+    Fragmentable {
+  uid: () => Promise<ID_Output>;
+  createdAt: () => Promise<DateTimeOutput>;
+  updatedAt: () => Promise<DateTimeOutput>;
+  title: () => Promise<String>;
+  time: () => Promise<String>;
+  servingAmount: () => Promise<String>;
+  servingType: () => Promise<String>;
+  description: () => Promise<String>;
+}
+
+export interface RecipePreviousValuesSubscription
+  extends Promise<AsyncIterator<RecipePreviousValues>>,
+    Fragmentable {
+  uid: () => Promise<AsyncIterator<ID_Output>>;
+  createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  title: () => Promise<AsyncIterator<String>>;
+  time: () => Promise<AsyncIterator<String>>;
+  servingAmount: () => Promise<AsyncIterator<String>>;
+  servingType: () => Promise<AsyncIterator<String>>;
+  description: () => Promise<AsyncIterator<String>>;
+}
+
+export interface ItemConnection {
+  pageInfo: PageInfo;
+  edges: ItemEdge[];
+}
+
+export interface ItemConnectionPromise
+  extends Promise<ItemConnection>,
+    Fragmentable {
+  pageInfo: <T = PageInfoPromise>() => T;
+  edges: <T = FragmentableArray<ItemEdge>>() => T;
+  aggregate: <T = AggregateItemPromise>() => T;
+}
+
+export interface ItemConnectionSubscription
+  extends Promise<AsyncIterator<ItemConnection>>,
+    Fragmentable {
+  pageInfo: <T = PageInfoSubscription>() => T;
+  edges: <T = Promise<AsyncIterator<ItemEdgeSubscription>>>() => T;
+  aggregate: <T = AggregateItemSubscription>() => T;
+}
+
+export interface RecipePhoto {
+  id: ID_Output;
+  filename: String;
+  url: String;
+}
+
+export interface RecipePhotoPromise extends Promise<RecipePhoto>, Fragmentable {
+  id: () => Promise<ID_Output>;
+  filename: () => Promise<String>;
+  url: () => Promise<String>;
+  recipe: <T = RecipePromise>() => T;
+}
+
+export interface RecipePhotoSubscription
+  extends Promise<AsyncIterator<RecipePhoto>>,
+    Fragmentable {
+  id: () => Promise<AsyncIterator<ID_Output>>;
+  filename: () => Promise<AsyncIterator<String>>;
+  url: () => Promise<AsyncIterator<String>>;
+  recipe: <T = RecipeSubscription>() => T;
+}
+
+export interface AggregateIngredient {
+  count: Int;
+}
+
+export interface AggregateIngredientPromise
+  extends Promise<AggregateIngredient>,
+    Fragmentable {
+  count: () => Promise<Int>;
+}
+
+export interface AggregateIngredientSubscription
+  extends Promise<AsyncIterator<AggregateIngredient>>,
+    Fragmentable {
+  count: () => Promise<AsyncIterator<Int>>;
+}
+
+export interface RecipePhotoSubscriptionPayload {
+  mutation: MutationType;
+  node: RecipePhoto;
+  updatedFields: String[];
+  previousValues: RecipePhotoPreviousValues;
+}
+
+export interface RecipePhotoSubscriptionPayloadPromise
+  extends Promise<RecipePhotoSubscriptionPayload>,
+    Fragmentable {
+  mutation: () => Promise<MutationType>;
+  node: <T = RecipePhotoPromise>() => T;
+  updatedFields: () => Promise<String[]>;
+  previousValues: <T = RecipePhotoPreviousValuesPromise>() => T;
+}
+
+export interface RecipePhotoSubscriptionPayloadSubscription
+  extends Promise<AsyncIterator<RecipePhotoSubscriptionPayload>>,
+    Fragmentable {
+  mutation: () => Promise<AsyncIterator<MutationType>>;
+  node: <T = RecipePhotoSubscription>() => T;
+  updatedFields: () => Promise<AsyncIterator<String[]>>;
+  previousValues: <T = RecipePhotoPreviousValuesSubscription>() => T;
+}
+
+export interface UserEdge {
+  node: User;
+  cursor: String;
+}
+
+export interface UserEdgePromise extends Promise<UserEdge>, Fragmentable {
+  node: <T = UserPromise>() => T;
+  cursor: () => Promise<String>;
+}
+
+export interface UserEdgeSubscription
+  extends Promise<AsyncIterator<UserEdge>>,
+    Fragmentable {
+  node: <T = UserSubscription>() => T;
+  cursor: () => Promise<AsyncIterator<String>>;
+}
+
+export interface RecipePhotoPreviousValues {
+  id: ID_Output;
+  filename: String;
+  url: String;
+}
+
+export interface RecipePhotoPreviousValuesPromise
+  extends Promise<RecipePhotoPreviousValues>,
+    Fragmentable {
+  id: () => Promise<ID_Output>;
+  filename: () => Promise<String>;
+  url: () => Promise<String>;
+}
+
+export interface RecipePhotoPreviousValuesSubscription
+  extends Promise<AsyncIterator<RecipePhotoPreviousValues>>,
+    Fragmentable {
+  id: () => Promise<AsyncIterator<ID_Output>>;
+  filename: () => Promise<AsyncIterator<String>>;
+  url: () => Promise<AsyncIterator<String>>;
+}
+
+export interface StepConnection {
+  pageInfo: PageInfo;
+  edges: StepEdge[];
+}
+
+export interface StepConnectionPromise
+  extends Promise<StepConnection>,
+    Fragmentable {
+  pageInfo: <T = PageInfoPromise>() => T;
+  edges: <T = FragmentableArray<StepEdge>>() => T;
+  aggregate: <T = AggregateStepPromise>() => T;
+}
+
+export interface StepConnectionSubscription
+  extends Promise<AsyncIterator<StepConnection>>,
+    Fragmentable {
+  pageInfo: <T = PageInfoSubscription>() => T;
+  edges: <T = Promise<AsyncIterator<StepEdgeSubscription>>>() => T;
+  aggregate: <T = AggregateStepSubscription>() => T;
+}
+
+export interface Ingredient {
+  uid: ID_Output;
+  index: Int;
+  name: String;
+  quantity: String;
+  unit: String;
+  processing: String;
+}
+
+export interface IngredientPromise extends Promise<Ingredient>, Fragmentable {
+  uid: () => Promise<ID_Output>;
+  index: () => Promise<Int>;
+  name: () => Promise<String>;
+  quantity: () => Promise<String>;
+  unit: () => Promise<String>;
+  processing: () => Promise<String>;
+  step: <T = StepPromise>() => T;
+}
+
+export interface IngredientSubscription
+  extends Promise<AsyncIterator<Ingredient>>,
+    Fragmentable {
+  uid: () => Promise<AsyncIterator<ID_Output>>;
+  index: () => Promise<AsyncIterator<Int>>;
+  name: () => Promise<AsyncIterator<String>>;
+  quantity: () => Promise<AsyncIterator<String>>;
+  unit: () => Promise<AsyncIterator<String>>;
+  processing: () => Promise<AsyncIterator<String>>;
+  step: <T = StepSubscription>() => T;
+}
+
+export interface RecipeEdge {
+  node: Recipe;
+  cursor: String;
+}
+
+export interface RecipeEdgePromise extends Promise<RecipeEdge>, Fragmentable {
+  node: <T = RecipePromise>() => T;
+  cursor: () => Promise<String>;
+}
+
+export interface RecipeEdgeSubscription
+  extends Promise<AsyncIterator<RecipeEdge>>,
+    Fragmentable {
+  node: <T = RecipeSubscription>() => T;
   cursor: () => Promise<AsyncIterator<String>>;
 }
 
@@ -5339,41 +5761,41 @@ export interface SortingSubscriptionPayloadSubscription
   previousValues: <T = SortingPreviousValuesSubscription>() => T;
 }
 
-export interface AggregateRecipe {
+export interface AggregateItem {
   count: Int;
 }
 
-export interface AggregateRecipePromise
-  extends Promise<AggregateRecipe>,
+export interface AggregateItemPromise
+  extends Promise<AggregateItem>,
     Fragmentable {
   count: () => Promise<Int>;
 }
 
-export interface AggregateRecipeSubscription
-  extends Promise<AsyncIterator<AggregateRecipe>>,
+export interface AggregateItemSubscription
+  extends Promise<AsyncIterator<AggregateItem>>,
     Fragmentable {
   count: () => Promise<AsyncIterator<Int>>;
 }
 
-export interface ItemAdditionConnection {
+export interface IngredientConnection {
   pageInfo: PageInfo;
-  edges: ItemAdditionEdge[];
+  edges: IngredientEdge[];
 }
 
-export interface ItemAdditionConnectionPromise
-  extends Promise<ItemAdditionConnection>,
+export interface IngredientConnectionPromise
+  extends Promise<IngredientConnection>,
     Fragmentable {
   pageInfo: <T = PageInfoPromise>() => T;
-  edges: <T = FragmentableArray<ItemAdditionEdge>>() => T;
-  aggregate: <T = AggregateItemAdditionPromise>() => T;
+  edges: <T = FragmentableArray<IngredientEdge>>() => T;
+  aggregate: <T = AggregateIngredientPromise>() => T;
 }
 
-export interface ItemAdditionConnectionSubscription
-  extends Promise<AsyncIterator<ItemAdditionConnection>>,
+export interface IngredientConnectionSubscription
+  extends Promise<AsyncIterator<IngredientConnection>>,
     Fragmentable {
   pageInfo: <T = PageInfoSubscription>() => T;
-  edges: <T = Promise<AsyncIterator<ItemAdditionEdgeSubscription>>>() => T;
-  aggregate: <T = AggregateItemAdditionSubscription>() => T;
+  edges: <T = Promise<AsyncIterator<IngredientEdgeSubscription>>>() => T;
+  aggregate: <T = AggregateIngredientSubscription>() => T;
 }
 
 export interface StepPreviousValues {
@@ -5426,29 +5848,51 @@ export interface StepSubscriptionPayloadSubscription
   previousValues: <T = StepPreviousValuesSubscription>() => T;
 }
 
-export interface StepAdditionSubscriptionPayload {
-  mutation: MutationType;
-  node: StepAddition;
-  updatedFields: String[];
-  previousValues: StepAdditionPreviousValues;
+export interface Step {
+  uid: ID_Output;
+  index: Int;
+  directions: String;
+  notes: String;
 }
 
-export interface StepAdditionSubscriptionPayloadPromise
-  extends Promise<StepAdditionSubscriptionPayload>,
-    Fragmentable {
-  mutation: () => Promise<MutationType>;
-  node: <T = StepAdditionPromise>() => T;
-  updatedFields: () => Promise<String[]>;
-  previousValues: <T = StepAdditionPreviousValuesPromise>() => T;
+export interface StepPromise extends Promise<Step>, Fragmentable {
+  uid: () => Promise<ID_Output>;
+  index: () => Promise<Int>;
+  directions: () => Promise<String>;
+  notes: () => Promise<String>;
+  item: <T = ItemPromise>() => T;
+  ingredients: <T = FragmentableArray<Ingredient>>(
+    args?: {
+      where?: IngredientWhereInput;
+      orderBy?: IngredientOrderByInput;
+      skip?: Int;
+      after?: String;
+      before?: String;
+      first?: Int;
+      last?: Int;
+    }
+  ) => T;
 }
 
-export interface StepAdditionSubscriptionPayloadSubscription
-  extends Promise<AsyncIterator<StepAdditionSubscriptionPayload>>,
+export interface StepSubscription
+  extends Promise<AsyncIterator<Step>>,
     Fragmentable {
-  mutation: () => Promise<AsyncIterator<MutationType>>;
-  node: <T = StepAdditionSubscription>() => T;
-  updatedFields: () => Promise<AsyncIterator<String[]>>;
-  previousValues: <T = StepAdditionPreviousValuesSubscription>() => T;
+  uid: () => Promise<AsyncIterator<ID_Output>>;
+  index: () => Promise<AsyncIterator<Int>>;
+  directions: () => Promise<AsyncIterator<String>>;
+  notes: () => Promise<AsyncIterator<String>>;
+  item: <T = ItemSubscription>() => T;
+  ingredients: <T = Promise<AsyncIterator<IngredientSubscription>>>(
+    args?: {
+      where?: IngredientWhereInput;
+      orderBy?: IngredientOrderByInput;
+      skip?: Int;
+      after?: String;
+      before?: String;
+      first?: Int;
+      last?: Int;
+    }
+  ) => T;
 }
 
 export interface SortingPreviousValues {
@@ -5473,90 +5917,87 @@ export interface SortingPreviousValuesSubscription
   order: () => Promise<AsyncIterator<ID_Output[]>>;
 }
 
-export interface AggregateIngredientAddition {
+export interface StepAdditionEdge {
+  node: StepAddition;
+  cursor: String;
+}
+
+export interface StepAdditionEdgePromise
+  extends Promise<StepAdditionEdge>,
+    Fragmentable {
+  node: <T = StepAdditionPromise>() => T;
+  cursor: () => Promise<String>;
+}
+
+export interface StepAdditionEdgeSubscription
+  extends Promise<AsyncIterator<StepAdditionEdge>>,
+    Fragmentable {
+  node: <T = StepAdditionSubscription>() => T;
+  cursor: () => Promise<AsyncIterator<String>>;
+}
+
+export interface IngredientAdditionEdge {
+  node: IngredientAddition;
+  cursor: String;
+}
+
+export interface IngredientAdditionEdgePromise
+  extends Promise<IngredientAdditionEdge>,
+    Fragmentable {
+  node: <T = IngredientAdditionPromise>() => T;
+  cursor: () => Promise<String>;
+}
+
+export interface IngredientAdditionEdgeSubscription
+  extends Promise<AsyncIterator<IngredientAdditionEdge>>,
+    Fragmentable {
+  node: <T = IngredientAdditionSubscription>() => T;
+  cursor: () => Promise<AsyncIterator<String>>;
+}
+
+export interface ModificationConnection {
+  pageInfo: PageInfo;
+  edges: ModificationEdge[];
+}
+
+export interface ModificationConnectionPromise
+  extends Promise<ModificationConnection>,
+    Fragmentable {
+  pageInfo: <T = PageInfoPromise>() => T;
+  edges: <T = FragmentableArray<ModificationEdge>>() => T;
+  aggregate: <T = AggregateModificationPromise>() => T;
+}
+
+export interface ModificationConnectionSubscription
+  extends Promise<AsyncIterator<ModificationConnection>>,
+    Fragmentable {
+  pageInfo: <T = PageInfoSubscription>() => T;
+  edges: <T = Promise<AsyncIterator<ModificationEdgeSubscription>>>() => T;
+  aggregate: <T = AggregateModificationSubscription>() => T;
+}
+
+export interface AggregateRecipePhoto {
   count: Int;
 }
 
-export interface AggregateIngredientAdditionPromise
-  extends Promise<AggregateIngredientAddition>,
+export interface AggregateRecipePhotoPromise
+  extends Promise<AggregateRecipePhoto>,
     Fragmentable {
   count: () => Promise<Int>;
 }
 
-export interface AggregateIngredientAdditionSubscription
-  extends Promise<AsyncIterator<AggregateIngredientAddition>>,
+export interface AggregateRecipePhotoSubscription
+  extends Promise<AsyncIterator<AggregateRecipePhoto>>,
     Fragmentable {
   count: () => Promise<AsyncIterator<Int>>;
 }
-
-export interface ModificationEdge {
-  node: Modification;
-  cursor: String;
-}
-
-export interface ModificationEdgePromise
-  extends Promise<ModificationEdge>,
-    Fragmentable {
-  node: <T = ModificationPromise>() => T;
-  cursor: () => Promise<String>;
-}
-
-export interface ModificationEdgeSubscription
-  extends Promise<AsyncIterator<ModificationEdge>>,
-    Fragmentable {
-  node: <T = ModificationSubscription>() => T;
-  cursor: () => Promise<AsyncIterator<String>>;
-}
-
-export interface StepConnection {
-  pageInfo: PageInfo;
-  edges: StepEdge[];
-}
-
-export interface StepConnectionPromise
-  extends Promise<StepConnection>,
-    Fragmentable {
-  pageInfo: <T = PageInfoPromise>() => T;
-  edges: <T = FragmentableArray<StepEdge>>() => T;
-  aggregate: <T = AggregateStepPromise>() => T;
-}
-
-export interface StepConnectionSubscription
-  extends Promise<AsyncIterator<StepConnection>>,
-    Fragmentable {
-  pageInfo: <T = PageInfoSubscription>() => T;
-  edges: <T = Promise<AsyncIterator<StepEdgeSubscription>>>() => T;
-  aggregate: <T = AggregateStepSubscription>() => T;
-}
-
-export interface UserEdge {
-  node: User;
-  cursor: String;
-}
-
-export interface UserEdgePromise extends Promise<UserEdge>, Fragmentable {
-  node: <T = UserPromise>() => T;
-  cursor: () => Promise<String>;
-}
-
-export interface UserEdgeSubscription
-  extends Promise<AsyncIterator<UserEdge>>,
-    Fragmentable {
-  node: <T = UserSubscription>() => T;
-  cursor: () => Promise<AsyncIterator<String>>;
-}
-
-export type Long = string;
-
-/*
-The `Boolean` scalar type represents `true` or `false`.
-*/
-export type Boolean = boolean;
 
 /*
 The `Int` scalar type represents non-fractional signed whole numeric values. Int can represent values between -(2^31) and 2^31 - 1. 
 */
 export type Int = number;
+
+export type Long = string;
 
 /*
 The `ID` scalar type represents a unique identifier, often used to refetch an object or as key for a cache. The ID type appears in a JSON response as a String; however, it is not intended to be human-readable. When expected as an input type, any string (such as `"4"`) or integer (such as `4`) input value will be accepted as an ID.
@@ -5578,6 +6019,11 @@ export type DateTimeInput = Date | string;
 DateTime scalar output type, which is always a string
 */
 export type DateTimeOutput = string;
+
+/*
+The `Boolean` scalar type represents `true` or `false`.
+*/
+export type Boolean = boolean;
 
 /**
  * Model Metadata
@@ -5602,6 +6048,10 @@ export const models: Model[] = [
   },
   {
     name: "Ingredient",
+    embedded: false
+  },
+  {
+    name: "RecipePhoto",
     embedded: false
   },
   {

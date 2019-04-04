@@ -1,0 +1,7 @@
+mutation RecipePhotoUpload($file: Upload!, $recipeId: ID!) {
+  recipePhotoUpload(file: $file, recipeId: $recipeId) {
+    id
+    filename
+    url
+  }
+}

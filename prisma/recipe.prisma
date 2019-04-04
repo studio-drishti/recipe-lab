@@ -11,6 +11,7 @@ type Recipe {
   items: [Item!]! @relation(name: "RecipeItems", onDelete: CASCADE)
   modifications: [Modification!]!
     @relation(name: "RecipeModifications", onDelete: CASCADE)
+  photos: [RecipePhoto!]! @relation(name: "RecipePhotos", onDelete: CASCADE)
 }
 
 type Item {
@@ -39,4 +40,11 @@ type Ingredient {
   unit: String! @default(value: "")
   processing: String! @default(value: "")
   step: Step! @relation(name: "RecipeIngredients")
+}
+
+type RecipePhoto {
+  id: ID! @unique
+  filename: String!
+  url: String!
+  recipe: Recipe! @relation(name: "RecipePhotos")
 }

@@ -37,7 +37,8 @@ export default class Recipe extends Component {
       description: PropTypes.string,
       servingAmount: PropTypes.string,
       servingType: PropTypes.string,
-      items: PropTypes.arrayOf(PropTypes.object)
+      items: PropTypes.arrayOf(PropTypes.object),
+      photos: PropTypes.arrayOf(PropTypes.object)
     })
   };
 
@@ -411,6 +412,12 @@ export default class Recipe extends Component {
     );
   };
 
+  addPhoto = photo => {
+    const { recipe } = this.state;
+    recipe.photos.push(photo);
+    this.setState({ recipe });
+  };
+
   render() {
     const {
       recipe,
@@ -433,6 +440,7 @@ export default class Recipe extends Component {
             alteration => alteration.sourceId === recipe.uid
           )}
           saveAlteration={this.saveAlteration}
+          addPhoto={this.addPhoto}
         />
         <RecipeStatus
           recipe={recipe}

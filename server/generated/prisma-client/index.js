@@ -25,6 +25,10 @@ var models = [
     embedded: false
   },
   {
+    name: "RecipePhoto",
+    embedded: false
+  },
+  {
     name: "Modification",
     embedded: false
   },

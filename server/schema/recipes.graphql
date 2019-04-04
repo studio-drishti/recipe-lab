@@ -10,6 +10,7 @@ type Recipe {
   description: String!
   items: [Item!]!
   modification(user: ID): Modification
+  photos: [RecipePhoto!]!
 }
 
 type Item {
@@ -31,4 +32,11 @@ type Ingredient {
   quantity: String!
   unit: String!
   processing: String!
+}
+
+type RecipePhoto {
+  id: ID!
+  filename: String!
+  url: String!
+  recipe: Recipe!
 }
