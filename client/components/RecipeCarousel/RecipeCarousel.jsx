@@ -2,11 +2,16 @@ import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import Swiper from 'react-id-swiper/lib/ReactIdSwiper.full';
 
-export default class Step extends PureComponent {
+export default class RecipeCarousel extends PureComponent {
   static displayName = 'RecipeCarousel';
   static propTypes = {
     photos: PropTypes.arrayOf(PropTypes.object)
   };
+
+  componentDidUpdate(prevProps) {
+    if (this.swiper && prevProps.photos.length !== this.props.photos.length)
+      this.swiper.update();
+  }
 
   render() {
     const { photos } = this.props;
@@ -19,7 +24,10 @@ export default class Step extends PureComponent {
         nextEl: '.swiper-button-next',
         prevEl: '.swiper-button-prev'
       },
-      spaceBetween: 20
+      spaceBetween: 20,
+      getSwiper: swiper => {
+        this.swiper = swiper;
+      }
     };
 
     return (

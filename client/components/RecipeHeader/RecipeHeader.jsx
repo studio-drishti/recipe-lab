@@ -21,7 +21,7 @@ registerPlugin(
   FilePondPluginImageResize
 );
 
-export default class Navigation extends PureComponent {
+export default class RecipeHeader extends PureComponent {
   static displayName = 'RecipeHeader';
   static propTypes = {
     recipe: PropTypes.object,
@@ -287,7 +287,7 @@ export default class Navigation extends PureComponent {
           )}
         </form>
         <div className={css.carousel}>
-          <RecipeCarousel photos={recipe.photos} />
+          <RecipeCarousel photos={[...recipe.photos]} />
         </div>
       </header>
     );
