@@ -1,6 +1,11 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import Swiper from 'react-id-swiper/lib/ReactIdSwiper.full';
+import { MdDeleteForever } from 'react-icons/md';
+
+import css from './RecipeCarousel.css';
+import IconButtonGroup from '../IconButtonGroup';
+import IconButton from '../IconButton';
 
 export default class RecipeCarousel extends PureComponent {
   static displayName = 'RecipeCarousel';
@@ -20,25 +25,35 @@ export default class RecipeCarousel extends PureComponent {
     const swiperParams = {
       pagination: {
         el: '.swiper-pagination',
-        type: 'fraction'
+        type: 'bullets',
+        dynamicBullets: true,
+        clickable: true
       },
       navigation: {
         nextEl: '.swiper-button-next',
         prevEl: '.swiper-button-prev'
       },
-      spaceBetween: 20,
       getSwiper: swiper => {
         this.swiper = swiper;
       }
     };
 
     return (
-      <div>
+      <div className={css.carousel}>
         {photos.length > 0 && (
           <Swiper {...swiperParams}>
             {photos.map(photo => (
-              <div key={photo.filename}>
-                <img src={photo.url} />
+              <div
+                key={photo.filename}
+                style={{ backgroundImage: `url(${photo.url})` }}
+                className={css.slide}
+              >
+                {/* <img src={photo.url} /> */}
+                <IconButtonGroup className={css.actions}>
+                  <IconButton>
+                    <MdDeleteForever />
+                  </IconButton>
+                </IconButtonGroup>
               </div>
             ))}
           </Swiper>
