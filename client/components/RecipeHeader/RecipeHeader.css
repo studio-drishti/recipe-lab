@@ -81,6 +81,10 @@
   }
 }
 
+.filepond {
+  max-height: 10rem;
+}
+
 .visuallyHidden {
   height: 0;
   width: 0;

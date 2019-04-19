@@ -248,6 +248,7 @@ export default class RecipeHeader extends PureComponent {
                 <FilePond
                   name="avatar"
                   ref={ref => (this.pond = ref)}
+                  className={css.filepond}
                   server={{
                     process: (
                       fieldName,
