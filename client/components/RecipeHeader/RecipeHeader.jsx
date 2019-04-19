@@ -1,6 +1,13 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import { MdEdit, MdCheck, MdTimer, MdLocalDining } from 'react-icons/md';
+import {
+  MdEdit,
+  MdCheck,
+  MdTimer,
+  MdLocalDining,
+  MdAddAPhoto
+} from 'react-icons/md';
+import classnames from 'classnames';
 import Textarea from 'react-textarea-autosize';
 import { Mutation } from 'react-apollo';
 import { FilePond, registerPlugin } from 'react-filepond';
@@ -11,6 +18,7 @@ import FilePondPluginImageTransform from 'filepond-plugin-image-transform';
 import { TIME_OPTIONS } from '../../config';
 import DiffText from '../DiffText';
 import TextButton from '../TextButton';
+import TextButtonGroup from '../TextButtonGroup';
 import RecipeCarousel from '../RecipeCarousel';
 import css from './RecipeHeader.css';
 import RecipePhotoUploadMutation from '../../graphql/RecipePhotoUpload.graphql';
@@ -96,6 +104,12 @@ export default class RecipeHeader extends PureComponent {
   disableEditing = () => {
     this.setState({ editing: false });
     document.removeEventListener('mousedown', this.handleClick);
+  };
+
+  triggerUploadDialog = () => {
+    const { editing } = this.state;
+    if (!editing) this.enableEditing();
+    this.pond.browse();
   };
 
   handleClick = e => {
@@ -228,47 +242,51 @@ export default class RecipeHeader extends PureComponent {
             )}
           </div>
 
-          <Mutation mutation={RecipePhotoUploadMutation}>
-            {uploadFile => (
-              <FilePond
-                name="avatar"
-                ref={ref => (this.pond = ref)}
-                server={{
-                  process: (
-                    fieldName,
-                    file,
-                    metadata,
-                    load,
-                    error,
-                    progress,
-                    abort
-                  ) => {
-                    uploadFile({ variables: { file, recipeId: recipe.uid } })
-                      .then(res => {
-                        addPhoto(res.data.recipePhotoUpload);
-                        load(res);
+          <div className={classnames({ [css.visuallyHidden]: !editing })}>
+            <Mutation mutation={RecipePhotoUploadMutation}>
+              {uploadFile => (
+                <FilePond
+                  name="avatar"
+                  ref={ref => (this.pond = ref)}
+                  server={{
+                    process: (
+                      fieldName,
+                      file,
+                      metadata,
+                      load,
+                      error,
+                      progress,
+                      abort
+                    ) => {
+                      uploadFile({
+                        variables: { file, recipeId: recipe.uid }
                       })
-                      .catch(err => error(err));
+                        .then(res => {
+                          addPhoto(res.data.recipePhotoUpload);
+                          load(res);
+                        })
+                        .catch(err => error(err));
 
-                    return {
-                      abort: () => {
-                        abort();
-                      }
-                    };
-                  }
-                }}
-                allowRevert={false}
-                allowMultiple={true}
-                imageTransformOutputMimeType="image/jpeg"
-                imageCropAspectRatio="3:2"
-                imageResizeTargetWidth="600"
-                onprocessfile={this.handleUploadComplete}
-              />
-            )}
-          </Mutation>
+                      return {
+                        abort: () => {
+                          abort();
+                        }
+                      };
+                    }
+                  }}
+                  allowRevert={false}
+                  allowMultiple={true}
+                  imageTransformOutputMimeType="image/jpeg"
+                  imageCropAspectRatio="3:2"
+                  imageResizeTargetWidth="600"
+                  onprocessfile={this.handleUploadComplete}
+                />
+              )}
+            </Mutation>
+          </div>
 
           {!editing && (
-            <>
+            <TextButtonGroup>
               <TextButton
                 className={css.editBtn}
                 onClick={this.enableEditingTitle}
@@ -276,7 +294,14 @@ export default class RecipeHeader extends PureComponent {
                 <MdEdit />
                 edit details
               </TextButton>
-            </>
+              <TextButton
+                className={css.uploadBtn}
+                onClick={this.triggerUploadDialog}
+              >
+                <MdAddAPhoto />
+                upload photos
+              </TextButton>
+            </TextButtonGroup>
           )}
 
           {editing && (
@@ -286,6 +311,7 @@ export default class RecipeHeader extends PureComponent {
             </TextButton>
           )}
         </form>
+
         <div className={css.carousel}>
           <RecipeCarousel photos={[...recipe.photos]} />
         </div>

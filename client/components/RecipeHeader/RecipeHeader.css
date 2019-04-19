@@ -80,3 +80,10 @@
     width: 6em;
   }
 }
+
+.visuallyHidden {
+  height: 0;
+  width: 0;
+  opacity: 0;
+  overflow: hidden;
+}

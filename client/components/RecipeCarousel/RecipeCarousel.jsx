@@ -9,8 +9,10 @@ export default class RecipeCarousel extends PureComponent {
   };
 
   componentDidUpdate(prevProps) {
-    if (this.swiper && prevProps.photos.length !== this.props.photos.length)
+    if (this.swiper && prevProps.photos.length !== this.props.photos.length) {
       this.swiper.update();
+      this.swiper.slideTo(this.props.photos.length - 1);
+    }
   }
 
   render() {
