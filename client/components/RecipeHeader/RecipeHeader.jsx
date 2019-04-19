@@ -139,7 +139,7 @@ export default class RecipeHeader extends PureComponent {
     const { recipe, addPhoto } = this.props;
     return (
       <header ref={this.headerRef} className={css.header}>
-        <form onSubmit={this.handleSubmit} className={css.title}>
+        <form onSubmit={this.handleSubmit} className={css.details}>
           {!editing && (
             <>
               <h1>
@@ -157,7 +157,7 @@ export default class RecipeHeader extends PureComponent {
           )}
 
           {editing && (
-            <div className={css.titleForm}>
+            <div className={css.titleInputs}>
               <input
                 type="text"
                 name="title"
@@ -195,7 +195,7 @@ export default class RecipeHeader extends PureComponent {
             )}
 
             {editing && (
-              <div className={css.statsForm}>
+              <div className={css.statInputs}>
                 <label>
                   <i>
                     <MdTimer />

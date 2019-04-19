@@ -37,7 +37,9 @@ export default class RecipeCarousel extends PureComponent {
         {photos.length > 0 && (
           <Swiper {...swiperParams}>
             {photos.map(photo => (
-              <img key={photo.filename} src={photo.url} />
+              <div key={photo.filename}>
+                <img src={photo.url} />
+              </div>
             ))}
           </Swiper>
         )}

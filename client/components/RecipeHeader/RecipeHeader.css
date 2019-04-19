@@ -1,12 +1,16 @@
 .header {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-column-gap: 2rem;
+  display: flex;
+  justify-content: space-between;
   margin-bottom: 2rem;
   align-items: center;
 }
 
-.title {
+.details,
+.carousel {
+  width: calc(50% - 1rem);
+}
+
+.details {
   & a {
     text-decoration: none;
     color: inherit;
@@ -19,7 +23,7 @@
   }
 }
 
-.titleForm {
+.titleInputs {
   & input {
     margin-bottom: 1rem;
   }
@@ -49,7 +53,7 @@
   }
 }
 
-.statsForm {
+.statInputs {
   display: grid;
   grid-template-columns: auto auto;
   grid-column-gap: 1rem;
