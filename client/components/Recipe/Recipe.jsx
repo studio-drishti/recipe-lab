@@ -9,7 +9,8 @@ import css from './Recipe.css';
 import reorder from '../../utils/reorder';
 import areArraysEqual from '../../utils/areArraysEqual';
 
-import RecipeHeader from '../RecipeHeader';
+import RecipeDetails from '../RecipeDetails';
+import RecipeCarousel from '../RecipeCarousel/RecipeCarousel';
 import RecipeBio from '../RecipeBio';
 import StepList from '../StepList';
 import Step from '../Step';
@@ -20,7 +21,6 @@ import IngredientList from '../IngredientList';
 import Ingredient from '../Ingredient';
 import IngredientTotals from '../IngredientTotals';
 import StepHeader from '../StepHeader';
-// import StepCarousel from '../StepCarousel';
 import RecipeNav from '../RecipeNav';
 import Directions from '../Directions';
 import RecipeStatus from '../RecipeStatus';
@@ -38,7 +38,8 @@ export default class Recipe extends Component {
       description: PropTypes.string,
       servingAmount: PropTypes.string,
       servingType: PropTypes.string,
-      items: PropTypes.arrayOf(PropTypes.object)
+      items: PropTypes.arrayOf(PropTypes.object),
+      photos: PropTypes.arrayOf(PropTypes.object)
     })
   };
 
@@ -412,6 +413,18 @@ export default class Recipe extends Component {
     );
   };
 
+  addPhoto = photo => {
+    const { recipe } = this.state;
+    recipe.photos.push(photo);
+    this.setState({ recipe });
+  };
+
+  removePhoto = index => {
+    const { recipe } = this.state;
+    recipe.photos.splice(index, 1);
+    this.setState({ recipe });
+  };
+
   render() {
     const {
       recipe,
@@ -428,13 +441,23 @@ export default class Recipe extends Component {
 
     return (
       <>
-        <RecipeHeader
-          recipe={recipe}
-          recipeMods={modification.alterations.filter(
-            alteration => alteration.sourceId === recipe.uid
-          )}
-          saveAlteration={this.saveAlteration}
-        />
+        <header className={css.recipeHeader}>
+          <RecipeDetails
+            className={css.recipeDetails}
+            recipe={recipe}
+            recipeMods={modification.alterations.filter(
+              alteration => alteration.sourceId === recipe.uid
+            )}
+            saveAlteration={this.saveAlteration}
+            addPhoto={this.addPhoto}
+          />
+          <RecipeCarousel
+            className={css.recipeCarousel}
+            removePhoto={this.removePhoto}
+            photos={[...recipe.photos]}
+          />
+        </header>
+
         <RecipeStatus
           recipe={recipe}
           modification={modification}
@@ -539,7 +562,7 @@ export default class Recipe extends Component {
               </ItemList>
             </DragDropContext>
           </div>
-          <aside className={css.recipeDetail}>
+          <aside className={css.stepDetail}>
             <div className={css.sticky}>
               <StepHeader
                 activeStep={activeStep}
@@ -575,9 +598,7 @@ export default class Recipe extends Component {
                   />
                 }
               />
-              <div className={css.recipeDetailContent}>
-                {/* <StepCarousel /> */}
-
+              <div className={css.stepDetailContent}>
                 <h3>Ingredients Used</h3>
                 <IngredientList
                   createIngredient={() => this.createIngredient(activeStep.uid)}

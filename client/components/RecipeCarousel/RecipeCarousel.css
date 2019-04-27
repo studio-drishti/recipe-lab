@@ -1,0 +1,10 @@
+.slide {
+  padding-bottom: 67%;
+  background-size: cover;
+
+  & .actions {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+  }
+}

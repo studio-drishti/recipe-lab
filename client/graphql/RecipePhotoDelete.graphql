@@ -1,0 +1,3 @@
+mutation RecipePhotoDelete($photoId: ID!) {
+  recipePhotoDelete(photoId: $photoId)
+}

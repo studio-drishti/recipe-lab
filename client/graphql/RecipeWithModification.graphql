@@ -23,6 +23,11 @@ query recipe($uid: ID!, $user: ID) {
         }
       }
     }
+    photos {
+      id
+      filename
+      url
+    }
     author {
       name
       avatar
