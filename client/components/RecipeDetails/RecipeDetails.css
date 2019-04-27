@@ -1,15 +1,3 @@
-.header {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 2rem;
-  align-items: center;
-}
-
-.details,
-.carousel {
-  width: calc(50% - 1rem);
-}
-
 .details {
   & a {
     text-decoration: none;

@@ -18,6 +18,7 @@ type Mutation {
   login(email: String!, password: String!): AuthPayload!
   avatarUpload(file: Upload!): File!
   recipePhotoUpload(file: Upload!, recipeId: ID!): RecipePhoto!
+  recipePhotoDelete(photoId: ID!): Boolean!
   saveModification(
     recipe: ID!
     user: ID!

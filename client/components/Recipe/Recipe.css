@@ -5,7 +5,19 @@
   grid-column-gap: 2rem;
 }
 
-.recipeDetail {
+.recipeHeader {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+  align-items: center;
+
+  & .recipeDetails,
+  & .recipeCarousel {
+    width: calc(50% - 1rem);
+  }
+}
+
+.stepDetail {
   position: relative;
 
   & img {
@@ -23,7 +35,7 @@
   }
 }
 
-.recipeDetailContent {
+.stepDetailContent {
   padding: 1rem;
   border: 1px solid lightgray;
   border-top: 0;
