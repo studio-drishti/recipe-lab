@@ -52,6 +52,9 @@ type AggregateUser {
 }
 
 type Alteration {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
   uid: ID!
   sourceId: ID!
   field: String!
@@ -66,6 +69,7 @@ type AlterationConnection {
 }
 
 input AlterationCreateInput {
+  id: ID
   uid: ID!
   sourceId: ID!
   field: String!
@@ -79,6 +83,7 @@ input AlterationCreateManyWithoutModificationInput {
 }
 
 input AlterationCreateWithoutModificationInput {
+  id: ID
   uid: ID!
   sourceId: ID!
   field: String!
@@ -91,6 +96,12 @@ type AlterationEdge {
 }
 
 enum AlterationOrderByInput {
+  id_ASC
+  id_DESC
+  createdAt_ASC
+  createdAt_DESC
+  updatedAt_ASC
+  updatedAt_DESC
   uid_ASC
   uid_DESC
   sourceId_ASC
@@ -99,15 +110,12 @@ enum AlterationOrderByInput {
   field_DESC
   value_ASC
   value_DESC
-  id_ASC
-  id_DESC
-  createdAt_ASC
-  createdAt_DESC
-  updatedAt_ASC
-  updatedAt_DESC
 }
 
 type AlterationPreviousValues {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
   uid: ID!
   sourceId: ID!
   field: String!
@@ -115,6 +123,36 @@ type AlterationPreviousValues {
 }
 
 input AlterationScalarWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  createdAt: DateTime
+  createdAt_not: DateTime
+  createdAt_in: [DateTime!]
+  createdAt_not_in: [DateTime!]
+  createdAt_lt: DateTime
+  createdAt_lte: DateTime
+  createdAt_gt: DateTime
+  createdAt_gte: DateTime
+  updatedAt: DateTime
+  updatedAt_not: DateTime
+  updatedAt_in: [DateTime!]
+  updatedAt_not_in: [DateTime!]
+  updatedAt_lt: DateTime
+  updatedAt_lte: DateTime
+  updatedAt_gt: DateTime
+  updatedAt_gte: DateTime
   uid: ID
   uid_not: ID
   uid_in: [ID!]
@@ -252,6 +290,36 @@ input AlterationUpsertWithWhereUniqueWithoutModificationInput {
 }
 
 input AlterationWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  createdAt: DateTime
+  createdAt_not: DateTime
+  createdAt_in: [DateTime!]
+  createdAt_not_in: [DateTime!]
+  createdAt_lt: DateTime
+  createdAt_lte: DateTime
+  createdAt_gt: DateTime
+  createdAt_gte: DateTime
+  updatedAt: DateTime
+  updatedAt_not: DateTime
+  updatedAt_in: [DateTime!]
+  updatedAt_not_in: [DateTime!]
+  updatedAt_lt: DateTime
+  updatedAt_lte: DateTime
+  updatedAt_gt: DateTime
+  updatedAt_gte: DateTime
   uid: ID
   uid_not: ID
   uid_in: [ID!]
@@ -315,6 +383,7 @@ input AlterationWhereInput {
 }
 
 input AlterationWhereUniqueInput {
+  id: ID
   uid: ID
 }
 
@@ -325,6 +394,9 @@ type BatchPayload {
 scalar DateTime
 
 type Ingredient {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
   uid: ID!
   index: Int!
   name: String!
@@ -335,6 +407,9 @@ type Ingredient {
 }
 
 type IngredientAddition {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
   uid: ID!
   parentId: ID!
   name: String!
@@ -351,6 +426,7 @@ type IngredientAdditionConnection {
 }
 
 input IngredientAdditionCreateInput {
+  id: ID
   uid: ID!
   parentId: ID!
   name: String!
@@ -366,6 +442,7 @@ input IngredientAdditionCreateManyWithoutModificationInput {
 }
 
 input IngredientAdditionCreateWithoutModificationInput {
+  id: ID
   uid: ID!
   parentId: ID!
   name: String!
@@ -380,6 +457,12 @@ type IngredientAdditionEdge {
 }
 
 enum IngredientAdditionOrderByInput {
+  id_ASC
+  id_DESC
+  createdAt_ASC
+  createdAt_DESC
+  updatedAt_ASC
+  updatedAt_DESC
   uid_ASC
   uid_DESC
   parentId_ASC
@@ -392,15 +475,12 @@ enum IngredientAdditionOrderByInput {
   unit_DESC
   processing_ASC
   processing_DESC
-  id_ASC
-  id_DESC
-  createdAt_ASC
-  createdAt_DESC
-  updatedAt_ASC
-  updatedAt_DESC
 }
 
 type IngredientAdditionPreviousValues {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
   uid: ID!
   parentId: ID!
   name: String!
@@ -410,6 +490,36 @@ type IngredientAdditionPreviousValues {
 }
 
 input IngredientAdditionScalarWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  createdAt: DateTime
+  createdAt_not: DateTime
+  createdAt_in: [DateTime!]
+  createdAt_not_in: [DateTime!]
+  createdAt_lt: DateTime
+  createdAt_lte: DateTime
+  createdAt_gt: DateTime
+  createdAt_gte: DateTime
+  updatedAt: DateTime
+  updatedAt_not: DateTime
+  updatedAt_in: [DateTime!]
+  updatedAt_not_in: [DateTime!]
+  updatedAt_lt: DateTime
+  updatedAt_lte: DateTime
+  updatedAt_gt: DateTime
+  updatedAt_gte: DateTime
   uid: ID
   uid_not: ID
   uid_in: [ID!]
@@ -583,6 +693,36 @@ input IngredientAdditionUpsertWithWhereUniqueWithoutModificationInput {
 }
 
 input IngredientAdditionWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  createdAt: DateTime
+  createdAt_not: DateTime
+  createdAt_in: [DateTime!]
+  createdAt_not_in: [DateTime!]
+  createdAt_lt: DateTime
+  createdAt_lte: DateTime
+  createdAt_gt: DateTime
+  createdAt_gte: DateTime
+  updatedAt: DateTime
+  updatedAt_not: DateTime
+  updatedAt_in: [DateTime!]
+  updatedAt_not_in: [DateTime!]
+  updatedAt_lt: DateTime
+  updatedAt_lte: DateTime
+  updatedAt_gt: DateTime
+  updatedAt_gte: DateTime
   uid: ID
   uid_not: ID
   uid_in: [ID!]
@@ -674,6 +814,7 @@ input IngredientAdditionWhereInput {
 }
 
 input IngredientAdditionWhereUniqueInput {
+  id: ID
   uid: ID
 }
 
@@ -684,6 +825,7 @@ type IngredientConnection {
 }
 
 input IngredientCreateInput {
+  id: ID
   uid: ID!
   index: Int!
   name: String
@@ -699,6 +841,7 @@ input IngredientCreateManyWithoutStepInput {
 }
 
 input IngredientCreateWithoutStepInput {
+  id: ID
   uid: ID!
   index: Int!
   name: String
@@ -713,6 +856,12 @@ type IngredientEdge {
 }
 
 enum IngredientOrderByInput {
+  id_ASC
+  id_DESC
+  createdAt_ASC
+  createdAt_DESC
+  updatedAt_ASC
+  updatedAt_DESC
   uid_ASC
   uid_DESC
   index_ASC
@@ -725,15 +874,12 @@ enum IngredientOrderByInput {
   unit_DESC
   processing_ASC
   processing_DESC
-  id_ASC
-  id_DESC
-  createdAt_ASC
-  createdAt_DESC
-  updatedAt_ASC
-  updatedAt_DESC
 }
 
 type IngredientPreviousValues {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
   uid: ID!
   index: Int!
   name: String!
@@ -743,6 +889,36 @@ type IngredientPreviousValues {
 }
 
 input IngredientScalarWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  createdAt: DateTime
+  createdAt_not: DateTime
+  createdAt_in: [DateTime!]
+  createdAt_not_in: [DateTime!]
+  createdAt_lt: DateTime
+  createdAt_lte: DateTime
+  createdAt_gt: DateTime
+  createdAt_gte: DateTime
+  updatedAt: DateTime
+  updatedAt_not: DateTime
+  updatedAt_in: [DateTime!]
+  updatedAt_not_in: [DateTime!]
+  updatedAt_lt: DateTime
+  updatedAt_lte: DateTime
+  updatedAt_gt: DateTime
+  updatedAt_gte: DateTime
   uid: ID
   uid_not: ID
   uid_in: [ID!]
@@ -910,6 +1086,36 @@ input IngredientUpsertWithWhereUniqueWithoutStepInput {
 }
 
 input IngredientWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  createdAt: DateTime
+  createdAt_not: DateTime
+  createdAt_in: [DateTime!]
+  createdAt_not_in: [DateTime!]
+  createdAt_lt: DateTime
+  createdAt_lte: DateTime
+  createdAt_gt: DateTime
+  createdAt_gte: DateTime
+  updatedAt: DateTime
+  updatedAt_not: DateTime
+  updatedAt_in: [DateTime!]
+  updatedAt_not_in: [DateTime!]
+  updatedAt_lt: DateTime
+  updatedAt_lte: DateTime
+  updatedAt_gt: DateTime
+  updatedAt_gte: DateTime
   uid: ID
   uid_not: ID
   uid_in: [ID!]
@@ -995,10 +1201,14 @@ input IngredientWhereInput {
 }
 
 input IngredientWhereUniqueInput {
+  id: ID
   uid: ID
 }
 
 type Item {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
   uid: ID!
   index: Int!
   name: String!
@@ -1007,6 +1217,9 @@ type Item {
 }
 
 type ItemAddition {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
   uid: ID!
   parentId: ID!
   name: String!
@@ -1020,6 +1233,7 @@ type ItemAdditionConnection {
 }
 
 input ItemAdditionCreateInput {
+  id: ID
   uid: ID!
   parentId: ID!
   name: String!
@@ -1032,6 +1246,7 @@ input ItemAdditionCreateManyWithoutModificationInput {
 }
 
 input ItemAdditionCreateWithoutModificationInput {
+  id: ID
   uid: ID!
   parentId: ID!
   name: String!
@@ -1043,27 +1258,60 @@ type ItemAdditionEdge {
 }
 
 enum ItemAdditionOrderByInput {
-  uid_ASC
-  uid_DESC
-  parentId_ASC
-  parentId_DESC
-  name_ASC
-  name_DESC
   id_ASC
   id_DESC
   createdAt_ASC
   createdAt_DESC
   updatedAt_ASC
   updatedAt_DESC
+  uid_ASC
+  uid_DESC
+  parentId_ASC
+  parentId_DESC
+  name_ASC
+  name_DESC
 }
 
 type ItemAdditionPreviousValues {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
   uid: ID!
   parentId: ID!
   name: String!
 }
 
 input ItemAdditionScalarWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  createdAt: DateTime
+  createdAt_not: DateTime
+  createdAt_in: [DateTime!]
+  createdAt_not_in: [DateTime!]
+  createdAt_lt: DateTime
+  createdAt_lte: DateTime
+  createdAt_gt: DateTime
+  createdAt_gte: DateTime
+  updatedAt: DateTime
+  updatedAt_not: DateTime
+  updatedAt_in: [DateTime!]
+  updatedAt_not_in: [DateTime!]
+  updatedAt_lt: DateTime
+  updatedAt_lte: DateTime
+  updatedAt_gt: DateTime
+  updatedAt_gte: DateTime
   uid: ID
   uid_not: ID
   uid_in: [ID!]
@@ -1183,6 +1431,36 @@ input ItemAdditionUpsertWithWhereUniqueWithoutModificationInput {
 }
 
 input ItemAdditionWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  createdAt: DateTime
+  createdAt_not: DateTime
+  createdAt_in: [DateTime!]
+  createdAt_not_in: [DateTime!]
+  createdAt_lt: DateTime
+  createdAt_lte: DateTime
+  createdAt_gt: DateTime
+  createdAt_gte: DateTime
+  updatedAt: DateTime
+  updatedAt_not: DateTime
+  updatedAt_in: [DateTime!]
+  updatedAt_not_in: [DateTime!]
+  updatedAt_lt: DateTime
+  updatedAt_lte: DateTime
+  updatedAt_gt: DateTime
+  updatedAt_gte: DateTime
   uid: ID
   uid_not: ID
   uid_in: [ID!]
@@ -1232,6 +1510,7 @@ input ItemAdditionWhereInput {
 }
 
 input ItemAdditionWhereUniqueInput {
+  id: ID
   uid: ID
 }
 
@@ -1242,6 +1521,7 @@ type ItemConnection {
 }
 
 input ItemCreateInput {
+  id: ID
   uid: ID!
   index: Int!
   name: String
@@ -1260,6 +1540,7 @@ input ItemCreateOneWithoutStepsInput {
 }
 
 input ItemCreateWithoutRecipeInput {
+  id: ID
   uid: ID!
   index: Int!
   name: String
@@ -1267,6 +1548,7 @@ input ItemCreateWithoutRecipeInput {
 }
 
 input ItemCreateWithoutStepsInput {
+  id: ID
   uid: ID!
   index: Int!
   name: String
@@ -1279,27 +1561,60 @@ type ItemEdge {
 }
 
 enum ItemOrderByInput {
-  uid_ASC
-  uid_DESC
-  index_ASC
-  index_DESC
-  name_ASC
-  name_DESC
   id_ASC
   id_DESC
   createdAt_ASC
   createdAt_DESC
   updatedAt_ASC
   updatedAt_DESC
+  uid_ASC
+  uid_DESC
+  index_ASC
+  index_DESC
+  name_ASC
+  name_DESC
 }
 
 type ItemPreviousValues {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
   uid: ID!
   index: Int!
   name: String!
 }
 
 input ItemScalarWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  createdAt: DateTime
+  createdAt_not: DateTime
+  createdAt_in: [DateTime!]
+  createdAt_not_in: [DateTime!]
+  createdAt_lt: DateTime
+  createdAt_lte: DateTime
+  createdAt_gt: DateTime
+  createdAt_gte: DateTime
+  updatedAt: DateTime
+  updatedAt_not: DateTime
+  updatedAt_in: [DateTime!]
+  updatedAt_not_in: [DateTime!]
+  updatedAt_lt: DateTime
+  updatedAt_lte: DateTime
+  updatedAt_gt: DateTime
+  updatedAt_gte: DateTime
   uid: ID
   uid_not: ID
   uid_in: [ID!]
@@ -1434,6 +1749,36 @@ input ItemUpsertWithWhereUniqueWithoutRecipeInput {
 }
 
 input ItemWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  createdAt: DateTime
+  createdAt_not: DateTime
+  createdAt_in: [DateTime!]
+  createdAt_not_in: [DateTime!]
+  createdAt_lt: DateTime
+  createdAt_lte: DateTime
+  createdAt_gt: DateTime
+  createdAt_gte: DateTime
+  updatedAt: DateTime
+  updatedAt_not: DateTime
+  updatedAt_in: [DateTime!]
+  updatedAt_not_in: [DateTime!]
+  updatedAt_lt: DateTime
+  updatedAt_lte: DateTime
+  updatedAt_gt: DateTime
+  updatedAt_gte: DateTime
   uid: ID
   uid_not: ID
   uid_in: [ID!]
@@ -1480,6 +1825,7 @@ input ItemWhereInput {
 }
 
 input ItemWhereUniqueInput {
+  id: ID
   uid: ID
 }
 
@@ -1506,6 +1852,7 @@ type ModificationConnection {
 }
 
 input ModificationCreateInput {
+  id: ID
   user: UserCreateOneWithoutModificationsInput!
   recipe: RecipeCreateOneWithoutModificationsInput!
   sortings: SortingCreateManyWithoutModificationInput
@@ -1556,6 +1903,7 @@ input ModificationCreateremovalsInput {
 }
 
 input ModificationCreateWithoutAlterationsInput {
+  id: ID
   user: UserCreateOneWithoutModificationsInput!
   recipe: RecipeCreateOneWithoutModificationsInput!
   sortings: SortingCreateManyWithoutModificationInput
@@ -1566,6 +1914,7 @@ input ModificationCreateWithoutAlterationsInput {
 }
 
 input ModificationCreateWithoutIngredientAdditionsInput {
+  id: ID
   user: UserCreateOneWithoutModificationsInput!
   recipe: RecipeCreateOneWithoutModificationsInput!
   sortings: SortingCreateManyWithoutModificationInput
@@ -1576,6 +1925,7 @@ input ModificationCreateWithoutIngredientAdditionsInput {
 }
 
 input ModificationCreateWithoutItemAdditionsInput {
+  id: ID
   user: UserCreateOneWithoutModificationsInput!
   recipe: RecipeCreateOneWithoutModificationsInput!
   sortings: SortingCreateManyWithoutModificationInput
@@ -1586,6 +1936,7 @@ input ModificationCreateWithoutItemAdditionsInput {
 }
 
 input ModificationCreateWithoutRecipeInput {
+  id: ID
   user: UserCreateOneWithoutModificationsInput!
   sortings: SortingCreateManyWithoutModificationInput
   alterations: AlterationCreateManyWithoutModificationInput
@@ -1596,6 +1947,7 @@ input ModificationCreateWithoutRecipeInput {
 }
 
 input ModificationCreateWithoutSortingsInput {
+  id: ID
   user: UserCreateOneWithoutModificationsInput!
   recipe: RecipeCreateOneWithoutModificationsInput!
   alterations: AlterationCreateManyWithoutModificationInput
@@ -1606,6 +1958,7 @@ input ModificationCreateWithoutSortingsInput {
 }
 
 input ModificationCreateWithoutStepAdditionsInput {
+  id: ID
   user: UserCreateOneWithoutModificationsInput!
   recipe: RecipeCreateOneWithoutModificationsInput!
   sortings: SortingCreateManyWithoutModificationInput
@@ -1616,6 +1969,7 @@ input ModificationCreateWithoutStepAdditionsInput {
 }
 
 input ModificationCreateWithoutUserInput {
+  id: ID
   recipe: RecipeCreateOneWithoutModificationsInput!
   sortings: SortingCreateManyWithoutModificationInput
   alterations: AlterationCreateManyWithoutModificationInput
@@ -2094,9 +2448,10 @@ type Query {
 }
 
 type Recipe {
-  uid: ID!
+  id: ID!
   createdAt: DateTime!
   updatedAt: DateTime!
+  uid: ID!
   author: User!
   title: String!
   time: String!
@@ -2115,6 +2470,7 @@ type RecipeConnection {
 }
 
 input RecipeCreateInput {
+  id: ID
   uid: ID!
   author: UserCreateOneWithoutRecipesInput!
   title: String
@@ -2148,6 +2504,7 @@ input RecipeCreateOneWithoutPhotosInput {
 }
 
 input RecipeCreateWithoutAuthorInput {
+  id: ID
   uid: ID!
   title: String
   time: String
@@ -2160,6 +2517,7 @@ input RecipeCreateWithoutAuthorInput {
 }
 
 input RecipeCreateWithoutItemsInput {
+  id: ID
   uid: ID!
   author: UserCreateOneWithoutRecipesInput!
   title: String
@@ -2172,6 +2530,7 @@ input RecipeCreateWithoutItemsInput {
 }
 
 input RecipeCreateWithoutModificationsInput {
+  id: ID
   uid: ID!
   author: UserCreateOneWithoutRecipesInput!
   title: String
@@ -2184,6 +2543,7 @@ input RecipeCreateWithoutModificationsInput {
 }
 
 input RecipeCreateWithoutPhotosInput {
+  id: ID
   uid: ID!
   author: UserCreateOneWithoutRecipesInput!
   title: String
@@ -2201,12 +2561,14 @@ type RecipeEdge {
 }
 
 enum RecipeOrderByInput {
-  uid_ASC
-  uid_DESC
+  id_ASC
+  id_DESC
   createdAt_ASC
   createdAt_DESC
   updatedAt_ASC
   updatedAt_DESC
+  uid_ASC
+  uid_DESC
   title_ASC
   title_DESC
   time_ASC
@@ -2217,12 +2579,12 @@ enum RecipeOrderByInput {
   servingType_DESC
   description_ASC
   description_DESC
-  id_ASC
-  id_DESC
 }
 
 type RecipePhoto {
   id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
   filename: String!
   url: String!
   recipe: Recipe!
@@ -2235,6 +2597,7 @@ type RecipePhotoConnection {
 }
 
 input RecipePhotoCreateInput {
+  id: ID
   filename: String!
   url: String!
   recipe: RecipeCreateOneWithoutPhotosInput!
@@ -2246,6 +2609,7 @@ input RecipePhotoCreateManyWithoutRecipeInput {
 }
 
 input RecipePhotoCreateWithoutRecipeInput {
+  id: ID
   filename: String!
   url: String!
 }
@@ -2258,18 +2622,20 @@ type RecipePhotoEdge {
 enum RecipePhotoOrderByInput {
   id_ASC
   id_DESC
-  filename_ASC
-  filename_DESC
-  url_ASC
-  url_DESC
   createdAt_ASC
   createdAt_DESC
   updatedAt_ASC
   updatedAt_DESC
+  filename_ASC
+  filename_DESC
+  url_ASC
+  url_DESC
 }
 
 type RecipePhotoPreviousValues {
   id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
   filename: String!
   url: String!
 }
@@ -2289,6 +2655,22 @@ input RecipePhotoScalarWhereInput {
   id_not_starts_with: ID
   id_ends_with: ID
   id_not_ends_with: ID
+  createdAt: DateTime
+  createdAt_not: DateTime
+  createdAt_in: [DateTime!]
+  createdAt_not_in: [DateTime!]
+  createdAt_lt: DateTime
+  createdAt_lte: DateTime
+  createdAt_gt: DateTime
+  createdAt_gte: DateTime
+  updatedAt: DateTime
+  updatedAt_not: DateTime
+  updatedAt_in: [DateTime!]
+  updatedAt_not_in: [DateTime!]
+  updatedAt_lt: DateTime
+  updatedAt_lte: DateTime
+  updatedAt_gt: DateTime
+  updatedAt_gte: DateTime
   filename: String
   filename_not: String
   filename_in: [String!]
@@ -2404,6 +2786,22 @@ input RecipePhotoWhereInput {
   id_not_starts_with: ID
   id_ends_with: ID
   id_not_ends_with: ID
+  createdAt: DateTime
+  createdAt_not: DateTime
+  createdAt_in: [DateTime!]
+  createdAt_not_in: [DateTime!]
+  createdAt_lt: DateTime
+  createdAt_lte: DateTime
+  createdAt_gt: DateTime
+  createdAt_gte: DateTime
+  updatedAt: DateTime
+  updatedAt_not: DateTime
+  updatedAt_in: [DateTime!]
+  updatedAt_not_in: [DateTime!]
+  updatedAt_lt: DateTime
+  updatedAt_lte: DateTime
+  updatedAt_gt: DateTime
+  updatedAt_gte: DateTime
   filename: String
   filename_not: String
   filename_in: [String!]
@@ -2443,9 +2841,10 @@ input RecipePhotoWhereUniqueInput {
 }
 
 type RecipePreviousValues {
-  uid: ID!
+  id: ID!
   createdAt: DateTime!
   updatedAt: DateTime!
+  uid: ID!
   title: String!
   time: String!
   servingAmount: String!
@@ -2454,20 +2853,20 @@ type RecipePreviousValues {
 }
 
 input RecipeScalarWhereInput {
-  uid: ID
-  uid_not: ID
-  uid_in: [ID!]
-  uid_not_in: [ID!]
-  uid_lt: ID
-  uid_lte: ID
-  uid_gt: ID
-  uid_gte: ID
-  uid_contains: ID
-  uid_not_contains: ID
-  uid_starts_with: ID
-  uid_not_starts_with: ID
-  uid_ends_with: ID
-  uid_not_ends_with: ID
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
   createdAt: DateTime
   createdAt_not: DateTime
   createdAt_in: [DateTime!]
@@ -2484,6 +2883,20 @@ input RecipeScalarWhereInput {
   updatedAt_lte: DateTime
   updatedAt_gt: DateTime
   updatedAt_gte: DateTime
+  uid: ID
+  uid_not: ID
+  uid_in: [ID!]
+  uid_not_in: [ID!]
+  uid_lt: ID
+  uid_lte: ID
+  uid_gt: ID
+  uid_gte: ID
+  uid_contains: ID
+  uid_not_contains: ID
+  uid_starts_with: ID
+  uid_not_starts_with: ID
+  uid_ends_with: ID
+  uid_not_ends_with: ID
   title: String
   title_not: String
   title_in: [String!]
@@ -2721,20 +3134,20 @@ input RecipeUpsertWithWhereUniqueWithoutAuthorInput {
 }
 
 input RecipeWhereInput {
-  uid: ID
-  uid_not: ID
-  uid_in: [ID!]
-  uid_not_in: [ID!]
-  uid_lt: ID
-  uid_lte: ID
-  uid_gt: ID
-  uid_gte: ID
-  uid_contains: ID
-  uid_not_contains: ID
-  uid_starts_with: ID
-  uid_not_starts_with: ID
-  uid_ends_with: ID
-  uid_not_ends_with: ID
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
   createdAt: DateTime
   createdAt_not: DateTime
   createdAt_in: [DateTime!]
@@ -2751,6 +3164,20 @@ input RecipeWhereInput {
   updatedAt_lte: DateTime
   updatedAt_gt: DateTime
   updatedAt_gte: DateTime
+  uid: ID
+  uid_not: ID
+  uid_in: [ID!]
+  uid_not_in: [ID!]
+  uid_lt: ID
+  uid_lte: ID
+  uid_gt: ID
+  uid_gte: ID
+  uid_contains: ID
+  uid_not_contains: ID
+  uid_starts_with: ID
+  uid_not_starts_with: ID
+  uid_ends_with: ID
+  uid_not_ends_with: ID
   author: UserWhereInput
   title: String
   title_not: String
@@ -2837,10 +3264,14 @@ input RecipeWhereInput {
 }
 
 input RecipeWhereUniqueInput {
+  id: ID
   uid: ID
 }
 
 type Sorting {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
   uid: ID!
   parentId: ID!
   order: [ID!]!
@@ -2854,6 +3285,7 @@ type SortingConnection {
 }
 
 input SortingCreateInput {
+  id: ID
   uid: ID!
   parentId: ID!
   order: SortingCreateorderInput
@@ -2870,6 +3302,7 @@ input SortingCreateorderInput {
 }
 
 input SortingCreateWithoutModificationInput {
+  id: ID
   uid: ID!
   parentId: ID!
   order: SortingCreateorderInput
@@ -2881,25 +3314,58 @@ type SortingEdge {
 }
 
 enum SortingOrderByInput {
-  uid_ASC
-  uid_DESC
-  parentId_ASC
-  parentId_DESC
   id_ASC
   id_DESC
   createdAt_ASC
   createdAt_DESC
   updatedAt_ASC
   updatedAt_DESC
+  uid_ASC
+  uid_DESC
+  parentId_ASC
+  parentId_DESC
 }
 
 type SortingPreviousValues {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
   uid: ID!
   parentId: ID!
   order: [ID!]!
 }
 
 input SortingScalarWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  createdAt: DateTime
+  createdAt_not: DateTime
+  createdAt_in: [DateTime!]
+  createdAt_not_in: [DateTime!]
+  createdAt_lt: DateTime
+  createdAt_lte: DateTime
+  createdAt_gt: DateTime
+  createdAt_gte: DateTime
+  updatedAt: DateTime
+  updatedAt_not: DateTime
+  updatedAt_in: [DateTime!]
+  updatedAt_not_in: [DateTime!]
+  updatedAt_lt: DateTime
+  updatedAt_lte: DateTime
+  updatedAt_gt: DateTime
+  updatedAt_gte: DateTime
   uid: ID
   uid_not: ID
   uid_in: [ID!]
@@ -3009,6 +3475,36 @@ input SortingUpsertWithWhereUniqueWithoutModificationInput {
 }
 
 input SortingWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  createdAt: DateTime
+  createdAt_not: DateTime
+  createdAt_in: [DateTime!]
+  createdAt_not_in: [DateTime!]
+  createdAt_lt: DateTime
+  createdAt_lte: DateTime
+  createdAt_gt: DateTime
+  createdAt_gte: DateTime
+  updatedAt: DateTime
+  updatedAt_not: DateTime
+  updatedAt_in: [DateTime!]
+  updatedAt_not_in: [DateTime!]
+  updatedAt_lt: DateTime
+  updatedAt_lte: DateTime
+  updatedAt_gt: DateTime
+  updatedAt_gte: DateTime
   uid: ID
   uid_not: ID
   uid_in: [ID!]
@@ -3044,10 +3540,14 @@ input SortingWhereInput {
 }
 
 input SortingWhereUniqueInput {
+  id: ID
   uid: ID
 }
 
 type Step {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
   uid: ID!
   index: Int!
   directions: String!
@@ -3057,6 +3557,9 @@ type Step {
 }
 
 type StepAddition {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
   uid: ID!
   parentId: ID!
   directions: String!
@@ -3071,6 +3574,7 @@ type StepAdditionConnection {
 }
 
 input StepAdditionCreateInput {
+  id: ID
   uid: ID!
   parentId: ID!
   directions: String!
@@ -3084,6 +3588,7 @@ input StepAdditionCreateManyWithoutModificationInput {
 }
 
 input StepAdditionCreateWithoutModificationInput {
+  id: ID
   uid: ID!
   parentId: ID!
   directions: String!
@@ -3096,6 +3601,12 @@ type StepAdditionEdge {
 }
 
 enum StepAdditionOrderByInput {
+  id_ASC
+  id_DESC
+  createdAt_ASC
+  createdAt_DESC
+  updatedAt_ASC
+  updatedAt_DESC
   uid_ASC
   uid_DESC
   parentId_ASC
@@ -3104,15 +3615,12 @@ enum StepAdditionOrderByInput {
   directions_DESC
   notes_ASC
   notes_DESC
-  id_ASC
-  id_DESC
-  createdAt_ASC
-  createdAt_DESC
-  updatedAt_ASC
-  updatedAt_DESC
 }
 
 type StepAdditionPreviousValues {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
   uid: ID!
   parentId: ID!
   directions: String!
@@ -3120,6 +3628,36 @@ type StepAdditionPreviousValues {
 }
 
 input StepAdditionScalarWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  createdAt: DateTime
+  createdAt_not: DateTime
+  createdAt_in: [DateTime!]
+  createdAt_not_in: [DateTime!]
+  createdAt_lt: DateTime
+  createdAt_lte: DateTime
+  createdAt_gt: DateTime
+  createdAt_gte: DateTime
+  updatedAt: DateTime
+  updatedAt_not: DateTime
+  updatedAt_in: [DateTime!]
+  updatedAt_not_in: [DateTime!]
+  updatedAt_lt: DateTime
+  updatedAt_lte: DateTime
+  updatedAt_gt: DateTime
+  updatedAt_gte: DateTime
   uid: ID
   uid_not: ID
   uid_in: [ID!]
@@ -3257,6 +3795,36 @@ input StepAdditionUpsertWithWhereUniqueWithoutModificationInput {
 }
 
 input StepAdditionWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  createdAt: DateTime
+  createdAt_not: DateTime
+  createdAt_in: [DateTime!]
+  createdAt_not_in: [DateTime!]
+  createdAt_lt: DateTime
+  createdAt_lte: DateTime
+  createdAt_gt: DateTime
+  createdAt_gte: DateTime
+  updatedAt: DateTime
+  updatedAt_not: DateTime
+  updatedAt_in: [DateTime!]
+  updatedAt_not_in: [DateTime!]
+  updatedAt_lt: DateTime
+  updatedAt_lte: DateTime
+  updatedAt_gt: DateTime
+  updatedAt_gte: DateTime
   uid: ID
   uid_not: ID
   uid_in: [ID!]
@@ -3320,6 +3888,7 @@ input StepAdditionWhereInput {
 }
 
 input StepAdditionWhereUniqueInput {
+  id: ID
   uid: ID
 }
 
@@ -3330,6 +3899,7 @@ type StepConnection {
 }
 
 input StepCreateInput {
+  id: ID
   uid: ID!
   index: Int!
   directions: String
@@ -3349,6 +3919,7 @@ input StepCreateOneWithoutIngredientsInput {
 }
 
 input StepCreateWithoutIngredientsInput {
+  id: ID
   uid: ID!
   index: Int!
   directions: String
@@ -3357,6 +3928,7 @@ input StepCreateWithoutIngredientsInput {
 }
 
 input StepCreateWithoutItemInput {
+  id: ID
   uid: ID!
   index: Int!
   directions: String
@@ -3370,6 +3942,12 @@ type StepEdge {
 }
 
 enum StepOrderByInput {
+  id_ASC
+  id_DESC
+  createdAt_ASC
+  createdAt_DESC
+  updatedAt_ASC
+  updatedAt_DESC
   uid_ASC
   uid_DESC
   index_ASC
@@ -3378,15 +3956,12 @@ enum StepOrderByInput {
   directions_DESC
   notes_ASC
   notes_DESC
-  id_ASC
-  id_DESC
-  createdAt_ASC
-  createdAt_DESC
-  updatedAt_ASC
-  updatedAt_DESC
 }
 
 type StepPreviousValues {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
   uid: ID!
   index: Int!
   directions: String!
@@ -3394,6 +3969,36 @@ type StepPreviousValues {
 }
 
 input StepScalarWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  createdAt: DateTime
+  createdAt_not: DateTime
+  createdAt_in: [DateTime!]
+  createdAt_not_in: [DateTime!]
+  createdAt_lt: DateTime
+  createdAt_lte: DateTime
+  createdAt_gt: DateTime
+  createdAt_gte: DateTime
+  updatedAt: DateTime
+  updatedAt_not: DateTime
+  updatedAt_in: [DateTime!]
+  updatedAt_not_in: [DateTime!]
+  updatedAt_lt: DateTime
+  updatedAt_lte: DateTime
+  updatedAt_gt: DateTime
+  updatedAt_gte: DateTime
   uid: ID
   uid_not: ID
   uid_in: [ID!]
@@ -3547,6 +4152,36 @@ input StepUpsertWithWhereUniqueWithoutItemInput {
 }
 
 input StepWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  createdAt: DateTime
+  createdAt_not: DateTime
+  createdAt_in: [DateTime!]
+  createdAt_not_in: [DateTime!]
+  createdAt_lt: DateTime
+  createdAt_lte: DateTime
+  createdAt_gt: DateTime
+  createdAt_gte: DateTime
+  updatedAt: DateTime
+  updatedAt_not: DateTime
+  updatedAt_in: [DateTime!]
+  updatedAt_not_in: [DateTime!]
+  updatedAt_lt: DateTime
+  updatedAt_lte: DateTime
+  updatedAt_gt: DateTime
+  updatedAt_gte: DateTime
   uid: ID
   uid_not: ID
   uid_in: [ID!]
@@ -3607,6 +4242,7 @@ input StepWhereInput {
 }
 
 input StepWhereUniqueInput {
+  id: ID
   uid: ID
 }
 
@@ -3646,6 +4282,7 @@ type UserConnection {
 }
 
 input UserCreateInput {
+  id: ID
   email: String!
   password: String!
   name: String!
@@ -3667,6 +4304,7 @@ input UserCreateOneWithoutRecipesInput {
 }
 
 input UserCreateWithoutModificationsInput {
+  id: ID
   email: String!
   password: String!
   name: String!
@@ -3677,6 +4315,7 @@ input UserCreateWithoutModificationsInput {
 }
 
 input UserCreateWithoutRecipesInput {
+  id: ID
   email: String!
   password: String!
   name: String!

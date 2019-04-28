@@ -1,12 +1,12 @@
 type Modification {
-  id: ID! @unique
+  id: ID! @id
   createdAt: DateTime! @createdAt
   updatedAt: DateTime! @updatedAt
   user: User! @relation(name: "ModificationOwner")
   recipe: Recipe! @relation(name: "RecipeModifications")
   sortings: [Sorting!]! @relation(name: "Sortings", onDelete: CASCADE)
   alterations: [Alteration!]! @relation(name: "Alterations", onDelete: CASCADE)
-  removals: [ID!]!
+  removals: [ID!]! @scalarList(strategy: RELATION)
   itemAdditions: [ItemAddition!]!
     @relation(name: "ItemAdditions", onDelete: CASCADE)
   stepAdditions: [StepAddition!]!
@@ -16,13 +16,19 @@ type Modification {
 }
 
 type Sorting {
+  id: ID! @id
+  createdAt: DateTime! @createdAt
+  updatedAt: DateTime! @updatedAt
   uid: ID! @unique
   parentId: ID!
-  order: [ID!]!
+  order: [ID!]! @scalarList(strategy: RELATION)
   modification: Modification! @relation(name: "Sortings")
 }
 
 type Alteration {
+  id: ID! @id
+  createdAt: DateTime! @createdAt
+  updatedAt: DateTime! @updatedAt
   uid: ID! @unique
   sourceId: ID!
   field: String!
@@ -31,6 +37,9 @@ type Alteration {
 }
 
 type ItemAddition {
+  id: ID! @id
+  createdAt: DateTime! @createdAt
+  updatedAt: DateTime! @updatedAt
   uid: ID! @unique
   parentId: ID!
   name: String!
@@ -38,6 +47,9 @@ type ItemAddition {
 }
 
 type StepAddition {
+  id: ID! @id
+  createdAt: DateTime! @createdAt
+  updatedAt: DateTime! @updatedAt
   uid: ID! @unique
   parentId: ID!
   directions: String!
@@ -46,6 +58,9 @@ type StepAddition {
 }
 
 type IngredientAddition {
+  id: ID! @id
+  createdAt: DateTime! @createdAt
+  updatedAt: DateTime! @updatedAt
   uid: ID! @unique
   parentId: ID!
   name: String!
