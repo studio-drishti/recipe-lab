@@ -1,7 +1,8 @@
 type Recipe {
-  uid: ID! @unique
+  id: ID! @id
   createdAt: DateTime! @createdAt
   updatedAt: DateTime! @updatedAt
+  uid: ID! @unique
   author: User! @relation(name: "RecipeAuthor")
   title: String! @default(value: "")
   time: String! @default(value: "")
@@ -15,6 +16,9 @@ type Recipe {
 }
 
 type Item {
+  id: ID! @id
+  createdAt: DateTime! @createdAt
+  updatedAt: DateTime! @updatedAt
   uid: ID! @unique
   index: Int!
   name: String! @default(value: "")
@@ -23,6 +27,9 @@ type Item {
 }
 
 type Step {
+  id: ID! @id
+  createdAt: DateTime! @createdAt
+  updatedAt: DateTime! @updatedAt
   uid: ID! @unique
   index: Int!
   directions: String! @default(value: "")
@@ -33,6 +40,9 @@ type Step {
 }
 
 type Ingredient {
+  id: ID! @id
+  createdAt: DateTime! @createdAt
+  updatedAt: DateTime! @updatedAt
   uid: ID! @unique
   index: Int!
   name: String! @default(value: "")
@@ -43,7 +53,9 @@ type Ingredient {
 }
 
 type RecipePhoto {
-  id: ID! @unique
+  id: ID! @id
+  createdAt: DateTime! @createdAt
+  updatedAt: DateTime! @updatedAt
   filename: String!
   url: String!
   recipe: Recipe! @relation(name: "RecipePhotos")
