@@ -1,0 +1,3 @@
+mutation RecipePhotoReOrder($photoId: ID!) {
+  recipeMovePhotoOrderUp(photoId: $photoId)
+}
