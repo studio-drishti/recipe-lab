@@ -1,30 +1,10 @@
 .ingredients {
   padding: 0;
   list-style: none;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-column-gap: 0.5rem;
-  grid-row-gap: 0.5rem;
-  align-items: start;
-
-  & > li:nth-child(odd)[data-editing='true'] {
-    margin-right: calc(-100% - 0.5rem);
-  }
-
-  & > li:nth-child(even)[data-editing='true'] {
-    margin-left: calc(-100% - 0.5rem);
-  }
-
-  &[data-editing='true'] {
-    & > li[data-editing='false'] {
-      opacity: 0.5;
-      pointer-events: none;
-      filter: blur(0.05em);
-    }
-  }
 }
 
 .listActions {
+  margin-bottom: 1rem;
   transition: all linear 0.2s;
 
   &.editing {
