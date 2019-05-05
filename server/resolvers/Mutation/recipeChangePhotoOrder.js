@@ -1,1 +1,14 @@
-//Will need to find the current photo order for the recipe and re-order it so that the current photo has a lower position
+module.exports = async (parent, args, ctx) => {
+  const { photos } = args;
+
+  photos.forEach(async element => {
+    await ctx.prisma.updateRecipePhoto({
+      data: {
+        index: element.index
+      },
+      where: {
+        id: element.id
+      }
+    });
+  });
+};

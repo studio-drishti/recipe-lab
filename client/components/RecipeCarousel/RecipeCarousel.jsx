@@ -39,6 +39,7 @@ export default class RecipeCarousel extends PureComponent {
 
     updatePhotos(updatedArray);
     this.swiper.slideTo(endIndex);
+    return photos.map(photo => photo.id);
   };
 
   render() {
@@ -71,19 +72,37 @@ export default class RecipeCarousel extends PureComponent {
               >
                 {/* <img src={photo.url} /> */}
                 <IconButtonGroup className={css.actions}>
-                  <IconButton
-                    disabled={i === 0}
-                    onClick={() => this.reOrderPhotos(i, -1)}
-                  >
-                    <MdExpandLess />
-                  </IconButton>
-                  <IconButton
-                    disabled={i === photos.length - 1}
-                    onClick={() => this.reOrderPhotos(i, 1)}
-                  >
-                    <MdExpandMore />
-                  </IconButton>
+                  <Mutation mutation={RecipePhotoReOrderMutation}>
+                    {photoReorder => (
+                      <>
+                        <IconButton
+                          disabled={i === 0}
+                          onClick={() =>
+                            this.reOrderPhotos(i, -1).then(photos =>
+                              photoReorder({
+                                photos: photos
+                              })
+                            )
+                          }
+                        >
+                          <MdExpandLess />
+                        </IconButton>
 
+                        <IconButton
+                          disabled={i === photos.length - 1}
+                          onClick={() =>
+                            this.reOrderPhotos(i, 1).then(photos =>
+                              photoReorder({
+                                photos: photos
+                              })
+                            )
+                          }
+                        >
+                          <MdExpandMore />
+                        </IconButton>
+                      </>
+                    )}
+                  </Mutation>
                   <Mutation
                     mutation={RecipePhotoDeleteMutation}
                     onCompleted={data => {

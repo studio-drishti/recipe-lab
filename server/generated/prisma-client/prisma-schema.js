@@ -2588,6 +2588,7 @@ type RecipePhoto {
   filename: String!
   url: String!
   recipe: Recipe!
+  index: Int!
 }
 
 type RecipePhotoConnection {
@@ -2601,6 +2602,7 @@ input RecipePhotoCreateInput {
   filename: String!
   url: String!
   recipe: RecipeCreateOneWithoutPhotosInput!
+  index: Int!
 }
 
 input RecipePhotoCreateManyWithoutRecipeInput {
@@ -2612,6 +2614,7 @@ input RecipePhotoCreateWithoutRecipeInput {
   id: ID
   filename: String!
   url: String!
+  index: Int!
 }
 
 type RecipePhotoEdge {
@@ -2630,6 +2633,8 @@ enum RecipePhotoOrderByInput {
   filename_DESC
   url_ASC
   url_DESC
+  index_ASC
+  index_DESC
 }
 
 type RecipePhotoPreviousValues {
@@ -2638,6 +2643,7 @@ type RecipePhotoPreviousValues {
   updatedAt: DateTime!
   filename: String!
   url: String!
+  index: Int!
 }
 
 input RecipePhotoScalarWhereInput {
@@ -2699,6 +2705,14 @@ input RecipePhotoScalarWhereInput {
   url_not_starts_with: String
   url_ends_with: String
   url_not_ends_with: String
+  index: Int
+  index_not: Int
+  index_in: [Int!]
+  index_not_in: [Int!]
+  index_lt: Int
+  index_lte: Int
+  index_gt: Int
+  index_gte: Int
   AND: [RecipePhotoScalarWhereInput!]
   OR: [RecipePhotoScalarWhereInput!]
   NOT: [RecipePhotoScalarWhereInput!]
@@ -2726,16 +2740,19 @@ input RecipePhotoUpdateInput {
   filename: String
   url: String
   recipe: RecipeUpdateOneRequiredWithoutPhotosInput
+  index: Int
 }
 
 input RecipePhotoUpdateManyDataInput {
   filename: String
   url: String
+  index: Int
 }
 
 input RecipePhotoUpdateManyMutationInput {
   filename: String
   url: String
+  index: Int
 }
 
 input RecipePhotoUpdateManyWithoutRecipeInput {
@@ -2758,6 +2775,7 @@ input RecipePhotoUpdateManyWithWhereNestedInput {
 input RecipePhotoUpdateWithoutRecipeDataInput {
   filename: String
   url: String
+  index: Int
 }
 
 input RecipePhotoUpdateWithWhereUniqueWithoutRecipeInput {
@@ -2831,6 +2849,14 @@ input RecipePhotoWhereInput {
   url_ends_with: String
   url_not_ends_with: String
   recipe: RecipeWhereInput
+  index: Int
+  index_not: Int
+  index_in: [Int!]
+  index_not_in: [Int!]
+  index_lt: Int
+  index_lte: Int
+  index_gt: Int
+  index_gte: Int
   AND: [RecipePhotoWhereInput!]
   OR: [RecipePhotoWhereInput!]
   NOT: [RecipePhotoWhereInput!]

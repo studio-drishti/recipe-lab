@@ -594,7 +594,9 @@ export type RecipePhotoOrderByInput =
   | "filename_ASC"
   | "filename_DESC"
   | "url_ASC"
-  | "url_DESC";
+  | "url_DESC"
+  | "index_ASC"
+  | "index_DESC";
 
 export type UserOrderByInput =
   | "id_ASC"
@@ -980,6 +982,14 @@ export interface RecipePhotoWhereInput {
   url_ends_with?: String;
   url_not_ends_with?: String;
   recipe?: RecipeWhereInput;
+  index?: Int;
+  index_not?: Int;
+  index_in?: Int[] | Int;
+  index_not_in?: Int[] | Int;
+  index_lt?: Int;
+  index_lte?: Int;
+  index_gt?: Int;
+  index_gte?: Int;
   AND?: RecipePhotoWhereInput[] | RecipePhotoWhereInput;
   OR?: RecipePhotoWhereInput[] | RecipePhotoWhereInput;
   NOT?: RecipePhotoWhereInput[] | RecipePhotoWhereInput;
@@ -1942,6 +1952,7 @@ export interface SortingScalarWhereInput {
 export interface RecipePhotoUpdateManyMutationInput {
   filename?: String;
   url?: String;
+  index?: Int;
 }
 
 export interface SortingUpdateManyWithWhereNestedInput {
@@ -1991,6 +2002,7 @@ export interface RecipePhotoUpdateInput {
   filename?: String;
   url?: String;
   recipe?: RecipeUpdateOneRequiredWithoutPhotosInput;
+  index?: Int;
 }
 
 export interface ModificationUpdateOneRequiredWithoutItemAdditionsInput {
@@ -2017,6 +2029,7 @@ export interface RecipePhotoCreateInput {
   filename: String;
   url: String;
   recipe: RecipeCreateOneWithoutPhotosInput;
+  index: Int;
 }
 
 export interface AlterationUpsertWithWhereUniqueWithoutModificationInput {
@@ -3293,6 +3306,7 @@ export interface RecipeSubscriptionWhereInput {
 export interface RecipePhotoUpdateWithoutRecipeDataInput {
   filename?: String;
   url?: String;
+  index?: Int;
 }
 
 export interface IngredientAdditionSubscriptionWhereInput {
@@ -3388,6 +3402,14 @@ export interface RecipePhotoScalarWhereInput {
   url_not_starts_with?: String;
   url_ends_with?: String;
   url_not_ends_with?: String;
+  index?: Int;
+  index_not?: Int;
+  index_in?: Int[] | Int;
+  index_not_in?: Int[] | Int;
+  index_lt?: Int;
+  index_lte?: Int;
+  index_gt?: Int;
+  index_gte?: Int;
   AND?: RecipePhotoScalarWhereInput[] | RecipePhotoScalarWhereInput;
   OR?: RecipePhotoScalarWhereInput[] | RecipePhotoScalarWhereInput;
   NOT?: RecipePhotoScalarWhereInput[] | RecipePhotoScalarWhereInput;
@@ -3411,6 +3433,7 @@ export type IngredientAdditionWhereUniqueInput = AtLeastOne<{
 export interface RecipePhotoUpdateManyDataInput {
   filename?: String;
   url?: String;
+  index?: Int;
 }
 
 export type ItemWhereUniqueInput = AtLeastOne<{
@@ -4452,6 +4475,7 @@ export interface RecipePhotoCreateWithoutRecipeInput {
   id?: ID_Input;
   filename: String;
   url: String;
+  index: Int;
 }
 
 export interface ModificationUpdateWithoutIngredientAdditionsDataInput {
@@ -6154,6 +6178,7 @@ export interface RecipePhoto {
   updatedAt: DateTimeOutput;
   filename: String;
   url: String;
+  index: Int;
 }
 
 export interface RecipePhotoPromise extends Promise<RecipePhoto>, Fragmentable {
@@ -6163,6 +6188,7 @@ export interface RecipePhotoPromise extends Promise<RecipePhoto>, Fragmentable {
   filename: () => Promise<String>;
   url: () => Promise<String>;
   recipe: <T = RecipePromise>() => T;
+  index: () => Promise<Int>;
 }
 
 export interface RecipePhotoSubscription
@@ -6174,6 +6200,7 @@ export interface RecipePhotoSubscription
   filename: () => Promise<AsyncIterator<String>>;
   url: () => Promise<AsyncIterator<String>>;
   recipe: <T = RecipeSubscription>() => T;
+  index: () => Promise<AsyncIterator<Int>>;
 }
 
 export interface AggregateIngredient {
@@ -6240,6 +6267,7 @@ export interface RecipePhotoPreviousValues {
   updatedAt: DateTimeOutput;
   filename: String;
   url: String;
+  index: Int;
 }
 
 export interface RecipePhotoPreviousValuesPromise
@@ -6250,6 +6278,7 @@ export interface RecipePhotoPreviousValuesPromise
   updatedAt: () => Promise<DateTimeOutput>;
   filename: () => Promise<String>;
   url: () => Promise<String>;
+  index: () => Promise<Int>;
 }
 
 export interface RecipePhotoPreviousValuesSubscription
@@ -6260,6 +6289,7 @@ export interface RecipePhotoPreviousValuesSubscription
   updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
   filename: () => Promise<AsyncIterator<String>>;
   url: () => Promise<AsyncIterator<String>>;
+  index: () => Promise<AsyncIterator<Int>>;
 }
 
 export interface StepConnection {
