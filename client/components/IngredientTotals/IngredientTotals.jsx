@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { Transition, animated } from 'react-spring/renderprops.cjs';
 
 import addFractions from '../../utils/addFractions';
 
@@ -89,9 +90,20 @@ export default class IngredientTotals extends Component {
   render() {
     return (
       <ul className={css.ingredients}>
-        {this.getIngredientTotals().map((ingredient, i) => (
-          <li key={i}>{this.formatIngredientTotal(ingredient)}</li>
-        ))}
+        <Transition
+          items={this.getIngredientTotals()}
+          keys={item => item.name}
+          initial={null}
+          from={{ overflow: 'hidden', height: 0, opacity: 0 }}
+          enter={{ height: 'auto', opacity: 1 }}
+          leave={{ height: 0, opacity: 0, marginBottom: '-0.5rem' }}
+        >
+          {item => props => (
+            <animated.li style={props}>
+              {this.formatIngredientTotal(item)}
+            </animated.li>
+          )}
+        </Transition>
       </ul>
     );
   }
