@@ -19,6 +19,7 @@ type Mutation {
   avatarUpload(file: Upload!): File!
   recipePhotoUpload(file: Upload!, recipeId: ID!): RecipePhoto!
   recipePhotoDelete(photoId: ID!): Boolean!
+  recipePhotoOrder(photoIds: [ID!], recipeId: ID!): Boolean!
   saveModification(
     recipe: ID!
     user: ID!

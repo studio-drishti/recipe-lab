@@ -462,6 +462,7 @@ export default class Recipe extends Component {
             removePhoto={this.removePhoto}
             updatePhotos={this.updatePhotos}
             photos={[...recipe.photos]}
+            recipeId={recipe.uid}
           />
         </header>
 

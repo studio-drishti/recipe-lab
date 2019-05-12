@@ -3,6 +3,7 @@ const login = require('./login');
 const avatarUpload = require('./avatarUpload');
 const recipePhotoUpload = require('./recipePhotoUpload');
 const recipePhotoDelete = require('./recipePhotoDelete');
+const recipePhotoOrder = require('./recipePhotoOrder');
 const saveModification = require('./saveModification');
 
 module.exports = {
@@ -11,5 +12,6 @@ module.exports = {
   avatarUpload,
   recipePhotoUpload,
   recipePhotoDelete,
-  saveModification
+  saveModification,
+  recipePhotoOrder
 };

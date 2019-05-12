@@ -12,12 +12,13 @@ import css from './RecipeCarousel.css';
 import IconButtonGroup from '../IconButtonGroup';
 import IconButton from '../IconButton';
 import RecipePhotoDeleteMutation from '../../graphql/RecipePhotoDelete.graphql';
-import RecipePhotoReOrderMutation from '../../graphql/RecipePhotoReOrder.graphql';
+import RecipePhotoOrderMutation from '../../graphql/RecipePhotoOrder.graphql';
 
 export default class RecipeCarousel extends PureComponent {
   static displayName = 'RecipeCarousel';
   static propTypes = {
     photos: PropTypes.arrayOf(PropTypes.object),
+    recipeId: PropTypes.string,
     className: PropTypes.string,
     removePhoto: PropTypes.func,
     updatePhotos: PropTypes.func
@@ -35,15 +36,18 @@ export default class RecipeCarousel extends PureComponent {
     const { photos, updatePhotos } = this.props;
     const endIndex = startIndex + indexChange;
 
-    const updatedArray = reorder(photos, startIndex, endIndex);
+    return new Promise(resolve => {
+      const updatedArray = reorder(photos, startIndex, endIndex);
 
-    updatePhotos(updatedArray);
-    this.swiper.slideTo(endIndex);
-    return photos.map(photo => photo.id);
+      updatePhotos(updatedArray);
+      this.swiper.slideTo(endIndex);
+
+      return resolve(updatedArray.map(photo => photo.id));
+    });
   };
 
   render() {
-    const { photos, className, removePhoto } = this.props;
+    const { photos, recipeId, className, removePhoto } = this.props;
     const swiperParams = {
       pagination: {
         el: '.swiper-pagination',
@@ -72,15 +76,18 @@ export default class RecipeCarousel extends PureComponent {
               >
                 {/* <img src={photo.url} /> */}
                 <IconButtonGroup className={css.actions}>
-                  <Mutation mutation={RecipePhotoReOrderMutation}>
-                    {photoReorder => (
+                  <Mutation mutation={RecipePhotoOrderMutation}>
+                    {photoOrder => (
                       <>
                         <IconButton
                           disabled={i === 0}
                           onClick={() =>
                             this.reOrderPhotos(i, -1).then(photos =>
-                              photoReorder({
-                                photos: photos
+                              photoOrder({
+                                variables: {
+                                  photoIds: photos,
+                                  recipeId: recipeId
+                                }
                               })
                             )
                           }
@@ -92,8 +99,11 @@ export default class RecipeCarousel extends PureComponent {
                           disabled={i === photos.length - 1}
                           onClick={() =>
                             this.reOrderPhotos(i, 1).then(photos =>
-                              photoReorder({
-                                photos: photos
+                              photoOrder({
+                                variables: {
+                                  photoIds: photos,
+                                  recipeId: recipeId
+                                }
                               })
                             )
                           }
