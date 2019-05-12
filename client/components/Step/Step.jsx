@@ -1,12 +1,14 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { Draggable } from 'react-beautiful-dnd';
-import { MdEdit, MdClear, MdCheck, MdRefresh } from 'react-icons/md';
+import { MdEdit, MdClear, MdCheck, MdRefresh, MdAdd } from 'react-icons/md';
 import classnames from 'classnames';
 
 import css from './Step.css';
 import IconButton from '../IconButton';
 import IconButtonGroup from '../IconButtonGroup';
+import TextButton from '../TextButton';
+import TextButtonGroup from '../TextButtonGroup';
 
 export default class Step extends PureComponent {
   static displayName = 'Step';
@@ -15,23 +17,23 @@ export default class Step extends PureComponent {
     index: PropTypes.number,
     itemId: PropTypes.string,
     stepId: PropTypes.string,
-    isActive: PropTypes.bool,
     directions: PropTypes.node,
     directionsValue: PropTypes.string,
     activateStep: PropTypes.func,
     removed: PropTypes.bool,
     focusOnMount: PropTypes.bool,
     removeStep: PropTypes.func,
-    restoreStep: PropTypes.func
+    restoreStep: PropTypes.func,
+    children: PropTypes.func
   };
 
   static defaultProps = {
-    isActive: false,
     removed: false,
     focusOnMount: false
   };
 
   state = {
+    isActive: false,
     editing: false
   };
 
@@ -42,40 +44,53 @@ export default class Step extends PureComponent {
     if (this.props.focusOnMount) this.enableEditing();
   }
 
-  componentDidUpdate(prevProps) {
-    if (prevProps.isActive && !this.props.isActive && this.state.editing) {
-      this.disableEditing();
-    }
-  }
+  // componentDidUpdate(prevProps) {
+  //   if (prevProps.isActive && !this.props.isActive && this.state.editing) {
+  //     this.disableEditing();
+  //   }
+  // }
 
   componentWillUnmount() {
     document.removeEventListener('mousedown', this.handleClick);
   }
 
+  activateStep = () => {
+    this.setState({ isActive: true });
+    document.addEventListener('mousedown', this.handleClick);
+  };
+
+  deactivateStep = () => {
+    this.setState({ isActive: false, editing: false });
+    document.removeEventListener('mousedown', this.handleClick);
+  };
+
   enableEditing = async () => {
-    const { activateStep, isActive } = this.props;
-    if (!isActive) activateStep();
-    await this.setState({ editing: true });
-    if (this.inputRef.current) this.inputRef.current.focus();
+    const { directionsValue } = this.props;
+    await this.setState({ editing: true, isActive: true });
+    this.inputRef.current.focus();
+    this.inputRef.current.selectionStart = directionsValue.length;
     document.addEventListener('mousedown', this.handleClick);
   };
 
   disableEditing = () => {
     this.setState({ editing: false });
-    document.removeEventListener('mousedown', this.handleClick);
+    // document.removeEventListener('mousedown', this.handleClick);
   };
 
   handleClick = e => {
-    if (this.stepRef.current.contains(e.target)) return;
-    this.disableEditing();
+    if (!this.stepRef.current.contains(e.target)) {
+      this.deactivateStep();
+    } else if (e.target !== this.inputRef.current) {
+      this.disableEditing();
+    }
   };
 
   handleSelect = () => {
-    const { activateStep, isActive } = this.props;
-    if (isActive && !this.state.editing) {
+    const { isActive, editing } = this.state;
+    if (isActive && !editing) {
       this.enableEditing();
     } else if (!isActive) {
-      activateStep();
+      this.activateStep();
     }
   };
 
@@ -96,16 +111,8 @@ export default class Step extends PureComponent {
   };
 
   render() {
-    const {
-      index,
-      itemId,
-      stepId,
-      isActive,
-      removed,
-      restoreStep,
-      directions
-    } = this.props;
-    const { editing } = this.state;
+    const { index, itemId, stepId, removed, children } = this.props;
+    const { editing, isActive } = this.state;
     return (
       <Draggable type={`STEP-${itemId}`} draggableId={stepId} index={index}>
         {(provided, snapshot) => (
@@ -127,20 +134,54 @@ export default class Step extends PureComponent {
               </div>
 
               <div className={css.stepDirections} onClick={this.handleSelect}>
-                {directions &&
+                {/* {directions &&
                   React.cloneElement(directions, {
                     editing,
                     removed,
                     restoreStep,
                     inputRef: this.inputRef
-                  })}
+                  })} */}
+                {children({ editing, isActive, inputRef: this.inputRef })}
+
+                <div className={css.stepActions}>
+                  <TextButtonGroup>
+                    {editing && (
+                      <TextButton onClick={this.handleSave}>
+                        <MdCheck /> save directions
+                      </TextButton>
+                    )}
+
+                    {!editing && !removed && (
+                      <TextButton onClick={this.enableEditing}>
+                        <MdEdit /> edit directions
+                      </TextButton>
+                    )}
+
+                    {!removed && (
+                      <TextButton>
+                        <MdAdd /> add ingredient
+                      </TextButton>
+                    )}
+
+                    {!removed && (
+                      <TextButton onClick={this.handleRemove}>
+                        <MdClear /> remove step
+                      </TextButton>
+                    )}
+
+                    {removed && !editing && (
+                      <TextButton onClick={this.handleRestore}>
+                        <MdRefresh /> restore step
+                      </TextButton>
+                    )}
+                  </TextButtonGroup>
+                </div>
               </div>
 
-              <div className={css.stepActions}>
+              <div className={css.stepShortcuts}>
                 <IconButtonGroup>
                   {removed && !editing && (
                     <IconButton
-                      type="button"
                       className={css.button}
                       title="restore step"
                       onClick={this.handleRestore}
@@ -166,16 +207,6 @@ export default class Step extends PureComponent {
                         <MdClear />
                       </IconButton>
                     </>
-                  )}
-
-                  {editing && (
-                    <IconButton
-                      title="Save modifications"
-                      className="button"
-                      onClick={this.handleSave}
-                    >
-                      <MdCheck />
-                    </IconButton>
                   )}
                 </IconButtonGroup>
               </div>

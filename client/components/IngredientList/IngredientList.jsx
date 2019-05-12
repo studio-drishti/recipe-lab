@@ -46,13 +46,13 @@ export default class IngredientList extends Component {
             )}
           </Droppable>
         )}
-        <div
+        {/* <div
           className={classnames(css.listActions, { [css.editing]: editing })}
         >
           <TextButton onClick={this.handleCreate}>
             <MdAdd /> add ingredient
           </TextButton>
-        </div>
+        </div> */}
       </>
     );
   }

@@ -6,13 +6,6 @@
   position: relative;
   overflow: hidden;
 
-  &:hover,
-  &.editing {
-    & .stepActions {
-      opacity: 1;
-    }
-  }
-
   &:not(.editing) .itemName {
     cursor: pointer;
   }

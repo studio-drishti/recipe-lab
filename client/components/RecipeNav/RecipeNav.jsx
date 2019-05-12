@@ -1,6 +1,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { MdNavigateBefore, MdNavigateNext } from 'react-icons/md';
+import {
+  MdNavigateBefore,
+  MdNavigateNext,
+  MdFormatListBulleted
+} from 'react-icons/md';
 import IconButton from '../IconButton';
 
 import IconButtonGroup from '../IconButtonGroup';
@@ -66,20 +70,32 @@ export default class Ingredient extends Component {
     setActiveStep(recipeItems[itemIndex], recipeSteps[itemIndex][stepIndex]);
   };
 
+  unsetStep = () => {
+    const { setActiveStep } = this.props;
+    setActiveStep(null, null);
+  };
+
   render() {
     const { recipeItems, recipeSteps, activeItem, activeStep } = this.props;
 
-    const activeItemIndex = recipeItems.findIndex(
-      item => item.uid === activeItem.uid
-    );
-    const activeStepIndex = recipeSteps[activeItemIndex].findIndex(
-      step => step.uid === activeStep.uid
-    );
-    const hasPrevStep =
-      (activeItemIndex === 0 && activeStepIndex > 0) || activeItemIndex > 0;
-    const hasNextStep =
-      activeItemIndex < recipeItems.length - 1 ||
-      activeStepIndex < recipeSteps[activeItemIndex].length - 1;
+    let hasPrevStep, hasNextStep;
+
+    if (activeStep === null) {
+      hasPrevStep = false;
+      hasNextStep = true;
+    } else {
+      const activeItemIndex = recipeItems.findIndex(
+        item => item.uid === activeItem.uid
+      );
+      const activeStepIndex = recipeSteps[activeItemIndex].findIndex(
+        step => step.uid === activeStep.uid
+      );
+      hasPrevStep =
+        (activeItemIndex === 0 && activeStepIndex > 0) || activeItemIndex > 0;
+      hasNextStep =
+        activeItemIndex < recipeItems.length - 1 ||
+        activeStepIndex < recipeSteps[activeItemIndex].length - 1;
+    }
 
     return (
       <IconButtonGroup>
@@ -89,6 +105,9 @@ export default class Ingredient extends Component {
           disabled={!hasPrevStep}
         >
           <MdNavigateBefore />
+        </IconButton>
+        <IconButton title="Show ingredient totals" onClick={this.unsetStep}>
+          <MdFormatListBulleted />
         </IconButton>
         <IconButton
           title="Next step"
