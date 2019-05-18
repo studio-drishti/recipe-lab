@@ -42,8 +42,6 @@ export default class Recipe extends Component {
 
   state = {
     recipe: this.props.recipe,
-    activeItem: null,
-    activeStep: null,
     autoFocusId: null,
     localStoreId: `MOD-${this.props.recipe.uid}`,
     unsavedCount: 0,
@@ -72,13 +70,6 @@ export default class Recipe extends Component {
 
     this.setState({ modification });
   }
-
-  setActiveStep = (item, step) => {
-    this.setState({
-      activeItem: item,
-      activeStep: step
-    });
-  };
 
   setModification = modification => {
     const { localStoreId } = this.state;
@@ -406,14 +397,6 @@ export default class Recipe extends Component {
     return mod !== undefined ? mod : source[fieldName];
   };
 
-  getActiveStepNumber = () => {
-    const { activeItem, activeStep } = this.state;
-    return (
-      this.getSteps(activeItem).findIndex(step => step.uid === activeStep.uid) +
-      1
-    );
-  };
-
   addPhoto = photo => {
     const { recipe } = this.state;
     recipe.photos.push(photo);
@@ -427,18 +410,9 @@ export default class Recipe extends Component {
   };
 
   render() {
-    const {
-      recipe,
-      activeItem,
-      activeStep,
-      activeIngredient,
-      autoFocusId,
-      modification,
-      unsavedCount
-    } = this.state;
+    const { recipe, autoFocusId, modification, unsavedCount } = this.state;
 
     const recipeItems = this.getItems();
-    // const activeStepIngredients = activeStep && this.getIngredients(activeStep);
 
     return (
       <DragDropContext onDragEnd={this.onDragEnd}>
@@ -534,25 +508,21 @@ export default class Recipe extends Component {
                                             mod =>
                                               mod.sourceId === ingredient.uid
                                           )}
-                                          removed={
-                                            activeItem &&
-                                            activeStep &&
-                                            modification.removals.some(
-                                              sourceId =>
-                                                [
-                                                  activeItem.uid,
-                                                  activeStep.uid,
-                                                  ingredient.uid
-                                                ].includes(sourceId)
-                                            )
-                                          }
+                                          removed={modification.removals.some(
+                                            sourceId =>
+                                              [
+                                                item.uid,
+                                                step.uid,
+                                                ingredient.uid
+                                              ].includes(sourceId)
+                                          )}
                                           removeIngredient={() =>
                                             this.removeIngredient(ingredient)
                                           }
                                           restoreIngredient={() =>
                                             this.undoAnyRemovals(
-                                              activeItem,
-                                              activeStep,
+                                              item,
+                                              step,
                                               ingredient
                                             )
                                           }
