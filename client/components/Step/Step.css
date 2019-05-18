@@ -54,9 +54,12 @@
       vertical-align: middle;
     }
   }
+}
 
-  & .stepDirections {
+.directions {
+  & p {
     cursor: pointer;
+    margin: 0;
   }
 }
 

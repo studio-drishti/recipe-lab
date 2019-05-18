@@ -24,35 +24,27 @@ export default class Ingredient extends Component {
     index: PropTypes.number,
     ingredient: PropTypes.object.isRequired,
     ingredientMods: PropTypes.arrayOf(PropTypes.object),
-    editing: PropTypes.bool,
     removed: PropTypes.bool,
     removeIngredient: PropTypes.func,
     restoreIngredient: PropTypes.func,
-    saveOrUpdateField: PropTypes.func,
-    setActiveIngredient: PropTypes.func
+    saveOrUpdateField: PropTypes.func
   };
 
   static defaultProps = {
     ingredientMods: [],
-    editing: false,
     removed: false
   };
 
   state = {
     errors: {},
-    edits: {}
+    edits: {},
+    editing: false
   };
 
   ingredientFields = ['quantity', 'unit', 'name', 'processing'];
 
   ingredientRef = React.createRef();
   quantityInputRef = React.createRef();
-
-  componentDidUpdate(prevProps) {
-    if (!prevProps.editing && this.props.editing) {
-      this.quantityInputRef.current.focus();
-    }
-  }
 
   componentWillUnmount() {
     document.removeEventListener('mousedown', this.handleClick);
@@ -120,9 +112,9 @@ export default class Ingredient extends Component {
   };
 
   deselect = () => {
-    this.props.setActiveIngredient(null);
+    // this.props.setActiveIngredient(null);
     document.removeEventListener('mousedown', this.handleClick);
-    this.setState({ errors: {}, edits: {} });
+    this.setState({ errors: {}, edits: {}, editing: false });
   };
 
   handleClick = e => {
@@ -144,10 +136,11 @@ export default class Ingredient extends Component {
     this.ingredientRef.current.focus();
   };
 
-  handleSelect = e => {
+  handleSelect = async e => {
     e.stopPropagation();
     document.addEventListener('mousedown', this.handleClick);
-    this.props.setActiveIngredient(this.props.ingredient);
+    await this.setState({ editing: true });
+    this.quantityInputRef.current.focus();
   };
 
   handleKeybdSelect = e => {
@@ -217,8 +210,8 @@ export default class Ingredient extends Component {
   };
 
   render() {
-    const { editing, removed, ingredient, index } = this.props;
-    const { errors } = this.state;
+    const { removed, ingredient, index } = this.props;
+    const { errors, editing } = this.state;
     return (
       <Draggable type="INGREDIENT" draggableId={ingredient.uid} index={index}>
         {(provided, snapshot) => (
