@@ -270,10 +270,21 @@ export default class Recipe extends Component {
       );
     } else if (result.type.startsWith('STEP')) {
       const itemId = result.destination.droppableId;
-      const item = recipe.items.find(item => item.uid === itemId);
+      const item = this.getUnsortedItems().find(item => item.uid === itemId);
       this.saveSorting(
         itemId,
         this.getUnsortedSteps(item),
+        result.source.index,
+        result.destination.index
+      );
+    } else if (result.type.startsWith('INGREDIENT')) {
+      const stepId = result.destination.droppableId;
+      const step = this.getUnsortedItems()
+        .flatMap(item => this.getUnsortedSteps(item))
+        .find(step => step.uid === stepId);
+      this.saveSorting(
+        stepId,
+        this.getUnsortedIngredients(step),
         result.source.index,
         result.destination.index
       );
@@ -314,7 +325,7 @@ export default class Recipe extends Component {
     this.setModification(modification);
   };
 
-  createIngredient = async stepId => {
+  createIngredient = stepId => {
     const { modification } = this.state;
 
     const addition = {
@@ -329,10 +340,8 @@ export default class Recipe extends Component {
 
     modification.additions.push(addition);
 
-    await this.setModification(modification);
-    setTimeout(() => {
-      this.setState({ activeIngredient: addition });
-    }, 200);
+    this.setModification(modification);
+    this.setState({ activeIngredient: addition });
   };
 
   getSorted = (parentId, arr) => {
@@ -446,7 +455,7 @@ export default class Recipe extends Component {
     const activeStepIngredients = this.getIngredients(activeStep);
 
     return (
-      <>
+      <DragDropContext onDragEnd={this.onDragEnd}>
         <header className={css.recipeHeader}>
           <RecipeDetails
             className={css.recipeDetails}
@@ -500,76 +509,69 @@ export default class Recipe extends Component {
                   </div>
                 ))}
             </div>
-
-            <DragDropContext onDragEnd={this.onDragEnd}>
-              <ItemList recipeId={recipe.uid}>
-                {recipeItems.map((item, itemI) => {
-                  const itemSteps = this.getSteps(item);
-                  return (
-                    <Item
-                      key={item.uid}
-                      itemId={item.uid}
-                      index={itemI}
-                      isLast={itemI === recipeItems.length - 1}
-                      focusOnMount={autoFocusId === item.uid}
-                      removed={modification.removals.includes(item.uid)}
-                      removeItem={() => this.removeItem(item)}
-                      restoreItem={() => this.undoRemoval(item)}
-                      createStep={() => this.createStep(item.uid)}
-                      createItem={this.createItem}
-                      itemNameValue={this.getFieldValue(item, 'name')}
-                      itemName={
-                        <ItemName
-                          item={item}
-                          prefix="Directions for"
-                          mod={this.getAlteration(item, 'name')}
-                          saveOrUpdateField={this.saveOrUpdateField}
-                        />
-                      }
-                    >
-                      {itemSteps.length > 0 && (
-                        <StepList itemId={item.uid}>
-                          {itemSteps.map((step, stepI) => (
-                            <Step
-                              key={step.uid}
-                              index={stepI}
-                              itemId={item.uid}
-                              stepId={step.uid}
-                              directionsValue={this.getFieldValue(
-                                step,
-                                'directions'
-                              )}
-                              removed={modification.removals.some(sourceId =>
-                                [item.uid, step.uid].includes(sourceId)
-                              )}
-                              isActive={
-                                activeItem.uid === item.uid &&
-                                activeStep.uid === step.uid
-                              }
-                              focusOnMount={autoFocusId === step.uid}
-                              activateStep={() =>
-                                this.setActiveStep(item, step)
-                              }
-                              removeStep={() => this.removeStep(step)}
-                              restoreStep={() =>
-                                this.undoAnyRemovals(item, step)
-                              }
-                              directions={
-                                <Directions
-                                  step={step}
-                                  mod={this.getAlteration(step, 'directions')}
-                                  saveOrUpdateField={this.saveOrUpdateField}
-                                />
-                              }
-                            />
-                          ))}
-                        </StepList>
-                      )}
-                    </Item>
-                  );
-                })}
-              </ItemList>
-            </DragDropContext>
+            <ItemList recipeId={recipe.uid}>
+              {recipeItems.map((item, itemI) => {
+                const itemSteps = this.getSteps(item);
+                return (
+                  <Item
+                    key={item.uid}
+                    itemId={item.uid}
+                    index={itemI}
+                    isLast={itemI === recipeItems.length - 1}
+                    focusOnMount={autoFocusId === item.uid}
+                    removed={modification.removals.includes(item.uid)}
+                    removeItem={() => this.removeItem(item)}
+                    restoreItem={() => this.undoRemoval(item)}
+                    createStep={() => this.createStep(item.uid)}
+                    createItem={this.createItem}
+                    itemNameValue={this.getFieldValue(item, 'name')}
+                    itemName={
+                      <ItemName
+                        item={item}
+                        prefix="Directions for"
+                        mod={this.getAlteration(item, 'name')}
+                        saveOrUpdateField={this.saveOrUpdateField}
+                      />
+                    }
+                  >
+                    {itemSteps.length > 0 && (
+                      <StepList itemId={item.uid}>
+                        {itemSteps.map((step, stepI) => (
+                          <Step
+                            key={step.uid}
+                            index={stepI}
+                            itemId={item.uid}
+                            stepId={step.uid}
+                            directionsValue={this.getFieldValue(
+                              step,
+                              'directions'
+                            )}
+                            removed={modification.removals.some(sourceId =>
+                              [item.uid, step.uid].includes(sourceId)
+                            )}
+                            isActive={
+                              activeItem.uid === item.uid &&
+                              activeStep.uid === step.uid
+                            }
+                            focusOnMount={autoFocusId === step.uid}
+                            activateStep={() => this.setActiveStep(item, step)}
+                            removeStep={() => this.removeStep(step)}
+                            restoreStep={() => this.undoAnyRemovals(item, step)}
+                            directions={
+                              <Directions
+                                step={step}
+                                mod={this.getAlteration(step, 'directions')}
+                                saveOrUpdateField={this.saveOrUpdateField}
+                              />
+                            }
+                          />
+                        ))}
+                      </StepList>
+                    )}
+                  </Item>
+                );
+              })}
+            </ItemList>
           </div>
           <aside className={css.stepDetail}>
             <div className={css.sticky}>
@@ -610,6 +612,7 @@ export default class Recipe extends Component {
               <div className={css.stepDetailContent}>
                 <h3>Ingredients Used</h3>
                 <IngredientList
+                  stepId={activeStep.uid}
                   createIngredient={() => this.createIngredient(activeStep.uid)}
                   editing={
                     activeIngredient !== null &&
@@ -618,9 +621,10 @@ export default class Recipe extends Component {
                     )
                   }
                 >
-                  {activeStepIngredients.map(ingredient => (
+                  {activeStepIngredients.map((ingredient, i) => (
                     <Ingredient
                       key={ingredient.uid}
+                      index={i}
                       ingredient={ingredient}
                       ingredientMods={modification.alterations.filter(
                         mod => mod.sourceId === ingredient.uid
@@ -650,7 +654,7 @@ export default class Recipe extends Component {
           </aside>
         </article>
         <RecipeBio author={recipe.author} />
-      </>
+      </DragDropContext>
     );
   }
 }

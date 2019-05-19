@@ -1,3 +1,7 @@
+.container {
+  margin-bottom: 0.25rem;
+}
+
 .ingredient {
   background: var(--color-white);
   padding: 0.5em;
@@ -6,6 +10,15 @@
   cursor: pointer;
   transition: all ease-out 0.3s;
   outline: 0;
+  display: grid;
+  grid-template-columns: min-content auto;
+  grid-column-gap: 0.5em;
+  align-items: center;
+
+  & .dragHandle {
+    color: var(--color-medium-gray);
+    transition: all linear 0.2s;
+  }
 
   & form {
     display: grid;
@@ -46,23 +59,20 @@
     transition: opacity ease-out 0.3s;
   }
 
-  &[data-editing='false']:hover,
-  &[data-editing='false']:focus,
-  &[data-editing='false']:focus-within,
-  &[data-editing='true'] {
+  &:hover,
+  &:focus-within,
+  & .editing {
     border: 0.01rem solid var(--color-medium-gray);
     transition: all ease-out 0.2s;
-    z-index: 1;
+
+    & .dragHandle {
+      color: var(--color-dark-gray);
+      transition: all linear 0.2s;
+    }
 
     & .button {
       opacity: 1;
       transition: opacity ease-out 0.2s;
     }
-  }
-
-  &[data-editing='false']:hover,
-  &[data-editing='true'] {
-    box-shadow: 0 0.25rem 0.25rem -0.25rem rgba(0, 0, 0, 0.15);
-    transform: translateY(-0.09em);
   }
 }

@@ -1,18 +1,27 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { MdClear, MdRefresh, MdCheck } from 'react-icons/md';
+import {
+  MdClear,
+  MdEdit,
+  MdRefresh,
+  MdCheck,
+  MdDragHandle
+} from 'react-icons/md';
 import classnames from 'classnames';
 import math from 'mathjs';
+import { Draggable } from 'react-beautiful-dnd';
 
 import css from './Ingredient.css';
 import DiffText from '../DiffText';
 import { MEASURE_UNITS } from '../../config';
 import IconButton from '../IconButton';
+import IconButtonGroup from '../IconButtonGroup';
 
 export default class Ingredient extends Component {
   static displayName = 'Ingredient';
 
   static propTypes = {
+    index: PropTypes.number,
     ingredient: PropTypes.object.isRequired,
     ingredientMods: PropTypes.arrayOf(PropTypes.object),
     editing: PropTypes.bool,
@@ -208,102 +217,126 @@ export default class Ingredient extends Component {
   };
 
   render() {
-    const { editing, removed } = this.props;
+    const { editing, removed, ingredient, index } = this.props;
     const { errors } = this.state;
     return (
-      <li
-        className={css.ingredient}
-        data-editing={editing}
-        onClick={this.handleSelect}
-        onKeyPress={this.handleKeybdSelect}
-        ref={this.ingredientRef}
-        tabIndex="0"
-      >
-        <form onSubmit={this.handleSave}>
-          {editing && (
-            <fieldset>
-              <input
-                type="text"
-                name="quantity"
-                title="Quantity"
-                ref={this.quantityInputRef}
-                value={this.getIngredientValue('quantity')}
-                placeholder={'Qty'}
-                onChange={this.handleIngredientChange}
-                className={classnames({ [css.error]: errors.quantity })}
-              />
-              <select
-                type="text"
-                name="unit"
-                title="Unit"
-                value={this.getIngredientValue('unit')}
-                onChange={this.handleIngredientChange}
-              >
-                <option value="">--</option>
-                {MEASURE_UNITS.map(unit => (
-                  <option key={unit} value={unit}>
-                    {unit}
-                  </option>
-                ))}
-              </select>
-              <input
-                type="text"
-                name="name"
-                title="Name"
-                value={this.getIngredientValue('name')}
-                placeholder={'Name'}
-                onChange={this.handleIngredientChange}
-              />
-              <input
-                type="text"
-                name="processing"
-                title="Process"
-                value={this.getIngredientValue('processing')}
-                placeholder={'Process'}
-                onChange={this.handleIngredientChange}
-              />
-            </fieldset>
-          )}
+      <Draggable type="INGREDIENT" draggableId={ingredient.uid} index={index}>
+        {(provided, snapshot) => (
+          <li
+            className={css.container}
+            ref={provided.innerRef}
+            {...provided.draggableProps}
+          >
+            <div
+              className={classnames(css.ingredient, {
+                [css.dragging]: snapshot.isDragging,
+                [css.editing]: editing
+              })}
+              onClick={this.handleSelect}
+              onKeyPress={this.handleKeybdSelect}
+              tabIndex="0"
+            >
+              <div className={css.dragHandle} {...provided.dragHandleProps}>
+                <MdDragHandle />
+              </div>
+              <form onSubmit={this.handleSave} ref={this.ingredientRef}>
+                {editing && (
+                  <fieldset>
+                    <input
+                      type="text"
+                      name="quantity"
+                      title="Quantity"
+                      ref={this.quantityInputRef}
+                      value={this.getIngredientValue('quantity')}
+                      placeholder={'Qty'}
+                      onChange={this.handleIngredientChange}
+                      className={classnames({ [css.error]: errors.quantity })}
+                    />
+                    <select
+                      type="text"
+                      name="unit"
+                      title="Unit"
+                      value={this.getIngredientValue('unit')}
+                      onChange={this.handleIngredientChange}
+                    >
+                      <option value="">--</option>
+                      {MEASURE_UNITS.map(unit => (
+                        <option key={unit} value={unit}>
+                          {unit}
+                        </option>
+                      ))}
+                    </select>
+                    <input
+                      type="text"
+                      name="name"
+                      title="Name"
+                      value={this.getIngredientValue('name')}
+                      placeholder={'Name'}
+                      onChange={this.handleIngredientChange}
+                    />
+                    <input
+                      type="text"
+                      name="processing"
+                      title="Process"
+                      value={this.getIngredientValue('processing')}
+                      placeholder={'Process'}
+                      onChange={this.handleIngredientChange}
+                    />
+                  </fieldset>
+                )}
 
-          {!editing && removed && this.renderRemovedIngredient()}
+                {!editing && removed && this.renderRemovedIngredient()}
 
-          {!editing && !removed && this.renderIngredientWithMods()}
+                {!editing && !removed && this.renderIngredientWithMods()}
 
-          <div className={css.buttons}>
-            {removed && !editing && (
-              <IconButton
-                className={css.button}
-                aria-label="restore ingredient"
-                onClick={this.handleRestore}
-                onKeyDown={this.handleKeybdRestore}
-              >
-                <MdRefresh />
-              </IconButton>
-            )}
+                <div className={css.buttons}>
+                  {removed && !editing && (
+                    <IconButton
+                      className={css.button}
+                      aria-label="restore ingredient"
+                      onClick={this.handleRestore}
+                      onKeyDown={this.handleKeybdRestore}
+                    >
+                      <MdRefresh />
+                    </IconButton>
+                  )}
 
-            {!removed && !editing && (
-              <IconButton
-                className={css.button}
-                aria-label="remove ingredient"
-                onClick={this.handleRemove}
-                onKeyDown={this.handleKeybdRemove}
-              >
-                <MdClear />
-              </IconButton>
-            )}
+                  {!removed && !editing && (
+                    <IconButtonGroup>
+                      <IconButton
+                        className={css.button}
+                        aria-label="edit ingredient"
+                        onClick={this.handleSelect}
+                        onKeyDown={this.handleKeybdSelect}
+                      >
+                        <MdEdit />
+                      </IconButton>
+                      <IconButton
+                        className={css.button}
+                        aria-label="remove ingredient"
+                        onClick={this.handleRemove}
+                        onKeyDown={this.handleKeybdRemove}
+                      >
+                        <MdClear />
+                      </IconButton>
+                    </IconButtonGroup>
+                  )}
 
-            {editing && (
-              <IconButton
-                className={css.button}
-                type="submit"
-                aria-label="save modifications"
-              >
-                <MdCheck />
-              </IconButton>
-            )}
-          </div>
-        </form>
-      </li>
+                  {editing && (
+                    <IconButton
+                      className={css.button}
+                      type="submit"
+                      aria-label="save modifications"
+                    >
+                      <MdCheck />
+                    </IconButton>
+                  )}
+                </div>
+              </form>
+            </div>
+          </li>
+        )}
+      </Draggable>
     );
   }
 }
