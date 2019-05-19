@@ -39,4 +39,5 @@ type RecipePhoto {
   filename: String!
   url: String!
   recipe: Recipe!
+  index: Int!
 }

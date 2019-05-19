@@ -434,6 +434,12 @@ export default class Recipe extends Component {
     this.setState({ recipe });
   };
 
+  updatePhotos = photos => {
+    const { recipe } = this.state;
+    recipe.photos = photos;
+    this.setState({ recipe });
+  };
+
   render() {
     const {
       recipe,
@@ -459,11 +465,14 @@ export default class Recipe extends Component {
             )}
             saveAlteration={this.saveAlteration}
             addPhoto={this.addPhoto}
+            photosLength={recipe.photos.length}
           />
           <RecipeCarousel
             className={css.recipeCarousel}
             removePhoto={this.removePhoto}
+            updatePhotos={this.updatePhotos}
             photos={[...recipe.photos]}
+            recipeId={recipe.uid}
           />
         </header>
 

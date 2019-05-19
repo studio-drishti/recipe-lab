@@ -35,7 +35,8 @@ export default class RecipeDetails extends PureComponent {
     recipe: PropTypes.object,
     recipeMods: PropTypes.arrayOf(PropTypes.object),
     saveAlteration: PropTypes.func,
-    addPhoto: PropTypes.func
+    addPhoto: PropTypes.func,
+    photosLength: PropTypes.number
   };
 
   state = {
@@ -136,7 +137,7 @@ export default class RecipeDetails extends PureComponent {
 
   render() {
     const { editing } = this.state;
-    const { recipe, addPhoto, className } = this.props;
+    const { recipe, addPhoto, className, photosLength } = this.props;
     return (
       <form
         ref={this.containerRef}
@@ -263,7 +264,11 @@ export default class RecipeDetails extends PureComponent {
                     abort
                   ) => {
                     uploadFile({
-                      variables: { file, recipeId: recipe.uid }
+                      variables: {
+                        file,
+                        recipeId: recipe.uid,
+                        index: photosLength
+                      }
                     })
                       .then(res => {
                         addPhoto(res.data.recipePhotoUpload);

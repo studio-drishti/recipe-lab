@@ -2,20 +2,25 @@ import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import Swiper from 'react-id-swiper/lib/ReactIdSwiper.full';
 import { MdDeleteForever } from 'react-icons/md';
+import { MdExpandMore, MdExpandLess } from 'react-icons/md';
 import { Mutation } from 'react-apollo';
 import classnames from 'classnames';
+import reorder from '../../utils/reorder';
 
 import css from './RecipeCarousel.css';
 import IconButtonGroup from '../IconButtonGroup';
 import IconButton from '../IconButton';
 import RecipePhotoDeleteMutation from '../../graphql/RecipePhotoDelete.graphql';
+import RecipePhotoOrderMutation from '../../graphql/RecipePhotoOrder.graphql';
 
 export default class RecipeCarousel extends PureComponent {
   static displayName = 'RecipeCarousel';
   static propTypes = {
     photos: PropTypes.arrayOf(PropTypes.object),
+    recipeId: PropTypes.string,
     className: PropTypes.string,
-    removePhoto: PropTypes.func
+    removePhoto: PropTypes.func,
+    updatePhotos: PropTypes.func
   };
 
   componentDidUpdate(prevProps) {
@@ -26,8 +31,22 @@ export default class RecipeCarousel extends PureComponent {
     }
   }
 
+  reOrderPhotos = (startIndex, indexChange) => {
+    const { photos, updatePhotos } = this.props;
+    const endIndex = startIndex + indexChange;
+
+    return new Promise(resolve => {
+      const updatedArray = reorder(photos, startIndex, endIndex);
+
+      updatePhotos(updatedArray);
+      this.swiper.slideTo(endIndex);
+
+      return resolve(updatedArray.map(photo => photo.id));
+    });
+  };
+
   render() {
-    const { photos, className, removePhoto } = this.props;
+    const { photos, recipeId, className, removePhoto } = this.props;
     const swiperParams = {
       pagination: {
         el: '.swiper-pagination',
@@ -56,6 +75,43 @@ export default class RecipeCarousel extends PureComponent {
               >
                 {/* <img src={photo.url} /> */}
                 <IconButtonGroup className={css.actions}>
+                  <Mutation mutation={RecipePhotoOrderMutation}>
+                    {photoOrder => (
+                      <>
+                        <IconButton
+                          disabled={i === 0}
+                          onClick={() =>
+                            this.reOrderPhotos(i, -1).then(photos =>
+                              photoOrder({
+                                variables: {
+                                  photoIds: photos,
+                                  recipeId: recipeId
+                                }
+                              })
+                            )
+                          }
+                        >
+                          <MdExpandLess />
+                        </IconButton>
+
+                        <IconButton
+                          disabled={i === photos.length - 1}
+                          onClick={() =>
+                            this.reOrderPhotos(i, 1).then(photos =>
+                              photoOrder({
+                                variables: {
+                                  photoIds: photos,
+                                  recipeId: recipeId
+                                }
+                              })
+                            )
+                          }
+                        >
+                          <MdExpandMore />
+                        </IconButton>
+                      </>
+                    )}
+                  </Mutation>
                   <Mutation
                     mutation={RecipePhotoDeleteMutation}
                     onCompleted={data => {
