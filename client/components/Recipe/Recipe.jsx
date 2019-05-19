@@ -456,6 +456,7 @@ export default class Recipe extends Component {
             )}
             saveAlteration={this.saveAlteration}
             addPhoto={this.addPhoto}
+            photosLength={recipe.photos.length}
           />
           <RecipeCarousel
             className={css.recipeCarousel}

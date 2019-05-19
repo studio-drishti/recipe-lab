@@ -1,7 +1,5 @@
 module.exports = async (parent, args, ctx) => {
   const { photoIds, recipeId } = args;
-  console.log('PhotoIds', photoIds);
-  console.log('RecipeId', recipeId);
 
   await ctx.prisma.updateRecipe({
     where: { uid: recipeId },
