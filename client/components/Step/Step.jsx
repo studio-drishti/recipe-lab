@@ -20,6 +20,7 @@ export default class Step extends PureComponent {
     step: PropTypes.object,
     stepMods: PropTypes.arrayOf(PropTypes.object),
     removed: PropTypes.bool,
+    focusOnMount: PropTypes.bool,
     saveOrUpdateField: PropTypes.func,
     removeStep: PropTypes.func,
     restoreStep: PropTypes.func,
@@ -39,9 +40,9 @@ export default class Step extends PureComponent {
   stepRef = React.createRef();
   inputRef = React.createRef();
 
-  // componentDidMount() {
-  //   if (this.props.focusOnMount) this.enableEditing();
-  // }
+  componentDidMount() {
+    if (this.props.focusOnMount) this.enableEditing();
+  }
 
   componentWillUnmount() {
     document.removeEventListener('mousedown', this.handleClick);

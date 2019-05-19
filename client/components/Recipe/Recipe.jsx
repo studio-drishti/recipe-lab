@@ -4,8 +4,6 @@ import PropTypes from 'prop-types';
 import { DragDropContext } from 'react-beautiful-dnd';
 import cuid from 'cuid';
 
-import css from './Recipe.css';
-
 import reorder from '../../utils/reorder';
 import areArraysEqual from '../../utils/areArraysEqual';
 
@@ -16,11 +14,12 @@ import StepList from '../StepList';
 import Step from '../Step';
 import ItemList from '../ItemList';
 import Item from '../Item';
-import ItemName from '../ItemName';
 import IngredientList from '../IngredientList';
 import Ingredient from '../Ingredient';
 import IngredientTotals from '../IngredientTotals';
 import RecipeStatus from '../RecipeStatus';
+
+import css from './Recipe.css';
 
 export default class Recipe extends Component {
   static displayName = 'Recipe';
@@ -441,7 +440,10 @@ export default class Recipe extends Component {
                 return (
                   <Item
                     key={item.uid}
-                    itemId={item.uid}
+                    item={item}
+                    itemMods={modification.alterations.filter(
+                      mod => mod.sourceId === item.uid
+                    )}
                     index={itemI}
                     isLast={itemI === recipeItems.length - 1}
                     focusOnMount={autoFocusId === item.uid}
@@ -450,15 +452,7 @@ export default class Recipe extends Component {
                     restoreItem={() => this.undoRemoval(item)}
                     createStep={() => this.createStep(item.uid)}
                     createItem={this.createItem}
-                    itemNameValue={this.getFieldValue(item, 'name')}
-                    itemName={
-                      <ItemName
-                        item={item}
-                        prefix="Directions for"
-                        mod={this.getAlteration(item, 'name')}
-                        saveOrUpdateField={this.saveOrUpdateField}
-                      />
-                    }
+                    saveOrUpdateField={this.saveOrUpdateField}
                   >
                     {itemSteps.length > 0 && (
                       <StepList itemId={item.uid}>
@@ -480,17 +474,6 @@ export default class Recipe extends Component {
                           >
                             {({ editing, isActive }) => (
                               <>
-                                {/* <Directions
-                                  editing={editing}
-                                  step={step}
-                                  inputRef={inputRef}
-                                  mod={this.getAlteration(step, 'directions')}
-                                  saveOrUpdateField={this.saveOrUpdateField}
-                                  removed={modification.removals.some(
-                                    sourceId =>
-                                      [item.uid, step.uid].includes(sourceId)
-                                  )}
-                                /> */}
                                 {isActive && (
                                   <IngredientList
                                     stepId={step.uid}

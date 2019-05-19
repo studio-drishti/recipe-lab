@@ -11,9 +11,11 @@ import {
 } from 'react-icons/md';
 import classnames from 'classnames';
 
-import css from './Item.css';
 import TextButton from '../TextButton';
 import TextButtonGroup from '../TextButtonGroup';
+import DiffText from '../DiffText';
+
+import css from './Item.css';
 
 export default class Item extends PureComponent {
   static displayName = 'Item';
@@ -21,25 +23,28 @@ export default class Item extends PureComponent {
   static propTypes = {
     children: PropTypes.node,
     index: PropTypes.number,
-    itemId: PropTypes.string,
+    item: PropTypes.object,
+    itemMods: PropTypes.arrayOf(PropTypes.object),
     handleItemChange: PropTypes.func,
-    itemNameValue: PropTypes.string,
-    itemName: PropTypes.node,
     removed: PropTypes.bool,
     isLast: PropTypes.bool,
     focusOnMount: PropTypes.bool,
     removeItem: PropTypes.func,
     restoreItem: PropTypes.func,
     createItem: PropTypes.func,
-    createStep: PropTypes.func
+    createStep: PropTypes.func,
+    saveOrUpdateField: PropTypes.func
+  };
+
+  static defaultProps = {
+    isLast: false,
+    focusOnMount: false
   };
 
   state = {
     hovering: false,
     editing: false,
-    removed: false,
-    isLast: false,
-    focusOnMount: false
+    removed: false
   };
 
   itemRef = React.createRef();
@@ -53,7 +58,8 @@ export default class Item extends PureComponent {
     document.removeEventListener('mousedown', this.handleClick);
   }
 
-  enableEditing = async () => {
+  enableEditing = async e => {
+    e.preventDefault();
     await this.setState({ editing: true });
     this.inputRef.current.focus();
     document.addEventListener('mousedown', this.handleClick);
@@ -95,7 +101,7 @@ export default class Item extends PureComponent {
   handleSave = e => {
     e.preventDefault();
     this.disableEditing();
-    if (!this.props.itemNameValue) this.props.removeItem();
+    if (!this.getItemValue('name')) this.props.removeItem();
   };
 
   handleCreateStep = () => {
@@ -110,19 +116,42 @@ export default class Item extends PureComponent {
     if (!editing) createItem();
   };
 
+  renderNameWithMods = () => {
+    const { item, removed } = this.props;
+    const prefix = 'Directions for ';
+    const original = prefix + item.name;
+
+    if (removed) return <del>{original}</del>;
+
+    const modified = prefix + this.getItemValue('name');
+    if (original !== modified) {
+      return <DiffText original={original} modified={modified} />;
+    }
+
+    return original;
+  };
+
+  getItemValue = fieldName => {
+    const { item, itemMods } = this.props;
+    const mod = itemMods.find(
+      mod => mod.sourceId === item.uid && mod.field === fieldName
+    );
+
+    return mod !== undefined ? mod.value : item[fieldName];
+  };
+
+  handleItemChange = e => {
+    const { name, value } = e.target;
+    const { removed, restoreItem, saveOrUpdateField, item } = this.props;
+    if (removed) restoreItem();
+    saveOrUpdateField(item, name, value);
+  };
+
   render() {
-    const {
-      children,
-      itemId,
-      index,
-      itemName,
-      removed,
-      isLast,
-      restoreItem
-    } = this.props;
+    const { children, item, index, removed, isLast } = this.props;
     const { hovering, editing } = this.state;
     return (
-      <Draggable type="ITEM" draggableId={itemId} index={index}>
+      <Draggable type="ITEM" draggableId={item.uid} index={index}>
         {(provided, snapshot) => (
           <div
             className={css.itemWrap}
@@ -146,15 +175,24 @@ export default class Item extends PureComponent {
                   <MdDragHandle />
                 </div>
                 <div className={css.itemHeader}>
-                  <div className={css.itemName} onClick={this.enableEditing}>
-                    {itemName &&
-                      React.cloneElement(itemName, {
-                        editing,
-                        removed,
-                        restoreItem,
-                        inputRef: this.inputRef
-                      })}
-                  </div>
+                  <form className={css.itemName}>
+                    {editing && (
+                      <input
+                        type="text"
+                        name="name"
+                        value={this.getItemValue('name')}
+                        ref={this.inputRef}
+                        placeholder="Item name"
+                        onChange={this.handleItemChange}
+                      />
+                    )}
+
+                    {!editing && (
+                      <h3 onMouseDown={this.enableEditing}>
+                        {this.renderNameWithMods()}
+                      </h3>
+                    )}
+                  </form>
                   <div className={css.itemActions}>
                     {editing && (
                       <button
