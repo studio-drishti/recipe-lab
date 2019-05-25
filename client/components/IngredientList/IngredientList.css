@@ -1,6 +1,10 @@
 .ingredients {
   padding: 0;
   list-style: none;
+
+  &.draggingOver {
+    pointer-events: none;
+  }
 }
 
 .listActions {

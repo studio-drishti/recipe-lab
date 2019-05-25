@@ -7,7 +7,6 @@
   padding: 0.5em;
   border: 0.01em solid transparent;
   border-radius: var(--default-border-radius);
-  cursor: pointer;
   transition: all ease-out 0.3s;
   outline: 0;
   display: grid;
@@ -61,7 +60,8 @@
 
   &:hover,
   &:focus-within,
-  & .editing {
+  &.editing,
+  &.dragging {
     border: 0.01rem solid var(--color-medium-gray);
     transition: all ease-out 0.2s;
 
@@ -75,4 +75,8 @@
       transition: opacity ease-out 0.2s;
     }
   }
+}
+
+.ingredientText {
+  cursor: pointer;
 }

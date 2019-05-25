@@ -45,17 +45,17 @@ export default class Step extends PureComponent {
   }
 
   componentWillUnmount() {
-    document.removeEventListener('mousedown', this.handleClick);
+    document.removeEventListener('mousedown', this.handleClick, true);
   }
 
   activateStep = () => {
     this.setState({ isActive: true });
-    document.addEventListener('mousedown', this.handleClick);
+    document.addEventListener('mousedown', this.handleClick, true);
   };
 
   deactivateStep = () => {
     this.setState({ isActive: false, editing: false });
-    document.removeEventListener('mousedown', this.handleClick);
+    document.removeEventListener('mousedown', this.handleClick, true);
   };
 
   enableEditing = async () => {
@@ -64,7 +64,7 @@ export default class Step extends PureComponent {
     this.inputRef.current.selectionStart = this.getStepValue(
       'directions'
     ).length;
-    document.addEventListener('mousedown', this.handleClick);
+    document.addEventListener('mousedown', this.handleClick, true);
   };
 
   disableEditing = () => {
@@ -83,7 +83,7 @@ export default class Step extends PureComponent {
     const { isActive, editing } = this.state;
 
     e.preventDefault();
-    document.removeEventListener('mousedown', this.handleClick);
+    document.removeEventListener('mousedown', this.handleClick, true);
 
     if (isActive && !editing) {
       this.enableEditing();

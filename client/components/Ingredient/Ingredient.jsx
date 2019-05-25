@@ -112,7 +112,6 @@ export default class Ingredient extends Component {
   };
 
   deselect = () => {
-    // this.props.setActiveIngredient(null);
     document.removeEventListener('mousedown', this.handleClick);
     this.setState({ errors: {}, edits: {}, editing: false });
   };
@@ -225,7 +224,6 @@ export default class Ingredient extends Component {
                 [css.dragging]: snapshot.isDragging,
                 [css.editing]: editing
               })}
-              onClick={this.handleSelect}
               onKeyPress={this.handleKeybdSelect}
               tabIndex="0"
             >
@@ -278,11 +276,17 @@ export default class Ingredient extends Component {
                   </fieldset>
                 )}
 
-                {!editing && removed && this.renderRemovedIngredient()}
+                {!editing && (
+                  <div
+                    className={css.ingredientText}
+                    onMouseDown={this.handleSelect}
+                  >
+                    {removed && this.renderRemovedIngredient()}
+                    {!removed && this.renderIngredientWithMods()}
+                  </div>
+                )}
 
-                {!editing && !removed && this.renderIngredientWithMods()}
-
-                <div className={css.buttons}>
+                <IconButtonGroup className={css.buttons}>
                   {removed && !editing && (
                     <IconButton
                       className={css.button}
@@ -295,11 +299,11 @@ export default class Ingredient extends Component {
                   )}
 
                   {!removed && !editing && (
-                    <IconButtonGroup>
+                    <>
                       <IconButton
                         className={css.button}
                         aria-label="edit ingredient"
-                        onClick={this.handleSelect}
+                        onMouseDown={this.handleSelect}
                         onKeyDown={this.handleKeybdSelect}
                       >
                         <MdEdit />
@@ -312,7 +316,7 @@ export default class Ingredient extends Component {
                       >
                         <MdClear />
                       </IconButton>
-                    </IconButtonGroup>
+                    </>
                   )}
 
                   {editing && (
@@ -324,7 +328,7 @@ export default class Ingredient extends Component {
                       <MdCheck />
                     </IconButton>
                   )}
-                </div>
+                </IconButtonGroup>
               </form>
             </div>
           </li>
