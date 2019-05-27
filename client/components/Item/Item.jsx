@@ -28,7 +28,6 @@ export default class Item extends PureComponent {
     handleItemChange: PropTypes.func,
     removed: PropTypes.bool,
     isLast: PropTypes.bool,
-    focusOnMount: PropTypes.bool,
     removeItem: PropTypes.func,
     restoreItem: PropTypes.func,
     createItem: PropTypes.func,
@@ -37,8 +36,7 @@ export default class Item extends PureComponent {
   };
 
   static defaultProps = {
-    isLast: false,
-    focusOnMount: false
+    isLast: false
   };
 
   state = {
@@ -51,18 +49,22 @@ export default class Item extends PureComponent {
   inputRef = React.createRef();
 
   componentDidMount() {
-    if (this.props.focusOnMount) this.enableEditing();
+    if (this.getItemValue('name') === '') this.enableEditing();
   }
 
   componentWillUnmount() {
     document.removeEventListener('mousedown', this.handleClick);
   }
 
-  enableEditing = async e => {
-    e.preventDefault();
+  enableEditing = async () => {
     await this.setState({ editing: true });
     this.inputRef.current.focus();
     document.addEventListener('mousedown', this.handleClick);
+  };
+
+  handleSelect = e => {
+    e.preventDefault();
+    this.enableEditing();
   };
 
   disableEditing = () => {
@@ -133,10 +135,10 @@ export default class Item extends PureComponent {
 
   getItemValue = fieldName => {
     const { item, itemMods } = this.props;
+
     const mod = itemMods.find(
       mod => mod.sourceId === item.uid && mod.field === fieldName
     );
-
     return mod !== undefined ? mod.value : item[fieldName];
   };
 
@@ -188,7 +190,7 @@ export default class Item extends PureComponent {
                     )}
 
                     {!editing && (
-                      <h3 onMouseDown={this.enableEditing}>
+                      <h3 onMouseDown={this.handleSelect}>
                         {this.renderNameWithMods()}
                       </h3>
                     )}
@@ -213,7 +215,7 @@ export default class Item extends PureComponent {
                       <>
                         <button
                           title="Edit item name"
-                          onClick={this.enableEditing}
+                          onClick={this.handleSelect}
                         >
                           <MdEdit />
                         </button>
