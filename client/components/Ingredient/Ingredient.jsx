@@ -24,23 +24,21 @@ export default class Ingredient extends Component {
     index: PropTypes.number,
     ingredient: PropTypes.object.isRequired,
     ingredientMods: PropTypes.arrayOf(PropTypes.object),
-    editing: PropTypes.bool,
     removed: PropTypes.bool,
     removeIngredient: PropTypes.func,
     restoreIngredient: PropTypes.func,
-    saveOrUpdateField: PropTypes.func,
-    setActiveIngredient: PropTypes.func
+    saveOrUpdateField: PropTypes.func
   };
 
   static defaultProps = {
     ingredientMods: [],
-    editing: false,
     removed: false
   };
 
   state = {
     errors: {},
-    edits: {}
+    edits: {},
+    editing: false
   };
 
   ingredientFields = ['quantity', 'unit', 'name', 'processing'];
@@ -48,15 +46,23 @@ export default class Ingredient extends Component {
   ingredientRef = React.createRef();
   quantityInputRef = React.createRef();
 
-  componentDidUpdate(prevProps) {
-    if (!prevProps.editing && this.props.editing) {
-      this.quantityInputRef.current.focus();
-    }
+  componentDidMount() {
+    if (this.isIngredientEmpty()) this.enableEditing();
   }
 
   componentWillUnmount() {
     document.removeEventListener('mousedown', this.handleClick);
+    if (this.isIngredientEmpty()) this.props.removeIngredient();
   }
+
+  isIngredientEmpty = () => {
+    return (
+      !this.getIngredientValue('quantity') &&
+      !this.getIngredientValue('unit') &&
+      !this.getIngredientValue('name') &&
+      !this.getIngredientValue('processing')
+    );
+  };
 
   getIngredientValue = fieldName => {
     const { edits } = this.state;
@@ -119,12 +125,6 @@ export default class Ingredient extends Component {
     return <DiffText original={original} modified={modified} />;
   };
 
-  deselect = () => {
-    this.props.setActiveIngredient(null);
-    document.removeEventListener('mousedown', this.handleClick);
-    this.setState({ errors: {}, edits: {} });
-  };
-
   handleClick = e => {
     if (this.ingredientRef.current.contains(e.target)) return;
     this.deselect();
@@ -132,22 +132,28 @@ export default class Ingredient extends Component {
 
   handleSave = e => {
     e.preventDefault();
-    if (
-      !this.getIngredientValue('quantity') &&
-      !this.getIngredientValue('unit') &&
-      !this.getIngredientValue('name') &&
-      !this.getIngredientValue('processing')
-    ) {
-      this.props.removeIngredient();
-    }
     this.deselect();
     this.ingredientRef.current.focus();
   };
 
+  enableEditing = async () => {
+    document.addEventListener('mousedown', this.handleClick);
+    await this.setState({ editing: true });
+    this.quantityInputRef.current.focus();
+  };
+
   handleSelect = e => {
     e.stopPropagation();
-    document.addEventListener('mousedown', this.handleClick);
-    this.props.setActiveIngredient(this.props.ingredient);
+    this.enableEditing();
+  };
+
+  deselect = () => {
+    document.removeEventListener('mousedown', this.handleClick);
+    if (this.isIngredientEmpty()) {
+      this.props.removeIngredient();
+    } else {
+      this.setState({ errors: {}, edits: {}, editing: false });
+    }
   };
 
   handleKeybdSelect = e => {
@@ -217,8 +223,8 @@ export default class Ingredient extends Component {
   };
 
   render() {
-    const { editing, removed, ingredient, index } = this.props;
-    const { errors } = this.state;
+    const { removed, ingredient, index } = this.props;
+    const { errors, editing } = this.state;
     return (
       <Draggable type="INGREDIENT" draggableId={ingredient.uid} index={index}>
         {(provided, snapshot) => (
@@ -232,7 +238,6 @@ export default class Ingredient extends Component {
                 [css.dragging]: snapshot.isDragging,
                 [css.editing]: editing
               })}
-              onClick={this.handleSelect}
               onKeyPress={this.handleKeybdSelect}
               tabIndex="0"
             >
@@ -285,11 +290,17 @@ export default class Ingredient extends Component {
                   </fieldset>
                 )}
 
-                {!editing && removed && this.renderRemovedIngredient()}
+                {!editing && (
+                  <div
+                    className={css.ingredientText}
+                    onMouseDown={this.handleSelect}
+                  >
+                    {removed && this.renderRemovedIngredient()}
+                    {!removed && this.renderIngredientWithMods()}
+                  </div>
+                )}
 
-                {!editing && !removed && this.renderIngredientWithMods()}
-
-                <div className={css.buttons}>
+                <IconButtonGroup className={css.buttons}>
                   {removed && !editing && (
                     <IconButton
                       className={css.button}
@@ -302,11 +313,11 @@ export default class Ingredient extends Component {
                   )}
 
                   {!removed && !editing && (
-                    <IconButtonGroup>
+                    <>
                       <IconButton
                         className={css.button}
                         aria-label="edit ingredient"
-                        onClick={this.handleSelect}
+                        onMouseDown={this.handleSelect}
                         onKeyDown={this.handleKeybdSelect}
                       >
                         <MdEdit />
@@ -319,7 +330,7 @@ export default class Ingredient extends Component {
                       >
                         <MdClear />
                       </IconButton>
-                    </IconButtonGroup>
+                    </>
                   )}
 
                   {editing && (
@@ -331,7 +342,7 @@ export default class Ingredient extends Component {
                       <MdCheck />
                     </IconButton>
                   )}
-                </div>
+                </IconButtonGroup>
               </form>
             </div>
           </li>

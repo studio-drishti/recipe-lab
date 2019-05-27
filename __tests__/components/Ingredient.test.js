@@ -38,7 +38,7 @@ const setup = propOverrides => {
   return {
     props,
     wrapper,
-    container: wrapper.find('.ingredient')
+    instance: wrapper.find('Ingredient').instance()
   };
 };
 
@@ -84,17 +84,24 @@ describe('Deleting and restoring ingredients', () => {
 });
 
 describe('Editing an ingredient', () => {
-  test('Sets the editing id on click', () => {
-    const { props, container } = setup();
-    container.simulate('click', { stopPropagation() {} });
-    expect(props.setActiveIngredient).toHaveBeenCalled();
-  });
-
   test('Displays as form inputs when editing', () => {
     const { wrapper } = setup({ editing: true });
     expect(wrapper.exists('button[aria-label^="save"]'));
     expect(wrapper.exists('input'));
   });
+});
 
-  // it requires quantity and name
+describe('Creating an ingredient', () => {
+  test('Auto focuses on first field when new ingredient mounts', () => {
+    const { wrapper } = setup({
+      ingredient: {
+        uid: cuid(),
+        quantity: '',
+        unit: '',
+        name: '',
+        processing: ''
+      }
+    });
+    expect(wrapper.find('input[name="quantity"]').is(':focus'));
+  });
 });

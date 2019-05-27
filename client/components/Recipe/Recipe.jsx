@@ -4,8 +4,6 @@ import PropTypes from 'prop-types';
 import { DragDropContext } from 'react-beautiful-dnd';
 import cuid from 'cuid';
 
-import css from './Recipe.css';
-
 import reorder from '../../utils/reorder';
 import areArraysEqual from '../../utils/areArraysEqual';
 
@@ -16,14 +14,12 @@ import StepList from '../StepList';
 import Step from '../Step';
 import ItemList from '../ItemList';
 import Item from '../Item';
-import ItemName from '../ItemName';
 import IngredientList from '../IngredientList';
 import Ingredient from '../Ingredient';
 import IngredientTotals from '../IngredientTotals';
-import StepHeader from '../StepHeader';
-import RecipeNav from '../RecipeNav';
-import Directions from '../Directions';
 import RecipeStatus from '../RecipeStatus';
+
+import css from './Recipe.css';
 
 export default class Recipe extends Component {
   static displayName = 'Recipe';
@@ -45,10 +41,6 @@ export default class Recipe extends Component {
 
   state = {
     recipe: this.props.recipe,
-    activeItem: this.props.recipe.items[0],
-    activeStep: this.props.recipe.items[0].steps[0],
-    activeIngredient: null,
-    autoFocusId: null,
     localStoreId: `MOD-${this.props.recipe.uid}`,
     unsavedCount: 0,
     modification: {
@@ -76,17 +68,6 @@ export default class Recipe extends Component {
 
     this.setState({ modification });
   }
-
-  setActiveStep = (item, step) => {
-    this.setState({
-      activeItem: item,
-      activeStep: step
-    });
-  };
-
-  setActiveIngredient = ingredient => {
-    this.setState({ activeIngredient: ingredient });
-  };
 
   setModification = modification => {
     const { localStoreId } = this.state;
@@ -303,8 +284,6 @@ export default class Recipe extends Component {
     };
 
     modification.additions.push(addition);
-
-    this.setState({ autoFocusId: addition.uid });
     this.setModification(modification);
   };
 
@@ -320,8 +299,6 @@ export default class Recipe extends Component {
     };
 
     modification.additions.push(addition);
-
-    this.setState({ autoFocusId: addition.uid });
     this.setModification(modification);
   };
 
@@ -414,14 +391,6 @@ export default class Recipe extends Component {
     return mod !== undefined ? mod : source[fieldName];
   };
 
-  getActiveStepNumber = () => {
-    const { activeItem, activeStep } = this.state;
-    return (
-      this.getSteps(activeItem).findIndex(step => step.uid === activeStep.uid) +
-      1
-    );
-  };
-
   addPhoto = photo => {
     const { recipe } = this.state;
     recipe.photos.push(photo);
@@ -441,18 +410,9 @@ export default class Recipe extends Component {
   };
 
   render() {
-    const {
-      recipe,
-      activeItem,
-      activeStep,
-      activeIngredient,
-      autoFocusId,
-      modification,
-      unsavedCount
-    } = this.state;
+    const { recipe, modification, unsavedCount } = this.state;
 
     const recipeItems = this.getItems();
-    const activeStepIngredients = this.getIngredients(activeStep);
 
     return (
       <DragDropContext onDragEnd={this.onDragEnd}>
@@ -476,63 +436,26 @@ export default class Recipe extends Component {
           />
         </header>
 
-        <RecipeStatus
-          recipe={recipe}
-          modification={modification}
-          unsavedCount={unsavedCount}
-          updateModification={modification => this.setState({ modification })}
-        />
         <article className={css.recipe}>
           <div className={css.recipeMain}>
-            <div className={css.ingredientTotals}>
-              {recipeItems
-                .filter(item => !modification.removals.includes(item.uid))
-                .map(item => (
-                  <div key={item.uid}>
-                    <h3>Ingredients for {this.getFieldValue(item, 'name')}</h3>
-                    <IngredientTotals
-                      ingredients={this.getSteps(item)
-                        .filter(
-                          step => !modification.removals.includes(step.uid)
-                        )
-                        .reduce((result, step) => {
-                          return result.concat(
-                            this.getIngredients(step).filter(
-                              ingredient =>
-                                !modification.removals.includes(ingredient.uid)
-                            )
-                          );
-                        }, [])}
-                      removals={modification.removals}
-                      alterations={modification.alterations}
-                    />
-                  </div>
-                ))}
-            </div>
             <ItemList recipeId={recipe.uid}>
               {recipeItems.map((item, itemI) => {
                 const itemSteps = this.getSteps(item);
                 return (
                   <Item
                     key={item.uid}
-                    itemId={item.uid}
+                    item={item}
+                    itemMods={modification.alterations.filter(
+                      mod => mod.sourceId === item.uid
+                    )}
                     index={itemI}
                     isLast={itemI === recipeItems.length - 1}
-                    focusOnMount={autoFocusId === item.uid}
                     removed={modification.removals.includes(item.uid)}
                     removeItem={() => this.removeItem(item)}
                     restoreItem={() => this.undoRemoval(item)}
                     createStep={() => this.createStep(item.uid)}
                     createItem={this.createItem}
-                    itemNameValue={this.getFieldValue(item, 'name')}
-                    itemName={
-                      <ItemName
-                        item={item}
-                        prefix="Directions for"
-                        mod={this.getAlteration(item, 'name')}
-                        saveOrUpdateField={this.saveOrUpdateField}
-                      />
-                    }
+                    saveOrUpdateField={this.saveOrUpdateField}
                   >
                     {itemSteps.length > 0 && (
                       <StepList itemId={item.uid}>
@@ -541,30 +464,63 @@ export default class Recipe extends Component {
                             key={step.uid}
                             index={stepI}
                             itemId={item.uid}
-                            stepId={step.uid}
-                            directionsValue={this.getFieldValue(
-                              step,
-                              'directions'
+                            step={step}
+                            stepMods={modification.alterations.filter(
+                              mod => mod.sourceId === step.uid
                             )}
                             removed={modification.removals.some(sourceId =>
                               [item.uid, step.uid].includes(sourceId)
                             )}
-                            isActive={
-                              activeItem.uid === item.uid &&
-                              activeStep.uid === step.uid
-                            }
-                            focusOnMount={autoFocusId === step.uid}
-                            activateStep={() => this.setActiveStep(item, step)}
+                            saveOrUpdateField={this.saveOrUpdateField}
                             removeStep={() => this.removeStep(step)}
                             restoreStep={() => this.undoAnyRemovals(item, step)}
-                            directions={
-                              <Directions
-                                step={step}
-                                mod={this.getAlteration(step, 'directions')}
-                                saveOrUpdateField={this.saveOrUpdateField}
-                              />
+                            createIngredient={() =>
+                              this.createIngredient(step.uid)
                             }
-                          />
+                          >
+                            {({ isActive }) => (
+                              <>
+                                {isActive && (
+                                  <IngredientList stepId={step.uid}>
+                                    {this.getIngredients(step).map(
+                                      (ingredient, i) => (
+                                        <Ingredient
+                                          key={ingredient.uid}
+                                          index={i}
+                                          ingredient={ingredient}
+                                          ingredientMods={modification.alterations.filter(
+                                            mod =>
+                                              mod.sourceId === ingredient.uid
+                                          )}
+                                          removed={modification.removals.some(
+                                            sourceId =>
+                                              [
+                                                item.uid,
+                                                step.uid,
+                                                ingredient.uid
+                                              ].includes(sourceId)
+                                          )}
+                                          removeIngredient={() =>
+                                            this.removeIngredient(ingredient)
+                                          }
+                                          restoreIngredient={() =>
+                                            this.undoAnyRemovals(
+                                              item,
+                                              step,
+                                              ingredient
+                                            )
+                                          }
+                                          saveOrUpdateField={
+                                            this.saveOrUpdateField
+                                          }
+                                        />
+                                      )
+                                    )}
+                                  </IngredientList>
+                                )}
+                              </>
+                            )}
+                          </Step>
                         ))}
                       </StepList>
                     )}
@@ -575,80 +531,42 @@ export default class Recipe extends Component {
           </div>
           <aside className={css.stepDetail}>
             <div className={css.sticky}>
-              <StepHeader
-                activeStep={activeStep}
-                removed={modification.removals.some(sourceId =>
-                  [activeItem.uid, activeStep.uid].includes(sourceId)
-                )}
-                removeStep={() => this.saveRemoval(activeStep)}
-                restoreStep={() => this.undoAnyRemovals(activeItem, activeStep)}
-                itemName={
-                  <ItemName
-                    item={activeItem}
-                    removed={modification.removals.includes(activeItem.uid)}
-                    restoreItem={() => this.undoRemoval(activeItem)}
-                    suffix={`> Step ${this.getActiveStepNumber()}`}
-                    mod={this.getAlteration(activeItem, 'name')}
-                    saveOrUpdateField={this.saveOrUpdateField}
-                  />
-                }
-                navigation={
-                  <RecipeNav
-                    recipeItems={recipeItems}
-                    recipeSteps={recipeItems.map(item => this.getSteps(item))}
-                    activeItem={activeItem}
-                    activeStep={activeStep}
-                    setActiveStep={this.setActiveStep}
-                  />
-                }
-                directions={
-                  <Directions
-                    step={activeStep}
-                    mod={this.getAlteration(activeStep, 'directions')}
-                    saveOrUpdateField={this.saveOrUpdateField}
-                  />
+              <RecipeStatus
+                recipe={recipe}
+                modification={modification}
+                unsavedCount={unsavedCount}
+                updateModification={modification =>
+                  this.setState({ modification })
                 }
               />
-              <div className={css.stepDetailContent}>
-                <h3>Ingredients Used</h3>
-                <IngredientList
-                  stepId={activeStep.uid}
-                  createIngredient={() => this.createIngredient(activeStep.uid)}
-                  editing={
-                    activeIngredient !== null &&
-                    activeStepIngredients.some(
-                      ingredient => ingredient.uid === activeIngredient.uid
-                    )
-                  }
-                >
-                  {activeStepIngredients.map((ingredient, i) => (
-                    <Ingredient
-                      key={ingredient.uid}
-                      index={i}
-                      ingredient={ingredient}
-                      ingredientMods={modification.alterations.filter(
-                        mod => mod.sourceId === ingredient.uid
-                      )}
-                      removed={modification.removals.some(sourceId =>
-                        [
-                          activeItem.uid,
-                          activeStep.uid,
-                          ingredient.uid
-                        ].includes(sourceId)
-                      )}
-                      editing={
-                        activeIngredient !== null &&
-                        activeIngredient.uid === ingredient.uid
-                      }
-                      removeIngredient={() => this.removeIngredient(ingredient)}
-                      restoreIngredient={() =>
-                        this.undoAnyRemovals(activeItem, activeStep, ingredient)
-                      }
-                      saveOrUpdateField={this.saveOrUpdateField}
-                      setActiveIngredient={this.setActiveIngredient}
-                    />
+              <div className={css.ingredientTotals}>
+                {recipeItems
+                  .filter(item => !modification.removals.includes(item.uid))
+                  .map(item => (
+                    <div key={item.uid}>
+                      <h3>
+                        Ingredients for {this.getFieldValue(item, 'name')}
+                      </h3>
+                      <IngredientTotals
+                        ingredients={this.getSteps(item)
+                          .filter(
+                            step => !modification.removals.includes(step.uid)
+                          )
+                          .reduce((result, step) => {
+                            return result.concat(
+                              this.getIngredients(step).filter(
+                                ingredient =>
+                                  !modification.removals.includes(
+                                    ingredient.uid
+                                  )
+                              )
+                            );
+                          }, [])}
+                        removals={modification.removals}
+                        alterations={modification.alterations}
+                      />
+                    </div>
                   ))}
-                </IngredientList>
               </div>
             </div>
           </aside>
