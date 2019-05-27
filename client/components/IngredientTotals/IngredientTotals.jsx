@@ -34,6 +34,14 @@ export default class IngredientTotals extends Component {
     const totals = {};
     ingredients.forEach(unModifiedIngredient => {
       const ingredient = this.getIngredientWithMods(unModifiedIngredient);
+
+      if (
+        ingredient.name === '' ||
+        ingredient.unit === '' ||
+        ingredient.quantity === ''
+      )
+        return;
+
       if (totals.hasOwnProperty(ingredient.name)) {
         totals[ingredient.name].divided = true;
         if (

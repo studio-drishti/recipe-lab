@@ -41,7 +41,6 @@ export default class Recipe extends Component {
 
   state = {
     recipe: this.props.recipe,
-    autoFocusId: null,
     localStoreId: `MOD-${this.props.recipe.uid}`,
     unsavedCount: 0,
     modification: {
@@ -285,8 +284,6 @@ export default class Recipe extends Component {
     };
 
     modification.additions.push(addition);
-
-    this.setState({ autoFocusId: addition.uid });
     this.setModification(modification);
   };
 
@@ -302,8 +299,6 @@ export default class Recipe extends Component {
     };
 
     modification.additions.push(addition);
-
-    this.setState({ autoFocusId: addition.uid });
     this.setModification(modification);
   };
 
@@ -409,7 +404,7 @@ export default class Recipe extends Component {
   };
 
   render() {
-    const { recipe, autoFocusId, modification, unsavedCount } = this.state;
+    const { recipe, modification, unsavedCount } = this.state;
 
     const recipeItems = this.getItems();
 
@@ -446,7 +441,6 @@ export default class Recipe extends Component {
                     )}
                     index={itemI}
                     isLast={itemI === recipeItems.length - 1}
-                    focusOnMount={autoFocusId === item.uid}
                     removed={modification.removals.includes(item.uid)}
                     removeItem={() => this.removeItem(item)}
                     restoreItem={() => this.undoRemoval(item)}
@@ -471,16 +465,14 @@ export default class Recipe extends Component {
                             saveOrUpdateField={this.saveOrUpdateField}
                             removeStep={() => this.removeStep(step)}
                             restoreStep={() => this.undoAnyRemovals(item, step)}
+                            createIngredient={() =>
+                              this.createIngredient(step.uid)
+                            }
                           >
-                            {({ editing, isActive }) => (
+                            {({ isActive }) => (
                               <>
                                 {isActive && (
-                                  <IngredientList
-                                    stepId={step.uid}
-                                    createIngredient={() =>
-                                      this.createIngredient(step.uid)
-                                    }
-                                  >
+                                  <IngredientList stepId={step.uid}>
                                     {this.getIngredients(step).map(
                                       (ingredient, i) => (
                                         <Ingredient

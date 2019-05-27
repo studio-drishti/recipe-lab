@@ -46,6 +46,17 @@ export default class Ingredient extends Component {
   ingredientRef = React.createRef();
   quantityInputRef = React.createRef();
 
+  componentDidMount() {
+    if (
+      this.getIngredientValue('quantity') === '' &&
+      this.getIngredientValue('unit') === '' &&
+      this.getIngredientValue('name') === '' &&
+      this.getIngredientValue('processing') === ''
+    ) {
+      this.enableEditing();
+    }
+  }
+
   componentWillUnmount() {
     document.removeEventListener('mousedown', this.handleClick);
   }
@@ -111,11 +122,6 @@ export default class Ingredient extends Component {
     return <DiffText original={original} modified={modified} />;
   };
 
-  deselect = () => {
-    document.removeEventListener('mousedown', this.handleClick);
-    this.setState({ errors: {}, edits: {}, editing: false });
-  };
-
   handleClick = e => {
     if (this.ingredientRef.current.contains(e.target)) return;
     this.deselect();
@@ -135,11 +141,20 @@ export default class Ingredient extends Component {
     this.ingredientRef.current.focus();
   };
 
-  handleSelect = async e => {
-    e.stopPropagation();
+  enableEditing = async () => {
     document.addEventListener('mousedown', this.handleClick);
     await this.setState({ editing: true });
     this.quantityInputRef.current.focus();
+  };
+
+  handleSelect = e => {
+    e.stopPropagation();
+    this.enableEditing();
+  };
+
+  deselect = () => {
+    document.removeEventListener('mousedown', this.handleClick);
+    this.setState({ errors: {}, edits: {}, editing: false });
   };
 
   handleKeybdSelect = e => {

@@ -20,16 +20,16 @@ export default class Step extends PureComponent {
     step: PropTypes.object,
     stepMods: PropTypes.arrayOf(PropTypes.object),
     removed: PropTypes.bool,
-    focusOnMount: PropTypes.bool,
     saveOrUpdateField: PropTypes.func,
     removeStep: PropTypes.func,
     restoreStep: PropTypes.func,
+    createIngredient: PropTypes.func,
     children: PropTypes.func
   };
 
   static defaultProps = {
     removed: false,
-    focusOnMount: false
+    stepMods: []
   };
 
   state = {
@@ -41,7 +41,7 @@ export default class Step extends PureComponent {
   inputRef = React.createRef();
 
   componentDidMount() {
-    if (this.props.focusOnMount) this.enableEditing();
+    if (this.getStepValue('directions') === '') this.enableEditing();
   }
 
   componentWillUnmount() {
@@ -106,6 +106,11 @@ export default class Step extends PureComponent {
   handleRestore = e => {
     e.stopPropagation();
     this.props.restoreStep();
+  };
+
+  handleCreateIngredient = e => {
+    e.stopPropagation();
+    this.props.createIngredient();
   };
 
   renderDirectionsWithMods = () => {
@@ -174,13 +179,16 @@ export default class Step extends PureComponent {
                   )}
 
                   {!editing && (
-                    <p onMouseDown={this.handleSelect}>
+                    <p
+                      className={css.stepDirections}
+                      onMouseDown={this.handleSelect}
+                    >
                       {this.renderDirectionsWithMods()}
                     </p>
                   )}
                 </form>
 
-                {children({ editing, isActive })}
+                {children && children({ editing, isActive })}
 
                 <div className={css.stepActions}>
                   <TextButtonGroup>
@@ -191,13 +199,16 @@ export default class Step extends PureComponent {
                     )}
 
                     {!editing && !removed && (
-                      <TextButton onClick={this.enableEditing}>
+                      <TextButton
+                        title="edit directions"
+                        onClick={this.enableEditing}
+                      >
                         <MdEdit /> edit directions
                       </TextButton>
                     )}
 
                     {!removed && (
-                      <TextButton>
+                      <TextButton onClick={this.handleCreateIngredient}>
                         <MdAdd /> add ingredient
                       </TextButton>
                     )}

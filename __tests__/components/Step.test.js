@@ -30,30 +30,38 @@ beforeEach(() => {
   props = {
     index: 0,
     itemId: cuid(),
-    stepId: cuid(),
-    activateStep: jest.fn()
+    step: {
+      uid: cuid(),
+      directions: 'Do the dumb things I gotta do.'
+    }
   };
 });
 
 describe('Displaying ingredient steps', () => {
   test('clicking on directions selects the step', () => {
-    const { wrapper } = setup(props);
-    wrapper.find('.stepDirections').simulate('click');
-    expect(props.activateStep).toBeCalled();
+    const { wrapper, instance } = setup(props);
+    const spy = jest.spyOn(instance, 'activateStep');
+    wrapper.find('.stepDirections').simulate('mouseDown');
+    expect(spy).toHaveBeenCalled();
+    expect(instance.state.isActive).toEqual(true);
   });
 
   test('clicking on selected step enables editing', () => {
-    props.isActive = true;
     const { wrapper, instance } = setup(props);
-    wrapper.find('.stepDirections').simulate('click');
-    expect(props.activateStep).toHaveBeenCalledTimes(0);
+    const activeStepSpy = jest.spyOn(instance, 'activateStep');
+    const enableEditingSpy = jest.spyOn(instance, 'enableEditing');
+    wrapper.find('.stepDirections').simulate('mouseDown');
+    expect(activeStepSpy).toHaveBeenCalled();
+    wrapper.find('.stepDirections').simulate('mouseDown');
+    expect(enableEditingSpy).toHaveBeenCalled();
     expect(instance.state.editing).toEqual(true);
   });
+});
 
-  test('clicking on edit button both selects and enables editing', () => {
-    const { wrapper, instance } = setup(props);
-    wrapper.find('button[title^="Edit"]').simulate('click');
-    expect(props.activateStep).toBeCalled();
-    expect(instance.state.editing).toEqual(true);
+describe('Creating steps', () => {
+  test('focuses on directions when creating a new step', () => {
+    props.step.directions = '';
+    const { wrapper } = setup(props);
+    expect(wrapper.find('textarea[name="directions"]').is(':focus'));
   });
 });
