@@ -256,7 +256,246 @@ async function main() {
     email: 'emma@recipelab.io',
     emailVerified: true,
     name: 'Emma',
-    password: '$2b$10$dqyYw5XovLjpmkYNiRDEWuwKaRAvLaG45fnXE5b3KTccKZcRPka2m' // "secret42"
+    password: '$2b$10$dqyYw5XovLjpmkYNiRDEWuwKaRAvLaG45fnXE5b3KTccKZcRPka2m', // "secret42"
+    recipes: {
+      create: [
+        {
+          uid: cuid(),
+          title: 'Thai Chicken Curry',
+          time: 'Moderate',
+          servingAmount: '6',
+          servingType: 'Bowls',
+          description:
+            'This tasty and easy one pot meal is a perfect use for leftover chicken when you need something quick and nutritions on a week night',
+          items: {
+            create: [
+              {
+                uid: cuid(),
+                index: 0,
+                name: 'Curry',
+                steps: {
+                  create: [
+                    {
+                      uid: cuid(),
+                      index: 0,
+                      directions:
+                        "Heat a large pot over medium-high heat. Add 2 tablespoons of butter, and when it's warm, saute the onion until it's brown and translucent",
+                      notes:
+                        'Try to cook the onions longer than you think will be necessary. Get them real carmelized. Yum Yum.',
+                      ingredients: {
+                        create: [
+                          {
+                            uid: cuid(),
+                            index: 0,
+                            name: 'Butter',
+                            quantity: '2',
+                            unit: 'tbsp'
+                          },
+                          {
+                            uid: cuid(),
+                            index: 1,
+                            name: 'medium onion',
+                            quantity: '1',
+                            processing: 'chopped'
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      uid: cuid(),
+                      index: 1,
+                      directions:
+                        'Add the garlic. Briefly stir and fry until the mixture is fragrant. Then set the heat to low',
+                      notes: '',
+                      ingredients: {
+                        create: [
+                          {
+                            uid: cuid(),
+                            index: 0,
+                            name: 'garlic cloves',
+                            quantity: '2',
+                            processing: 'minced'
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      uid: cuid(),
+                      index: 2,
+                      directions: 'Add diced carrots',
+                      notes: '',
+                      ingredients: {
+                        create: [
+                          {
+                            uid: cuid(),
+                            index: 0,
+                            name:
+                              'Carrots - Rainbow carrots are fun and add some color',
+                            quantity: '1/2',
+                            unit: 'cup',
+                            processing: 'diced'
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      uid: cuid(),
+                      index: 4,
+                      directions:
+                        'Add 1/2 cup of diced bell peppers (whatever color strikes your fancy) ',
+                      notes:
+                        'A colorful meal is a mouth watering meal. Try to use different coloros of carrots and peppers to make your curry striking and your own',
+                      ingredients: {
+                        create: [
+                          {
+                            uid: cuid(),
+                            index: 0,
+                            name: 'Bell peppers',
+                            quantity: '2/3',
+                            unit: 'cup',
+                            processing: 'diced'
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      uid: cuid(),
+                      index: 4,
+                      directions: 'Add chicken and stir all ingredients',
+                      notes:
+                        'If you have leftover chicken from a roast, use it here! Shread it quickly in a food processer and toss it in. If you need to cook your chicken, cube it and saute it with the veggies',
+                      ingredients: {
+                        create: [
+                          {
+                            uid: cuid(),
+                            index: 0,
+                            name: 'Chicken',
+                            quantity: '1',
+                            unit: 'cup',
+                            processing: 'cubed or pulled'
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      uid: cuid(),
+                      index: 3,
+                      directions:
+                        'Add chicken stock, and coconut milk. Set burner to medium low heat and simmer until veggies are soft and chicken is cooked',
+                      notes: '',
+                      ingredients: {
+                        create: [
+                          {
+                            uid: cuid(),
+                            index: 0,
+                            name: 'Chicken stock',
+                            quantity: '1',
+                            unit: 'cup'
+                          },
+                          {
+                            uid: cuid(),
+                            index: 1,
+                            name: 'Coconut milk',
+                            quantity: '1',
+                            unit: 'can'
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      uid: cuid(),
+                      index: 4,
+                      directions:
+                        'While the curry is simmering, cook 1/2 cup of qunioa as directed on package',
+                      notes: '',
+                      ingredients: {
+                        create: [
+                          {
+                            uid: cuid(),
+                            index: 0,
+                            name: 'qunioa',
+                            quantity: '1/2',
+                            unit: 'Cup'
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      uid: cuid(),
+                      index: 4,
+                      directions:
+                        'Optional: Chop up greens for an extra dose of greens',
+                      notes:
+                        'The body cannot have enogh greens. Chopping some greens like spinich or kale and placing it a the bottom of a curry bowl adds some extra color and veggies',
+                      ingredients: {
+                        create: [
+                          {
+                            uid: cuid(),
+                            index: 0,
+                            name: 'Greens',
+                            quantity: '1/2',
+                            unit: 'Cup',
+                            processing: 'Chopped'
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      uid: cuid(),
+                      index: 4,
+                      directions:
+                        'Add lime juice, ginger, cayanne pepper and salt to taste',
+                      notes: '',
+                      ingredients: {
+                        create: [
+                          {
+                            uid: cuid(),
+                            index: 0,
+                            name: 'Lime',
+                            quantity: '1',
+                            unit: 'Whole lime',
+                            processing: 'Squeezed'
+                          },
+                          {
+                            uid: cuid(),
+                            index: 0,
+                            name: 'Powdered ginger',
+                            quantity: '1',
+                            unit: 'tsp'
+                          },
+                          {
+                            uid: cuid(),
+                            index: 0,
+                            name: 'Cayanne pepper',
+                            quantity: '1/2',
+                            unit: 'tsp'
+                          },
+                          {
+                            uid: cuid(),
+                            index: 0,
+                            name: 'Salt',
+                            quantity: '1',
+                            unit: 'tsp'
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      uid: cuid(),
+                      index: 4,
+                      directions:
+                        'Place qunioa at the bottom of the bowl, add optional chopped greens and then put the curry on top. Eat until you are good and full',
+                      notes:
+                        'If you want some extra color or flavor. Add a diced radish or pumpkin seeds to the top of the bowl.'
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
   });
 }
 
