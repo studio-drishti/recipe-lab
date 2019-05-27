@@ -68,8 +68,12 @@ export default class Item extends PureComponent {
   };
 
   disableEditing = () => {
-    this.setState({ editing: false });
     document.removeEventListener('mousedown', this.handleClick);
+    if (!this.getItemValue('name')) {
+      this.props.removeItem();
+    } else {
+      this.setState({ editing: false });
+    }
   };
 
   handleSubmit = e => {
