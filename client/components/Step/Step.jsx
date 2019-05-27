@@ -54,8 +54,12 @@ export default class Step extends PureComponent {
   };
 
   deactivateStep = () => {
-    this.setState({ isActive: false, editing: false });
     document.removeEventListener('mousedown', this.handleClick, true);
+    if (!this.getStepValue('directions')) {
+      this.props.removeStep();
+    } else {
+      this.setState({ isActive: false, editing: false });
+    }
   };
 
   enableEditing = async () => {
@@ -68,7 +72,11 @@ export default class Step extends PureComponent {
   };
 
   disableEditing = () => {
-    this.setState({ editing: false });
+    if (!this.getStepValue('directions')) {
+      this.props.removeStep();
+    } else {
+      this.setState({ editing: false });
+    }
   };
 
   handleClick = e => {
@@ -95,7 +103,6 @@ export default class Step extends PureComponent {
   handleSave = e => {
     e.stopPropagation();
     this.disableEditing();
-    if (!this.getStepValue('directions')) this.props.removeStep();
   };
 
   handleRemove = e => {
@@ -193,7 +200,7 @@ export default class Step extends PureComponent {
                 <div className={css.stepActions}>
                   <TextButtonGroup>
                     {editing && (
-                      <TextButton onClick={this.handleSave}>
+                      <TextButton onMouseDown={this.handleSave}>
                         <MdCheck /> save directions
                       </TextButton>
                     )}
@@ -208,19 +215,19 @@ export default class Step extends PureComponent {
                     )}
 
                     {!removed && (
-                      <TextButton onClick={this.handleCreateIngredient}>
+                      <TextButton onMouseDown={this.handleCreateIngredient}>
                         <MdAdd /> add ingredient
                       </TextButton>
                     )}
 
                     {!removed && (
-                      <TextButton onClick={this.handleRemove}>
+                      <TextButton onMouseDown={this.handleRemove}>
                         <MdClear /> remove step
                       </TextButton>
                     )}
 
                     {removed && !editing && (
-                      <TextButton onClick={this.handleRestore}>
+                      <TextButton onMouseDown={this.handleRestore}>
                         <MdRefresh /> restore step
                       </TextButton>
                     )}
