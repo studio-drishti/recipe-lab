@@ -47,19 +47,22 @@ export default class Ingredient extends Component {
   quantityInputRef = React.createRef();
 
   componentDidMount() {
-    if (
-      this.getIngredientValue('quantity') === '' &&
-      this.getIngredientValue('unit') === '' &&
-      this.getIngredientValue('name') === '' &&
-      this.getIngredientValue('processing') === ''
-    ) {
-      this.enableEditing();
-    }
+    if (this.isIngredientEmpty()) this.enableEditing();
   }
 
   componentWillUnmount() {
     document.removeEventListener('mousedown', this.handleClick);
+    if (this.isIngredientEmpty()) this.props.removeIngredient();
   }
+
+  isIngredientEmpty = () => {
+    return (
+      !this.getIngredientValue('quantity') &&
+      !this.getIngredientValue('unit') &&
+      !this.getIngredientValue('name') &&
+      !this.getIngredientValue('processing')
+    );
+  };
 
   getIngredientValue = fieldName => {
     const { edits } = this.state;
@@ -129,14 +132,6 @@ export default class Ingredient extends Component {
 
   handleSave = e => {
     e.preventDefault();
-    if (
-      !this.getIngredientValue('quantity') &&
-      !this.getIngredientValue('unit') &&
-      !this.getIngredientValue('name') &&
-      !this.getIngredientValue('processing')
-    ) {
-      this.props.removeIngredient();
-    }
     this.deselect();
     this.ingredientRef.current.focus();
   };
@@ -154,7 +149,11 @@ export default class Ingredient extends Component {
 
   deselect = () => {
     document.removeEventListener('mousedown', this.handleClick);
-    this.setState({ errors: {}, edits: {}, editing: false });
+    if (this.isIngredientEmpty()) {
+      this.props.removeIngredient();
+    } else {
+      this.setState({ errors: {}, edits: {}, editing: false });
+    }
   };
 
   handleKeybdSelect = e => {
