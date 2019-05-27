@@ -200,7 +200,7 @@ export default class Step extends PureComponent {
                 <div className={css.stepActions}>
                   <TextButtonGroup>
                     {editing && (
-                      <TextButton onMouseDown={this.handleSave}>
+                      <TextButton onClick={this.handleSave}>
                         <MdCheck /> save directions
                       </TextButton>
                     )}
@@ -215,19 +215,19 @@ export default class Step extends PureComponent {
                     )}
 
                     {!removed && (
-                      <TextButton onMouseDown={this.handleCreateIngredient}>
+                      <TextButton onClick={this.handleCreateIngredient}>
                         <MdAdd /> add ingredient
                       </TextButton>
                     )}
 
                     {!removed && (
-                      <TextButton onMouseDown={this.handleRemove}>
+                      <TextButton onClick={this.handleRemove}>
                         <MdClear /> remove step
                       </TextButton>
                     )}
 
                     {removed && !editing && (
-                      <TextButton onMouseDown={this.handleRestore}>
+                      <TextButton onClick={this.handleRestore}>
                         <MdRefresh /> restore step
                       </TextButton>
                     )}
