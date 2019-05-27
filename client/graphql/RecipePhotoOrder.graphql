@@ -1,0 +1,3 @@
+mutation RecipePhotoOrder($photoIds: [ID!]!, $recipeId: ID!) {
+  recipePhotoOrder(photoIds: $photoIds, recipeId: $recipeId)
+}

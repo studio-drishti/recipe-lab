@@ -6,7 +6,7 @@ module.exports = {
     return ctx.prisma.recipe({ uid }).items({ orderBy: 'index_ASC' });
   },
   photos: async ({ uid }, args, ctx) => {
-    return await ctx.prisma.recipe({ uid }).photos();
+    return await ctx.prisma.recipe({ uid }).photos({ orderBy: 'index_ASC' });
   },
   modification: ({ uid }, { user }, ctx) => {
     if (!user) return undefined;

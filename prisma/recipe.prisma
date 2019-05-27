@@ -59,4 +59,5 @@ type RecipePhoto {
   filename: String!
   url: String!
   recipe: Recipe! @relation(name: "RecipePhotos")
+  index: Int!
 }

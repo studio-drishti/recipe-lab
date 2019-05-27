@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const { storeFS } = require('../../utils/fileUploads');
 
-module.exports = async (parent, { file, recipeId }, ctx) => {
+module.exports = async (parent, { file, recipeId, index }, ctx) => {
   // TODO: verify recipe exists or add a graphql shield rule that
   //       only lets owners post photos to own recipes
 
@@ -22,6 +22,7 @@ module.exports = async (parent, { file, recipeId }, ctx) => {
     url: `/public/recipes/${recipeId}/${filename}`,
     recipe: {
       connect: { uid: recipeId }
-    }
+    },
+    index
   });
 };
