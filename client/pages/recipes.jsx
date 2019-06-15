@@ -21,8 +21,8 @@ export default class RecipesPage extends Component {
                 <h1>{recipe.title}</h1>
                 <p>{recipe.description}</p>
                 <Link
-                  as={`/recipes/${recipe.uid}`}
-                  href={`/recipe?id=${recipe.uid}`}
+                  as={`/recipes/${recipe.slug}`}
+                  href={`/recipe?slug=${recipe.slug}`}
                 >
                   <a>Show me more!</a>
                 </Link>

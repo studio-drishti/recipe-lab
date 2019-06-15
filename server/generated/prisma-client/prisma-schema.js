@@ -2452,6 +2452,7 @@ type Recipe {
   createdAt: DateTime!
   updatedAt: DateTime!
   uid: ID!
+  slug: String!
   author: User!
   title: String!
   time: String!
@@ -2472,6 +2473,7 @@ type RecipeConnection {
 input RecipeCreateInput {
   id: ID
   uid: ID!
+  slug: String!
   author: UserCreateOneWithoutRecipesInput!
   title: String
   time: String
@@ -2506,6 +2508,7 @@ input RecipeCreateOneWithoutPhotosInput {
 input RecipeCreateWithoutAuthorInput {
   id: ID
   uid: ID!
+  slug: String!
   title: String
   time: String
   servingAmount: String
@@ -2519,6 +2522,7 @@ input RecipeCreateWithoutAuthorInput {
 input RecipeCreateWithoutItemsInput {
   id: ID
   uid: ID!
+  slug: String!
   author: UserCreateOneWithoutRecipesInput!
   title: String
   time: String
@@ -2532,6 +2536,7 @@ input RecipeCreateWithoutItemsInput {
 input RecipeCreateWithoutModificationsInput {
   id: ID
   uid: ID!
+  slug: String!
   author: UserCreateOneWithoutRecipesInput!
   title: String
   time: String
@@ -2545,6 +2550,7 @@ input RecipeCreateWithoutModificationsInput {
 input RecipeCreateWithoutPhotosInput {
   id: ID
   uid: ID!
+  slug: String!
   author: UserCreateOneWithoutRecipesInput!
   title: String
   time: String
@@ -2569,6 +2575,8 @@ enum RecipeOrderByInput {
   updatedAt_DESC
   uid_ASC
   uid_DESC
+  slug_ASC
+  slug_DESC
   title_ASC
   title_DESC
   time_ASC
@@ -2871,6 +2879,7 @@ type RecipePreviousValues {
   createdAt: DateTime!
   updatedAt: DateTime!
   uid: ID!
+  slug: String!
   title: String!
   time: String!
   servingAmount: String!
@@ -2923,6 +2932,20 @@ input RecipeScalarWhereInput {
   uid_not_starts_with: ID
   uid_ends_with: ID
   uid_not_ends_with: ID
+  slug: String
+  slug_not: String
+  slug_in: [String!]
+  slug_not_in: [String!]
+  slug_lt: String
+  slug_lte: String
+  slug_gt: String
+  slug_gte: String
+  slug_contains: String
+  slug_not_contains: String
+  slug_starts_with: String
+  slug_not_starts_with: String
+  slug_ends_with: String
+  slug_not_ends_with: String
   title: String
   title_not: String
   title_in: [String!]
@@ -3018,6 +3041,7 @@ input RecipeSubscriptionWhereInput {
 
 input RecipeUpdateInput {
   uid: ID
+  slug: String
   author: UserUpdateOneRequiredWithoutRecipesInput
   title: String
   time: String
@@ -3031,6 +3055,7 @@ input RecipeUpdateInput {
 
 input RecipeUpdateManyDataInput {
   uid: ID
+  slug: String
   title: String
   time: String
   servingAmount: String
@@ -3040,6 +3065,7 @@ input RecipeUpdateManyDataInput {
 
 input RecipeUpdateManyMutationInput {
   uid: ID
+  slug: String
   title: String
   time: String
   servingAmount: String
@@ -3087,6 +3113,7 @@ input RecipeUpdateOneRequiredWithoutPhotosInput {
 
 input RecipeUpdateWithoutAuthorDataInput {
   uid: ID
+  slug: String
   title: String
   time: String
   servingAmount: String
@@ -3099,6 +3126,7 @@ input RecipeUpdateWithoutAuthorDataInput {
 
 input RecipeUpdateWithoutItemsDataInput {
   uid: ID
+  slug: String
   author: UserUpdateOneRequiredWithoutRecipesInput
   title: String
   time: String
@@ -3111,6 +3139,7 @@ input RecipeUpdateWithoutItemsDataInput {
 
 input RecipeUpdateWithoutModificationsDataInput {
   uid: ID
+  slug: String
   author: UserUpdateOneRequiredWithoutRecipesInput
   title: String
   time: String
@@ -3123,6 +3152,7 @@ input RecipeUpdateWithoutModificationsDataInput {
 
 input RecipeUpdateWithoutPhotosDataInput {
   uid: ID
+  slug: String
   author: UserUpdateOneRequiredWithoutRecipesInput
   title: String
   time: String
@@ -3204,6 +3234,20 @@ input RecipeWhereInput {
   uid_not_starts_with: ID
   uid_ends_with: ID
   uid_not_ends_with: ID
+  slug: String
+  slug_not: String
+  slug_in: [String!]
+  slug_not_in: [String!]
+  slug_lt: String
+  slug_lte: String
+  slug_gt: String
+  slug_gte: String
+  slug_contains: String
+  slug_not_contains: String
+  slug_starts_with: String
+  slug_not_starts_with: String
+  slug_ends_with: String
+  slug_not_ends_with: String
   author: UserWhereInput
   title: String
   title_not: String
@@ -3292,6 +3336,7 @@ input RecipeWhereInput {
 input RecipeWhereUniqueInput {
   id: ID
   uid: ID
+  slug: String
 }
 
 type Sorting {
@@ -4591,3 +4636,4 @@ input UserWhereUniqueInput {
 }
 `
       }
+    

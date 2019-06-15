@@ -583,6 +583,8 @@ export type RecipeOrderByInput =
   | "updatedAt_DESC"
   | "uid_ASC"
   | "uid_DESC"
+  | "slug_ASC"
+  | "slug_DESC"
   | "title_ASC"
   | "title_DESC"
   | "time_ASC"
@@ -1378,6 +1380,20 @@ export interface RecipeWhereInput {
   uid_not_starts_with?: Maybe<ID_Input>;
   uid_ends_with?: Maybe<ID_Input>;
   uid_not_ends_with?: Maybe<ID_Input>;
+  slug?: Maybe<String>;
+  slug_not?: Maybe<String>;
+  slug_in?: Maybe<String[] | String>;
+  slug_not_in?: Maybe<String[] | String>;
+  slug_lt?: Maybe<String>;
+  slug_lte?: Maybe<String>;
+  slug_gt?: Maybe<String>;
+  slug_gte?: Maybe<String>;
+  slug_contains?: Maybe<String>;
+  slug_not_contains?: Maybe<String>;
+  slug_starts_with?: Maybe<String>;
+  slug_not_starts_with?: Maybe<String>;
+  slug_ends_with?: Maybe<String>;
+  slug_not_ends_with?: Maybe<String>;
   author?: Maybe<UserWhereInput>;
   title?: Maybe<String>;
   title_not?: Maybe<String>;
@@ -2089,6 +2105,7 @@ export interface AlterationUpsertWithWhereUniqueWithoutModificationInput {
 
 export interface RecipeUpdateInput {
   uid?: Maybe<ID_Input>;
+  slug?: Maybe<String>;
   author?: Maybe<UserUpdateOneRequiredWithoutRecipesInput>;
   title?: Maybe<String>;
   time?: Maybe<String>;
@@ -2195,6 +2212,7 @@ export interface AlterationScalarWhereInput {
 export interface RecipeCreateInput {
   id?: Maybe<ID_Input>;
   uid: ID_Input;
+  slug: String;
   author: UserCreateOneWithoutRecipesInput;
   title?: Maybe<String>;
   time?: Maybe<String>;
@@ -3603,6 +3621,20 @@ export interface RecipeScalarWhereInput {
   uid_not_starts_with?: Maybe<ID_Input>;
   uid_ends_with?: Maybe<ID_Input>;
   uid_not_ends_with?: Maybe<ID_Input>;
+  slug?: Maybe<String>;
+  slug_not?: Maybe<String>;
+  slug_in?: Maybe<String[] | String>;
+  slug_not_in?: Maybe<String[] | String>;
+  slug_lt?: Maybe<String>;
+  slug_lte?: Maybe<String>;
+  slug_gt?: Maybe<String>;
+  slug_gte?: Maybe<String>;
+  slug_contains?: Maybe<String>;
+  slug_not_contains?: Maybe<String>;
+  slug_starts_with?: Maybe<String>;
+  slug_not_starts_with?: Maybe<String>;
+  slug_ends_with?: Maybe<String>;
+  slug_not_ends_with?: Maybe<String>;
   title?: Maybe<String>;
   title_not?: Maybe<String>;
   title_in?: Maybe<String[] | String>;
@@ -3690,10 +3722,12 @@ export interface RecipeUpdateManyWithWhereNestedInput {
 export type RecipeWhereUniqueInput = AtLeastOne<{
   id: Maybe<ID_Input>;
   uid?: Maybe<ID_Input>;
+  slug?: Maybe<String>;
 }>;
 
 export interface RecipeUpdateManyDataInput {
   uid?: Maybe<ID_Input>;
+  slug?: Maybe<String>;
   title?: Maybe<String>;
   time?: Maybe<String>;
   servingAmount?: Maybe<String>;
@@ -3729,6 +3763,7 @@ export type StepWhereUniqueInput = AtLeastOne<{
 
 export interface RecipeUpdateWithoutModificationsDataInput {
   uid?: Maybe<ID_Input>;
+  slug?: Maybe<String>;
   author?: Maybe<UserUpdateOneRequiredWithoutRecipesInput>;
   title?: Maybe<String>;
   time?: Maybe<String>;
@@ -3828,6 +3863,7 @@ export interface ModificationUpdateWithWhereUniqueWithoutUserInput {
 export interface RecipeCreateWithoutAuthorInput {
   id?: Maybe<ID_Input>;
   uid: ID_Input;
+  slug: String;
   title?: Maybe<String>;
   time?: Maybe<String>;
   servingAmount?: Maybe<String>;
@@ -3928,6 +3964,7 @@ export interface AlterationUpdateManyMutationInput {
 export interface RecipeCreateWithoutModificationsInput {
   id?: Maybe<ID_Input>;
   uid: ID_Input;
+  slug: String;
   author: UserCreateOneWithoutRecipesInput;
   title?: Maybe<String>;
   time?: Maybe<String>;
@@ -3991,6 +4028,7 @@ export interface IngredientCreateInput {
 
 export interface RecipeUpdateWithoutAuthorDataInput {
   uid?: Maybe<ID_Input>;
+  slug?: Maybe<String>;
   title?: Maybe<String>;
   time?: Maybe<String>;
   servingAmount?: Maybe<String>;
@@ -4245,6 +4283,7 @@ export interface ModificationCreateOneWithoutStepAdditionsInput {
 export interface RecipeCreateWithoutItemsInput {
   id?: Maybe<ID_Input>;
   uid: ID_Input;
+  slug: String;
   author: UserCreateOneWithoutRecipesInput;
   title?: Maybe<String>;
   time?: Maybe<String>;
@@ -4288,6 +4327,7 @@ export interface StepUpdateOneRequiredWithoutIngredientsInput {
 export interface RecipeCreateWithoutPhotosInput {
   id?: Maybe<ID_Input>;
   uid: ID_Input;
+  slug: String;
   author: UserCreateOneWithoutRecipesInput;
   title?: Maybe<String>;
   time?: Maybe<String>;
@@ -4357,6 +4397,7 @@ export interface SortingCreateWithoutModificationInput {
 
 export interface RecipeUpdateWithoutItemsDataInput {
   uid?: Maybe<ID_Input>;
+  slug?: Maybe<String>;
   author?: Maybe<UserUpdateOneRequiredWithoutRecipesInput>;
   title?: Maybe<String>;
   time?: Maybe<String>;
@@ -4556,6 +4597,7 @@ export interface ModificationCreateOneWithoutIngredientAdditionsInput {
 
 export interface RecipeUpdateWithoutPhotosDataInput {
   uid?: Maybe<ID_Input>;
+  slug?: Maybe<String>;
   author?: Maybe<UserUpdateOneRequiredWithoutRecipesInput>;
   title?: Maybe<String>;
   time?: Maybe<String>;
@@ -4657,6 +4699,7 @@ export interface IngredientAdditionUpdateManyMutationInput {
 
 export interface RecipeUpdateManyMutationInput {
   uid?: Maybe<ID_Input>;
+  slug?: Maybe<String>;
   title?: Maybe<String>;
   time?: Maybe<String>;
   servingAmount?: Maybe<String>;
@@ -6111,6 +6154,7 @@ export interface Recipe {
   createdAt: DateTimeOutput;
   updatedAt: DateTimeOutput;
   uid: ID_Output;
+  slug: String;
   title: String;
   time: String;
   servingAmount: String;
@@ -6123,6 +6167,7 @@ export interface RecipePromise extends Promise<Recipe>, Fragmentable {
   createdAt: () => Promise<DateTimeOutput>;
   updatedAt: () => Promise<DateTimeOutput>;
   uid: () => Promise<ID_Output>;
+  slug: () => Promise<String>;
   author: <T = UserPromise>() => T;
   title: () => Promise<String>;
   time: () => Promise<String>;
@@ -6165,6 +6210,7 @@ export interface RecipeSubscription
   createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
   updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
   uid: () => Promise<AsyncIterator<ID_Output>>;
+  slug: () => Promise<AsyncIterator<String>>;
   author: <T = UserSubscription>() => T;
   title: () => Promise<AsyncIterator<String>>;
   time: () => Promise<AsyncIterator<String>>;
@@ -6207,6 +6253,7 @@ export interface RecipeNullablePromise
   createdAt: () => Promise<DateTimeOutput>;
   updatedAt: () => Promise<DateTimeOutput>;
   uid: () => Promise<ID_Output>;
+  slug: () => Promise<String>;
   author: <T = UserPromise>() => T;
   title: () => Promise<String>;
   time: () => Promise<String>;
@@ -6479,6 +6526,7 @@ export interface RecipePreviousValues {
   createdAt: DateTimeOutput;
   updatedAt: DateTimeOutput;
   uid: ID_Output;
+  slug: String;
   title: String;
   time: String;
   servingAmount: String;
@@ -6493,6 +6541,7 @@ export interface RecipePreviousValuesPromise
   createdAt: () => Promise<DateTimeOutput>;
   updatedAt: () => Promise<DateTimeOutput>;
   uid: () => Promise<ID_Output>;
+  slug: () => Promise<String>;
   title: () => Promise<String>;
   time: () => Promise<String>;
   servingAmount: () => Promise<String>;
@@ -6507,6 +6556,7 @@ export interface RecipePreviousValuesSubscription
   createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
   updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
   uid: () => Promise<AsyncIterator<ID_Output>>;
+  slug: () => Promise<AsyncIterator<String>>;
   title: () => Promise<AsyncIterator<String>>;
   time: () => Promise<AsyncIterator<String>>;
   servingAmount: () => Promise<AsyncIterator<String>>;

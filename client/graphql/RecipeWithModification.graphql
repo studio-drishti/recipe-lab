@@ -1,7 +1,8 @@
 #import './ModificationFragment.graphql'
-query recipe($uid: ID!, $user: ID) {
-  recipe(uid: $uid) {
+query recipe($slug: String!, $user: ID) {
+  recipe(slug: $slug) {
     uid
+    slug
     title
     description
     servingAmount

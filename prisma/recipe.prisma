@@ -3,6 +3,7 @@ type Recipe {
   createdAt: DateTime! @createdAt
   updatedAt: DateTime! @updatedAt
   uid: ID! @unique
+  slug: String! @unique
   author: User! @relation(name: "RecipeAuthor")
   title: String! @default(value: "")
   time: String! @default(value: "")

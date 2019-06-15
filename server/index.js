@@ -45,7 +45,7 @@ module.exports = nextApp
     );
     server.express.use(routes);
 
-    server.express.get('/recipes/:id', (req, res) => {
+    server.express.get('/recipes/:slug', (req, res) => {
       const actualPage = '/recipe';
       nextApp.render(req, res, actualPage, req.params);
     });

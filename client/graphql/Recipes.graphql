@@ -1,6 +1,6 @@
 {
   recipes {
-    uid
+    slug
     title
     description
   }
