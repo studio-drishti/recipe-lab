@@ -11,6 +11,7 @@ async function main() {
       create: [
         {
           uid: cuid(),
+          slug: 'spaghetti-meatballs',
           title: 'Spaghetti and Meatballs',
           time: 'Moderate',
           servingAmount: '4',
@@ -261,6 +262,7 @@ async function main() {
       create: [
         {
           uid: cuid(),
+          slug: 'thai-chicken-curry',
           title: 'Thai Chicken Curry',
           time: 'Moderate',
           servingAmount: '6',

@@ -11,23 +11,24 @@ export default class IndexPage extends Component {
   static displayName = 'IndexPage';
   static contextType = UserContext;
   static propTypes = {
-    recipeId: PropTypes.string
+    recipeSlug: PropTypes.string
   };
 
   static async getInitialProps(context) {
-    const { id } = context.query;
+    const { slug } = context.query;
     return {
-      recipeId: id
+      recipeSlug: slug
     };
   }
 
   render() {
     const { user } = this.context;
+    const { recipeSlug } = this.props;
     return (
       <Page>
         <Query
           query={RecipeWithModificationQuery}
-          variables={{ uid: this.props.recipeId, user: user ? user.id : null }}
+          variables={{ slug: recipeSlug, user: user ? user.id : null }}
         >
           {({ loading, error, data }) => {
             if (loading) return 'Loading...';

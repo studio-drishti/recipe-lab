@@ -3,6 +3,7 @@ type Recipe {
   createdAt: DateTime!
   updatedAt: DateTime!
   author: User!
+  slug: String!
   title: String!
   time: String!
   servingAmount: String!

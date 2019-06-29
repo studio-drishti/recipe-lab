@@ -9,7 +9,7 @@ scalar Upload
 type Query {
   sessionUser: User
   recipes: [Recipe!]!
-  recipe(uid: ID!): Recipe
+  recipe(slug: String!): Recipe
   modification(uid: ID!): Modification
 }
 
