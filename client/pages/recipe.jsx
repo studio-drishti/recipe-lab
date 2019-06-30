@@ -34,11 +34,11 @@ export default class IndexPage extends Component {
             if (loading) return 'Loading...';
             if (error) return `Error! ${error.message}`;
 
-            const { recipe } = data;
-
+            const { recipe: recipeWithMod } = data;
+            const { modification, ...recipe } = recipeWithMod;
             return (
               <>
-                <Recipe recipe={recipe} />
+                <Recipe recipe={recipe} modification={modification} />
               </>
             );
           }}

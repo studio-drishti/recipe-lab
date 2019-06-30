@@ -36,28 +36,33 @@ export default class Recipe extends Component {
       servingType: PropTypes.string,
       items: PropTypes.arrayOf(PropTypes.object),
       photos: PropTypes.arrayOf(PropTypes.object)
-    })
+    }),
+    modification: PropTypes.arrayOf(PropTypes.object)
   };
 
   state = {
-    recipe: this.props.recipe,
-    localStoreId: `MOD-${this.props.recipe.uid}`,
+    localStoreId: null,
     unsavedCount: 0,
-    modification: {
-      sortings: [],
-      alterations: [],
-      removals: [],
-      additions: []
-    }
+    recipe: this.props.recipe ? this.props.recipe : null,
+    modification: this.props.modification
+      ? this.props.modification
+      : {
+          sortings: [],
+          alterations: [],
+          removals: [],
+          additions: []
+        }
   };
 
   componentDidMount() {
-    // const { localStoreId } = this.state;
-    let { modification, recipe } = this.state;
+    let { modification } = this.state;
+    const { recipe } = this.props;
 
-    if (recipe.modification) {
-      modification = Object.assign(modification, recipe.modification);
+    if (!recipe) {
+      recipe.uid = cuid();
     }
+
+    const localStoreId = `MOD-${recipe.uid}`;
 
     // if (localStorage.getItem(localStoreId)) {
     //   modification = Object.assign(
@@ -66,7 +71,7 @@ export default class Recipe extends Component {
     //   );
     // }
 
-    this.setState({ modification });
+    this.setState({ modification, recipe, localStoreId });
   }
 
   setModification = modification => {
