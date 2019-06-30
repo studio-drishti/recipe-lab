@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
 
+import withAuthGuard from '../utils/withAuthGuard';
+
 import Recipe from '../components/Recipe';
 import Page from '../layouts/Main';
 
-export default class RecipesPage extends Component {
-  static displayName = 'RecipesPage';
+class NewRecipePage extends Component {
+  static displayName = 'NewRecipePage';
 
   render() {
     return (
@@ -14,3 +16,5 @@ export default class RecipesPage extends Component {
     );
   }
 }
+
+export default withAuthGuard(NewRecipePage);

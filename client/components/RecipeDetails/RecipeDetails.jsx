@@ -40,7 +40,9 @@ export default class RecipeDetails extends PureComponent {
   };
 
   state = {
-    editing: false
+    errors: {},
+    edits: {},
+    editing: !this.props.recipe ? true : false
   };
 
   containerRef = React.createRef();
@@ -66,6 +68,12 @@ export default class RecipeDetails extends PureComponent {
 
   getRecipeValue = fieldName => {
     const { recipe, recipeMods } = this.props;
+    const { edits } = this.state;
+
+    if (edits[fieldName] !== undefined) return edits[fieldName];
+
+    if (!recipe) return '';
+
     const mod = recipeMods.find(mod => mod.field === fieldName);
 
     return mod !== undefined ? mod.value : recipe[fieldName];
