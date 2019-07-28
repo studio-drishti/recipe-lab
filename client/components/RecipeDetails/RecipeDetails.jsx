@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import {
   MdEdit,
@@ -8,6 +8,7 @@ import {
   MdAddAPhoto
 } from 'react-icons/md';
 import classnames from 'classnames';
+import math from 'mathjs';
 import Textarea from 'react-textarea-autosize';
 import { Mutation } from 'react-apollo';
 import { FilePond, registerPlugin } from 'react-filepond';
@@ -19,6 +20,7 @@ import { TIME_OPTIONS } from '../../config';
 import DiffText from '../DiffText';
 import TextButton from '../TextButton';
 import TextButtonGroup from '../TextButtonGroup';
+import TextInput from '../TextInput';
 import css from './RecipeDetails.css';
 import RecipePhotoUploadMutation from '../../graphql/RecipePhotoUpload.graphql';
 
@@ -28,7 +30,7 @@ registerPlugin(
   FilePondPluginImageResize
 );
 
-export default class RecipeDetails extends PureComponent {
+export default class RecipeDetails extends Component {
   static displayName = 'RecipeDetails';
   static propTypes = {
     className: PropTypes.string,
@@ -42,6 +44,7 @@ export default class RecipeDetails extends PureComponent {
   state = {
     errors: {},
     edits: {},
+    timeouts: {},
     editing: !this.props.recipe ? true : false
   };
 
@@ -126,15 +129,80 @@ export default class RecipeDetails extends PureComponent {
     this.disableEditing();
   };
 
+  save = () => {
+    const { recipe, saveAlteration } = this.props;
+    const { edits, errors } = this.state;
+    const hasErrors = Object.keys(errors);
+    if (recipe) {
+      Object.entries(edits)
+        .filter(([key]) => {
+          !hasErrors.includes(key);
+        })
+        .forEach(([key, value]) => {
+          saveAlteration(recipe, key, value);
+        });
+      this.setState({ edits: {} });
+      this.disableEditing();
+    } else if (hasErrors.length === 0) {
+      // run create recipe logic
+    }
+  };
+
+  validate = (fieldName, value) => {
+    const { errors } = this.state;
+
+    delete errors[fieldName];
+
+    switch (fieldName) {
+      case 'title':
+        if (value.length < 5 || value.length > 255)
+          errors.title = 'Recipe title must be between 5 and 255 characters';
+        break;
+      case 'description':
+        if (value.length < 100 || value.length > 255)
+          errors.description =
+            'Description must be between 100 and 255 characters';
+        break;
+      case 'servingAmount':
+        try {
+          if (value) math.fraction(value);
+        } catch {
+          errors.servingAmount =
+            'Please enter serving amount as whole numbers and fractions (e.g. 1 1/3)';
+        }
+        break;
+      case 'servingType':
+        if (value.length < 3 || value.length > 125)
+          errors.servingType =
+            'Serving type must be between 3 and 125 characters';
+        break;
+      case 'time':
+        if (!TIME_OPTIONS.includes(value))
+          errors.time = 'Please select a level of commitment';
+        break;
+    }
+    this.setState({ errors });
+  };
+
+  validateAll = () => {
+    ['title', 'description', 'servingAmount', 'servingType', 'time'].forEach(
+      fieldName => this.validate(fieldName, this.getRecipeValue(fieldName))
+    );
+  };
+
   handleRecipeChange = e => {
     const { name, value } = e.target;
-    const { recipe, saveAlteration } = this.props;
-    saveAlteration(recipe, name, value);
+    const { edits, timeouts } = this.state;
+    edits[name] = value;
+    if (timeouts[name]) clearTimeout(timeouts[name]);
+    timeouts[name] = setTimeout(() => this.validate(name, value), 1000);
+    this.setState({ timeouts, edits });
   };
 
   handleSubmit = e => {
     e.preventDefault();
-    this.disableEditing();
+    this.validateAll();
+    this.save();
   };
 
   handleUploadComplete = (err, file) => {
@@ -144,7 +212,7 @@ export default class RecipeDetails extends PureComponent {
   };
 
   render() {
-    const { editing } = this.state;
+    const { editing, errors } = this.state;
     const { recipe, addPhoto, className, photosLength } = this.props;
     return (
       <form
@@ -169,16 +237,18 @@ export default class RecipeDetails extends PureComponent {
         )}
 
         {editing && (
-          <div className={css.titleInputs}>
-            <input
-              type="text"
+          <div>
+            <TextInput
               name="title"
-              ref={this.titleInputRef}
+              className={css.titleInput}
+              inputRef={this.titleInputRef}
               placeholder="Recipe title"
               value={this.getRecipeValue('title')}
               onChange={this.handleRecipeChange}
+              error={errors.title}
             />
             <Textarea
+              className={css.titleInput}
               inputRef={this.descriptionInputRef}
               name="description"
               value={this.getRecipeValue('description')}
@@ -322,7 +392,7 @@ export default class RecipeDetails extends PureComponent {
         )}
 
         {editing && (
-          <TextButton onClick={this.disableEditing}>
+          <TextButton type="submit">
             <MdCheck />
             save changes
           </TextButton>
