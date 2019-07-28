@@ -64,10 +64,11 @@ To execute the unit-tests, you would:
 
 ## Database
 
-To seed the database while docker is not running:
+To seed the database:
 
-- Run `docker-compose run --rm node npm run seed` while docker is not running.
-- Or run `docker-compose exec node npm run seed` while docker is running
+- Start the container `docker-compose up`
+- Deploy prisma `docker-compose exec node npm run prisma-deploy`
+- Seed the database `docker-compose exec node npm run prisma-seed`
 
 ## Editor Configuration
 
