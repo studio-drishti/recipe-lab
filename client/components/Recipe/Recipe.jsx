@@ -8,7 +8,7 @@ import reorder from '../../utils/reorder';
 import areArraysEqual from '../../utils/areArraysEqual';
 
 import RecipeDetails from '../RecipeDetails';
-import RecipeCarousel from '../RecipeCarousel/RecipeCarousel';
+import RecipePhotoDisplay from '../RecipePhotoDisplay/RecipePhotoDisplay';
 import RecipeBio from '../RecipeBio';
 import StepList from '../StepList';
 import Step from '../Step';
@@ -35,7 +35,7 @@ export default class Recipe extends Component {
       servingAmount: PropTypes.string,
       servingType: PropTypes.string,
       items: PropTypes.arrayOf(PropTypes.object),
-      photos: PropTypes.arrayOf(PropTypes.object)
+      photo: PropTypes.object
     })
   };
 
@@ -393,21 +393,21 @@ export default class Recipe extends Component {
 
   addPhoto = photo => {
     const { recipe } = this.state;
-    recipe.photos.push(photo);
+    recipe.photo = photo;
     this.setState({ recipe });
   };
 
-  removePhoto = index => {
-    const { recipe } = this.state;
-    recipe.photos.splice(index, 1);
-    this.setState({ recipe });
-  };
+  // removePhoto = index => {
+  //   const { recipe } = this.state;
+  //   recipe.photos.splice(index, 1);
+  //   this.setState({ recipe });
+  // };
 
-  updatePhotos = photos => {
-    const { recipe } = this.state;
-    recipe.photos = photos;
-    this.setState({ recipe });
-  };
+  // updatePhotos = photos => {
+  //   const { recipe } = this.state;
+  //   recipe.photos = photos;
+  //   this.setState({ recipe });
+  // };
 
   render() {
     const { recipe, modification, unsavedCount } = this.state;
@@ -425,13 +425,12 @@ export default class Recipe extends Component {
             )}
             saveAlteration={this.saveAlteration}
             addPhoto={this.addPhoto}
-            photosLength={recipe.photos.length}
           />
-          <RecipeCarousel
-            className={css.recipeCarousel}
-            removePhoto={this.removePhoto}
-            updatePhotos={this.updatePhotos}
-            photos={[...recipe.photos]}
+          <RecipePhotoDisplay
+            className={css.recipePhotoDisplay}
+            // removePhoto={this.removePhoto}
+            // updatePhotos={this.updatePhotos}
+            photo={recipe.photo}
             recipeId={recipe.uid}
           />
         </header>

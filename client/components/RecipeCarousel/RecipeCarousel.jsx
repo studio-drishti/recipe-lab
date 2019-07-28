@@ -5,63 +5,63 @@ import { MdDeleteForever } from 'react-icons/md';
 import { MdExpandMore, MdExpandLess } from 'react-icons/md';
 import { Mutation } from 'react-apollo';
 import classnames from 'classnames';
-import reorder from '../../utils/reorder';
+//import reorder from '../../utils/reorder';
 
 import css from './RecipeCarousel.css';
 import IconButtonGroup from '../IconButtonGroup';
 import IconButton from '../IconButton';
 import RecipePhotoDeleteMutation from '../../graphql/RecipePhotoDelete.graphql';
-import RecipePhotoOrderMutation from '../../graphql/RecipePhotoOrder.graphql';
+//import RecipePhotoOrderMutation from '../../graphql/RecipePhotoOrder.graphql';
 
 export default class RecipeCarousel extends PureComponent {
   static displayName = 'RecipeCarousel';
   static propTypes = {
-    photos: PropTypes.arrayOf(PropTypes.object),
+    photo: PropTypes.object,
     recipeId: PropTypes.string,
     className: PropTypes.string,
     removePhoto: PropTypes.func,
-    updatePhotos: PropTypes.func
+    updatePhoto: PropTypes.func
   };
 
-  componentDidUpdate(prevProps) {
-    // TODO: if photos length has decreased, slideTo the next photo instead of end of slideshow
-    if (this.swiper && prevProps.photos.length !== this.props.photos.length) {
-      this.swiper.update();
-      this.swiper.slideTo(this.props.photos.length - 1);
-    }
-  }
+  // componentDidUpdate(prevProps) {
+  //   // TODO: if photos length has decreased, slideTo the next photo instead of end of slideshow
+  //   if (this.swiper && prevProps.photos.length !== this.props.photos.length) {
+  //     this.swiper.update();
+  //     this.swiper.slideTo(this.props.photos.length - 1);
+  //   }
+  // }
 
-  reOrderPhotos = (startIndex, indexChange) => {
-    const { photos, updatePhotos } = this.props;
-    const endIndex = startIndex + indexChange;
+  // reOrderPhotos = (startIndex, indexChange) => {
+  //   const { photos, updatePhotos } = this.props;
+  //   const endIndex = startIndex + indexChange;
 
-    return new Promise(resolve => {
-      const updatedArray = reorder(photos, startIndex, endIndex);
+  //   return new Promise(resolve => {
+  //     const updatedArray = reorder(photos, startIndex, endIndex);
 
-      updatePhotos(updatedArray);
-      this.swiper.slideTo(endIndex);
+  //     updatePhotos(updatedArray);
+  //     this.swiper.slideTo(endIndex);
 
-      return resolve(updatedArray.map(photo => photo.id));
-    });
-  };
+  //     return resolve(updatedArray.map(photo => photo.id));
+  //   });
+  // };
 
   render() {
-    const { photos, recipeId, className, removePhoto } = this.props;
-    const swiperParams = {
-      pagination: {
-        el: '.swiper-pagination',
-        type: 'bullets',
-        dynamicBullets: true,
-        clickable: true
-      },
-      navigation: {
-        nextEl: '.swiper-button-next',
-        prevEl: '.swiper-button-prev'
-      },
-      getSwiper: swiper => {
-        this.swiper = swiper;
-      }
-    };
+    const { photo, recipeId, className, removePhoto } = this.props;
+    // const swiperParams = {
+    //   pagination: {
+    //     el: '.swiper-pagination',
+    //     type: 'bullets',
+    //     dynamicBullets: true,
+    //     clickable: true
+    //   },
+    //   navigation: {
+    //     nextEl: '.swiper-button-next',
+    //     prevEl: '.swiper-button-prev'
+    //   },
+    //   getSwiper: swiper => {
+    //     this.swiper = swiper;
+    //   }
+    // };
 
     return (
       <div className={classnames(css.carousel, className)}>
