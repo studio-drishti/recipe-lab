@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import Router from 'next/router';
 import {
   MdEdit,
   MdCheck,
@@ -10,7 +11,8 @@ import {
 import classnames from 'classnames';
 import math from 'mathjs';
 import Textarea from 'react-textarea-autosize';
-import { Mutation } from 'react-apollo';
+import { Mutation, withApollo } from 'react-apollo';
+import { ApolloClient } from 'apollo-boost';
 import { FilePond, registerPlugin } from 'react-filepond';
 import FilePondPluginImageCrop from 'filepond-plugin-image-crop';
 import FilePondPluginImageResize from 'filepond-plugin-image-resize';
@@ -23,6 +25,7 @@ import TextButtonGroup from '../TextButtonGroup';
 import TextInput from '../TextInput';
 import css from './RecipeDetails.css';
 import RecipePhotoUploadMutation from '../../graphql/RecipePhotoUpload.graphql';
+import CreateRecipeMutation from '../../graphql/CreateRecipe.graphql';
 
 registerPlugin(
   FilePondPluginImageTransform,
@@ -30,7 +33,7 @@ registerPlugin(
   FilePondPluginImageResize
 );
 
-export default class RecipeDetails extends Component {
+class RecipeDetails extends Component {
   static displayName = 'RecipeDetails';
   static propTypes = {
     className: PropTypes.string,
@@ -38,7 +41,8 @@ export default class RecipeDetails extends Component {
     recipeMods: PropTypes.arrayOf(PropTypes.object),
     saveAlteration: PropTypes.func,
     addPhoto: PropTypes.func,
-    photosLength: PropTypes.number
+    photosLength: PropTypes.number,
+    client: PropTypes.instanceOf(ApolloClient)
   };
 
   state = {
@@ -130,7 +134,7 @@ export default class RecipeDetails extends Component {
   };
 
   save = () => {
-    const { recipe, saveAlteration } = this.props;
+    const { recipe, saveAlteration, client } = this.props;
     const { edits, errors } = this.state;
     const hasErrors = Object.keys(errors);
     if (recipe) {
@@ -144,7 +148,21 @@ export default class RecipeDetails extends Component {
       this.setState({ edits: {} });
       this.disableEditing();
     } else if (hasErrors.length === 0) {
-      // run create recipe logic
+      client
+        .mutate({
+          mutation: CreateRecipeMutation,
+          variables: {
+            title: this.getRecipeValue('title'),
+            description: this.getRecipeValue('description'),
+            time: this.getRecipeValue('time'),
+            servingAmount: this.getRecipeValue('servingAmount'),
+            servingType: this.getRecipeValue('servingType')
+          }
+        })
+        .then(({ data }) => {
+          const { slug } = data.createRecipe;
+          Router.replace(`/recipe?slug=${slug}`, `/recipes/${slug}`);
+        });
     }
   };
 
@@ -159,7 +177,7 @@ export default class RecipeDetails extends Component {
           errors.title = 'Recipe title must be between 5 and 255 characters';
         break;
       case 'description':
-        if (value.length < 100 || value.length > 255)
+        if (value.length < 50 || value.length > 255)
           errors.description =
             'Description must be between 100 and 255 characters';
         break;
@@ -288,6 +306,7 @@ export default class RecipeDetails extends Component {
                   ref={this.timeInputRef}
                   value={this.getRecipeValue('time')}
                 >
+                  <option value="">-- commitment --</option>
                   {TIME_OPTIONS.map(time => (
                     <option key={time} value={time}>
                       {time}
@@ -401,3 +420,5 @@ export default class RecipeDetails extends Component {
     );
   }
 }
+
+export default withApollo(RecipeDetails);
