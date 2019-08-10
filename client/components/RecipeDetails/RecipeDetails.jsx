@@ -10,7 +10,6 @@ import {
 } from 'react-icons/md';
 import classnames from 'classnames';
 import math from 'mathjs';
-import Textarea from 'react-textarea-autosize';
 import { Mutation, withApollo } from 'react-apollo';
 import { ApolloClient } from 'apollo-boost';
 import { FilePond, registerPlugin } from 'react-filepond';
@@ -23,6 +22,8 @@ import DiffText from '../DiffText';
 import TextButton from '../TextButton';
 import TextButtonGroup from '../TextButtonGroup';
 import TextInput from '../TextInput';
+import Textarea from '../Textarea';
+import Select from '../Select';
 import css from './RecipeDetails.css';
 import RecipePhotoUploadMutation from '../../graphql/RecipePhotoUpload.graphql';
 import CreateRecipeMutation from '../../graphql/CreateRecipe.graphql';
@@ -183,7 +184,8 @@ class RecipeDetails extends Component {
         break;
       case 'servingAmount':
         try {
-          if (value) math.fraction(value);
+          if (!value) throw new Error();
+          math.fraction(value);
         } catch {
           errors.servingAmount =
             'Please enter serving amount as whole numbers and fractions (e.g. 1 1/3)';
@@ -272,6 +274,7 @@ class RecipeDetails extends Component {
               value={this.getRecipeValue('description')}
               placeholder="Recipe description"
               onChange={this.handleRecipeChange}
+              error={errors.description}
             />
           </div>
         )}
@@ -296,15 +299,16 @@ class RecipeDetails extends Component {
 
           {editing && (
             <div className={css.statInputs}>
-              <label>
+              <label className={css.timeInput}>
                 <i>
                   <MdTimer />
                 </i>
-                <select
+                <Select
                   name="time"
                   onChange={this.handleRecipeChange}
                   ref={this.timeInputRef}
                   value={this.getRecipeValue('time')}
+                  error={errors.time}
                 >
                   <option value="">-- commitment --</option>
                   {TIME_OPTIONS.map(time => (
@@ -312,7 +316,7 @@ class RecipeDetails extends Component {
                       {time}
                     </option>
                   ))}
-                </select>
+                </Select>
               </label>
               <span className={css.servingInput}>
                 <label htmlFor="recipeServingAmount">
@@ -320,7 +324,7 @@ class RecipeDetails extends Component {
                     <MdLocalDining />
                   </i>
                 </label>
-                <input
+                <TextInput
                   ref={this.servingInputRef}
                   id="recipeServingAmount"
                   name="servingAmount"
@@ -329,14 +333,16 @@ class RecipeDetails extends Component {
                   value={this.getRecipeValue('servingAmount')}
                   placeholder="Amnt"
                   onChange={this.handleRecipeChange}
+                  error={errors.servingAmount}
                 />
-                <input
+                <TextInput
                   name="servingType"
                   className={css.servingType}
                   type="text"
                   value={this.getRecipeValue('servingType')}
                   placeholder="Servings"
                   onChange={this.handleRecipeChange}
+                  error={errors.servingType}
                 />
               </span>
             </div>

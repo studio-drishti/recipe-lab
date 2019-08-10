@@ -1,12 +1,12 @@
 .inputContainer {
   display: flex;
 
-  & input {
+  & select {
     width: 100%;
   }
 }
 
-.hasError input {
+.hasError select {
   border-color: var(--color-error);
 }
 

@@ -54,6 +54,12 @@
   }
 }
 
+.timeInput,
+.servingInput {
+  display: flex;
+  align-items: center;
+}
+
 .servingInput {
   & .servingAmount {
     width: 4em;

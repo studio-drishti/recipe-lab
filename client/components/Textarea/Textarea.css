@@ -6,7 +6,7 @@
   }
 }
 
-.hasError input {
+.hasError textarea {
   border-color: var(--color-error);
 }
 
