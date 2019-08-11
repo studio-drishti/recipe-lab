@@ -8,7 +8,7 @@ const getUnusedSlug = async (originalSLug, ctx, i = 1) => {
   if (!slugTaken) {
     return slug;
   }
-  return getUnusedSlug(originalSLug, ctx, i++);
+  return getUnusedSlug(originalSLug, ctx, i + 1);
 };
 
 module.exports = async (parent, args, ctx) => {
