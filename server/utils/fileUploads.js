@@ -1,6 +1,6 @@
 const fs = require('fs');
 const path = require('path');
-const slugify = require('slugify');
+const getSlug = require('speakingurl');
 
 const generateFilename = originalFilename => {
   const maxLength = 50;
@@ -11,11 +11,7 @@ const generateFilename = originalFilename => {
   if (filename.length > maxLength)
     filename = filename.substring(0, maxLength).trim();
 
-  filename =
-    slugify(filename, { remove: /[*+~.()'"!:@]/g }) +
-    '_' +
-    Date.now() +
-    filePath.ext;
+  filename = getSlug(filename) + '_' + Date.now() + filePath.ext;
 
   return filename;
 };

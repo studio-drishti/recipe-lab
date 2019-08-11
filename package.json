@@ -63,7 +63,7 @@
     "react-icons": "3.7.0",
     "react-id-swiper": "2.1.2",
     "react-textarea-autosize": "7.1.0",
-    "slugify": "1.3.4",
+    "speakingurl": "14.0.1",
     "swiper": "4.5.0"
   },
   "devDependencies": {

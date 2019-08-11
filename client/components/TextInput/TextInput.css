@@ -1,0 +1,19 @@
+.inputContainer {
+  display: flex;
+
+  & input {
+    width: 100%;
+  }
+}
+
+.hasError input {
+  border-color: var(--color-error);
+}
+
+.errorIcon {
+  color: white;
+  background: var(--color-error);
+  padding: 0 0.5rem;
+  display: flex;
+  align-items: center;
+}

@@ -20,6 +20,13 @@ type Mutation {
   recipePhotoUpload(file: Upload!, recipeId: ID!, index: Int!): RecipePhoto!
   recipePhotoDelete(photoId: ID!): Boolean!
   recipePhotoOrder(photoIds: [ID!], recipeId: ID!): Boolean!
+  createRecipe(
+    title: String!
+    time: String!
+    servingAmount: String!
+    servingType: String!
+    description: String!
+  ): Recipe!
   saveModification(
     recipe: ID!
     user: ID!
