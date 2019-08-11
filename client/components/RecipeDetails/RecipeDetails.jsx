@@ -306,7 +306,7 @@ class RecipeDetails extends Component {
                 <Select
                   name="time"
                   onChange={this.handleRecipeChange}
-                  ref={this.timeInputRef}
+                  inputRef={this.timeInputRef}
                   value={this.getRecipeValue('time')}
                   error={errors.time}
                 >
@@ -325,7 +325,7 @@ class RecipeDetails extends Component {
                   </i>
                 </label>
                 <TextInput
-                  ref={this.servingInputRef}
+                  inputRef={this.servingInputRef}
                   id="recipeServingAmount"
                   name="servingAmount"
                   className={css.servingAmount}
