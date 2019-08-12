@@ -8,7 +8,7 @@ import {
   MdDragHandle
 } from 'react-icons/md';
 import classnames from 'classnames';
-import math from 'mathjs';
+import { fraction } from 'mathjs';
 import { Draggable } from 'react-beautiful-dnd';
 
 import css from './Ingredient.css';
@@ -201,7 +201,7 @@ export default class Ingredient extends Component {
     switch (name) {
       case 'quantity':
         try {
-          if (value) math.fraction(value);
+          if (value) fraction(value);
         } catch {
           errors.quantity =
             'Please enter quantity as whole numbers and fractions (e.g. 1 1/3)';

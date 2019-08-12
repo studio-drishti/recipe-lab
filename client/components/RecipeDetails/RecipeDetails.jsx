@@ -9,7 +9,7 @@ import {
   MdAddAPhoto
 } from 'react-icons/md';
 import classnames from 'classnames';
-import math from 'mathjs';
+import { fraction } from 'mathjs';
 import { Mutation, withApollo } from 'react-apollo';
 import { ApolloClient } from 'apollo-boost';
 import { FilePond, registerPlugin } from 'react-filepond';
@@ -185,7 +185,7 @@ class RecipeDetails extends Component {
       case 'servingAmount':
         try {
           if (!value) throw new Error();
-          math.fraction(value);
+          fraction(value);
         } catch {
           errors.servingAmount =
             'Please enter serving amount as whole numbers and fractions (e.g. 1 1/3)';

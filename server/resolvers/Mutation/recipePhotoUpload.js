@@ -3,9 +3,6 @@ const path = require('path');
 const { storeFS } = require('../../utils/fileUploads');
 
 module.exports = async (parent, { file, recipeId, index }, ctx) => {
-  // TODO: verify recipe exists or add a graphql shield rule that
-  //       only lets owners post photos to own recipes
-
   const dest = path.resolve(__dirname, `../../public/recipes/${recipeId}`);
   fs.mkdirSync(dest, { recursive: true });
 

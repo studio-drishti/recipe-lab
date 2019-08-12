@@ -45,11 +45,6 @@ module.exports = nextApp
     );
     server.express.use(routes);
 
-    server.express.get('/recipes/:slug', (req, res) => {
-      const actualPage = '/recipe';
-      nextApp.render(req, res, actualPage, req.params);
-    });
-
     server.express.all('*', (req, res, next) => {
       if (['/playground', '/graphql'].includes(req.path)) return next();
 
