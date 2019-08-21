@@ -2,10 +2,10 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Query } from 'react-apollo';
 
-import UserContext from '../utils/UserContext';
-import Page from '../layouts/Main';
-import Recipe from '../components/Recipe';
-import RecipeWithModificationQuery from '../graphql/RecipeWithModification.graphql';
+import UserContext from '../../utils/UserContext';
+import Page from '../../layouts/Main';
+import Recipe from '../../components/Recipe';
+import RecipeWithModificationQuery from '../../graphql/RecipeWithModification.graphql';
 
 export default class IndexPage extends Component {
   static displayName = 'IndexPage';

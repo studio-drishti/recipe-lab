@@ -9,7 +9,6 @@ import areArraysEqual from '../../utils/areArraysEqual';
 import UserContext from '../../utils/UserContext';
 
 import RecipeDetails from '../RecipeDetails';
-import RecipeCarousel from '../RecipeCarousel/RecipeCarousel';
 import RecipeBio from '../RecipeBio';
 import StepList from '../StepList';
 import Step from '../Step';
@@ -39,7 +38,7 @@ export default class Recipe extends Component {
       items: PropTypes.arrayOf(PropTypes.object),
       photos: PropTypes.arrayOf(PropTypes.object)
     }),
-    modification: PropTypes.arrayOf(PropTypes.object)
+    modification: PropTypes.object
   };
 
   state = {
@@ -432,7 +431,10 @@ export default class Recipe extends Component {
             addPhoto={this.addPhoto}
             photosLength={recipe ? recipe.photos.length : 0}
           />
-          {recipe ? (
+          <div>
+            <img src="https://via.placeholder.com/600x300" />
+          </div>
+          {/* {recipe ? (
             <RecipeCarousel
               className={css.recipeCarousel}
               removePhoto={this.removePhoto}
@@ -442,7 +444,7 @@ export default class Recipe extends Component {
             />
           ) : (
             <img src="https://via.placeholder.com/600x300" />
-          )}
+          )} */}
         </header>
 
         <article className={css.recipe}>

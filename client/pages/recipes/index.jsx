@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import Link from 'next/link';
 import { Query } from 'react-apollo';
 
-import Page from '../layouts/Main';
-import RecipesQuery from '../graphql/Recipes.graphql';
+import Page from '../../layouts/Main';
+import RecipesQuery from '../../graphql/Recipes.graphql';
 
 export default class RecipesPage extends Component {
   static displayName = 'RecipesPage';

@@ -6,8 +6,8 @@ class AuthError extends Error {
   }
 }
 
-module.exports = context => {
-  const Authorization = context.request.get('Authorization');
+module.exports = ctx => {
+  const Authorization = ctx.request.get('Authorization');
   if (!Authorization) throw new AuthError();
   if (Authorization) {
     const token = Authorization.replace('Bearer ', '');

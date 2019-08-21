@@ -1,11 +1,7 @@
 const fs = require('fs');
 const path = require('path');
-// const { storeFS } = require('../../utils/fileUploads');
-// const getUserId = require('../../utils/getUserId');
 
 module.exports = async (parent, { photoId }, ctx) => {
-  // const userId = getUserId(ctx);
-
   // TODO: verify photo is owned by the user, set up a graphql shield rule for this
 
   const fragment = `
