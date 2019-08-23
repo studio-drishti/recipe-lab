@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import Link from 'next/link';
-import { Query } from 'react-apollo';
 
 import Page from '../../layouts/Main';
 import RecipesQuery from '../../graphql/Recipes.graphql';
@@ -8,28 +8,35 @@ import RecipesQuery from '../../graphql/Recipes.graphql';
 export default class RecipesPage extends Component {
   static displayName = 'RecipesPage';
 
+  static propTypes = {
+    recipes: PropTypes.arrayOf(PropTypes.object)
+  };
+
+  static async getInitialProps({ apolloClient }) {
+    const {
+      data: { recipes }
+    } = await apolloClient.query({
+      query: RecipesQuery
+    });
+    return { recipes };
+  }
+
   render() {
+    const { recipes } = this.props;
     return (
       <Page>
-        <Query query={RecipesQuery}>
-          {({ loading, error, data }) => {
-            if (loading) return 'Loading...';
-            if (error) return `Error! ${error.message}`;
-
-            return data.recipes.map((recipe, i) => (
-              <div key={i}>
-                <h1>{recipe.title}</h1>
-                <p>{recipe.description}</p>
-                <Link
-                  as={`/recipes/${recipe.slug}`}
-                  href={`/recipe?slug=${recipe.slug}`}
-                >
-                  <a>Show me more!</a>
-                </Link>
-              </div>
-            ));
-          }}
-        </Query>
+        {recipes.map(recipe => (
+          <div key={recipe.uid}>
+            <h1>{recipe.title}</h1>
+            <p>{recipe.description}</p>
+            <Link
+              as={`/recipes/${recipe.slug}`}
+              href={`/recipe?slug=${recipe.slug}`}
+            >
+              <a>Show me more!</a>
+            </Link>
+          </div>
+        ))}
       </Page>
     );
   }

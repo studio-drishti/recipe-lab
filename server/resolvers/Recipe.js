@@ -1,3 +1,5 @@
+const getUserId = require('../utils/getUserId');
+
 module.exports = {
   author: ({ uid }, args, ctx) => {
     return ctx.prisma.recipe({ uid }).author();
@@ -9,7 +11,14 @@ module.exports = {
     return await ctx.prisma.recipe({ uid }).photos({ orderBy: 'index_ASC' });
   },
   modification: ({ uid }, { user }, ctx) => {
-    if (!user) return undefined;
+    if (!user) {
+      try {
+        user = getUserId(ctx);
+      } catch {
+        return undefined;
+      }
+    }
+
     return ctx.prisma
       .modifications({
         where: { recipe: { uid }, user: { id: user } }

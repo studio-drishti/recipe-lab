@@ -8,9 +8,10 @@ import { setContext } from 'apollo-link-context';
 import fetch from 'isomorphic-unfetch';
 
 let apolloClient = null;
+const isBrowser = typeof window !== 'undefined';
 
 // Polyfill fetch() on the server (used by apollo-client)
-if (!process.browser) {
+if (!isBrowser) {
   global.fetch = fetch;
 }
 
@@ -42,8 +43,8 @@ function create(initialState, { getToken }) {
 
   // Check out https://github.com/zeit/next.js/pull/4611 if you want to use the AWSAppSyncClient
   return new ApolloClient({
-    connectToDevTools: process.browser,
-    ssrMode: !process.browser, // Disables forceFetch on the server (so queries are only run once)
+    connectToDevTools: isBrowser,
+    ssrMode: !isBrowser, // Disables forceFetch on the server (so queries are only run once)
     link: authLink.concat(httpLink),
     cache: new InMemoryCache({ fragmentMatcher }).restore(initialState || {})
   });
@@ -52,7 +53,7 @@ function create(initialState, { getToken }) {
 export default function initApollo(initialState, options) {
   // Make sure to create a new client for every server-side request so that data
   // isn't shared between connections (which would be bad)
-  if (!process.browser) {
+  if (!isBrowser) {
     return create(initialState, options);
   }
 
