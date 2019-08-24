@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import Swiper from 'react-id-swiper/lib/ReactIdSwiper.full';
 import { MdDeleteForever } from 'react-icons/md';
 import { MdExpandMore, MdExpandLess } from 'react-icons/md';
-import { Mutation } from 'react-apollo';
+import { Mutation } from '@apollo/react-components';
 import classnames from 'classnames';
 import reorder from '../../utils/reorder';
 

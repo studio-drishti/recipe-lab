@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Mutation, withApollo } from 'react-apollo';
+import { Mutation } from '@apollo/react-components';
+import { withApollo } from '@apollo/react-hoc';
 import { ApolloClient } from 'apollo-boost';
 import cookie from 'cookie';
 import redirect from '../../utils/redirect';

@@ -1,7 +1,7 @@
 import React from 'react';
 import cookie from 'cookie';
 import PropTypes from 'prop-types';
-import { getDataFromTree } from 'react-apollo';
+import { getDataFromTree } from '@apollo/react-ssr';
 import Head from 'next/head';
 
 import initApollo from './initApollo';
@@ -15,15 +15,22 @@ function parseCookies(req, options = {}) {
 
 export default App => {
   return class WithData extends React.Component {
+    // It is needed for better devtools experience. Check how react devtools shows it: "MyApp WithData"
     static displayName = `WithData(${App.displayName})`;
+
+    // Since apolloState is required but it is missed before this method returns the new props,
+    // so it is needed to provide defaults
+    static defaultProps = {
+      apolloState: {}
+    };
+
     static propTypes = {
       apolloState: PropTypes.object.isRequired
     };
 
     static async getInitialProps(ctx) {
       const {
-        Component,
-        router,
+        AppTree,
         ctx: { req, res }
       } = ctx;
       const apollo = initApollo(
@@ -46,18 +53,13 @@ export default App => {
         return {};
       }
 
-      if (!process.browser) {
+      if (typeof window === 'undefined') {
         // Run all graphql queries in the component tree
         // and extract the resulting data
         try {
           // Run all GraphQL queries
           await getDataFromTree(
-            <App
-              {...appProps}
-              Component={Component}
-              router={router}
-              apolloClient={apollo}
-            />
+            <AppTree {...appProps} apolloClient={apollo} />
           );
         } catch (error) {
           // Prevent Apollo Client GraphQL errors from crashing SSR.
@@ -92,7 +94,7 @@ export default App => {
     }
 
     render() {
-      return <App {...this.props} apolloClient={this.apolloClient} />;
+      return <App apolloClient={this.apolloClient} {...this.props} />;
     }
   };
 };
