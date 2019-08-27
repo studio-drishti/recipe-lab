@@ -10,8 +10,7 @@ import {
 } from 'react-icons/md';
 import classnames from 'classnames';
 import { fraction } from 'mathjs';
-import { Mutation } from '@apollo/react-components';
-import { withApollo } from '@apollo/react-hoc';
+import { Mutation, withApollo } from 'react-apollo';
 import { ApolloClient } from 'apollo-boost';
 import { FilePond, registerPlugin } from 'react-filepond';
 import FilePondPluginImageCrop from 'filepond-plugin-image-crop';
@@ -122,7 +121,9 @@ const RecipeDetails = ({recipe, addPhoto, className, photosLength, recipeMods })
     const hasErrors = Object.keys(errors);
     if (recipe) {
       Object.entries(edits)
-        .filter(([key]) => !hasErrors.includes(key))
+        .filter(([key]) => {
+          !hasErrors.includes(key);
+        })
         .forEach(([key, value]) => {
           saveAlteration(recipe, key, value);
         });
@@ -180,6 +181,11 @@ const RecipeDetails = ({recipe, addPhoto, className, photosLength, recipeMods })
 
 
   const validate = (fieldName, value) => {
+    setErrors({
+      ...errors,
+      [fieldName]: undefined
+    })
+
     switch (fieldName) {
       case 'title':
         if (value.length < 5 || value.length > 255)
