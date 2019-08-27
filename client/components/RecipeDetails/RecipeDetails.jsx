@@ -180,8 +180,6 @@ const RecipeDetails = ({recipe, addPhoto, className, photosLength, recipeMods })
 
 
   const validate = (fieldName, value) => {
-    //delete errors[fieldName];
-
     switch (fieldName) {
       case 'title':
         if (value.length < 5 || value.length > 255)
