@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, useState, useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import Router from 'next/router';
 import {
@@ -35,109 +35,90 @@ registerPlugin(
   FilePondPluginImageResize
 );
 
-class RecipeDetails extends Component {
-  static displayName = 'RecipeDetails';
-  static propTypes = {
-    className: PropTypes.string,
-    recipe: PropTypes.object,
-    recipeMods: PropTypes.arrayOf(PropTypes.object),
-    saveAlteration: PropTypes.func,
-    addPhoto: PropTypes.func,
-    photosLength: PropTypes.number,
-    client: PropTypes.instanceOf(ApolloClient)
+const RecipeDetails = ({recipe, addPhoto, className, photosLength, recipeMods }) => {
+
+  const [errors, setErrors] = useState({});
+  const [edits, setEdit] = useState({});
+  const [editing, setEditing] = useState(!recipe? true : false); 
+  const [timeouts, setTimeoutValue] = useState({});
+
+  const containerRef = useRef(null);
+  const titleInputRef = useRef(null);
+  const descriptionInputRef = useRef(null);
+  const timeInputRef = useRef(null);
+  const skillInputRef = useRef(null);
+  const servingInputRef = useRef(null);
+  let pond = useRef(null);
+
+   const enableEditing = () => {
+    setEditing(true)
+    document.addEventListener('mousedown', handleClick);
   };
 
-  state = {
-    errors: {},
-    edits: {},
-    timeouts: {},
-    editing: !this.props.recipe ? true : false
+  const enableEditingTitle = async () => {
+    await enableEditing();
+    if (titleInputRef.current) titleInputRef.current.focus();
   };
 
-  containerRef = React.createRef();
-  titleInputRef = React.createRef();
-  descriptionInputRef = React.createRef();
-  timeInputRef = React.createRef();
-  skillInputRef = React.createRef();
-  servingInputRef = React.createRef();
-
-  componentWillUnmount() {
-    document.removeEventListener('mousedown', this.handleClick);
-  }
-
-  renderWithMods = fieldName => {
-    const { recipeMods, recipe } = this.props;
-    const mod = recipeMods.find(mod => mod.field === fieldName);
-    if (mod !== undefined) {
-      return <DiffText original={recipe[fieldName]} modified={mod.value} />;
-    } else {
-      return recipe[fieldName];
-    }
+  const enableEditingDescription = async () => {
+    await enableEditing();
+    if (descriptionInputRef.current)
+      descriptionInputRef.current.focus();
   };
 
-  getRecipeValue = fieldName => {
-    const { recipe, recipeMods } = this.props;
-    const { edits } = this.state;
+  const enableEditingSkill = async () => {
+    await this.enableEditing();
+    if (skillInputRef.current) skillInputRef.current.focus();
+  };
 
+  
+  const getRecipeValue = (fieldName) => {
     if (edits[fieldName] !== undefined) return edits[fieldName];
 
     if (!recipe) return '';
-
     const mod = recipeMods.find(mod => mod.field === fieldName);
-
     return mod !== undefined ? mod.value : recipe[fieldName];
   };
 
-  enableEditing = () => {
-    this.setState({ editing: true });
-    document.addEventListener('mousedown', this.handleClick);
+  const handleClick = e => {
+    if (containerRef.current.contains(e.target)) return;
+    disableEditing();
   };
 
-  enableEditingTitle = async () => {
-    await this.enableEditing();
-    if (this.titleInputRef.current) this.titleInputRef.current.focus();
+
+  const handleRecipeChange = e => {
+    const { name, value } = e.target;
+    edits[name] = value;
+    if (timeouts[name]) clearTimeout(timeouts[name]);
+    setEdit({
+      ...edits,
+      name: value
+    })
+    setTimeout(() => {
+      setTimeoutValue({
+        ...timeouts,
+        name: validate(name, value),
+      })
+    }, 1000);
   };
 
-  enableEditingDescription = async () => {
-    await this.enableEditing();
-    if (this.descriptionInputRef.current)
-      this.descriptionInputRef.current.focus();
+  const  enableEditingTime = async () => {
+    await enableEditing();
+    if (timeInputRef.current) timeInputRef.current.focus();
   };
 
-  enableEditingTime = async () => {
-    await this.enableEditing();
-    if (this.timeInputRef.current) this.timeInputRef.current.focus();
+  const handleUploadComplete  = (err, file) => {
+    setTimeout(() => {
+      pond.removeFile(file);
+    }, 1000);
   };
 
-  enableEditingSkill = async () => {
-    await this.enableEditing();
-    if (this.skillInputRef.current) this.skillInputRef.current.focus();
+  const triggerUploadDialog= () => {
+    if (!editing) enableEditing();
+    pond.browse();
   };
 
-  enableEditingServing = async () => {
-    await this.enableEditing();
-    if (this.servingInputRef.current) this.servingInputRef.current.focus();
-  };
-
-  disableEditing = () => {
-    this.setState({ editing: false });
-    document.removeEventListener('mousedown', this.handleClick);
-  };
-
-  triggerUploadDialog = () => {
-    const { editing } = this.state;
-    if (!editing) this.enableEditing();
-    this.pond.browse();
-  };
-
-  handleClick = e => {
-    if (this.containerRef.current.contains(e.target)) return;
-    this.disableEditing();
-  };
-
-  save = () => {
-    const { recipe, saveAlteration, client } = this.props;
-    const { edits, errors } = this.state;
+  const save = () => {
     const hasErrors = Object.keys(errors);
     if (recipe) {
       Object.entries(edits)
@@ -145,18 +126,18 @@ class RecipeDetails extends Component {
         .forEach(([key, value]) => {
           saveAlteration(recipe, key, value);
         });
-      this.setState({ edits: {} });
-      this.disableEditing();
+      setErrors({});
+      disableEditing();
     } else if (hasErrors.length === 0) {
       client
         .mutate({
           mutation: CreateRecipeMutation,
           variables: {
-            title: this.getRecipeValue('title'),
-            description: this.getRecipeValue('description'),
-            time: this.getRecipeValue('time'),
-            servingAmount: this.getRecipeValue('servingAmount'),
-            servingType: this.getRecipeValue('servingType')
+            title: getRecipeValue('title'),
+            description: getRecipeValue('description'),
+            time: getRecipeValue('time'),
+            servingAmount: getRecipeValue('servingAmount'),
+            servingType: getRecipeValue('servingType')
           }
         })
         .then(({ data }) => {
@@ -166,90 +147,101 @@ class RecipeDetails extends Component {
     }
   };
 
-  validate = (fieldName, value) => {
-    const { errors } = this.state;
+  const handleSubmit = (e) => {
+     e.preventDefault();
+     validateAll();
+     save();
+  };
 
-    delete errors[fieldName];
+  const enableEditingServing = async () => {
+    await enableEditing();
+    if (servingInputRef.current) servingInputRef.current.focus();
+  };
+
+  const renderWithMods = (fieldName) => {
+    const mod = recipeMods.find(mod => mod.field === fieldName);
+    if (mod !== undefined) {
+      return <DiffText original={recipe[fieldName]} modified={mod.value} />;
+    } else {
+      return recipe[fieldName];
+    }
+  };
+
+  const disableEditing = () => {
+    setEditing(false)
+    document.removeEventListener('mousedown', handleClick);
+  };
+
+  const validateAll = () => {
+      ['title', 'description', 'servingAmount', 'servingType', 'time'].forEach(
+      fieldName => validate(fieldName, getRecipeValue(fieldName))
+    );
+  };
+
+
+  const validate = (fieldName, value) => {
+    //delete errors[fieldName];
 
     switch (fieldName) {
       case 'title':
         if (value.length < 5 || value.length > 255)
-          errors.title = 'Recipe title must be between 5 and 255 characters';
+          setErrors({
+            ...errors,
+            title: "Recipe title must be between 5 and 255 characters"
+          })
         break;
       case 'description':
         if (value.length < 50 || value.length > 255)
-          errors.description =
-            'Description must be between 100 and 255 characters';
+          setErrors({
+            ...errors,
+            description: "Description must be between 100 and 255 characters"
+          })  
         break;
       case 'servingAmount':
         try {
           if (!value) throw new Error();
           fraction(value);
         } catch {
-          errors.servingAmount =
-            'Please enter serving amount as whole numbers and fractions (e.g. 1 1/3)';
+            setErrors({
+            ...errors,
+            servingAmount: "Please enter serving amount as whole numbers and fractions (e.g. 1 1/3)"
+          })    
         }
         break;
       case 'servingType':
         if (value.length < 3 || value.length > 125)
-          errors.servingType =
-            'Serving type must be between 3 and 125 characters';
+          setErrors({
+            ...errors,
+            servingType: "Serving type must be between 3 and 125 characters"
+          })      
         break;
       case 'time':
         if (!TIME_OPTIONS.includes(value))
-          errors.time = 'Please select a level of commitment';
+          setErrors({
+            ...errors,
+            time: "Please select a level of commitment"
+          })   
         break;
     }
-    this.setState({ errors });
-  };
-
-  validateAll = () => {
-    ['title', 'description', 'servingAmount', 'servingType', 'time'].forEach(
-      fieldName => this.validate(fieldName, this.getRecipeValue(fieldName))
-    );
-  };
-
-  handleRecipeChange = e => {
-    const { name, value } = e.target;
-    const { edits, timeouts } = this.state;
-    edits[name] = value;
-    if (timeouts[name]) clearTimeout(timeouts[name]);
-    timeouts[name] = setTimeout(() => this.validate(name, value), 1000);
-    this.setState({ timeouts, edits });
-  };
-
-  handleSubmit = e => {
-    e.preventDefault();
-    this.validateAll();
-    this.save();
-  };
-
-  handleUploadComplete = (err, file) => {
-    setTimeout(() => {
-      this.pond.removeFile(file);
-    }, 1000);
-  };
-
-  render() {
-    const { editing, errors } = this.state;
-    const { recipe, addPhoto, className, photosLength } = this.props;
-    return (
+  }
+  
+  return (
       <form
-        ref={this.containerRef}
-        onSubmit={this.handleSubmit}
+        ref={containerRef}
+        onSubmit={handleSubmit}
         className={classnames(css.details, className)}
       >
         {!editing && (
           <>
             <h1>
-              <a onClick={this.enableEditingTitle}>
-                {this.renderWithMods('title')}
+              <a onClick={enableEditingTitle}>
+                {renderWithMods('title')}
               </a>
             </h1>
             <h3>Recipe by {recipe.author.name}</h3>
             <p>
-              <a onClick={this.enableEditingDescription}>
-                {this.renderWithMods('description')}
+              <a onClick={enableEditingDescription}>
+                {renderWithMods('description')}
               </a>
             </p>
           </>
@@ -260,19 +252,19 @@ class RecipeDetails extends Component {
             <TextInput
               name="title"
               className={css.titleInput}
-              inputRef={this.titleInputRef}
+              inputRef={titleInputRef}
               placeholder="Recipe title"
-              value={this.getRecipeValue('title')}
-              onChange={this.handleRecipeChange}
+              value={getRecipeValue('title')}
+              onChange={(e) => handleRecipeChange(e)}
               error={errors.title}
             />
             <Textarea
               className={css.titleInput}
-              inputRef={this.descriptionInputRef}
+              inputRef={descriptionInputRef}
               name="description"
-              value={this.getRecipeValue('description')}
+              value={getRecipeValue('description')}
               placeholder="Recipe description"
-              onChange={this.handleRecipeChange}
+              onChange={handleRecipeChange}
               error={errors.description}
             />
           </div>
@@ -280,18 +272,18 @@ class RecipeDetails extends Component {
         <div className={css.stats}>
           {!editing && (
             <>
-              <a onClick={this.enableEditingTime}>
+              <a onClick={enableEditingTime}>
                 <i>
                   <MdTimer />
                 </i>
-                {this.getRecipeValue('time')}
+                {getRecipeValue('time')}
               </a>
-              <a onClick={this.enableEditingServing}>
+              <a onClick={enableEditingServing}>
                 <i>
                   <MdLocalDining />
                 </i>
-                {this.getRecipeValue('servingAmount')}{' '}
-                {this.getRecipeValue('servingType')}
+                {getRecipeValue('servingAmount')}{' '}
+                {getRecipeValue('servingType')}
               </a>
             </>
           )}
@@ -304,9 +296,9 @@ class RecipeDetails extends Component {
                 </i>
                 <Select
                   name="time"
-                  onChange={this.handleRecipeChange}
-                  inputRef={this.timeInputRef}
-                  value={this.getRecipeValue('time')}
+                  onChange={handleRecipeChange}
+                  inputRef={timeInputRef}
+                  value={getRecipeValue('time')}
                   error={errors.time}
                 >
                   <option value="">-- commitment --</option>
@@ -324,23 +316,23 @@ class RecipeDetails extends Component {
                   </i>
                 </label>
                 <TextInput
-                  inputRef={this.servingInputRef}
+                  inputRef={servingInputRef}
                   id="recipeServingAmount"
                   name="servingAmount"
                   className={css.servingAmount}
                   type="text"
-                  value={this.getRecipeValue('servingAmount')}
+                  value={getRecipeValue('servingAmount')}
                   placeholder="Amnt"
-                  onChange={this.handleRecipeChange}
+                  onChange={handleRecipeChange}
                   error={errors.servingAmount}
                 />
                 <TextInput
                   name="servingType"
                   className={css.servingType}
                   type="text"
-                  value={this.getRecipeValue('servingType')}
+                  value={getRecipeValue('servingType')}
                   placeholder="Servings"
-                  onChange={this.handleRecipeChange}
+                  onChange={handleRecipeChange}
                   error={errors.servingType}
                 />
               </span>
@@ -353,7 +345,7 @@ class RecipeDetails extends Component {
             {uploadFile => (
               <FilePond
                 name="avatar"
-                ref={ref => (this.pond = ref)}
+                ref={ref => (pond = ref)}
                 className={css.filepond}
                 server={{
                   process: (
@@ -390,7 +382,7 @@ class RecipeDetails extends Component {
                 imageTransformOutputMimeType="image/jpeg"
                 imageCropAspectRatio="3:2"
                 imageResizeTargetWidth="600"
-                onprocessfile={this.handleUploadComplete}
+                onprocessfile={handleUploadComplete}
               />
             )}
           </Mutation>
@@ -400,14 +392,14 @@ class RecipeDetails extends Component {
           <TextButtonGroup>
             <TextButton
               className={css.editBtn}
-              onClick={this.enableEditingTitle}
+              onClick={enableEditingTitle}
             >
               <MdEdit />
               edit details
             </TextButton>
             <TextButton
               className={css.uploadBtn}
-              onClick={this.triggerUploadDialog}
+              onClick={triggerUploadDialog}
             >
               <MdAddAPhoto />
               upload photos
@@ -422,8 +414,20 @@ class RecipeDetails extends Component {
           </TextButton>
         )}
       </form>
-    );
-  }
+  
+  )
 }
+
+RecipeDetails.propTypes = {
+  className: PropTypes.string,
+    recipe: PropTypes.object,
+    recipeMods: PropTypes.arrayOf(PropTypes.object),
+    saveAlteration: PropTypes.func,
+    addPhoto: PropTypes.func,
+    photosLength: PropTypes.number,
+    client: PropTypes.instanceOf(ApolloClient)
+}
+
+RecipeDetails.displayName = 'RecipeDetails';
 
 export default withApollo(RecipeDetails);
