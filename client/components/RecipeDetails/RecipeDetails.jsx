@@ -10,7 +10,7 @@ import {
 } from 'react-icons/md';
 import classnames from 'classnames';
 import { fraction } from 'mathjs';
-import { Mutation, withApollo } from 'react-apollo';
+import { withApollo } from '@apollo/react-hoc';
 import { ApolloClient } from 'apollo-boost';
 import { FilePond, registerPlugin } from 'react-filepond';
 import FilePondPluginImageCrop from 'filepond-plugin-image-crop';
@@ -34,11 +34,16 @@ registerPlugin(
   FilePondPluginImageResize
 );
 
-const RecipeDetails = ({recipe, addPhoto, className, photosLength, recipeMods }) => {
-
+const RecipeDetails = ({
+  recipe,
+  addPhoto,
+  className,
+  photosLength,
+  recipeMods
+}) => {
   const [errors, setErrors] = useState({});
   const [edits, setEdit] = useState({});
-  const [editing, setEditing] = useState(!recipe? true : false); 
+  const [editing, setEditing] = useState(!recipe ? true : false);
   const [timeouts, setTimeoutValue] = useState({});
 
   const containerRef = useRef(null);
@@ -49,8 +54,8 @@ const RecipeDetails = ({recipe, addPhoto, className, photosLength, recipeMods })
   const servingInputRef = useRef(null);
   let pond = useRef(null);
 
-   const enableEditing = () => {
-    setEditing(true)
+  const enableEditing = () => {
+    setEditing(true);
     document.addEventListener('mousedown', handleClick);
   };
 
@@ -61,8 +66,7 @@ const RecipeDetails = ({recipe, addPhoto, className, photosLength, recipeMods })
 
   const enableEditingDescription = async () => {
     await enableEditing();
-    if (descriptionInputRef.current)
-      descriptionInputRef.current.focus();
+    if (descriptionInputRef.current) descriptionInputRef.current.focus();
   };
 
   const enableEditingSkill = async () => {
@@ -70,8 +74,7 @@ const RecipeDetails = ({recipe, addPhoto, className, photosLength, recipeMods })
     if (skillInputRef.current) skillInputRef.current.focus();
   };
 
-  
-  const getRecipeValue = (fieldName) => {
+  const getRecipeValue = fieldName => {
     if (edits[fieldName] !== undefined) return edits[fieldName];
 
     if (!recipe) return '';
@@ -84,7 +87,6 @@ const RecipeDetails = ({recipe, addPhoto, className, photosLength, recipeMods })
     disableEditing();
   };
 
-
   const handleRecipeChange = e => {
     const { name, value } = e.target;
     edits[name] = value;
@@ -92,27 +94,27 @@ const RecipeDetails = ({recipe, addPhoto, className, photosLength, recipeMods })
     setEdit({
       ...edits,
       name: value
-    })
+    });
     setTimeout(() => {
       setTimeoutValue({
         ...timeouts,
-        name: validate(name, value),
-      })
+        name: validate(name, value)
+      });
     }, 1000);
   };
 
-  const  enableEditingTime = async () => {
+  const enableEditingTime = async () => {
     await enableEditing();
     if (timeInputRef.current) timeInputRef.current.focus();
   };
 
-  const handleUploadComplete  = (err, file) => {
+  const handleUploadComplete = (err, file) => {
     setTimeout(() => {
       pond.removeFile(file);
     }, 1000);
   };
 
-  const triggerUploadDialog= () => {
+  const triggerUploadDialog = () => {
     if (!editing) enableEditing();
     pond.browse();
   };
@@ -148,10 +150,10 @@ const RecipeDetails = ({recipe, addPhoto, className, photosLength, recipeMods })
     }
   };
 
-  const handleSubmit = (e) => {
-     e.preventDefault();
-     validateAll();
-     save();
+  const handleSubmit = e => {
+    e.preventDefault();
+    validateAll();
+    save();
   };
 
   const enableEditingServing = async () => {
@@ -159,7 +161,7 @@ const RecipeDetails = ({recipe, addPhoto, className, photosLength, recipeMods })
     if (servingInputRef.current) servingInputRef.current.focus();
   };
 
-  const renderWithMods = (fieldName) => {
+  const renderWithMods = fieldName => {
     const mod = recipeMods.find(mod => mod.field === fieldName);
     if (mod !== undefined) {
       return <DiffText original={recipe[fieldName]} modified={mod.value} />;
@@ -169,268 +171,258 @@ const RecipeDetails = ({recipe, addPhoto, className, photosLength, recipeMods })
   };
 
   const disableEditing = () => {
-    setEditing(false)
+    setEditing(false);
     document.removeEventListener('mousedown', handleClick);
   };
 
   const validateAll = () => {
-      ['title', 'description', 'servingAmount', 'servingType', 'time'].forEach(
+    ['title', 'description', 'servingAmount', 'servingType', 'time'].forEach(
       fieldName => validate(fieldName, getRecipeValue(fieldName))
     );
   };
-
 
   const validate = (fieldName, value) => {
     setErrors({
       ...errors,
       [fieldName]: undefined
-    })
+    });
 
     switch (fieldName) {
       case 'title':
         if (value.length < 5 || value.length > 255)
           setErrors({
             ...errors,
-            title: "Recipe title must be between 5 and 255 characters"
-          })
+            title: 'Recipe title must be between 5 and 255 characters'
+          });
         break;
       case 'description':
         if (value.length < 50 || value.length > 255)
           setErrors({
             ...errors,
-            description: "Description must be between 100 and 255 characters"
-          })  
+            description: 'Description must be between 100 and 255 characters'
+          });
         break;
       case 'servingAmount':
         try {
           if (!value) throw new Error();
           fraction(value);
         } catch {
-            setErrors({
+          setErrors({
             ...errors,
-            servingAmount: "Please enter serving amount as whole numbers and fractions (e.g. 1 1/3)"
-          })    
+            servingAmount:
+              'Please enter serving amount as whole numbers and fractions (e.g. 1 1/3)'
+          });
         }
         break;
       case 'servingType':
         if (value.length < 3 || value.length > 125)
           setErrors({
             ...errors,
-            servingType: "Serving type must be between 3 and 125 characters"
-          })      
+            servingType: 'Serving type must be between 3 and 125 characters'
+          });
         break;
       case 'time':
         if (!TIME_OPTIONS.includes(value))
           setErrors({
             ...errors,
-            time: "Please select a level of commitment"
-          })   
+            time: 'Please select a level of commitment'
+          });
         break;
     }
-  }
-  
+  };
+
   return (
-      <form
-        ref={containerRef}
-        onSubmit={handleSubmit}
-        className={classnames(css.details, className)}
-      >
+    <form
+      ref={containerRef}
+      onSubmit={handleSubmit}
+      className={classnames(css.details, className)}
+    >
+      {!editing && (
+        <>
+          <h1>
+            <a onClick={enableEditingTitle}>{renderWithMods('title')}</a>
+          </h1>
+          <h3>Recipe by {recipe.author.name}</h3>
+          <p>
+            <a onClick={enableEditingDescription}>
+              {renderWithMods('description')}
+            </a>
+          </p>
+        </>
+      )}
+
+      {editing && (
+        <div>
+          <TextInput
+            name="title"
+            className={css.titleInput}
+            inputRef={titleInputRef}
+            placeholder="Recipe title"
+            value={getRecipeValue('title')}
+            onChange={e => handleRecipeChange(e)}
+            error={errors.title}
+          />
+          <Textarea
+            className={css.titleInput}
+            inputRef={descriptionInputRef}
+            name="description"
+            value={getRecipeValue('description')}
+            placeholder="Recipe description"
+            onChange={handleRecipeChange}
+            error={errors.description}
+          />
+        </div>
+      )}
+      <div className={css.stats}>
         {!editing && (
           <>
-            <h1>
-              <a onClick={enableEditingTitle}>
-                {renderWithMods('title')}
-              </a>
-            </h1>
-            <h3>Recipe by {recipe.author.name}</h3>
-            <p>
-              <a onClick={enableEditingDescription}>
-                {renderWithMods('description')}
-              </a>
-            </p>
+            <a onClick={enableEditingTime}>
+              <i>
+                <MdTimer />
+              </i>
+              {getRecipeValue('time')}
+            </a>
+            <a onClick={enableEditingServing}>
+              <i>
+                <MdLocalDining />
+              </i>
+              {getRecipeValue('servingAmount')} {getRecipeValue('servingType')}
+            </a>
           </>
         )}
 
         {editing && (
-          <div>
-            <TextInput
-              name="title"
-              className={css.titleInput}
-              inputRef={titleInputRef}
-              placeholder="Recipe title"
-              value={getRecipeValue('title')}
-              onChange={(e) => handleRecipeChange(e)}
-              error={errors.title}
-            />
-            <Textarea
-              className={css.titleInput}
-              inputRef={descriptionInputRef}
-              name="description"
-              value={getRecipeValue('description')}
-              placeholder="Recipe description"
-              onChange={handleRecipeChange}
-              error={errors.description}
-            />
-          </div>
-        )}
-        <div className={css.stats}>
-          {!editing && (
-            <>
-              <a onClick={enableEditingTime}>
-                <i>
-                  <MdTimer />
-                </i>
-                {getRecipeValue('time')}
-              </a>
-              <a onClick={enableEditingServing}>
+          <div className={css.statInputs}>
+            <label className={css.timeInput}>
+              <i>
+                <MdTimer />
+              </i>
+              <Select
+                name="time"
+                onChange={handleRecipeChange}
+                inputRef={timeInputRef}
+                value={getRecipeValue('time')}
+                error={errors.time}
+              >
+                <option value="">-- commitment --</option>
+                {TIME_OPTIONS.map(time => (
+                  <option key={time} value={time}>
+                    {time}
+                  </option>
+                ))}
+              </Select>
+            </label>
+            <span className={css.servingInput}>
+              <label htmlFor="recipeServingAmount">
                 <i>
                   <MdLocalDining />
                 </i>
-                {getRecipeValue('servingAmount')}{' '}
-                {getRecipeValue('servingType')}
-              </a>
-            </>
-          )}
-
-          {editing && (
-            <div className={css.statInputs}>
-              <label className={css.timeInput}>
-                <i>
-                  <MdTimer />
-                </i>
-                <Select
-                  name="time"
-                  onChange={handleRecipeChange}
-                  inputRef={timeInputRef}
-                  value={getRecipeValue('time')}
-                  error={errors.time}
-                >
-                  <option value="">-- commitment --</option>
-                  {TIME_OPTIONS.map(time => (
-                    <option key={time} value={time}>
-                      {time}
-                    </option>
-                  ))}
-                </Select>
               </label>
-              <span className={css.servingInput}>
-                <label htmlFor="recipeServingAmount">
-                  <i>
-                    <MdLocalDining />
-                  </i>
-                </label>
-                <TextInput
-                  inputRef={servingInputRef}
-                  id="recipeServingAmount"
-                  name="servingAmount"
-                  className={css.servingAmount}
-                  type="text"
-                  value={getRecipeValue('servingAmount')}
-                  placeholder="Amnt"
-                  onChange={handleRecipeChange}
-                  error={errors.servingAmount}
-                />
-                <TextInput
-                  name="servingType"
-                  className={css.servingType}
-                  type="text"
-                  value={getRecipeValue('servingType')}
-                  placeholder="Servings"
-                  onChange={handleRecipeChange}
-                  error={errors.servingType}
-                />
-              </span>
-            </div>
-          )}
-        </div>
-
-        <div className={classnames({ [css.visuallyHidden]: !editing })}>
-          <Mutation mutation={RecipePhotoUploadMutation}>
-            {uploadFile => (
-              <FilePond
-                name="avatar"
-                ref={ref => (pond = ref)}
-                className={css.filepond}
-                server={{
-                  process: (
-                    fieldName,
-                    file,
-                    metadata,
-                    load,
-                    error,
-                    progress,
-                    abort
-                  ) => {
-                    uploadFile({
-                      variables: {
-                        file,
-                        recipeId: recipe.uid,
-                        index: photosLength
-                      }
-                    })
-                      .then(res => {
-                        addPhoto(res.data.recipePhotoUpload);
-                        load(res);
-                      })
-                      .catch(err => error(err));
-
-                    return {
-                      abort: () => {
-                        abort();
-                      }
-                    };
-                  }
-                }}
-                allowRevert={false}
-                allowMultiple={true}
-                imageTransformOutputMimeType="image/jpeg"
-                imageCropAspectRatio="3:2"
-                imageResizeTargetWidth="600"
-                onprocessfile={handleUploadComplete}
+              <TextInput
+                inputRef={servingInputRef}
+                id="recipeServingAmount"
+                name="servingAmount"
+                className={css.servingAmount}
+                type="text"
+                value={getRecipeValue('servingAmount')}
+                placeholder="Amnt"
+                onChange={handleRecipeChange}
+                error={errors.servingAmount}
               />
-            )}
-          </Mutation>
-        </div>
-
-        {!editing && (
-          <TextButtonGroup>
-            <TextButton
-              className={css.editBtn}
-              onClick={enableEditingTitle}
-            >
-              <MdEdit />
-              edit details
-            </TextButton>
-            <TextButton
-              className={css.uploadBtn}
-              onClick={triggerUploadDialog}
-            >
-              <MdAddAPhoto />
-              upload photos
-            </TextButton>
-          </TextButtonGroup>
+              <TextInput
+                name="servingType"
+                className={css.servingType}
+                type="text"
+                value={getRecipeValue('servingType')}
+                placeholder="Servings"
+                onChange={handleRecipeChange}
+                error={errors.servingType}
+              />
+            </span>
+          </div>
         )}
+      </div>
 
-        {editing && (
-          <TextButton type="submit">
-            <MdCheck />
-            save changes
+      <div className={classnames({ [css.visuallyHidden]: !editing })}>
+        <Mutation mutation={RecipePhotoUploadMutation}>
+          {uploadFile => (
+            <FilePond
+              name="avatar"
+              ref={ref => (pond = ref)}
+              className={css.filepond}
+              server={{
+                process: (
+                  fieldName,
+                  file,
+                  metadata,
+                  load,
+                  error,
+                  progress,
+                  abort
+                ) => {
+                  uploadFile({
+                    variables: {
+                      file,
+                      recipeId: recipe.uid,
+                      index: photosLength
+                    }
+                  })
+                    .then(res => {
+                      addPhoto(res.data.recipePhotoUpload);
+                      load(res);
+                    })
+                    .catch(err => error(err));
+
+                  return {
+                    abort: () => {
+                      abort();
+                    }
+                  };
+                }
+              }}
+              allowRevert={false}
+              allowMultiple={true}
+              imageTransformOutputMimeType="image/jpeg"
+              imageCropAspectRatio="3:2"
+              imageResizeTargetWidth="600"
+              onprocessfile={handleUploadComplete}
+            />
+          )}
+        </Mutation>
+      </div>
+
+      {!editing && (
+        <TextButtonGroup>
+          <TextButton className={css.editBtn} onClick={enableEditingTitle}>
+            <MdEdit />
+            edit details
           </TextButton>
-        )}
-      </form>
-  
-  )
-}
+          <TextButton className={css.uploadBtn} onClick={triggerUploadDialog}>
+            <MdAddAPhoto />
+            upload photos
+          </TextButton>
+        </TextButtonGroup>
+      )}
+
+      {editing && (
+        <TextButton type="submit">
+          <MdCheck />
+          save changes
+        </TextButton>
+      )}
+    </form>
+  );
+};
 
 RecipeDetails.propTypes = {
   className: PropTypes.string,
-    recipe: PropTypes.object,
-    recipeMods: PropTypes.arrayOf(PropTypes.object),
-    saveAlteration: PropTypes.func,
-    addPhoto: PropTypes.func,
-    photosLength: PropTypes.number,
-    client: PropTypes.instanceOf(ApolloClient)
-}
+  recipe: PropTypes.object,
+  recipeMods: PropTypes.arrayOf(PropTypes.object),
+  saveAlteration: PropTypes.func,
+  addPhoto: PropTypes.func,
+  photosLength: PropTypes.number,
+  client: PropTypes.instanceOf(ApolloClient)
+};
 
 RecipeDetails.displayName = 'RecipeDetails';
 
