@@ -1,4 +1,4 @@
-import React, { Component, useState, useRef, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import PropTypes from 'prop-types';
 import Router from 'next/router';
 import {
@@ -10,6 +10,7 @@ import {
 } from 'react-icons/md';
 import classnames from 'classnames';
 import { fraction } from 'mathjs';
+import { Mutation } from '@apollo/react-components';
 import { withApollo } from '@apollo/react-hoc';
 import { ApolloClient } from 'apollo-boost';
 import { FilePond, registerPlugin } from 'react-filepond';
@@ -39,7 +40,9 @@ const RecipeDetails = ({
   addPhoto,
   className,
   photosLength,
-  recipeMods
+  recipeMods,
+  saveAlteration,
+  client
 }) => {
   const [errors, setErrors] = useState({});
   const [edits, setEdit] = useState({});
@@ -50,7 +53,6 @@ const RecipeDetails = ({
   const titleInputRef = useRef(null);
   const descriptionInputRef = useRef(null);
   const timeInputRef = useRef(null);
-  const skillInputRef = useRef(null);
   const servingInputRef = useRef(null);
   let pond = useRef(null);
 
@@ -67,11 +69,6 @@ const RecipeDetails = ({
   const enableEditingDescription = async () => {
     await enableEditing();
     if (descriptionInputRef.current) descriptionInputRef.current.focus();
-  };
-
-  const enableEditingSkill = async () => {
-    await this.enableEditing();
-    if (skillInputRef.current) skillInputRef.current.focus();
   };
 
   const getRecipeValue = fieldName => {
