@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import Router from 'next/router';
 import {
@@ -54,21 +54,35 @@ const RecipeDetails = ({
   const descriptionInputRef = useRef(null);
   const timeInputRef = useRef(null);
   const servingInputRef = useRef(null);
-  let pond = useRef(null);
+  let pond;
+
+  useEffect(() => {
+    return () => {
+      document.removeEventListener('mousedown', handleClick);
+    };
+  }, []);
 
   const enableEditing = () => {
     setEditing(true);
     document.addEventListener('mousedown', handleClick);
   };
 
-  const enableEditingTitle = async () => {
+  const edit = async refTitle => {
     await enableEditing();
-    if (titleInputRef.current) titleInputRef.current.focus();
+    if (refTitle === 'description' && descriptionInputRef.current) {
+      descriptionInputRef.current.focus();
+    } else if (refTitle === 'title' && titleInputRef.current) {
+      titleInputRef.current.focus();
+    } else if (refTitle === 'time' && timeInputRef.current) {
+      timeInputRef.current.focus();
+    } else if (refTitle === 'servingAmount' && servingInputRef.current) {
+      servingInputRef.current.focus();
+    }
   };
 
-  const enableEditingDescription = async () => {
-    await enableEditing();
-    if (descriptionInputRef.current) descriptionInputRef.current.focus();
+  const disableEditing = () => {
+    setEditing(false);
+    document.removeEventListener('mousedown', handleClick);
   };
 
   const getRecipeValue = fieldName => {
@@ -100,11 +114,6 @@ const RecipeDetails = ({
     }, 1000);
   };
 
-  const enableEditingTime = async () => {
-    await enableEditing();
-    if (timeInputRef.current) timeInputRef.current.focus();
-  };
-
   const handleUploadComplete = (err, file) => {
     setTimeout(() => {
       pond.removeFile(file);
@@ -120,9 +129,7 @@ const RecipeDetails = ({
     const hasErrors = Object.keys(errors);
     if (recipe) {
       Object.entries(edits)
-        .filter(([key]) => {
-          !hasErrors.includes(key);
-        })
+        .filter(([key]) => !hasErrors.includes(key))
         .forEach(([key, value]) => {
           saveAlteration(recipe, key, value);
         });
@@ -153,11 +160,6 @@ const RecipeDetails = ({
     save();
   };
 
-  const enableEditingServing = async () => {
-    await enableEditing();
-    if (servingInputRef.current) servingInputRef.current.focus();
-  };
-
   const renderWithMods = fieldName => {
     const mod = recipeMods.find(mod => mod.field === fieldName);
     if (mod !== undefined) {
@@ -165,11 +167,6 @@ const RecipeDetails = ({
     } else {
       return recipe[fieldName];
     }
-  };
-
-  const disableEditing = () => {
-    setEditing(false);
-    document.removeEventListener('mousedown', handleClick);
   };
 
   const validateAll = () => {
@@ -237,11 +234,11 @@ const RecipeDetails = ({
       {!editing && (
         <>
           <h1>
-            <a onClick={enableEditingTitle}>{renderWithMods('title')}</a>
+            <a onClick={() => edit('title')}>{renderWithMods('title')}</a>
           </h1>
           <h3>Recipe by {recipe.author.name}</h3>
           <p>
-            <a onClick={enableEditingDescription}>
+            <a onClick={() => edit('description')}>
               {renderWithMods('description')}
             </a>
           </p>
@@ -273,13 +270,13 @@ const RecipeDetails = ({
       <div className={css.stats}>
         {!editing && (
           <>
-            <a onClick={enableEditingTime}>
+            <a onClick={() => edit('time')}>
               <i>
                 <MdTimer />
               </i>
               {getRecipeValue('time')}
             </a>
-            <a onClick={enableEditingServing}>
+            <a onClick={() => edit('servingAmount')}>
               <i>
                 <MdLocalDining />
               </i>
@@ -390,7 +387,7 @@ const RecipeDetails = ({
 
       {!editing && (
         <TextButtonGroup>
-          <TextButton className={css.editBtn} onClick={enableEditingTitle}>
+          <TextButton className={css.editBtn} onClick={() => edit('title')}>
             <MdEdit />
             edit details
           </TextButton>
