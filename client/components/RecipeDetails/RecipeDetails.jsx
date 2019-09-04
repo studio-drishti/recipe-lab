@@ -62,9 +62,13 @@ const RecipeDetails = ({
     };
   }, []);
 
-  const enableEditing = () => {
-    setEditing(true);
-    document.addEventListener('mousedown', handleClick);
+  const enableEditing = async refTitle => {
+    if (refTitle) {
+      edit(refTitle);
+    } else {
+      setEditing(true);
+      document.addEventListener('mousedown', handleClick);
+    }
   };
 
   const edit = async refTitle => {
@@ -236,7 +240,9 @@ const RecipeDetails = ({
       {!editing && (
         <>
           <h1>
-            <a onClick={() => edit('title')}>{renderWithMods('title')}</a>
+            <a onClick={() => enableEditing('title')}>
+              {renderWithMods('title')}
+            </a>
           </h1>
           <h3>Recipe by {recipe.author.name}</h3>
           <p>
@@ -272,13 +278,13 @@ const RecipeDetails = ({
       <div className={css.stats}>
         {!editing && (
           <>
-            <a onClick={() => edit('time')}>
+            <a onClick={() => enableEditing('time')}>
               <i>
                 <MdTimer />
               </i>
               {getRecipeValue('time')}
             </a>
-            <a onClick={() => edit('servingAmount')}>
+            <a onClick={() => enableEditing('servingAmount')}>
               <i>
                 <MdLocalDining />
               </i>
@@ -389,7 +395,10 @@ const RecipeDetails = ({
 
       {!editing && (
         <TextButtonGroup>
-          <TextButton className={css.editBtn} onClick={() => edit('title')}>
+          <TextButton
+            className={css.editBtn}
+            onClick={() => enableEditing('title')}
+          >
             <MdEdit />
             edit details
           </TextButton>
