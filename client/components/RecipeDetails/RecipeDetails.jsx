@@ -73,14 +73,17 @@ const RecipeDetails = ({
 
   const edit = async refTitle => {
     await enableEditing();
-    if (refTitle === 'description' && descriptionInputRef.current) {
-      descriptionInputRef.current.focus();
-    } else if (refTitle === 'title' && titleInputRef.current) {
-      titleInputRef.current.focus();
-    } else if (refTitle === 'time' && timeInputRef.current) {
-      timeInputRef.current.focus();
-    } else if (refTitle === 'servingAmount' && servingInputRef.current) {
-      servingInputRef.current.focus();
+    switch (refTitle) {
+      case 'description':
+        return descriptionInputRef.current.focus();
+      case 'title':
+        return titleInputRef.current.focus();
+      case 'time':
+        return timeInputRef.current.focus();
+      case 'servingAmount':
+        return servingInputRef.current.focus();
+      default:
+        return titleInputRef.current.focus();
     }
   };
 
