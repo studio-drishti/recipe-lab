@@ -62,22 +62,12 @@ const RecipeDetails = ({
     };
   }, []);
 
-  const enableEditing = async refTitle => {
-    if (refTitle) {
-      edit(refTitle);
-    } else {
-      setEditing(true);
-      document.addEventListener('mousedown', handleClick);
-    }
-  };
-
-  const edit = async refTitle => {
-    await enableEditing();
+  const edit = refTitle => {
     switch (refTitle) {
-      case 'description':
-        return descriptionInputRef.current.focus();
       case 'title':
         return titleInputRef.current.focus();
+      case 'description':
+        return descriptionInputRef.current.focus();
       case 'time':
         return timeInputRef.current.focus();
       case 'servingAmount':
@@ -85,6 +75,12 @@ const RecipeDetails = ({
       default:
         return titleInputRef.current.focus();
     }
+  };
+
+  const enableEditing = async refTitle => {
+    await setEditing(true);
+    if (refTitle) edit(refTitle);
+    document.addEventListener('mousedown', handleClick);
   };
 
   const disableEditing = () => {
@@ -249,7 +245,7 @@ const RecipeDetails = ({
           </h1>
           <h3>Recipe by {recipe.author.name}</h3>
           <p>
-            <a onClick={() => edit('description')}>
+            <a onClick={() => enableEditing('description')}>
               {renderWithMods('description')}
             </a>
           </p>
