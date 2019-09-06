@@ -62,7 +62,9 @@ const RecipeDetails = ({
     };
   }, []);
 
-  const edit = refTitle => {
+  const enableEditing = async refTitle => {
+    await setEditing(true);
+    document.addEventListener('mousedown', handleClick);
     switch (refTitle) {
       case 'title':
         return titleInputRef.current.focus();
@@ -75,12 +77,6 @@ const RecipeDetails = ({
       default:
         return titleInputRef.current.focus();
     }
-  };
-
-  const enableEditing = async refTitle => {
-    await setEditing(true);
-    if (refTitle) edit(refTitle);
-    document.addEventListener('mousedown', handleClick);
   };
 
   const disableEditing = () => {
