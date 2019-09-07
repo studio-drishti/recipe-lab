@@ -129,7 +129,7 @@ const RecipeDetails = ({
     if (recipe) {
       Object.entries(edits)
         .filter(([key]) => {
-          !hasErrors.includes(key);
+          return !hasErrors.includes(key);
         })
         .forEach(([key, value]) => {
           saveAlteration(recipe, key, value);
