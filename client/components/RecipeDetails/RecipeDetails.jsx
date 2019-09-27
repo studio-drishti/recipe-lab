@@ -47,13 +47,12 @@ const RecipeDetails = ({
   const [errors, setErrors] = useState({});
   const [edits, setEdit] = useState({});
   const [editing, setEditing] = useState(!recipe ? true : false);
-  const [timeouts, setTimeoutValue] = useState({});
-
-  const containerRef = useRef(null);
-  const titleInputRef = useRef(null);
-  const descriptionInputRef = useRef(null);
-  const timeInputRef = useRef(null);
-  const servingInputRef = useRef(null);
+  const validationTimeouts = useRef({});
+  const containerRef = useRef();
+  const titleInputRef = useRef();
+  const descriptionInputRef = useRef();
+  const timeInputRef = useRef();
+  const servingInputRef = useRef();
   let pond;
 
   useEffect(() => {
@@ -102,16 +101,18 @@ const RecipeDetails = ({
   const handleRecipeChange = e => {
     const { name, value } = e.target;
     edits[name] = value;
-    if (timeouts[name]) clearTimeout(timeouts[name]);
+
+    if (validationTimeouts.current[name])
+      clearTimeout(validationTimeouts.current[name]);
+
     setEdit({
       ...edits,
       name: value
     });
-    setTimeout(() => {
-      setTimeoutValue({
-        ...timeouts,
-        name: validate(name, value)
-      });
+
+    validationTimeouts.current[name] = setTimeout(() => {
+      validate(name, value);
+      delete validationTimeouts.current[name];
     }, 1000);
   };
 
