@@ -10,9 +10,7 @@ import {
 } from 'react-icons/md';
 import classnames from 'classnames';
 import { fraction } from 'mathjs';
-import { Mutation } from '@apollo/react-components';
-import { withApollo } from '@apollo/react-hoc';
-import { ApolloClient } from 'apollo-boost';
+import { Mutation, useApolloClient } from 'react-apollo';
 import { FilePond, registerPlugin } from 'react-filepond';
 import FilePondPluginImageCrop from 'filepond-plugin-image-crop';
 import FilePondPluginImageResize from 'filepond-plugin-image-resize';
@@ -41,9 +39,9 @@ const RecipeDetails = ({
   className,
   photosLength,
   recipeMods,
-  saveAlteration,
-  client
+  saveAlteration
 }) => {
+  const client = useApolloClient();
   const [errors, setErrors] = useState({});
   const [edits, setEdit] = useState({});
   const [editing, setEditing] = useState(!recipe ? true : false);
@@ -406,10 +404,9 @@ RecipeDetails.propTypes = {
   recipeMods: PropTypes.arrayOf(PropTypes.object),
   saveAlteration: PropTypes.func,
   addPhoto: PropTypes.func,
-  photosLength: PropTypes.number,
-  client: PropTypes.instanceOf(ApolloClient)
+  photosLength: PropTypes.number
 };
 
 RecipeDetails.displayName = 'RecipeDetails';
 
-export default withApollo(RecipeDetails);
+export default RecipeDetails;
