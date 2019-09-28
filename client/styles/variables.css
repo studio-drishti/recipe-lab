@@ -23,4 +23,5 @@
   --color-black: #262626;
   --color-white: #fff;
   --color-highlight: rgb(252, 251, 198);
+  --color-error: red;
 }

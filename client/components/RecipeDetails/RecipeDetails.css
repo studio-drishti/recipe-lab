@@ -11,17 +11,8 @@
   }
 }
 
-.titleInputs {
-  & input {
-    margin-bottom: 1rem;
-  }
-
-  & input,
-  & textarea {
-    display: block;
-    width: 100%;
-    margin-bottom: 1rem;
-  }
+.titleInput {
+  margin-bottom: 1rem;
 }
 
 .stats {
@@ -61,6 +52,12 @@
     background: var(--color-medium-gray);
     color: var(--color-dark-gray);
   }
+}
+
+.timeInput,
+.servingInput {
+  display: flex;
+  align-items: center;
 }
 
 .servingInput {

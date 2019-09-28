@@ -11,8 +11,7 @@ export default class Footer extends Component {
           Copyright &copy; {new Date().getFullYear()} Recipe Lab
         </div>
         <div className={css.social}>
-          <a href="#">Instagram</a> |<a href="#">Facebook</a> |
-          <a href="#">Mastadon</a>
+          <a href="#">Pixelfed</a> | <a href="#">Mastodon</a>
         </div>
       </footer>
     );

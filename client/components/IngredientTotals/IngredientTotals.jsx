@@ -42,11 +42,9 @@ export default class IngredientTotals extends Component {
       )
         return;
 
-      if (totals.hasOwnProperty(ingredient.name)) {
+      if (ingredient.name in totals) {
         totals[ingredient.name].divided = true;
-        if (
-          totals[ingredient.name].quantities.hasOwnProperty(ingredient.unit)
-        ) {
+        if (ingredient.unit in totals[ingredient.name].quantities) {
           totals[ingredient.name].quantities[ingredient.unit] = addFractions(
             totals[ingredient.name].quantities[ingredient.unit],
             ingredient.quantity
@@ -68,7 +66,7 @@ export default class IngredientTotals extends Component {
 
     return Object.entries(totals).map(([key, val]) => ({
       name: key,
-      divided: val.hasOwnProperty('divided'),
+      divided: 'divided' in val,
       quantities: Object.entries(val.quantities)
         .map(([key, val]) => ({
           unit: key,

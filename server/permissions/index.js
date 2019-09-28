@@ -2,31 +2,31 @@ const { rule, shield } = require('graphql-shield');
 const getUserId = require('../utils/getUserId');
 
 const rules = {
-  isAuthenticatedUser: rule()((parent, args, context) => {
-    const userId = getUserId(context);
+  /**
+   * cache: 'contextual' is needed for routes that use graphql-upload.
+   * See: https://github.com/maticzav/graphql-shield/issues/408
+   */
+  isAuthenticatedUser: rule({ cache: 'contextual' })((parent, args, ctx) => {
+    const userId = getUserId(ctx);
     return Boolean(userId);
-  })
-  // isPostOwner: rule()(async (parent, { id }, context) => {
-  //   const userId = getUserId(context);
-  //   const author = await context.prisma
-  //     .post({
-  //       id
-  //     })
-  //     .author();
-  //   return userId === author.id;
-  // })
+  }),
+  isRecipeOwner: rule({ cache: 'contextual' })(
+    async (parent, { recipeId }, ctx) => {
+      const userId = getUserId(ctx);
+      return await ctx.prisma.$exists.recipe({
+        uid: recipeId,
+        author: { id: userId }
+      });
+    }
+  )
 };
 
 module.exports = shield({
   Query: {
     sessionUser: rules.isAuthenticatedUser
-    // filterPosts: rules.isAuthenticatedUser,
-    // post: rules.isAuthenticatedUser
   },
   Mutation: {
-    avatarUpload: rules.isAuthenticatedUser
-    // createDraft: rules.isAuthenticatedUser
-    // deletePost: rules.isPostOwner,
-    // publish: rules.isPostOwner
+    avatarUpload: rules.isAuthenticatedUser,
+    recipePhotoUpload: rules.isRecipeOwner
   }
 });

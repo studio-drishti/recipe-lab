@@ -1,4 +1,4 @@
-import App, { Container } from 'next/app';
+import App from 'next/app';
 import React from 'react';
 import { ApolloProvider } from 'react-apollo';
 
@@ -40,13 +40,11 @@ class MyApp extends App {
   render() {
     const { Component, pageProps, apolloClient } = this.props;
     return (
-      <Container>
-        <ApolloProvider client={apolloClient}>
-          <UserContext.Provider value={this.state}>
-            <Component {...pageProps} />
-          </UserContext.Provider>
-        </ApolloProvider>
-      </Container>
+      <ApolloProvider client={apolloClient}>
+        <UserContext.Provider value={this.state}>
+          <Component {...pageProps} />
+        </UserContext.Provider>
+      </ApolloProvider>
     );
   }
 }

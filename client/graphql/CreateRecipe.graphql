@@ -1,0 +1,17 @@
+mutation CreateRecipe(
+  $title: String!
+  $time: String!
+  $servingAmount: String!
+  $servingType: String!
+  $description: String!
+) {
+  createRecipe(
+    title: $title
+    time: $time
+    servingAmount: $servingAmount
+    servingType: $servingType
+    description: $description
+  ) {
+    slug
+  }
+}
