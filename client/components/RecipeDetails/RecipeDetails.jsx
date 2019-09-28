@@ -10,9 +10,7 @@ import {
 } from 'react-icons/md';
 import classnames from 'classnames';
 import { fraction } from 'mathjs';
-import { Mutation } from '@apollo/react-components';
-import { withApollo } from '@apollo/react-hoc';
-import { ApolloClient } from 'apollo-boost';
+import { Mutation, useApolloClient } from 'react-apollo';
 import { FilePond, registerPlugin } from 'react-filepond';
 import FilePondPluginImageCrop from 'filepond-plugin-image-crop';
 import FilePondPluginImageResize from 'filepond-plugin-image-resize';
@@ -41,19 +39,18 @@ const RecipeDetails = ({
   className,
   photosLength,
   recipeMods,
-  saveAlteration,
-  client
+  saveAlteration
 }) => {
+  const client = useApolloClient();
   const [errors, setErrors] = useState({});
   const [edits, setEdit] = useState({});
   const [editing, setEditing] = useState(!recipe ? true : false);
-  const [timeouts, setTimeoutValue] = useState({});
-
-  const containerRef = useRef(null);
-  const titleInputRef = useRef(null);
-  const descriptionInputRef = useRef(null);
-  const timeInputRef = useRef(null);
-  const servingInputRef = useRef(null);
+  const validationTimeouts = useRef({});
+  const containerRef = useRef();
+  const titleInputRef = useRef();
+  const descriptionInputRef = useRef();
+  const timeInputRef = useRef();
+  const servingInputRef = useRef();
   let pond;
 
   useEffect(() => {
@@ -62,20 +59,22 @@ const RecipeDetails = ({
     };
   }, []);
 
-  const enableEditing = async refTitle => {
+  const enableEditing = async fieldName => {
     await setEditing(true);
     document.addEventListener('mousedown', handleClick);
-    switch (refTitle) {
-      case 'title':
-        return titleInputRef.current.focus();
+    switch (fieldName) {
       case 'description':
-        return descriptionInputRef.current.focus();
+        descriptionInputRef.current.focus();
+        break;
       case 'time':
-        return timeInputRef.current.focus();
+        timeInputRef.current.focus();
+        break;
       case 'servingAmount':
-        return servingInputRef.current.focus();
+        servingInputRef.current.focus();
+        break;
       default:
-        return titleInputRef.current.focus();
+        titleInputRef.current.focus();
+        break;
     }
   };
 
@@ -100,16 +99,18 @@ const RecipeDetails = ({
   const handleRecipeChange = e => {
     const { name, value } = e.target;
     edits[name] = value;
-    if (timeouts[name]) clearTimeout(timeouts[name]);
+
+    if (validationTimeouts.current[name])
+      clearTimeout(validationTimeouts.current[name]);
+
     setEdit({
       ...edits,
       name: value
     });
-    setTimeout(() => {
-      setTimeoutValue({
-        ...timeouts,
-        name: validate(name, value)
-      });
+
+    validationTimeouts.current[name] = setTimeout(() => {
+      validate(name, value);
+      delete validationTimeouts.current[name];
     }, 1000);
   };
 
@@ -124,17 +125,23 @@ const RecipeDetails = ({
     pond.browse();
   };
 
-  const save = () => {
-    const hasErrors = Object.keys(errors);
+  const handleSubmit = async e => {
+    e.preventDefault();
+
+    const hasErrors = [
+      'title',
+      'description',
+      'servingAmount',
+      'servingType',
+      'time'
+    ].filter(fieldName => validate(fieldName, getRecipeValue(fieldName)));
+
     if (recipe) {
       Object.entries(edits)
-        .filter(([key]) => {
-          return !hasErrors.includes(key);
-        })
+        .filter(([key]) => !hasErrors.includes(key))
         .forEach(([key, value]) => {
           saveAlteration(recipe, key, value);
         });
-      setErrors({});
       disableEditing();
     } else if (hasErrors.length === 0) {
       client
@@ -150,15 +157,9 @@ const RecipeDetails = ({
         })
         .then(({ data }) => {
           const { slug } = data.createRecipe;
-          Router.replace(`/recipe?slug=${slug}`, `/recipes/${slug}`);
+          Router.replace('/recipes/[slug]', `/recipes/${slug}`);
         });
     }
-  };
-
-  const handleSubmit = e => {
-    e.preventDefault();
-    validateAll();
-    save();
   };
 
   const renderWithMods = fieldName => {
@@ -170,60 +171,43 @@ const RecipeDetails = ({
     }
   };
 
-  const validateAll = () => {
-    ['title', 'description', 'servingAmount', 'servingType', 'time'].forEach(
-      fieldName => validate(fieldName, getRecipeValue(fieldName))
-    );
-  };
-
   const validate = (fieldName, value) => {
-    setErrors({
-      ...errors,
-      [fieldName]: undefined
-    });
+    let err = undefined;
 
     switch (fieldName) {
       case 'title':
         if (value.length < 5 || value.length > 255)
-          setErrors({
-            ...errors,
-            title: 'Recipe title must be between 5 and 255 characters'
-          });
+          err = 'Recipe title must be between 5 and 255 characters';
         break;
       case 'description':
         if (value.length < 50 || value.length > 255)
-          setErrors({
-            ...errors,
-            description: 'Description must be between 100 and 255 characters'
-          });
+          err = 'Description must be between 100 and 255 characters';
         break;
       case 'servingAmount':
         try {
           if (!value) throw new Error();
           fraction(value);
         } catch {
-          setErrors({
-            ...errors,
-            servingAmount:
-              'Please enter serving amount as whole numbers and fractions (e.g. 1 1/3)'
-          });
+          err =
+            'Serving amount must be whole numbers and fractions (e.g. 1 1/3)';
         }
         break;
       case 'servingType':
         if (value.length < 3 || value.length > 125)
-          setErrors({
-            ...errors,
-            servingType: 'Serving type must be between 3 and 125 characters'
-          });
+          err = 'Serving type must be between 3 and 125 characters';
         break;
       case 'time':
         if (!TIME_OPTIONS.includes(value))
-          setErrors({
-            ...errors,
-            time: 'Please select a level of commitment'
-          });
+          err = 'Please select a level of commitment';
         break;
     }
+
+    setErrors(errors => ({
+      ...errors,
+      [fieldName]: err
+    }));
+
+    return Boolean(err);
   };
 
   return (
@@ -256,7 +240,7 @@ const RecipeDetails = ({
             inputRef={titleInputRef}
             placeholder="Recipe title"
             value={getRecipeValue('title')}
-            onChange={e => handleRecipeChange(e)}
+            onChange={handleRecipeChange}
             error={errors.title}
           />
           <Textarea
@@ -420,10 +404,9 @@ RecipeDetails.propTypes = {
   recipeMods: PropTypes.arrayOf(PropTypes.object),
   saveAlteration: PropTypes.func,
   addPhoto: PropTypes.func,
-  photosLength: PropTypes.number,
-  client: PropTypes.instanceOf(ApolloClient)
+  photosLength: PropTypes.number
 };
 
 RecipeDetails.displayName = 'RecipeDetails';
 
-export default withApollo(RecipeDetails);
+export default RecipeDetails;

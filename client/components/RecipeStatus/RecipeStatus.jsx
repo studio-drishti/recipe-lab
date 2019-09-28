@@ -1,7 +1,7 @@
 import React from 'react';
 import { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import { withApollo } from '@apollo/react-hoc';
+import { withApollo } from 'react-apollo';
 import { ApolloClient } from 'apollo-boost';
 
 import UserContext from '../../utils/UserContext';

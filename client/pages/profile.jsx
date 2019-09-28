@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Mutation } from '@apollo/react-components';
+import { Mutation } from 'react-apollo';
 import { FilePond, registerPlugin } from 'react-filepond';
 import FilePondPluginImageCrop from 'filepond-plugin-image-crop';
 import FilePondPluginImageResize from 'filepond-plugin-image-resize';

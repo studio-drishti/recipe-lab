@@ -1,6 +1,6 @@
 import App from 'next/app';
 import React from 'react';
-import { ApolloProvider } from '@apollo/react-common';
+import { ApolloProvider } from 'react-apollo';
 
 import 'normalize.css';
 import '../styles/variables.css';
