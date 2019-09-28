@@ -6,7 +6,7 @@ type User {
   password: String!
   name: String!
   avatar: String
-  slug: String
+  slug: String!
   emailVerified: Boolean! @default(value: false)
   recipes: [Recipe!]! @relation(name: "RecipeAuthor", onDelete: CASCADE)
   modifications: [Modification!]!

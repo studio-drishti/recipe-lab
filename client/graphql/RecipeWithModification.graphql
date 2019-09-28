@@ -8,6 +8,7 @@ query recipe($slug: String!, $user: ID) {
     servingAmount
     servingType
     time
+    photoUrl
     items {
       uid
       name
@@ -23,11 +24,6 @@ query recipe($slug: String!, $user: ID) {
           processing
         }
       }
-    }
-    photos {
-      id
-      filename
-      url
     }
     author {
       name

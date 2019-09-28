@@ -11,7 +11,6 @@ import css from './RecipeCarousel.css';
 import IconButtonGroup from '../IconButtonGroup';
 import IconButton from '../IconButton';
 import RecipePhotoDeleteMutation from '../../graphql/RecipePhotoDelete.graphql';
-//import RecipePhotoOrderMutation from '../../graphql/RecipePhotoOrder.graphql';
 
 export default class RecipeCarousel extends PureComponent {
   static displayName = 'RecipeCarousel';
@@ -30,20 +29,6 @@ export default class RecipeCarousel extends PureComponent {
   //     this.swiper.slideTo(this.props.photos.length - 1);
   //   }
   // }
-
-  // reOrderPhotos = (startIndex, indexChange) => {
-  //   const { photos, updatePhotos } = this.props;
-  //   const endIndex = startIndex + indexChange;
-
-  //   return new Promise(resolve => {
-  //     const updatedArray = reorder(photos, startIndex, endIndex);
-
-  //     updatePhotos(updatedArray);
-  //     this.swiper.slideTo(endIndex);
-
-  //     return resolve(updatedArray.map(photo => photo.id));
-  //   });
-  // };
 
   render() {
     const { photo, recipeId, className, removePhoto } = this.props;

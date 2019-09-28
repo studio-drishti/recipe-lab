@@ -31,10 +31,6 @@ type AggregateRecipe {
   count: Int!
 }
 
-type AggregateRecipePhoto {
-  count: Int!
-}
-
 type AggregateSorting {
   count: Int!
 }
@@ -2358,12 +2354,6 @@ type Mutation {
   upsertRecipe(where: RecipeWhereUniqueInput!, create: RecipeCreateInput!, update: RecipeUpdateInput!): Recipe!
   deleteRecipe(where: RecipeWhereUniqueInput!): Recipe
   deleteManyRecipes(where: RecipeWhereInput): BatchPayload!
-  createRecipePhoto(data: RecipePhotoCreateInput!): RecipePhoto!
-  updateRecipePhoto(data: RecipePhotoUpdateInput!, where: RecipePhotoWhereUniqueInput!): RecipePhoto
-  updateManyRecipePhotos(data: RecipePhotoUpdateManyMutationInput!, where: RecipePhotoWhereInput): BatchPayload!
-  upsertRecipePhoto(where: RecipePhotoWhereUniqueInput!, create: RecipePhotoCreateInput!, update: RecipePhotoUpdateInput!): RecipePhoto!
-  deleteRecipePhoto(where: RecipePhotoWhereUniqueInput!): RecipePhoto
-  deleteManyRecipePhotos(where: RecipePhotoWhereInput): BatchPayload!
   createSorting(data: SortingCreateInput!): Sorting!
   updateSorting(data: SortingUpdateInput!, where: SortingWhereUniqueInput!): Sorting
   updateManySortings(data: SortingUpdateManyMutationInput!, where: SortingWhereInput): BatchPayload!
@@ -2429,9 +2419,6 @@ type Query {
   recipe(where: RecipeWhereUniqueInput!): Recipe
   recipes(where: RecipeWhereInput, orderBy: RecipeOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Recipe]!
   recipesConnection(where: RecipeWhereInput, orderBy: RecipeOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): RecipeConnection!
-  recipePhoto(where: RecipePhotoWhereUniqueInput!): RecipePhoto
-  recipePhotos(where: RecipePhotoWhereInput, orderBy: RecipePhotoOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [RecipePhoto]!
-  recipePhotosConnection(where: RecipePhotoWhereInput, orderBy: RecipePhotoOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): RecipePhotoConnection!
   sorting(where: SortingWhereUniqueInput!): Sorting
   sortings(where: SortingWhereInput, orderBy: SortingOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Sorting]!
   sortingsConnection(where: SortingWhereInput, orderBy: SortingOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): SortingConnection!
@@ -2461,7 +2448,8 @@ type Recipe {
   description: String!
   items(where: ItemWhereInput, orderBy: ItemOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Item!]
   modifications(where: ModificationWhereInput, orderBy: ModificationOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Modification!]
-  photos(where: RecipePhotoWhereInput, orderBy: RecipePhotoOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [RecipePhoto!]
+  photoFilename: String
+  photoUrl: String
 }
 
 type RecipeConnection {
@@ -2482,7 +2470,8 @@ input RecipeCreateInput {
   description: String
   items: ItemCreateManyWithoutRecipeInput
   modifications: ModificationCreateManyWithoutRecipeInput
-  photos: RecipePhotoCreateManyWithoutRecipeInput
+  photoFilename: String
+  photoUrl: String
 }
 
 input RecipeCreateManyWithoutAuthorInput {
@@ -2500,11 +2489,6 @@ input RecipeCreateOneWithoutModificationsInput {
   connect: RecipeWhereUniqueInput
 }
 
-input RecipeCreateOneWithoutPhotosInput {
-  create: RecipeCreateWithoutPhotosInput
-  connect: RecipeWhereUniqueInput
-}
-
 input RecipeCreateWithoutAuthorInput {
   id: ID
   uid: ID!
@@ -2516,7 +2500,8 @@ input RecipeCreateWithoutAuthorInput {
   description: String
   items: ItemCreateManyWithoutRecipeInput
   modifications: ModificationCreateManyWithoutRecipeInput
-  photos: RecipePhotoCreateManyWithoutRecipeInput
+  photoFilename: String
+  photoUrl: String
 }
 
 input RecipeCreateWithoutItemsInput {
@@ -2530,7 +2515,8 @@ input RecipeCreateWithoutItemsInput {
   servingType: String
   description: String
   modifications: ModificationCreateManyWithoutRecipeInput
-  photos: RecipePhotoCreateManyWithoutRecipeInput
+  photoFilename: String
+  photoUrl: String
 }
 
 input RecipeCreateWithoutModificationsInput {
@@ -2544,21 +2530,8 @@ input RecipeCreateWithoutModificationsInput {
   servingType: String
   description: String
   items: ItemCreateManyWithoutRecipeInput
-  photos: RecipePhotoCreateManyWithoutRecipeInput
-}
-
-input RecipeCreateWithoutPhotosInput {
-  id: ID
-  uid: ID!
-  slug: String!
-  author: UserCreateOneWithoutRecipesInput!
-  title: String
-  time: String
-  servingAmount: String
-  servingType: String
-  description: String
-  items: ItemCreateManyWithoutRecipeInput
-  modifications: ModificationCreateManyWithoutRecipeInput
+  photoFilename: String
+  photoUrl: String
 }
 
 type RecipeEdge {
@@ -2587,291 +2560,10 @@ enum RecipeOrderByInput {
   servingType_DESC
   description_ASC
   description_DESC
-}
-
-type RecipePhoto {
-  id: ID!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  filename: String!
-  url: String!
-  recipe: Recipe!
-  index: Int!
-}
-
-type RecipePhotoConnection {
-  pageInfo: PageInfo!
-  edges: [RecipePhotoEdge]!
-  aggregate: AggregateRecipePhoto!
-}
-
-input RecipePhotoCreateInput {
-  id: ID
-  filename: String!
-  url: String!
-  recipe: RecipeCreateOneWithoutPhotosInput!
-  index: Int!
-}
-
-input RecipePhotoCreateManyWithoutRecipeInput {
-  create: [RecipePhotoCreateWithoutRecipeInput!]
-  connect: [RecipePhotoWhereUniqueInput!]
-}
-
-input RecipePhotoCreateWithoutRecipeInput {
-  id: ID
-  filename: String!
-  url: String!
-  index: Int!
-}
-
-type RecipePhotoEdge {
-  node: RecipePhoto!
-  cursor: String!
-}
-
-enum RecipePhotoOrderByInput {
-  id_ASC
-  id_DESC
-  createdAt_ASC
-  createdAt_DESC
-  updatedAt_ASC
-  updatedAt_DESC
-  filename_ASC
-  filename_DESC
-  url_ASC
-  url_DESC
-  index_ASC
-  index_DESC
-}
-
-type RecipePhotoPreviousValues {
-  id: ID!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  filename: String!
-  url: String!
-  index: Int!
-}
-
-input RecipePhotoScalarWhereInput {
-  id: ID
-  id_not: ID
-  id_in: [ID!]
-  id_not_in: [ID!]
-  id_lt: ID
-  id_lte: ID
-  id_gt: ID
-  id_gte: ID
-  id_contains: ID
-  id_not_contains: ID
-  id_starts_with: ID
-  id_not_starts_with: ID
-  id_ends_with: ID
-  id_not_ends_with: ID
-  createdAt: DateTime
-  createdAt_not: DateTime
-  createdAt_in: [DateTime!]
-  createdAt_not_in: [DateTime!]
-  createdAt_lt: DateTime
-  createdAt_lte: DateTime
-  createdAt_gt: DateTime
-  createdAt_gte: DateTime
-  updatedAt: DateTime
-  updatedAt_not: DateTime
-  updatedAt_in: [DateTime!]
-  updatedAt_not_in: [DateTime!]
-  updatedAt_lt: DateTime
-  updatedAt_lte: DateTime
-  updatedAt_gt: DateTime
-  updatedAt_gte: DateTime
-  filename: String
-  filename_not: String
-  filename_in: [String!]
-  filename_not_in: [String!]
-  filename_lt: String
-  filename_lte: String
-  filename_gt: String
-  filename_gte: String
-  filename_contains: String
-  filename_not_contains: String
-  filename_starts_with: String
-  filename_not_starts_with: String
-  filename_ends_with: String
-  filename_not_ends_with: String
-  url: String
-  url_not: String
-  url_in: [String!]
-  url_not_in: [String!]
-  url_lt: String
-  url_lte: String
-  url_gt: String
-  url_gte: String
-  url_contains: String
-  url_not_contains: String
-  url_starts_with: String
-  url_not_starts_with: String
-  url_ends_with: String
-  url_not_ends_with: String
-  index: Int
-  index_not: Int
-  index_in: [Int!]
-  index_not_in: [Int!]
-  index_lt: Int
-  index_lte: Int
-  index_gt: Int
-  index_gte: Int
-  AND: [RecipePhotoScalarWhereInput!]
-  OR: [RecipePhotoScalarWhereInput!]
-  NOT: [RecipePhotoScalarWhereInput!]
-}
-
-type RecipePhotoSubscriptionPayload {
-  mutation: MutationType!
-  node: RecipePhoto
-  updatedFields: [String!]
-  previousValues: RecipePhotoPreviousValues
-}
-
-input RecipePhotoSubscriptionWhereInput {
-  mutation_in: [MutationType!]
-  updatedFields_contains: String
-  updatedFields_contains_every: [String!]
-  updatedFields_contains_some: [String!]
-  node: RecipePhotoWhereInput
-  AND: [RecipePhotoSubscriptionWhereInput!]
-  OR: [RecipePhotoSubscriptionWhereInput!]
-  NOT: [RecipePhotoSubscriptionWhereInput!]
-}
-
-input RecipePhotoUpdateInput {
-  filename: String
-  url: String
-  recipe: RecipeUpdateOneRequiredWithoutPhotosInput
-  index: Int
-}
-
-input RecipePhotoUpdateManyDataInput {
-  filename: String
-  url: String
-  index: Int
-}
-
-input RecipePhotoUpdateManyMutationInput {
-  filename: String
-  url: String
-  index: Int
-}
-
-input RecipePhotoUpdateManyWithoutRecipeInput {
-  create: [RecipePhotoCreateWithoutRecipeInput!]
-  delete: [RecipePhotoWhereUniqueInput!]
-  connect: [RecipePhotoWhereUniqueInput!]
-  set: [RecipePhotoWhereUniqueInput!]
-  disconnect: [RecipePhotoWhereUniqueInput!]
-  update: [RecipePhotoUpdateWithWhereUniqueWithoutRecipeInput!]
-  upsert: [RecipePhotoUpsertWithWhereUniqueWithoutRecipeInput!]
-  deleteMany: [RecipePhotoScalarWhereInput!]
-  updateMany: [RecipePhotoUpdateManyWithWhereNestedInput!]
-}
-
-input RecipePhotoUpdateManyWithWhereNestedInput {
-  where: RecipePhotoScalarWhereInput!
-  data: RecipePhotoUpdateManyDataInput!
-}
-
-input RecipePhotoUpdateWithoutRecipeDataInput {
-  filename: String
-  url: String
-  index: Int
-}
-
-input RecipePhotoUpdateWithWhereUniqueWithoutRecipeInput {
-  where: RecipePhotoWhereUniqueInput!
-  data: RecipePhotoUpdateWithoutRecipeDataInput!
-}
-
-input RecipePhotoUpsertWithWhereUniqueWithoutRecipeInput {
-  where: RecipePhotoWhereUniqueInput!
-  update: RecipePhotoUpdateWithoutRecipeDataInput!
-  create: RecipePhotoCreateWithoutRecipeInput!
-}
-
-input RecipePhotoWhereInput {
-  id: ID
-  id_not: ID
-  id_in: [ID!]
-  id_not_in: [ID!]
-  id_lt: ID
-  id_lte: ID
-  id_gt: ID
-  id_gte: ID
-  id_contains: ID
-  id_not_contains: ID
-  id_starts_with: ID
-  id_not_starts_with: ID
-  id_ends_with: ID
-  id_not_ends_with: ID
-  createdAt: DateTime
-  createdAt_not: DateTime
-  createdAt_in: [DateTime!]
-  createdAt_not_in: [DateTime!]
-  createdAt_lt: DateTime
-  createdAt_lte: DateTime
-  createdAt_gt: DateTime
-  createdAt_gte: DateTime
-  updatedAt: DateTime
-  updatedAt_not: DateTime
-  updatedAt_in: [DateTime!]
-  updatedAt_not_in: [DateTime!]
-  updatedAt_lt: DateTime
-  updatedAt_lte: DateTime
-  updatedAt_gt: DateTime
-  updatedAt_gte: DateTime
-  filename: String
-  filename_not: String
-  filename_in: [String!]
-  filename_not_in: [String!]
-  filename_lt: String
-  filename_lte: String
-  filename_gt: String
-  filename_gte: String
-  filename_contains: String
-  filename_not_contains: String
-  filename_starts_with: String
-  filename_not_starts_with: String
-  filename_ends_with: String
-  filename_not_ends_with: String
-  url: String
-  url_not: String
-  url_in: [String!]
-  url_not_in: [String!]
-  url_lt: String
-  url_lte: String
-  url_gt: String
-  url_gte: String
-  url_contains: String
-  url_not_contains: String
-  url_starts_with: String
-  url_not_starts_with: String
-  url_ends_with: String
-  url_not_ends_with: String
-  recipe: RecipeWhereInput
-  index: Int
-  index_not: Int
-  index_in: [Int!]
-  index_not_in: [Int!]
-  index_lt: Int
-  index_lte: Int
-  index_gt: Int
-  index_gte: Int
-  AND: [RecipePhotoWhereInput!]
-  OR: [RecipePhotoWhereInput!]
-  NOT: [RecipePhotoWhereInput!]
-}
-
-input RecipePhotoWhereUniqueInput {
-  id: ID
+  photoFilename_ASC
+  photoFilename_DESC
+  photoUrl_ASC
+  photoUrl_DESC
 }
 
 type RecipePreviousValues {
@@ -2885,6 +2577,8 @@ type RecipePreviousValues {
   servingAmount: String!
   servingType: String!
   description: String!
+  photoFilename: String
+  photoUrl: String
 }
 
 input RecipeScalarWhereInput {
@@ -3016,6 +2710,34 @@ input RecipeScalarWhereInput {
   description_not_starts_with: String
   description_ends_with: String
   description_not_ends_with: String
+  photoFilename: String
+  photoFilename_not: String
+  photoFilename_in: [String!]
+  photoFilename_not_in: [String!]
+  photoFilename_lt: String
+  photoFilename_lte: String
+  photoFilename_gt: String
+  photoFilename_gte: String
+  photoFilename_contains: String
+  photoFilename_not_contains: String
+  photoFilename_starts_with: String
+  photoFilename_not_starts_with: String
+  photoFilename_ends_with: String
+  photoFilename_not_ends_with: String
+  photoUrl: String
+  photoUrl_not: String
+  photoUrl_in: [String!]
+  photoUrl_not_in: [String!]
+  photoUrl_lt: String
+  photoUrl_lte: String
+  photoUrl_gt: String
+  photoUrl_gte: String
+  photoUrl_contains: String
+  photoUrl_not_contains: String
+  photoUrl_starts_with: String
+  photoUrl_not_starts_with: String
+  photoUrl_ends_with: String
+  photoUrl_not_ends_with: String
   AND: [RecipeScalarWhereInput!]
   OR: [RecipeScalarWhereInput!]
   NOT: [RecipeScalarWhereInput!]
@@ -3050,7 +2772,8 @@ input RecipeUpdateInput {
   description: String
   items: ItemUpdateManyWithoutRecipeInput
   modifications: ModificationUpdateManyWithoutRecipeInput
-  photos: RecipePhotoUpdateManyWithoutRecipeInput
+  photoFilename: String
+  photoUrl: String
 }
 
 input RecipeUpdateManyDataInput {
@@ -3061,6 +2784,8 @@ input RecipeUpdateManyDataInput {
   servingAmount: String
   servingType: String
   description: String
+  photoFilename: String
+  photoUrl: String
 }
 
 input RecipeUpdateManyMutationInput {
@@ -3071,6 +2796,8 @@ input RecipeUpdateManyMutationInput {
   servingAmount: String
   servingType: String
   description: String
+  photoFilename: String
+  photoUrl: String
 }
 
 input RecipeUpdateManyWithoutAuthorInput {
@@ -3104,13 +2831,6 @@ input RecipeUpdateOneRequiredWithoutModificationsInput {
   connect: RecipeWhereUniqueInput
 }
 
-input RecipeUpdateOneRequiredWithoutPhotosInput {
-  create: RecipeCreateWithoutPhotosInput
-  update: RecipeUpdateWithoutPhotosDataInput
-  upsert: RecipeUpsertWithoutPhotosInput
-  connect: RecipeWhereUniqueInput
-}
-
 input RecipeUpdateWithoutAuthorDataInput {
   uid: ID
   slug: String
@@ -3121,7 +2841,8 @@ input RecipeUpdateWithoutAuthorDataInput {
   description: String
   items: ItemUpdateManyWithoutRecipeInput
   modifications: ModificationUpdateManyWithoutRecipeInput
-  photos: RecipePhotoUpdateManyWithoutRecipeInput
+  photoFilename: String
+  photoUrl: String
 }
 
 input RecipeUpdateWithoutItemsDataInput {
@@ -3134,7 +2855,8 @@ input RecipeUpdateWithoutItemsDataInput {
   servingType: String
   description: String
   modifications: ModificationUpdateManyWithoutRecipeInput
-  photos: RecipePhotoUpdateManyWithoutRecipeInput
+  photoFilename: String
+  photoUrl: String
 }
 
 input RecipeUpdateWithoutModificationsDataInput {
@@ -3147,20 +2869,8 @@ input RecipeUpdateWithoutModificationsDataInput {
   servingType: String
   description: String
   items: ItemUpdateManyWithoutRecipeInput
-  photos: RecipePhotoUpdateManyWithoutRecipeInput
-}
-
-input RecipeUpdateWithoutPhotosDataInput {
-  uid: ID
-  slug: String
-  author: UserUpdateOneRequiredWithoutRecipesInput
-  title: String
-  time: String
-  servingAmount: String
-  servingType: String
-  description: String
-  items: ItemUpdateManyWithoutRecipeInput
-  modifications: ModificationUpdateManyWithoutRecipeInput
+  photoFilename: String
+  photoUrl: String
 }
 
 input RecipeUpdateWithWhereUniqueWithoutAuthorInput {
@@ -3176,11 +2886,6 @@ input RecipeUpsertWithoutItemsInput {
 input RecipeUpsertWithoutModificationsInput {
   update: RecipeUpdateWithoutModificationsDataInput!
   create: RecipeCreateWithoutModificationsInput!
-}
-
-input RecipeUpsertWithoutPhotosInput {
-  update: RecipeUpdateWithoutPhotosDataInput!
-  create: RecipeCreateWithoutPhotosInput!
 }
 
 input RecipeUpsertWithWhereUniqueWithoutAuthorInput {
@@ -3325,9 +3030,34 @@ input RecipeWhereInput {
   modifications_every: ModificationWhereInput
   modifications_some: ModificationWhereInput
   modifications_none: ModificationWhereInput
-  photos_every: RecipePhotoWhereInput
-  photos_some: RecipePhotoWhereInput
-  photos_none: RecipePhotoWhereInput
+  photoFilename: String
+  photoFilename_not: String
+  photoFilename_in: [String!]
+  photoFilename_not_in: [String!]
+  photoFilename_lt: String
+  photoFilename_lte: String
+  photoFilename_gt: String
+  photoFilename_gte: String
+  photoFilename_contains: String
+  photoFilename_not_contains: String
+  photoFilename_starts_with: String
+  photoFilename_not_starts_with: String
+  photoFilename_ends_with: String
+  photoFilename_not_ends_with: String
+  photoUrl: String
+  photoUrl_not: String
+  photoUrl_in: [String!]
+  photoUrl_not_in: [String!]
+  photoUrl_lt: String
+  photoUrl_lte: String
+  photoUrl_gt: String
+  photoUrl_gte: String
+  photoUrl_contains: String
+  photoUrl_not_contains: String
+  photoUrl_starts_with: String
+  photoUrl_not_starts_with: String
+  photoUrl_ends_with: String
+  photoUrl_not_ends_with: String
   AND: [RecipeWhereInput!]
   OR: [RecipeWhereInput!]
   NOT: [RecipeWhereInput!]
@@ -4325,7 +4055,6 @@ type Subscription {
   itemAddition(where: ItemAdditionSubscriptionWhereInput): ItemAdditionSubscriptionPayload
   modification(where: ModificationSubscriptionWhereInput): ModificationSubscriptionPayload
   recipe(where: RecipeSubscriptionWhereInput): RecipeSubscriptionPayload
-  recipePhoto(where: RecipePhotoSubscriptionWhereInput): RecipePhotoSubscriptionPayload
   sorting(where: SortingSubscriptionWhereInput): SortingSubscriptionPayload
   step(where: StepSubscriptionWhereInput): StepSubscriptionPayload
   stepAddition(where: StepAdditionSubscriptionWhereInput): StepAdditionSubscriptionPayload

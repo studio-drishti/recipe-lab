@@ -324,7 +324,7 @@ const RecipeDetails = ({
         )}
       </div>
 
-      <div className={classnames({ [css.visuallyHidden]: !editing })}>
+      {/* <div className={classnames({ [css.visuallyHidden]: !editing })}>
         <Mutation mutation={RecipePhotoUploadMutation}>
           {uploadFile => (
             <FilePond
@@ -370,9 +370,9 @@ const RecipeDetails = ({
             />
           )}
         </Mutation>
-      </div>
+      </div> */}
 
-      {!editing && (
+      {/* {!editing && (
         <TextButtonGroup>
           <TextButton
             className={css.editBtn}
@@ -386,7 +386,7 @@ const RecipeDetails = ({
             upload photos
           </TextButton>
         </TextButtonGroup>
-      )}
+      )} */}
 
       {editing && (
         <TextButton type="submit">
