@@ -61,12 +61,12 @@
 }
 
 .servingInput {
-  & .servingAmount {
-    width: 4em;
+  & .servingAmount input {
+    max-width: 4em;
   }
 
-  & .servingType {
-    width: 6em;
+  & .servingType input {
+    max-width: 6em;
   }
 }
 
