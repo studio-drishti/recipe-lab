@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import { MdWarning } from 'react-icons/md';
+import Tooltip from '../Tooltip';
 
 import css from './TextInput.css';
 
@@ -13,9 +14,9 @@ const TextInput = ({ error, className, inputRef, ...props }) => (
   >
     <input ref={inputRef} {...props} />
     {error && (
-      <span className={css.errorIcon}>
+      <Tooltip tip={error} className={css.errorIcon}>
         <MdWarning />
-      </span>
+      </Tooltip>
     )}
   </div>
 );

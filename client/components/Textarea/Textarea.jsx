@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import { MdWarning } from 'react-icons/md';
 import TextareaAutosize from 'react-textarea-autosize';
+import Tooltip from '../Tooltip';
 
 import css from './Textarea.css';
 
@@ -14,9 +15,9 @@ const Textarea = ({ error, className, ...props }) => (
   >
     <TextareaAutosize {...props} />
     {error && (
-      <span className={css.errorIcon}>
+      <Tooltip tip={error} className={css.errorIcon}>
         <MdWarning />
-      </span>
+      </Tooltip>
     )}
   </div>
 );

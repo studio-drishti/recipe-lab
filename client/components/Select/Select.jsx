@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import { MdWarning } from 'react-icons/md';
 
+import Tooltip from '../Tooltip';
+
 import css from './Select.css';
 
 const Select = ({ error, className, inputRef, children, ...props }) => (
@@ -15,9 +17,9 @@ const Select = ({ error, className, inputRef, children, ...props }) => (
       {children}
     </select>
     {error && (
-      <span className={css.errorIcon}>
+      <Tooltip tip={error} className={css.errorIcon}>
         <MdWarning />
-      </span>
+      </Tooltip>
     )}
   </div>
 );
