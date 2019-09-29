@@ -6,14 +6,16 @@
 }
 
 .recipeHeader {
-  display: flex;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-column-gap: 2rem;
   margin-bottom: 2rem;
   align-items: center;
+}
 
-  & .recipeDetails,
-  & .recipeCarousel {
-    width: calc(50% - 1rem);
+@media (--medium-viewport) {
+  .recipeHeader {
+    grid-template-columns: 1fr 1fr;
   }
 }
 
