@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import classnames from 'classnames';
 import { useMutation } from 'react-apollo';
 
 import { FilePond, registerPlugin } from 'react-filepond';
@@ -9,7 +10,7 @@ import FilePondPluginImageTransform from 'filepond-plugin-image-transform';
 
 import RecipePhotoUploadMutation from '../../graphql/RecipePhotoUpload.graphql';
 
-import css from './RecipePhotoDisplay.css';
+import css from './RecipePhoto.css';
 
 registerPlugin(
   FilePondPluginImageTransform,
@@ -17,7 +18,7 @@ registerPlugin(
   FilePondPluginImageResize
 );
 
-const RecipePhotoDisplay = ({ photo, addPhoto, recipeId, className }) => {
+const RecipePhoto = ({ recipe, setRecipePhoto, className }) => {
   const [uploadFile] = useMutation(RecipePhotoUploadMutation);
   let pond;
   const handleUploadComplete = (err, file) => {
@@ -27,12 +28,14 @@ const RecipePhotoDisplay = ({ photo, addPhoto, recipeId, className }) => {
   };
 
   return (
-    <div>
-      {photo && (
+    <div className={classnames(className)}>
+      {recipe.photoUrl ? (
         <div
-          style={{ backgroundImage: `url(${photo.url})` }}
+          style={{ backgroundImage: `url(${recipe.photoUrl})` }}
           className={css.slide}
         />
+      ) : (
+        <img src="https://via.placeholder.com/600x300" />
       )}
       <FilePond
         name="avatar"
@@ -48,20 +51,27 @@ const RecipePhotoDisplay = ({ photo, addPhoto, recipeId, className }) => {
             progress,
             abort
           ) => {
+            const controller = new AbortController();
             uploadFile({
               variables: {
                 file,
-                recipeId: recipeId
+                recipeId: recipe.uid
+              },
+              context: {
+                fetchOptions: {
+                  signal: controller.signal
+                }
               }
             })
               .then(res => {
-                addPhoto(res.data.recipePhotoUpload);
+                setRecipePhoto(res.data.recipePhotoUpload.photoUrl);
                 load(res);
               })
               .catch(err => error(err));
 
             return {
               abort: () => {
+                controller.abort();
                 abort();
               }
             };
@@ -78,12 +88,11 @@ const RecipePhotoDisplay = ({ photo, addPhoto, recipeId, className }) => {
   );
 };
 
-RecipePhotoDisplay.propTypes = {
-  addPhoto: PropTypes.func,
-  photo: PropTypes.object,
-  recipeId: PropTypes.string,
+RecipePhoto.propTypes = {
+  setRecipePhoto: PropTypes.func,
+  recipe: PropTypes.object,
   className: PropTypes.string,
   updatePhoto: PropTypes.func
 };
 
-export default RecipePhotoDisplay;
+export default RecipePhoto;

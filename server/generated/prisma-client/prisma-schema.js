@@ -4069,7 +4069,7 @@ type User {
   password: String!
   name: String!
   avatar: String
-  slug: String
+  slug: String!
   emailVerified: Boolean!
   recipes(where: RecipeWhereInput, orderBy: RecipeOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Recipe!]
   modifications(where: ModificationWhereInput, orderBy: ModificationOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Modification!]
@@ -4087,7 +4087,7 @@ input UserCreateInput {
   password: String!
   name: String!
   avatar: String
-  slug: String
+  slug: String!
   emailVerified: Boolean
   recipes: RecipeCreateManyWithoutAuthorInput
   modifications: ModificationCreateManyWithoutUserInput
@@ -4109,7 +4109,7 @@ input UserCreateWithoutModificationsInput {
   password: String!
   name: String!
   avatar: String
-  slug: String
+  slug: String!
   emailVerified: Boolean
   recipes: RecipeCreateManyWithoutAuthorInput
 }
@@ -4120,7 +4120,7 @@ input UserCreateWithoutRecipesInput {
   password: String!
   name: String!
   avatar: String
-  slug: String
+  slug: String!
   emailVerified: Boolean
   modifications: ModificationCreateManyWithoutUserInput
 }
@@ -4159,7 +4159,7 @@ type UserPreviousValues {
   password: String!
   name: String!
   avatar: String
-  slug: String
+  slug: String!
   emailVerified: Boolean!
 }
 

@@ -9,7 +9,7 @@ import areArraysEqual from '../../utils/areArraysEqual';
 import UserContext from '../../utils/UserContext';
 
 import RecipeDetails from '../RecipeDetails';
-import RecipePhotoDisplay from '../RecipePhotoDisplay/RecipePhotoDisplay';
+import RecipePhoto from '../RecipePhoto/RecipePhoto';
 import RecipeBio from '../RecipeBio';
 import StepList from '../StepList';
 import Step from '../Step';
@@ -396,9 +396,9 @@ export default class Recipe extends Component {
     return mod !== undefined ? mod : source[fieldName];
   };
 
-  addPhoto = photo => {
+  setRecipePhoto = photoUrl => {
     const { recipe } = this.state;
-    recipe.photo = photo;
+    recipe.photoUrl = photoUrl;
     this.setState({ recipe });
   };
 
@@ -429,29 +429,13 @@ export default class Recipe extends Component {
               alteration => alteration.sourceId === recipe.uid
             )}
             saveAlteration={this.saveAlteration}
-            addPhoto={this.addPhoto}
           />
-          <RecipePhotoDisplay
-            className={css.recipePhotoDisplay}
+          <RecipePhoto
+            className={css.recipePhoto}
             // removePhoto={this.removePhoto}
-            // updatePhotos={this.updatePhotos}
-            photo={recipe.photo}
-            recipeId={recipe.uid}
+            setRecipePhoto={this.setRecipePhoto}
+            recipe={recipe}
           />
-          <div>
-            <img src="https://via.placeholder.com/600x300" />
-          </div>
-          {/* {recipe ? (
-            <RecipeCarousel
-              className={css.recipeCarousel}
-              removePhoto={this.removePhoto}
-              updatePhotos={this.updatePhotos}
-              photos={[...recipe.photos]}
-              recipeId={recipe.uid}
-            />
-          ) : (
-            <img src="https://via.placeholder.com/600x300" />
-          )} */}
         </header>
 
         <article className={css.recipe}>

@@ -14,7 +14,6 @@ type Recipe {
   modifications: [Modification!]!
     @relation(name: "RecipeModifications", onDelete: CASCADE)
   photoFilename: String
-  photoUrl: String
 }
 
 type Item {

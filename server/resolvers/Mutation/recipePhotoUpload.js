@@ -17,12 +17,7 @@ module.exports = async (parent, { file, recipeId }, ctx) => {
   const dest = path.resolve(__dirname, `../../public/${recipe.author.id}`);
   fs.mkdirSync(dest, { recursive: true });
 
-  const {
-    createReadStream,
-    filename: originalFilename,
-    mimetype,
-    encoding
-  } = await file;
+  const { createReadStream, filename: originalFilename, mimetype } = await file;
 
   if (!['image/jpeg', 'image/jpg'].includes(mimetype))
     throw new Error('Invalid file type');
@@ -30,12 +25,10 @@ module.exports = async (parent, { file, recipeId }, ctx) => {
   const stream = createReadStream();
   const { filename } = await storeFS(stream, dest, originalFilename);
 
-  await ctx.prisma.updateRecipe({
+  return await ctx.prisma.updateRecipe({
     where: { uid: recipeId },
     data: {
       photoFilename: filename
     }
   });
-
-  return { filename, mimetype, encoding };
 };

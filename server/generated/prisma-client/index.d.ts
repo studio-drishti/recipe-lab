@@ -2037,7 +2037,7 @@ export interface UserCreateInput {
   password: String;
   name: String;
   avatar?: Maybe<String>;
-  slug?: Maybe<String>;
+  slug: String;
   emailVerified?: Maybe<Boolean>;
   recipes?: Maybe<RecipeCreateManyWithoutAuthorInput>;
   modifications?: Maybe<ModificationCreateManyWithoutUserInput>;
@@ -3874,7 +3874,7 @@ export interface UserCreateWithoutModificationsInput {
   password: String;
   name: String;
   avatar?: Maybe<String>;
-  slug?: Maybe<String>;
+  slug: String;
   emailVerified?: Maybe<Boolean>;
   recipes?: Maybe<RecipeCreateManyWithoutAuthorInput>;
 }
@@ -4374,7 +4374,7 @@ export interface UserCreateWithoutRecipesInput {
   password: String;
   name: String;
   avatar?: Maybe<String>;
-  slug?: Maybe<String>;
+  slug: String;
   emailVerified?: Maybe<Boolean>;
   modifications?: Maybe<ModificationCreateManyWithoutUserInput>;
 }
@@ -4508,7 +4508,7 @@ export interface UserPreviousValues {
   password: String;
   name: String;
   avatar?: String;
-  slug?: String;
+  slug: String;
   emailVerified: Boolean;
 }
 
@@ -5608,7 +5608,7 @@ export interface User {
   password: String;
   name: String;
   avatar?: String;
-  slug?: String;
+  slug: String;
   emailVerified: Boolean;
 }
 
