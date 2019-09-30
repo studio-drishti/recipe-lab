@@ -21,6 +21,42 @@ registerPlugin(
 const RecipePhoto = ({ recipe, setRecipePhoto, className }) => {
   const [uploadFile] = useMutation(RecipePhotoUploadMutation);
   let pond;
+
+  const processUpload = (
+    fieldName,
+    file,
+    metadata,
+    load,
+    error,
+    progress,
+    abort
+  ) => {
+    const controller = new AbortController();
+    uploadFile({
+      variables: {
+        file,
+        recipeId: recipe.uid
+      },
+      context: {
+        fetchOptions: {
+          signal: controller.signal
+        }
+      }
+    })
+      .then(res => {
+        setRecipePhoto(res.data.recipePhotoUpload.photoUrl);
+        load(res);
+      })
+      .catch(err => error(err));
+
+    return {
+      abort: () => {
+        controller.abort();
+        abort();
+      }
+    };
+  };
+
   const handleUploadComplete = (err, file) => {
     setTimeout(() => {
       pond.removeFile(file);
@@ -41,42 +77,7 @@ const RecipePhoto = ({ recipe, setRecipePhoto, className }) => {
         name="avatar"
         ref={ref => (pond = ref)}
         className={css.filepond}
-        server={{
-          process: (
-            fieldName,
-            file,
-            metadata,
-            load,
-            error,
-            progress,
-            abort
-          ) => {
-            const controller = new AbortController();
-            uploadFile({
-              variables: {
-                file,
-                recipeId: recipe.uid
-              },
-              context: {
-                fetchOptions: {
-                  signal: controller.signal
-                }
-              }
-            })
-              .then(res => {
-                setRecipePhoto(res.data.recipePhotoUpload.photoUrl);
-                load(res);
-              })
-              .catch(err => error(err));
-
-            return {
-              abort: () => {
-                controller.abort();
-                abort();
-              }
-            };
-          }
-        }}
+        server={{ process: processUpload }}
         allowRevert={false}
         allowMultiple={false}
         imageTransformOutputMimeType="image/jpeg"

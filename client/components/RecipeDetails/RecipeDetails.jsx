@@ -10,11 +10,7 @@ import {
 } from 'react-icons/md';
 import classnames from 'classnames';
 import { fraction } from 'mathjs';
-import { Mutation, useApolloClient } from 'react-apollo';
-import { FilePond, registerPlugin } from 'react-filepond';
-import FilePondPluginImageCrop from 'filepond-plugin-image-crop';
-import FilePondPluginImageResize from 'filepond-plugin-image-resize';
-import FilePondPluginImageTransform from 'filepond-plugin-image-transform';
+import { useApolloClient } from 'react-apollo';
 
 import { TIME_OPTIONS } from '../../config';
 import DiffText from '../DiffText';
@@ -24,23 +20,9 @@ import TextInput from '../TextInput';
 import Textarea from '../Textarea';
 import Select from '../Select';
 import css from './RecipeDetails.css';
-import RecipePhotoUploadMutation from '../../graphql/RecipePhotoUpload.graphql';
 import CreateRecipeMutation from '../../graphql/CreateRecipe.graphql';
 
-registerPlugin(
-  FilePondPluginImageTransform,
-  FilePondPluginImageCrop,
-  FilePondPluginImageResize
-);
-
-const RecipeDetails = ({
-  recipe,
-  addPhoto,
-  className,
-  photosLength,
-  recipeMods,
-  saveAlteration
-}) => {
+const RecipeDetails = ({ recipe, className, recipeMods, saveAlteration }) => {
   const client = useApolloClient();
   const [errors, setErrors] = useState({});
   const [edits, setEdit] = useState({});
@@ -51,7 +33,6 @@ const RecipeDetails = ({
   const descriptionInputRef = useRef();
   const timeInputRef = useRef();
   const servingInputRef = useRef();
-  let pond;
 
   useEffect(() => {
     return () => {
@@ -114,15 +95,10 @@ const RecipeDetails = ({
     }, 1000);
   };
 
-  const handleUploadComplete = (err, file) => {
-    setTimeout(() => {
-      pond.removeFile(file);
-    }, 1000);
-  };
-
   const triggerUploadDialog = () => {
-    if (!editing) enableEditing();
-    pond.browse();
+    // TODO: Figure out how to restore this functionality now that filepond has moved to RecipePhoto
+    // if (!editing) enableEditing();
+    // pond.browse();
   };
 
   const handleSubmit = async e => {
@@ -324,55 +300,7 @@ const RecipeDetails = ({
         )}
       </div>
 
-      {/* <div className={classnames({ [css.visuallyHidden]: !editing })}>
-        <Mutation mutation={RecipePhotoUploadMutation}>
-          {uploadFile => (
-            <FilePond
-              name="avatar"
-              ref={ref => (pond = ref)}
-              className={css.filepond}
-              server={{
-                process: (
-                  fieldName,
-                  file,
-                  metadata,
-                  load,
-                  error,
-                  progress,
-                  abort
-                ) => {
-                  uploadFile({
-                    variables: {
-                      file,
-                      recipeId: recipe.uid,
-                      index: photosLength
-                    }
-                  })
-                    .then(res => {
-                      addPhoto(res.data.recipePhotoUpload);
-                      load(res);
-                    })
-                    .catch(err => error(err));
-
-                  return {
-                    abort: () => {
-                      abort();
-                    }
-                  };
-                }
-              }}
-              allowRevert={false}
-              allowMultiple={true}
-              imageTransformOutputMimeType="image/jpeg"
-              imageCropAspectRatio="3:2"
-              imageResizeTargetWidth="600"
-              onprocessfile={handleUploadComplete}
-            />
-          )}
-        </Mutation>
-      </div> */}
-
-      {/* {!editing && (
+      {!editing && (
         <TextButtonGroup>
           <TextButton
             className={css.editBtn}
@@ -383,10 +311,10 @@ const RecipeDetails = ({
           </TextButton>
           <TextButton className={css.uploadBtn} onClick={triggerUploadDialog}>
             <MdAddAPhoto />
-            upload photos
+            upload photo
           </TextButton>
         </TextButtonGroup>
-      )} */}
+      )}
 
       {editing && (
         <TextButton type="submit">
@@ -402,9 +330,7 @@ RecipeDetails.propTypes = {
   className: PropTypes.string,
   recipe: PropTypes.object,
   recipeMods: PropTypes.arrayOf(PropTypes.object),
-  saveAlteration: PropTypes.func,
-  addPhoto: PropTypes.func,
-  photosLength: PropTypes.number
+  saveAlteration: PropTypes.func
 };
 
 RecipeDetails.displayName = 'RecipeDetails';
