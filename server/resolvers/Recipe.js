@@ -10,14 +10,14 @@ module.exports = {
   photoUrl: async ({ uid }, args, ctx) => {
     const recipe = await ctx.prisma.recipe({ uid }).$fragment(`
       fragment RecipeWithAuthor on Recipe {
-        photoFilename
+        photo
         author {
-          id
+          slug
         }
       }
     `);
-    if (!recipe.photoFilename) return null;
-    return `/public/${recipe.author.id}/${recipe.photoFilename}`;
+    if (!recipe.photo) return null;
+    return `/public/${recipe.author.slug}/${recipe.photo}`;
   },
   modification: ({ uid }, { user }, ctx) => {
     if (!user) {

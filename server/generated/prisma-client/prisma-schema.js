@@ -2448,8 +2448,7 @@ type Recipe {
   description: String!
   items(where: ItemWhereInput, orderBy: ItemOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Item!]
   modifications(where: ModificationWhereInput, orderBy: ModificationOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Modification!]
-  photoFilename: String
-  photoUrl: String
+  photo: String
 }
 
 type RecipeConnection {
@@ -2470,8 +2469,7 @@ input RecipeCreateInput {
   description: String
   items: ItemCreateManyWithoutRecipeInput
   modifications: ModificationCreateManyWithoutRecipeInput
-  photoFilename: String
-  photoUrl: String
+  photo: String
 }
 
 input RecipeCreateManyWithoutAuthorInput {
@@ -2500,8 +2498,7 @@ input RecipeCreateWithoutAuthorInput {
   description: String
   items: ItemCreateManyWithoutRecipeInput
   modifications: ModificationCreateManyWithoutRecipeInput
-  photoFilename: String
-  photoUrl: String
+  photo: String
 }
 
 input RecipeCreateWithoutItemsInput {
@@ -2515,8 +2512,7 @@ input RecipeCreateWithoutItemsInput {
   servingType: String
   description: String
   modifications: ModificationCreateManyWithoutRecipeInput
-  photoFilename: String
-  photoUrl: String
+  photo: String
 }
 
 input RecipeCreateWithoutModificationsInput {
@@ -2530,8 +2526,7 @@ input RecipeCreateWithoutModificationsInput {
   servingType: String
   description: String
   items: ItemCreateManyWithoutRecipeInput
-  photoFilename: String
-  photoUrl: String
+  photo: String
 }
 
 type RecipeEdge {
@@ -2560,10 +2555,8 @@ enum RecipeOrderByInput {
   servingType_DESC
   description_ASC
   description_DESC
-  photoFilename_ASC
-  photoFilename_DESC
-  photoUrl_ASC
-  photoUrl_DESC
+  photo_ASC
+  photo_DESC
 }
 
 type RecipePreviousValues {
@@ -2577,8 +2570,7 @@ type RecipePreviousValues {
   servingAmount: String!
   servingType: String!
   description: String!
-  photoFilename: String
-  photoUrl: String
+  photo: String
 }
 
 input RecipeScalarWhereInput {
@@ -2710,34 +2702,20 @@ input RecipeScalarWhereInput {
   description_not_starts_with: String
   description_ends_with: String
   description_not_ends_with: String
-  photoFilename: String
-  photoFilename_not: String
-  photoFilename_in: [String!]
-  photoFilename_not_in: [String!]
-  photoFilename_lt: String
-  photoFilename_lte: String
-  photoFilename_gt: String
-  photoFilename_gte: String
-  photoFilename_contains: String
-  photoFilename_not_contains: String
-  photoFilename_starts_with: String
-  photoFilename_not_starts_with: String
-  photoFilename_ends_with: String
-  photoFilename_not_ends_with: String
-  photoUrl: String
-  photoUrl_not: String
-  photoUrl_in: [String!]
-  photoUrl_not_in: [String!]
-  photoUrl_lt: String
-  photoUrl_lte: String
-  photoUrl_gt: String
-  photoUrl_gte: String
-  photoUrl_contains: String
-  photoUrl_not_contains: String
-  photoUrl_starts_with: String
-  photoUrl_not_starts_with: String
-  photoUrl_ends_with: String
-  photoUrl_not_ends_with: String
+  photo: String
+  photo_not: String
+  photo_in: [String!]
+  photo_not_in: [String!]
+  photo_lt: String
+  photo_lte: String
+  photo_gt: String
+  photo_gte: String
+  photo_contains: String
+  photo_not_contains: String
+  photo_starts_with: String
+  photo_not_starts_with: String
+  photo_ends_with: String
+  photo_not_ends_with: String
   AND: [RecipeScalarWhereInput!]
   OR: [RecipeScalarWhereInput!]
   NOT: [RecipeScalarWhereInput!]
@@ -2772,8 +2750,7 @@ input RecipeUpdateInput {
   description: String
   items: ItemUpdateManyWithoutRecipeInput
   modifications: ModificationUpdateManyWithoutRecipeInput
-  photoFilename: String
-  photoUrl: String
+  photo: String
 }
 
 input RecipeUpdateManyDataInput {
@@ -2784,8 +2761,7 @@ input RecipeUpdateManyDataInput {
   servingAmount: String
   servingType: String
   description: String
-  photoFilename: String
-  photoUrl: String
+  photo: String
 }
 
 input RecipeUpdateManyMutationInput {
@@ -2796,8 +2772,7 @@ input RecipeUpdateManyMutationInput {
   servingAmount: String
   servingType: String
   description: String
-  photoFilename: String
-  photoUrl: String
+  photo: String
 }
 
 input RecipeUpdateManyWithoutAuthorInput {
@@ -2841,8 +2816,7 @@ input RecipeUpdateWithoutAuthorDataInput {
   description: String
   items: ItemUpdateManyWithoutRecipeInput
   modifications: ModificationUpdateManyWithoutRecipeInput
-  photoFilename: String
-  photoUrl: String
+  photo: String
 }
 
 input RecipeUpdateWithoutItemsDataInput {
@@ -2855,8 +2829,7 @@ input RecipeUpdateWithoutItemsDataInput {
   servingType: String
   description: String
   modifications: ModificationUpdateManyWithoutRecipeInput
-  photoFilename: String
-  photoUrl: String
+  photo: String
 }
 
 input RecipeUpdateWithoutModificationsDataInput {
@@ -2869,8 +2842,7 @@ input RecipeUpdateWithoutModificationsDataInput {
   servingType: String
   description: String
   items: ItemUpdateManyWithoutRecipeInput
-  photoFilename: String
-  photoUrl: String
+  photo: String
 }
 
 input RecipeUpdateWithWhereUniqueWithoutAuthorInput {
@@ -3030,34 +3002,20 @@ input RecipeWhereInput {
   modifications_every: ModificationWhereInput
   modifications_some: ModificationWhereInput
   modifications_none: ModificationWhereInput
-  photoFilename: String
-  photoFilename_not: String
-  photoFilename_in: [String!]
-  photoFilename_not_in: [String!]
-  photoFilename_lt: String
-  photoFilename_lte: String
-  photoFilename_gt: String
-  photoFilename_gte: String
-  photoFilename_contains: String
-  photoFilename_not_contains: String
-  photoFilename_starts_with: String
-  photoFilename_not_starts_with: String
-  photoFilename_ends_with: String
-  photoFilename_not_ends_with: String
-  photoUrl: String
-  photoUrl_not: String
-  photoUrl_in: [String!]
-  photoUrl_not_in: [String!]
-  photoUrl_lt: String
-  photoUrl_lte: String
-  photoUrl_gt: String
-  photoUrl_gte: String
-  photoUrl_contains: String
-  photoUrl_not_contains: String
-  photoUrl_starts_with: String
-  photoUrl_not_starts_with: String
-  photoUrl_ends_with: String
-  photoUrl_not_ends_with: String
+  photo: String
+  photo_not: String
+  photo_in: [String!]
+  photo_not_in: [String!]
+  photo_lt: String
+  photo_lte: String
+  photo_gt: String
+  photo_gte: String
+  photo_contains: String
+  photo_not_contains: String
+  photo_starts_with: String
+  photo_not_starts_with: String
+  photo_ends_with: String
+  photo_not_ends_with: String
   AND: [RecipeWhereInput!]
   OR: [RecipeWhereInput!]
   NOT: [RecipeWhereInput!]
@@ -4066,10 +4024,10 @@ type User {
   createdAt: DateTime!
   updatedAt: DateTime!
   email: String!
+  slug: String!
   password: String!
   name: String!
   avatar: String
-  slug: String!
   emailVerified: Boolean!
   recipes(where: RecipeWhereInput, orderBy: RecipeOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Recipe!]
   modifications(where: ModificationWhereInput, orderBy: ModificationOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Modification!]
@@ -4084,10 +4042,10 @@ type UserConnection {
 input UserCreateInput {
   id: ID
   email: String!
+  slug: String!
   password: String!
   name: String!
   avatar: String
-  slug: String!
   emailVerified: Boolean
   recipes: RecipeCreateManyWithoutAuthorInput
   modifications: ModificationCreateManyWithoutUserInput
@@ -4106,10 +4064,10 @@ input UserCreateOneWithoutRecipesInput {
 input UserCreateWithoutModificationsInput {
   id: ID
   email: String!
+  slug: String!
   password: String!
   name: String!
   avatar: String
-  slug: String!
   emailVerified: Boolean
   recipes: RecipeCreateManyWithoutAuthorInput
 }
@@ -4117,10 +4075,10 @@ input UserCreateWithoutModificationsInput {
 input UserCreateWithoutRecipesInput {
   id: ID
   email: String!
+  slug: String!
   password: String!
   name: String!
   avatar: String
-  slug: String!
   emailVerified: Boolean
   modifications: ModificationCreateManyWithoutUserInput
 }
@@ -4139,14 +4097,14 @@ enum UserOrderByInput {
   updatedAt_DESC
   email_ASC
   email_DESC
+  slug_ASC
+  slug_DESC
   password_ASC
   password_DESC
   name_ASC
   name_DESC
   avatar_ASC
   avatar_DESC
-  slug_ASC
-  slug_DESC
   emailVerified_ASC
   emailVerified_DESC
 }
@@ -4156,10 +4114,10 @@ type UserPreviousValues {
   createdAt: DateTime!
   updatedAt: DateTime!
   email: String!
+  slug: String!
   password: String!
   name: String!
   avatar: String
-  slug: String!
   emailVerified: Boolean!
 }
 
@@ -4183,10 +4141,10 @@ input UserSubscriptionWhereInput {
 
 input UserUpdateInput {
   email: String
+  slug: String
   password: String
   name: String
   avatar: String
-  slug: String
   emailVerified: Boolean
   recipes: RecipeUpdateManyWithoutAuthorInput
   modifications: ModificationUpdateManyWithoutUserInput
@@ -4194,10 +4152,10 @@ input UserUpdateInput {
 
 input UserUpdateManyMutationInput {
   email: String
+  slug: String
   password: String
   name: String
   avatar: String
-  slug: String
   emailVerified: Boolean
 }
 
@@ -4217,20 +4175,20 @@ input UserUpdateOneRequiredWithoutRecipesInput {
 
 input UserUpdateWithoutModificationsDataInput {
   email: String
+  slug: String
   password: String
   name: String
   avatar: String
-  slug: String
   emailVerified: Boolean
   recipes: RecipeUpdateManyWithoutAuthorInput
 }
 
 input UserUpdateWithoutRecipesDataInput {
   email: String
+  slug: String
   password: String
   name: String
   avatar: String
-  slug: String
   emailVerified: Boolean
   modifications: ModificationUpdateManyWithoutUserInput
 }
@@ -4290,6 +4248,20 @@ input UserWhereInput {
   email_not_starts_with: String
   email_ends_with: String
   email_not_ends_with: String
+  slug: String
+  slug_not: String
+  slug_in: [String!]
+  slug_not_in: [String!]
+  slug_lt: String
+  slug_lte: String
+  slug_gt: String
+  slug_gte: String
+  slug_contains: String
+  slug_not_contains: String
+  slug_starts_with: String
+  slug_not_starts_with: String
+  slug_ends_with: String
+  slug_not_ends_with: String
   password: String
   password_not: String
   password_in: [String!]
@@ -4332,20 +4304,6 @@ input UserWhereInput {
   avatar_not_starts_with: String
   avatar_ends_with: String
   avatar_not_ends_with: String
-  slug: String
-  slug_not: String
-  slug_in: [String!]
-  slug_not_in: [String!]
-  slug_lt: String
-  slug_lte: String
-  slug_gt: String
-  slug_gte: String
-  slug_contains: String
-  slug_not_contains: String
-  slug_starts_with: String
-  slug_not_starts_with: String
-  slug_ends_with: String
-  slug_not_ends_with: String
   emailVerified: Boolean
   emailVerified_not: Boolean
   recipes_every: RecipeWhereInput
@@ -4362,6 +4320,7 @@ input UserWhereInput {
 input UserWhereUniqueInput {
   id: ID
   email: String
+  slug: String
 }
 `
       }

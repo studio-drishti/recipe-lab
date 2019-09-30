@@ -556,10 +556,8 @@ export type RecipeOrderByInput =
   | "servingType_DESC"
   | "description_ASC"
   | "description_DESC"
-  | "photoFilename_ASC"
-  | "photoFilename_DESC"
-  | "photoUrl_ASC"
-  | "photoUrl_DESC";
+  | "photo_ASC"
+  | "photo_DESC";
 
 export type SortingOrderByInput =
   | "id_ASC"
@@ -582,14 +580,14 @@ export type UserOrderByInput =
   | "updatedAt_DESC"
   | "email_ASC"
   | "email_DESC"
+  | "slug_ASC"
+  | "slug_DESC"
   | "password_ASC"
   | "password_DESC"
   | "name_ASC"
   | "name_DESC"
   | "avatar_ASC"
   | "avatar_DESC"
-  | "slug_ASC"
-  | "slug_DESC"
   | "emailVerified_ASC"
   | "emailVerified_DESC";
 
@@ -1521,6 +1519,20 @@ export interface UserWhereInput {
   email_not_starts_with?: Maybe<String>;
   email_ends_with?: Maybe<String>;
   email_not_ends_with?: Maybe<String>;
+  slug?: Maybe<String>;
+  slug_not?: Maybe<String>;
+  slug_in?: Maybe<String[] | String>;
+  slug_not_in?: Maybe<String[] | String>;
+  slug_lt?: Maybe<String>;
+  slug_lte?: Maybe<String>;
+  slug_gt?: Maybe<String>;
+  slug_gte?: Maybe<String>;
+  slug_contains?: Maybe<String>;
+  slug_not_contains?: Maybe<String>;
+  slug_starts_with?: Maybe<String>;
+  slug_not_starts_with?: Maybe<String>;
+  slug_ends_with?: Maybe<String>;
+  slug_not_ends_with?: Maybe<String>;
   password?: Maybe<String>;
   password_not?: Maybe<String>;
   password_in?: Maybe<String[] | String>;
@@ -1563,20 +1575,6 @@ export interface UserWhereInput {
   avatar_not_starts_with?: Maybe<String>;
   avatar_ends_with?: Maybe<String>;
   avatar_not_ends_with?: Maybe<String>;
-  slug?: Maybe<String>;
-  slug_not?: Maybe<String>;
-  slug_in?: Maybe<String[] | String>;
-  slug_not_in?: Maybe<String[] | String>;
-  slug_lt?: Maybe<String>;
-  slug_lte?: Maybe<String>;
-  slug_gt?: Maybe<String>;
-  slug_gte?: Maybe<String>;
-  slug_contains?: Maybe<String>;
-  slug_not_contains?: Maybe<String>;
-  slug_starts_with?: Maybe<String>;
-  slug_not_starts_with?: Maybe<String>;
-  slug_ends_with?: Maybe<String>;
-  slug_not_ends_with?: Maybe<String>;
   emailVerified?: Maybe<Boolean>;
   emailVerified_not?: Maybe<Boolean>;
   recipes_every?: Maybe<RecipeWhereInput>;
@@ -2016,10 +2014,10 @@ export interface StepUpdateManyDataInput {
 
 export interface UserUpdateInput {
   email?: Maybe<String>;
+  slug?: Maybe<String>;
   password?: Maybe<String>;
   name?: Maybe<String>;
   avatar?: Maybe<String>;
-  slug?: Maybe<String>;
   emailVerified?: Maybe<Boolean>;
   recipes?: Maybe<RecipeUpdateManyWithoutAuthorInput>;
   modifications?: Maybe<ModificationUpdateManyWithoutUserInput>;
@@ -2034,10 +2032,10 @@ export interface ItemUpsertWithWhereUniqueWithoutRecipeInput {
 export interface UserCreateInput {
   id?: Maybe<ID_Input>;
   email: String;
+  slug: String;
   password: String;
   name: String;
   avatar?: Maybe<String>;
-  slug: String;
   emailVerified?: Maybe<Boolean>;
   recipes?: Maybe<RecipeCreateManyWithoutAuthorInput>;
   modifications?: Maybe<ModificationCreateManyWithoutUserInput>;
@@ -2350,8 +2348,7 @@ export interface RecipeUpdateManyMutationInput {
   servingAmount?: Maybe<String>;
   servingType?: Maybe<String>;
   description?: Maybe<String>;
-  photoFilename?: Maybe<String>;
-  photoUrl?: Maybe<String>;
+  photo?: Maybe<String>;
 }
 
 export interface SortingUpdateManyDataInput {
@@ -2371,8 +2368,7 @@ export interface RecipeUpdateInput {
   description?: Maybe<String>;
   items?: Maybe<ItemUpdateManyWithoutRecipeInput>;
   modifications?: Maybe<ModificationUpdateManyWithoutRecipeInput>;
-  photoFilename?: Maybe<String>;
-  photoUrl?: Maybe<String>;
+  photo?: Maybe<String>;
 }
 
 export interface AlterationUpdateManyWithoutModificationInput {
@@ -2904,34 +2900,20 @@ export interface RecipeWhereInput {
   modifications_every?: Maybe<ModificationWhereInput>;
   modifications_some?: Maybe<ModificationWhereInput>;
   modifications_none?: Maybe<ModificationWhereInput>;
-  photoFilename?: Maybe<String>;
-  photoFilename_not?: Maybe<String>;
-  photoFilename_in?: Maybe<String[] | String>;
-  photoFilename_not_in?: Maybe<String[] | String>;
-  photoFilename_lt?: Maybe<String>;
-  photoFilename_lte?: Maybe<String>;
-  photoFilename_gt?: Maybe<String>;
-  photoFilename_gte?: Maybe<String>;
-  photoFilename_contains?: Maybe<String>;
-  photoFilename_not_contains?: Maybe<String>;
-  photoFilename_starts_with?: Maybe<String>;
-  photoFilename_not_starts_with?: Maybe<String>;
-  photoFilename_ends_with?: Maybe<String>;
-  photoFilename_not_ends_with?: Maybe<String>;
-  photoUrl?: Maybe<String>;
-  photoUrl_not?: Maybe<String>;
-  photoUrl_in?: Maybe<String[] | String>;
-  photoUrl_not_in?: Maybe<String[] | String>;
-  photoUrl_lt?: Maybe<String>;
-  photoUrl_lte?: Maybe<String>;
-  photoUrl_gt?: Maybe<String>;
-  photoUrl_gte?: Maybe<String>;
-  photoUrl_contains?: Maybe<String>;
-  photoUrl_not_contains?: Maybe<String>;
-  photoUrl_starts_with?: Maybe<String>;
-  photoUrl_not_starts_with?: Maybe<String>;
-  photoUrl_ends_with?: Maybe<String>;
-  photoUrl_not_ends_with?: Maybe<String>;
+  photo?: Maybe<String>;
+  photo_not?: Maybe<String>;
+  photo_in?: Maybe<String[] | String>;
+  photo_not_in?: Maybe<String[] | String>;
+  photo_lt?: Maybe<String>;
+  photo_lte?: Maybe<String>;
+  photo_gt?: Maybe<String>;
+  photo_gte?: Maybe<String>;
+  photo_contains?: Maybe<String>;
+  photo_not_contains?: Maybe<String>;
+  photo_starts_with?: Maybe<String>;
+  photo_not_starts_with?: Maybe<String>;
+  photo_ends_with?: Maybe<String>;
+  photo_not_ends_with?: Maybe<String>;
   AND?: Maybe<RecipeWhereInput[] | RecipeWhereInput>;
   OR?: Maybe<RecipeWhereInput[] | RecipeWhereInput>;
   NOT?: Maybe<RecipeWhereInput[] | RecipeWhereInput>;
@@ -3189,10 +3171,10 @@ export interface StepAdditionUpdateManyDataInput {
 
 export interface UserUpdateWithoutModificationsDataInput {
   email?: Maybe<String>;
+  slug?: Maybe<String>;
   password?: Maybe<String>;
   name?: Maybe<String>;
   avatar?: Maybe<String>;
-  slug?: Maybe<String>;
   emailVerified?: Maybe<Boolean>;
   recipes?: Maybe<RecipeUpdateManyWithoutAuthorInput>;
 }
@@ -3537,10 +3519,10 @@ export interface ModificationScalarWhereInput {
 
 export interface UserUpdateManyMutationInput {
   email?: Maybe<String>;
+  slug?: Maybe<String>;
   password?: Maybe<String>;
   name?: Maybe<String>;
   avatar?: Maybe<String>;
-  slug?: Maybe<String>;
   emailVerified?: Maybe<Boolean>;
 }
 
@@ -3707,34 +3689,20 @@ export interface RecipeScalarWhereInput {
   description_not_starts_with?: Maybe<String>;
   description_ends_with?: Maybe<String>;
   description_not_ends_with?: Maybe<String>;
-  photoFilename?: Maybe<String>;
-  photoFilename_not?: Maybe<String>;
-  photoFilename_in?: Maybe<String[] | String>;
-  photoFilename_not_in?: Maybe<String[] | String>;
-  photoFilename_lt?: Maybe<String>;
-  photoFilename_lte?: Maybe<String>;
-  photoFilename_gt?: Maybe<String>;
-  photoFilename_gte?: Maybe<String>;
-  photoFilename_contains?: Maybe<String>;
-  photoFilename_not_contains?: Maybe<String>;
-  photoFilename_starts_with?: Maybe<String>;
-  photoFilename_not_starts_with?: Maybe<String>;
-  photoFilename_ends_with?: Maybe<String>;
-  photoFilename_not_ends_with?: Maybe<String>;
-  photoUrl?: Maybe<String>;
-  photoUrl_not?: Maybe<String>;
-  photoUrl_in?: Maybe<String[] | String>;
-  photoUrl_not_in?: Maybe<String[] | String>;
-  photoUrl_lt?: Maybe<String>;
-  photoUrl_lte?: Maybe<String>;
-  photoUrl_gt?: Maybe<String>;
-  photoUrl_gte?: Maybe<String>;
-  photoUrl_contains?: Maybe<String>;
-  photoUrl_not_contains?: Maybe<String>;
-  photoUrl_starts_with?: Maybe<String>;
-  photoUrl_not_starts_with?: Maybe<String>;
-  photoUrl_ends_with?: Maybe<String>;
-  photoUrl_not_ends_with?: Maybe<String>;
+  photo?: Maybe<String>;
+  photo_not?: Maybe<String>;
+  photo_in?: Maybe<String[] | String>;
+  photo_not_in?: Maybe<String[] | String>;
+  photo_lt?: Maybe<String>;
+  photo_lte?: Maybe<String>;
+  photo_gt?: Maybe<String>;
+  photo_gte?: Maybe<String>;
+  photo_contains?: Maybe<String>;
+  photo_not_contains?: Maybe<String>;
+  photo_starts_with?: Maybe<String>;
+  photo_not_starts_with?: Maybe<String>;
+  photo_ends_with?: Maybe<String>;
+  photo_not_ends_with?: Maybe<String>;
   AND?: Maybe<RecipeScalarWhereInput[] | RecipeScalarWhereInput>;
   OR?: Maybe<RecipeScalarWhereInput[] | RecipeScalarWhereInput>;
   NOT?: Maybe<RecipeScalarWhereInput[] | RecipeScalarWhereInput>;
@@ -3767,8 +3735,7 @@ export interface RecipeUpdateManyDataInput {
   servingAmount?: Maybe<String>;
   servingType?: Maybe<String>;
   description?: Maybe<String>;
-  photoFilename?: Maybe<String>;
-  photoUrl?: Maybe<String>;
+  photo?: Maybe<String>;
 }
 
 export interface SortingUpdateInput {
@@ -3810,8 +3777,7 @@ export interface RecipeCreateInput {
   description?: Maybe<String>;
   items?: Maybe<ItemCreateManyWithoutRecipeInput>;
   modifications?: Maybe<ModificationCreateManyWithoutRecipeInput>;
-  photoFilename?: Maybe<String>;
-  photoUrl?: Maybe<String>;
+  photo?: Maybe<String>;
 }
 
 export interface RecipeUpdateWithoutModificationsDataInput {
@@ -3824,8 +3790,7 @@ export interface RecipeUpdateWithoutModificationsDataInput {
   servingType?: Maybe<String>;
   description?: Maybe<String>;
   items?: Maybe<ItemUpdateManyWithoutRecipeInput>;
-  photoFilename?: Maybe<String>;
-  photoUrl?: Maybe<String>;
+  photo?: Maybe<String>;
 }
 
 export interface ModificationCreateInput {
@@ -3860,10 +3825,10 @@ export interface AlterationCreateInput {
 
 export interface UserUpdateWithoutRecipesDataInput {
   email?: Maybe<String>;
+  slug?: Maybe<String>;
   password?: Maybe<String>;
   name?: Maybe<String>;
   avatar?: Maybe<String>;
-  slug?: Maybe<String>;
   emailVerified?: Maybe<Boolean>;
   modifications?: Maybe<ModificationUpdateManyWithoutUserInput>;
 }
@@ -3871,10 +3836,10 @@ export interface UserUpdateWithoutRecipesDataInput {
 export interface UserCreateWithoutModificationsInput {
   id?: Maybe<ID_Input>;
   email: String;
+  slug: String;
   password: String;
   name: String;
   avatar?: Maybe<String>;
-  slug: String;
   emailVerified?: Maybe<Boolean>;
   recipes?: Maybe<RecipeCreateManyWithoutAuthorInput>;
 }
@@ -3989,8 +3954,7 @@ export interface RecipeCreateWithoutModificationsInput {
   servingType?: Maybe<String>;
   description?: Maybe<String>;
   items?: Maybe<ItemCreateManyWithoutRecipeInput>;
-  photoFilename?: Maybe<String>;
-  photoUrl?: Maybe<String>;
+  photo?: Maybe<String>;
 }
 
 export interface ModificationUpsertWithoutAlterationsInput {
@@ -4043,8 +4007,7 @@ export interface RecipeUpdateWithoutAuthorDataInput {
   description?: Maybe<String>;
   items?: Maybe<ItemUpdateManyWithoutRecipeInput>;
   modifications?: Maybe<ModificationUpdateManyWithoutRecipeInput>;
-  photoFilename?: Maybe<String>;
-  photoUrl?: Maybe<String>;
+  photo?: Maybe<String>;
 }
 
 export interface ItemCreateInput {
@@ -4173,13 +4136,13 @@ export interface RecipeCreateWithoutItemsInput {
   servingType?: Maybe<String>;
   description?: Maybe<String>;
   modifications?: Maybe<ModificationCreateManyWithoutRecipeInput>;
-  photoFilename?: Maybe<String>;
-  photoUrl?: Maybe<String>;
+  photo?: Maybe<String>;
 }
 
 export type UserWhereUniqueInput = AtLeastOne<{
   id: Maybe<ID_Input>;
   email?: Maybe<String>;
+  slug?: Maybe<String>;
 }>;
 
 export interface IngredientUpdateInput {
@@ -4290,8 +4253,7 @@ export interface RecipeUpdateWithoutItemsDataInput {
   servingType?: Maybe<String>;
   description?: Maybe<String>;
   modifications?: Maybe<ModificationUpdateManyWithoutRecipeInput>;
-  photoFilename?: Maybe<String>;
-  photoUrl?: Maybe<String>;
+  photo?: Maybe<String>;
 }
 
 export interface StepSubscriptionWhereInput {
@@ -4371,10 +4333,10 @@ export interface IngredientAdditionCreateInput {
 export interface UserCreateWithoutRecipesInput {
   id?: Maybe<ID_Input>;
   email: String;
+  slug: String;
   password: String;
   name: String;
   avatar?: Maybe<String>;
-  slug: String;
   emailVerified?: Maybe<Boolean>;
   modifications?: Maybe<ModificationCreateManyWithoutUserInput>;
 }
@@ -4492,8 +4454,7 @@ export interface RecipeCreateWithoutAuthorInput {
   description?: Maybe<String>;
   items?: Maybe<ItemCreateManyWithoutRecipeInput>;
   modifications?: Maybe<ModificationCreateManyWithoutRecipeInput>;
-  photoFilename?: Maybe<String>;
-  photoUrl?: Maybe<String>;
+  photo?: Maybe<String>;
 }
 
 export interface NodeNode {
@@ -4505,10 +4466,10 @@ export interface UserPreviousValues {
   createdAt: DateTimeOutput;
   updatedAt: DateTimeOutput;
   email: String;
+  slug: String;
   password: String;
   name: String;
   avatar?: String;
-  slug: String;
   emailVerified: Boolean;
 }
 
@@ -4519,10 +4480,10 @@ export interface UserPreviousValuesPromise
   createdAt: () => Promise<DateTimeOutput>;
   updatedAt: () => Promise<DateTimeOutput>;
   email: () => Promise<String>;
+  slug: () => Promise<String>;
   password: () => Promise<String>;
   name: () => Promise<String>;
   avatar: () => Promise<String>;
-  slug: () => Promise<String>;
   emailVerified: () => Promise<Boolean>;
 }
 
@@ -4533,10 +4494,10 @@ export interface UserPreviousValuesSubscription
   createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
   updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
   email: () => Promise<AsyncIterator<String>>;
+  slug: () => Promise<AsyncIterator<String>>;
   password: () => Promise<AsyncIterator<String>>;
   name: () => Promise<AsyncIterator<String>>;
   avatar: () => Promise<AsyncIterator<String>>;
-  slug: () => Promise<AsyncIterator<String>>;
   emailVerified: () => Promise<AsyncIterator<Boolean>>;
 }
 
@@ -5605,10 +5566,10 @@ export interface User {
   createdAt: DateTimeOutput;
   updatedAt: DateTimeOutput;
   email: String;
+  slug: String;
   password: String;
   name: String;
   avatar?: String;
-  slug: String;
   emailVerified: Boolean;
 }
 
@@ -5617,10 +5578,10 @@ export interface UserPromise extends Promise<User>, Fragmentable {
   createdAt: () => Promise<DateTimeOutput>;
   updatedAt: () => Promise<DateTimeOutput>;
   email: () => Promise<String>;
+  slug: () => Promise<String>;
   password: () => Promise<String>;
   name: () => Promise<String>;
   avatar: () => Promise<String>;
-  slug: () => Promise<String>;
   emailVerified: () => Promise<Boolean>;
   recipes: <T = FragmentableArray<Recipe>>(args?: {
     where?: RecipeWhereInput;
@@ -5649,10 +5610,10 @@ export interface UserSubscription
   createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
   updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
   email: () => Promise<AsyncIterator<String>>;
+  slug: () => Promise<AsyncIterator<String>>;
   password: () => Promise<AsyncIterator<String>>;
   name: () => Promise<AsyncIterator<String>>;
   avatar: () => Promise<AsyncIterator<String>>;
-  slug: () => Promise<AsyncIterator<String>>;
   emailVerified: () => Promise<AsyncIterator<Boolean>>;
   recipes: <T = Promise<AsyncIterator<RecipeSubscription>>>(args?: {
     where?: RecipeWhereInput;
@@ -5681,10 +5642,10 @@ export interface UserNullablePromise
   createdAt: () => Promise<DateTimeOutput>;
   updatedAt: () => Promise<DateTimeOutput>;
   email: () => Promise<String>;
+  slug: () => Promise<String>;
   password: () => Promise<String>;
   name: () => Promise<String>;
   avatar: () => Promise<String>;
-  slug: () => Promise<String>;
   emailVerified: () => Promise<Boolean>;
   recipes: <T = FragmentableArray<Recipe>>(args?: {
     where?: RecipeWhereInput;
@@ -6026,8 +5987,7 @@ export interface RecipePreviousValues {
   servingAmount: String;
   servingType: String;
   description: String;
-  photoFilename?: String;
-  photoUrl?: String;
+  photo?: String;
 }
 
 export interface RecipePreviousValuesPromise
@@ -6043,8 +6003,7 @@ export interface RecipePreviousValuesPromise
   servingAmount: () => Promise<String>;
   servingType: () => Promise<String>;
   description: () => Promise<String>;
-  photoFilename: () => Promise<String>;
-  photoUrl: () => Promise<String>;
+  photo: () => Promise<String>;
 }
 
 export interface RecipePreviousValuesSubscription
@@ -6060,8 +6019,7 @@ export interface RecipePreviousValuesSubscription
   servingAmount: () => Promise<AsyncIterator<String>>;
   servingType: () => Promise<AsyncIterator<String>>;
   description: () => Promise<AsyncIterator<String>>;
-  photoFilename: () => Promise<AsyncIterator<String>>;
-  photoUrl: () => Promise<AsyncIterator<String>>;
+  photo: () => Promise<AsyncIterator<String>>;
 }
 
 export interface Recipe {
@@ -6075,8 +6033,7 @@ export interface Recipe {
   servingAmount: String;
   servingType: String;
   description: String;
-  photoFilename?: String;
-  photoUrl?: String;
+  photo?: String;
 }
 
 export interface RecipePromise extends Promise<Recipe>, Fragmentable {
@@ -6109,8 +6066,7 @@ export interface RecipePromise extends Promise<Recipe>, Fragmentable {
     first?: Int;
     last?: Int;
   }) => T;
-  photoFilename: () => Promise<String>;
-  photoUrl: () => Promise<String>;
+  photo: () => Promise<String>;
 }
 
 export interface RecipeSubscription
@@ -6145,8 +6101,7 @@ export interface RecipeSubscription
     first?: Int;
     last?: Int;
   }) => T;
-  photoFilename: () => Promise<AsyncIterator<String>>;
-  photoUrl: () => Promise<AsyncIterator<String>>;
+  photo: () => Promise<AsyncIterator<String>>;
 }
 
 export interface RecipeNullablePromise
@@ -6181,8 +6136,7 @@ export interface RecipeNullablePromise
     first?: Int;
     last?: Int;
   }) => T;
-  photoFilename: () => Promise<String>;
-  photoUrl: () => Promise<String>;
+  photo: () => Promise<String>;
 }
 
 export interface StepAddition {

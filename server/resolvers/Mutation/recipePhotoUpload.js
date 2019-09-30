@@ -5,17 +5,20 @@ const { storeFS } = require('../../utils/fileUploads');
 module.exports = async (parent, { file, recipeId }, ctx) => {
   const recipe = await ctx.prisma.recipe({ uid: recipeId }).$fragment(`
     fragment RecipeWithAuthor on Recipe {
-      photoFilename
+      photo
       author {
-        id
+        slug
       }
     }
   `);
 
-  // if photoFilename, delete it
-
-  const dest = path.resolve(__dirname, `../../public/${recipe.author.id}`);
+  const dest = path.resolve(__dirname, `../../public/${recipe.author.slug}`);
   fs.mkdirSync(dest, { recursive: true });
+
+  if (recipe.photo) {
+    const oldPhoto = path.join(dest, recipe.photo);
+    if (fs.existsSync(oldPhoto)) fs.unlinkSync(oldPhoto);
+  }
 
   const { createReadStream, filename: originalFilename, mimetype } = await file;
 
@@ -28,7 +31,7 @@ module.exports = async (parent, { file, recipeId }, ctx) => {
   return await ctx.prisma.updateRecipe({
     where: { uid: recipeId },
     data: {
-      photoFilename: filename
+      photo: filename
     }
   });
 };
