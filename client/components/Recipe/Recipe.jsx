@@ -37,7 +37,7 @@ export default class Recipe extends Component {
       servingAmount: PropTypes.string,
       servingType: PropTypes.string,
       items: PropTypes.arrayOf(PropTypes.object),
-      photo: PropTypes.object
+      photoUrl: PropTypes.string
     }),
     modification: PropTypes.object
   };
@@ -401,18 +401,6 @@ export default class Recipe extends Component {
     recipe.photoUrl = photoUrl;
     this.setState({ recipe });
   };
-
-  // removePhoto = index => {
-  //   const { recipe } = this.state;
-  //   recipe.photos.splice(index, 1);
-  //   this.setState({ recipe });
-  // };
-
-  // updatePhotos = photos => {
-  //   const { recipe } = this.state;
-  //   recipe.photos = photos;
-  //   this.setState({ recipe });
-  // };
 
   render() {
     const { recipe, modification, unsavedCount } = this.state;
