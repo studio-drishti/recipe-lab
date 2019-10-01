@@ -9,6 +9,7 @@ import areArraysEqual from '../../utils/areArraysEqual';
 import UserContext from '../../utils/UserContext';
 
 import RecipeDetails from '../RecipeDetails';
+import RecipePhoto from '../RecipePhoto/RecipePhoto';
 import RecipeBio from '../RecipeBio';
 import StepList from '../StepList';
 import Step from '../Step';
@@ -36,7 +37,7 @@ export default class Recipe extends Component {
       servingAmount: PropTypes.string,
       servingType: PropTypes.string,
       items: PropTypes.arrayOf(PropTypes.object),
-      photos: PropTypes.arrayOf(PropTypes.object)
+      photo: PropTypes.string
     }),
     modification: PropTypes.object
   };
@@ -395,22 +396,9 @@ export default class Recipe extends Component {
     return mod !== undefined ? mod : source[fieldName];
   };
 
-  addPhoto = photo => {
+  setRecipePhoto = photo => {
     const { recipe } = this.state;
-    recipe.photos.push(photo);
-    this.setState({ recipe });
-  };
-
-  removePhoto = index => {
-    const { recipe } = this.state;
-    recipe.photos.splice(index, 1);
-    this.setState({ recipe });
-  };
-
-  updatePhotos = photos => {
-    const { recipe } = this.state;
-    recipe.photos = photos;
-    this.setState({ recipe });
+    this.setState({ recipe: { ...recipe, photo } });
   };
 
   render() {
@@ -428,23 +416,13 @@ export default class Recipe extends Component {
               alteration => alteration.sourceId === recipe.uid
             )}
             saveAlteration={this.saveAlteration}
-            addPhoto={this.addPhoto}
-            photosLength={recipe ? recipe.photos.length : 0}
           />
-          <div>
-            <img src="https://via.placeholder.com/600x300" />
-          </div>
-          {/* {recipe ? (
-            <RecipeCarousel
-              className={css.recipeCarousel}
-              removePhoto={this.removePhoto}
-              updatePhotos={this.updatePhotos}
-              photos={[...recipe.photos]}
-              recipeId={recipe.uid}
-            />
-          ) : (
-            <img src="https://via.placeholder.com/600x300" />
-          )} */}
+          <RecipePhoto
+            className={css.recipePhoto}
+            // removePhoto={this.removePhoto}
+            setRecipePhoto={this.setRecipePhoto}
+            recipe={recipe}
+          />
         </header>
 
         <article className={css.recipe}>

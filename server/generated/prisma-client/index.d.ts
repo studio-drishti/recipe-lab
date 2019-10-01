@@ -25,7 +25,6 @@ export interface Exists {
   itemAddition: (where?: ItemAdditionWhereInput) => Promise<boolean>;
   modification: (where?: ModificationWhereInput) => Promise<boolean>;
   recipe: (where?: RecipeWhereInput) => Promise<boolean>;
-  recipePhoto: (where?: RecipePhotoWhereInput) => Promise<boolean>;
   sorting: (where?: SortingWhereInput) => Promise<boolean>;
   step: (where?: StepWhereInput) => Promise<boolean>;
   stepAddition: (where?: StepAdditionWhereInput) => Promise<boolean>;
@@ -190,27 +189,6 @@ export interface Prisma {
     first?: Int;
     last?: Int;
   }) => RecipeConnectionPromise;
-  recipePhoto: (
-    where: RecipePhotoWhereUniqueInput
-  ) => RecipePhotoNullablePromise;
-  recipePhotos: (args?: {
-    where?: RecipePhotoWhereInput;
-    orderBy?: RecipePhotoOrderByInput;
-    skip?: Int;
-    after?: String;
-    before?: String;
-    first?: Int;
-    last?: Int;
-  }) => FragmentableArray<RecipePhoto>;
-  recipePhotosConnection: (args?: {
-    where?: RecipePhotoWhereInput;
-    orderBy?: RecipePhotoOrderByInput;
-    skip?: Int;
-    after?: String;
-    before?: String;
-    first?: Int;
-    last?: Int;
-  }) => RecipePhotoConnectionPromise;
   sorting: (where: SortingWhereUniqueInput) => SortingNullablePromise;
   sortings: (args?: {
     where?: SortingWhereInput;
@@ -421,24 +399,6 @@ export interface Prisma {
   }) => RecipePromise;
   deleteRecipe: (where: RecipeWhereUniqueInput) => RecipePromise;
   deleteManyRecipes: (where?: RecipeWhereInput) => BatchPayloadPromise;
-  createRecipePhoto: (data: RecipePhotoCreateInput) => RecipePhotoPromise;
-  updateRecipePhoto: (args: {
-    data: RecipePhotoUpdateInput;
-    where: RecipePhotoWhereUniqueInput;
-  }) => RecipePhotoPromise;
-  updateManyRecipePhotos: (args: {
-    data: RecipePhotoUpdateManyMutationInput;
-    where?: RecipePhotoWhereInput;
-  }) => BatchPayloadPromise;
-  upsertRecipePhoto: (args: {
-    where: RecipePhotoWhereUniqueInput;
-    create: RecipePhotoCreateInput;
-    update: RecipePhotoUpdateInput;
-  }) => RecipePhotoPromise;
-  deleteRecipePhoto: (where: RecipePhotoWhereUniqueInput) => RecipePhotoPromise;
-  deleteManyRecipePhotos: (
-    where?: RecipePhotoWhereInput
-  ) => BatchPayloadPromise;
   createSorting: (data: SortingCreateInput) => SortingPromise;
   updateSorting: (args: {
     data: SortingUpdateInput;
@@ -537,9 +497,6 @@ export interface Subscription {
   recipe: (
     where?: RecipeSubscriptionWhereInput
   ) => RecipeSubscriptionPayloadSubscription;
-  recipePhoto: (
-    where?: RecipePhotoSubscriptionWhereInput
-  ) => RecipePhotoSubscriptionPayloadSubscription;
   sorting: (
     where?: SortingSubscriptionWhereInput
   ) => SortingSubscriptionPayloadSubscription;
@@ -562,7 +519,7 @@ export interface ClientConstructor<T> {
  * Types
  */
 
-export type SortingOrderByInput =
+export type AlterationOrderByInput =
   | "id_ASC"
   | "id_DESC"
   | "createdAt_ASC"
@@ -571,8 +528,12 @@ export type SortingOrderByInput =
   | "updatedAt_DESC"
   | "uid_ASC"
   | "uid_DESC"
-  | "parentId_ASC"
-  | "parentId_DESC";
+  | "sourceId_ASC"
+  | "sourceId_DESC"
+  | "field_ASC"
+  | "field_DESC"
+  | "value_ASC"
+  | "value_DESC";
 
 export type RecipeOrderByInput =
   | "id_ASC"
@@ -594,21 +555,21 @@ export type RecipeOrderByInput =
   | "servingType_ASC"
   | "servingType_DESC"
   | "description_ASC"
-  | "description_DESC";
+  | "description_DESC"
+  | "photo_ASC"
+  | "photo_DESC";
 
-export type RecipePhotoOrderByInput =
+export type SortingOrderByInput =
   | "id_ASC"
   | "id_DESC"
   | "createdAt_ASC"
   | "createdAt_DESC"
   | "updatedAt_ASC"
   | "updatedAt_DESC"
-  | "filename_ASC"
-  | "filename_DESC"
-  | "url_ASC"
-  | "url_DESC"
-  | "index_ASC"
-  | "index_DESC";
+  | "uid_ASC"
+  | "uid_DESC"
+  | "parentId_ASC"
+  | "parentId_DESC";
 
 export type UserOrderByInput =
   | "id_ASC"
@@ -619,14 +580,14 @@ export type UserOrderByInput =
   | "updatedAt_DESC"
   | "email_ASC"
   | "email_DESC"
+  | "slug_ASC"
+  | "slug_DESC"
   | "password_ASC"
   | "password_DESC"
   | "name_ASC"
   | "name_DESC"
   | "avatar_ASC"
   | "avatar_DESC"
-  | "slug_ASC"
-  | "slug_DESC"
   | "emailVerified_ASC"
   | "emailVerified_DESC";
 
@@ -710,22 +671,6 @@ export type IngredientAdditionOrderByInput =
 
 export type MutationType = "CREATED" | "UPDATED" | "DELETED";
 
-export type AlterationOrderByInput =
-  | "id_ASC"
-  | "id_DESC"
-  | "createdAt_ASC"
-  | "createdAt_DESC"
-  | "updatedAt_ASC"
-  | "updatedAt_DESC"
-  | "uid_ASC"
-  | "uid_DESC"
-  | "sourceId_ASC"
-  | "sourceId_DESC"
-  | "field_ASC"
-  | "field_DESC"
-  | "value_ASC"
-  | "value_DESC";
-
 export type ItemAdditionOrderByInput =
   | "id_ASC"
   | "id_DESC"
@@ -756,9 +701,68 @@ export type StepAdditionOrderByInput =
   | "notes_ASC"
   | "notes_DESC";
 
-export interface AlterationUpdateWithWhereUniqueWithoutModificationInput {
-  where: AlterationWhereUniqueInput;
-  data: AlterationUpdateWithoutModificationDataInput;
+export interface SortingScalarWhereInput {
+  id?: Maybe<ID_Input>;
+  id_not?: Maybe<ID_Input>;
+  id_in?: Maybe<ID_Input[] | ID_Input>;
+  id_not_in?: Maybe<ID_Input[] | ID_Input>;
+  id_lt?: Maybe<ID_Input>;
+  id_lte?: Maybe<ID_Input>;
+  id_gt?: Maybe<ID_Input>;
+  id_gte?: Maybe<ID_Input>;
+  id_contains?: Maybe<ID_Input>;
+  id_not_contains?: Maybe<ID_Input>;
+  id_starts_with?: Maybe<ID_Input>;
+  id_not_starts_with?: Maybe<ID_Input>;
+  id_ends_with?: Maybe<ID_Input>;
+  id_not_ends_with?: Maybe<ID_Input>;
+  createdAt?: Maybe<DateTimeInput>;
+  createdAt_not?: Maybe<DateTimeInput>;
+  createdAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  createdAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  createdAt_lt?: Maybe<DateTimeInput>;
+  createdAt_lte?: Maybe<DateTimeInput>;
+  createdAt_gt?: Maybe<DateTimeInput>;
+  createdAt_gte?: Maybe<DateTimeInput>;
+  updatedAt?: Maybe<DateTimeInput>;
+  updatedAt_not?: Maybe<DateTimeInput>;
+  updatedAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  updatedAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  updatedAt_lt?: Maybe<DateTimeInput>;
+  updatedAt_lte?: Maybe<DateTimeInput>;
+  updatedAt_gt?: Maybe<DateTimeInput>;
+  updatedAt_gte?: Maybe<DateTimeInput>;
+  uid?: Maybe<ID_Input>;
+  uid_not?: Maybe<ID_Input>;
+  uid_in?: Maybe<ID_Input[] | ID_Input>;
+  uid_not_in?: Maybe<ID_Input[] | ID_Input>;
+  uid_lt?: Maybe<ID_Input>;
+  uid_lte?: Maybe<ID_Input>;
+  uid_gt?: Maybe<ID_Input>;
+  uid_gte?: Maybe<ID_Input>;
+  uid_contains?: Maybe<ID_Input>;
+  uid_not_contains?: Maybe<ID_Input>;
+  uid_starts_with?: Maybe<ID_Input>;
+  uid_not_starts_with?: Maybe<ID_Input>;
+  uid_ends_with?: Maybe<ID_Input>;
+  uid_not_ends_with?: Maybe<ID_Input>;
+  parentId?: Maybe<ID_Input>;
+  parentId_not?: Maybe<ID_Input>;
+  parentId_in?: Maybe<ID_Input[] | ID_Input>;
+  parentId_not_in?: Maybe<ID_Input[] | ID_Input>;
+  parentId_lt?: Maybe<ID_Input>;
+  parentId_lte?: Maybe<ID_Input>;
+  parentId_gt?: Maybe<ID_Input>;
+  parentId_gte?: Maybe<ID_Input>;
+  parentId_contains?: Maybe<ID_Input>;
+  parentId_not_contains?: Maybe<ID_Input>;
+  parentId_starts_with?: Maybe<ID_Input>;
+  parentId_not_starts_with?: Maybe<ID_Input>;
+  parentId_ends_with?: Maybe<ID_Input>;
+  parentId_not_ends_with?: Maybe<ID_Input>;
+  AND?: Maybe<SortingScalarWhereInput[] | SortingScalarWhereInput>;
+  OR?: Maybe<SortingScalarWhereInput[] | SortingScalarWhereInput>;
+  NOT?: Maybe<SortingScalarWhereInput[] | SortingScalarWhereInput>;
 }
 
 export type AlterationWhereUniqueInput = AtLeastOne<{
@@ -766,12 +770,374 @@ export type AlterationWhereUniqueInput = AtLeastOne<{
   uid?: Maybe<ID_Input>;
 }>;
 
-export interface ItemAdditionUpdateWithWhereUniqueWithoutModificationInput {
-  where: ItemAdditionWhereUniqueInput;
-  data: ItemAdditionUpdateWithoutModificationDataInput;
+export interface AlterationScalarWhereInput {
+  id?: Maybe<ID_Input>;
+  id_not?: Maybe<ID_Input>;
+  id_in?: Maybe<ID_Input[] | ID_Input>;
+  id_not_in?: Maybe<ID_Input[] | ID_Input>;
+  id_lt?: Maybe<ID_Input>;
+  id_lte?: Maybe<ID_Input>;
+  id_gt?: Maybe<ID_Input>;
+  id_gte?: Maybe<ID_Input>;
+  id_contains?: Maybe<ID_Input>;
+  id_not_contains?: Maybe<ID_Input>;
+  id_starts_with?: Maybe<ID_Input>;
+  id_not_starts_with?: Maybe<ID_Input>;
+  id_ends_with?: Maybe<ID_Input>;
+  id_not_ends_with?: Maybe<ID_Input>;
+  createdAt?: Maybe<DateTimeInput>;
+  createdAt_not?: Maybe<DateTimeInput>;
+  createdAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  createdAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  createdAt_lt?: Maybe<DateTimeInput>;
+  createdAt_lte?: Maybe<DateTimeInput>;
+  createdAt_gt?: Maybe<DateTimeInput>;
+  createdAt_gte?: Maybe<DateTimeInput>;
+  updatedAt?: Maybe<DateTimeInput>;
+  updatedAt_not?: Maybe<DateTimeInput>;
+  updatedAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  updatedAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  updatedAt_lt?: Maybe<DateTimeInput>;
+  updatedAt_lte?: Maybe<DateTimeInput>;
+  updatedAt_gt?: Maybe<DateTimeInput>;
+  updatedAt_gte?: Maybe<DateTimeInput>;
+  uid?: Maybe<ID_Input>;
+  uid_not?: Maybe<ID_Input>;
+  uid_in?: Maybe<ID_Input[] | ID_Input>;
+  uid_not_in?: Maybe<ID_Input[] | ID_Input>;
+  uid_lt?: Maybe<ID_Input>;
+  uid_lte?: Maybe<ID_Input>;
+  uid_gt?: Maybe<ID_Input>;
+  uid_gte?: Maybe<ID_Input>;
+  uid_contains?: Maybe<ID_Input>;
+  uid_not_contains?: Maybe<ID_Input>;
+  uid_starts_with?: Maybe<ID_Input>;
+  uid_not_starts_with?: Maybe<ID_Input>;
+  uid_ends_with?: Maybe<ID_Input>;
+  uid_not_ends_with?: Maybe<ID_Input>;
+  sourceId?: Maybe<ID_Input>;
+  sourceId_not?: Maybe<ID_Input>;
+  sourceId_in?: Maybe<ID_Input[] | ID_Input>;
+  sourceId_not_in?: Maybe<ID_Input[] | ID_Input>;
+  sourceId_lt?: Maybe<ID_Input>;
+  sourceId_lte?: Maybe<ID_Input>;
+  sourceId_gt?: Maybe<ID_Input>;
+  sourceId_gte?: Maybe<ID_Input>;
+  sourceId_contains?: Maybe<ID_Input>;
+  sourceId_not_contains?: Maybe<ID_Input>;
+  sourceId_starts_with?: Maybe<ID_Input>;
+  sourceId_not_starts_with?: Maybe<ID_Input>;
+  sourceId_ends_with?: Maybe<ID_Input>;
+  sourceId_not_ends_with?: Maybe<ID_Input>;
+  field?: Maybe<String>;
+  field_not?: Maybe<String>;
+  field_in?: Maybe<String[] | String>;
+  field_not_in?: Maybe<String[] | String>;
+  field_lt?: Maybe<String>;
+  field_lte?: Maybe<String>;
+  field_gt?: Maybe<String>;
+  field_gte?: Maybe<String>;
+  field_contains?: Maybe<String>;
+  field_not_contains?: Maybe<String>;
+  field_starts_with?: Maybe<String>;
+  field_not_starts_with?: Maybe<String>;
+  field_ends_with?: Maybe<String>;
+  field_not_ends_with?: Maybe<String>;
+  value?: Maybe<String>;
+  value_not?: Maybe<String>;
+  value_in?: Maybe<String[] | String>;
+  value_not_in?: Maybe<String[] | String>;
+  value_lt?: Maybe<String>;
+  value_lte?: Maybe<String>;
+  value_gt?: Maybe<String>;
+  value_gte?: Maybe<String>;
+  value_contains?: Maybe<String>;
+  value_not_contains?: Maybe<String>;
+  value_starts_with?: Maybe<String>;
+  value_not_starts_with?: Maybe<String>;
+  value_ends_with?: Maybe<String>;
+  value_not_ends_with?: Maybe<String>;
+  AND?: Maybe<AlterationScalarWhereInput[] | AlterationScalarWhereInput>;
+  OR?: Maybe<AlterationScalarWhereInput[] | AlterationScalarWhereInput>;
+  NOT?: Maybe<AlterationScalarWhereInput[] | AlterationScalarWhereInput>;
 }
 
-export interface IngredientAdditionWhereInput {
+export interface StepAdditionWhereInput {
+  id?: Maybe<ID_Input>;
+  id_not?: Maybe<ID_Input>;
+  id_in?: Maybe<ID_Input[] | ID_Input>;
+  id_not_in?: Maybe<ID_Input[] | ID_Input>;
+  id_lt?: Maybe<ID_Input>;
+  id_lte?: Maybe<ID_Input>;
+  id_gt?: Maybe<ID_Input>;
+  id_gte?: Maybe<ID_Input>;
+  id_contains?: Maybe<ID_Input>;
+  id_not_contains?: Maybe<ID_Input>;
+  id_starts_with?: Maybe<ID_Input>;
+  id_not_starts_with?: Maybe<ID_Input>;
+  id_ends_with?: Maybe<ID_Input>;
+  id_not_ends_with?: Maybe<ID_Input>;
+  createdAt?: Maybe<DateTimeInput>;
+  createdAt_not?: Maybe<DateTimeInput>;
+  createdAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  createdAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  createdAt_lt?: Maybe<DateTimeInput>;
+  createdAt_lte?: Maybe<DateTimeInput>;
+  createdAt_gt?: Maybe<DateTimeInput>;
+  createdAt_gte?: Maybe<DateTimeInput>;
+  updatedAt?: Maybe<DateTimeInput>;
+  updatedAt_not?: Maybe<DateTimeInput>;
+  updatedAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  updatedAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  updatedAt_lt?: Maybe<DateTimeInput>;
+  updatedAt_lte?: Maybe<DateTimeInput>;
+  updatedAt_gt?: Maybe<DateTimeInput>;
+  updatedAt_gte?: Maybe<DateTimeInput>;
+  uid?: Maybe<ID_Input>;
+  uid_not?: Maybe<ID_Input>;
+  uid_in?: Maybe<ID_Input[] | ID_Input>;
+  uid_not_in?: Maybe<ID_Input[] | ID_Input>;
+  uid_lt?: Maybe<ID_Input>;
+  uid_lte?: Maybe<ID_Input>;
+  uid_gt?: Maybe<ID_Input>;
+  uid_gte?: Maybe<ID_Input>;
+  uid_contains?: Maybe<ID_Input>;
+  uid_not_contains?: Maybe<ID_Input>;
+  uid_starts_with?: Maybe<ID_Input>;
+  uid_not_starts_with?: Maybe<ID_Input>;
+  uid_ends_with?: Maybe<ID_Input>;
+  uid_not_ends_with?: Maybe<ID_Input>;
+  parentId?: Maybe<ID_Input>;
+  parentId_not?: Maybe<ID_Input>;
+  parentId_in?: Maybe<ID_Input[] | ID_Input>;
+  parentId_not_in?: Maybe<ID_Input[] | ID_Input>;
+  parentId_lt?: Maybe<ID_Input>;
+  parentId_lte?: Maybe<ID_Input>;
+  parentId_gt?: Maybe<ID_Input>;
+  parentId_gte?: Maybe<ID_Input>;
+  parentId_contains?: Maybe<ID_Input>;
+  parentId_not_contains?: Maybe<ID_Input>;
+  parentId_starts_with?: Maybe<ID_Input>;
+  parentId_not_starts_with?: Maybe<ID_Input>;
+  parentId_ends_with?: Maybe<ID_Input>;
+  parentId_not_ends_with?: Maybe<ID_Input>;
+  directions?: Maybe<String>;
+  directions_not?: Maybe<String>;
+  directions_in?: Maybe<String[] | String>;
+  directions_not_in?: Maybe<String[] | String>;
+  directions_lt?: Maybe<String>;
+  directions_lte?: Maybe<String>;
+  directions_gt?: Maybe<String>;
+  directions_gte?: Maybe<String>;
+  directions_contains?: Maybe<String>;
+  directions_not_contains?: Maybe<String>;
+  directions_starts_with?: Maybe<String>;
+  directions_not_starts_with?: Maybe<String>;
+  directions_ends_with?: Maybe<String>;
+  directions_not_ends_with?: Maybe<String>;
+  notes?: Maybe<String>;
+  notes_not?: Maybe<String>;
+  notes_in?: Maybe<String[] | String>;
+  notes_not_in?: Maybe<String[] | String>;
+  notes_lt?: Maybe<String>;
+  notes_lte?: Maybe<String>;
+  notes_gt?: Maybe<String>;
+  notes_gte?: Maybe<String>;
+  notes_contains?: Maybe<String>;
+  notes_not_contains?: Maybe<String>;
+  notes_starts_with?: Maybe<String>;
+  notes_not_starts_with?: Maybe<String>;
+  notes_ends_with?: Maybe<String>;
+  notes_not_ends_with?: Maybe<String>;
+  modification?: Maybe<ModificationWhereInput>;
+  AND?: Maybe<StepAdditionWhereInput[] | StepAdditionWhereInput>;
+  OR?: Maybe<StepAdditionWhereInput[] | StepAdditionWhereInput>;
+  NOT?: Maybe<StepAdditionWhereInput[] | StepAdditionWhereInput>;
+}
+
+export interface AlterationUpdateManyWithWhereNestedInput {
+  where: AlterationScalarWhereInput;
+  data: AlterationUpdateManyDataInput;
+}
+
+export interface ItemWhereInput {
+  id?: Maybe<ID_Input>;
+  id_not?: Maybe<ID_Input>;
+  id_in?: Maybe<ID_Input[] | ID_Input>;
+  id_not_in?: Maybe<ID_Input[] | ID_Input>;
+  id_lt?: Maybe<ID_Input>;
+  id_lte?: Maybe<ID_Input>;
+  id_gt?: Maybe<ID_Input>;
+  id_gte?: Maybe<ID_Input>;
+  id_contains?: Maybe<ID_Input>;
+  id_not_contains?: Maybe<ID_Input>;
+  id_starts_with?: Maybe<ID_Input>;
+  id_not_starts_with?: Maybe<ID_Input>;
+  id_ends_with?: Maybe<ID_Input>;
+  id_not_ends_with?: Maybe<ID_Input>;
+  createdAt?: Maybe<DateTimeInput>;
+  createdAt_not?: Maybe<DateTimeInput>;
+  createdAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  createdAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  createdAt_lt?: Maybe<DateTimeInput>;
+  createdAt_lte?: Maybe<DateTimeInput>;
+  createdAt_gt?: Maybe<DateTimeInput>;
+  createdAt_gte?: Maybe<DateTimeInput>;
+  updatedAt?: Maybe<DateTimeInput>;
+  updatedAt_not?: Maybe<DateTimeInput>;
+  updatedAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  updatedAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  updatedAt_lt?: Maybe<DateTimeInput>;
+  updatedAt_lte?: Maybe<DateTimeInput>;
+  updatedAt_gt?: Maybe<DateTimeInput>;
+  updatedAt_gte?: Maybe<DateTimeInput>;
+  uid?: Maybe<ID_Input>;
+  uid_not?: Maybe<ID_Input>;
+  uid_in?: Maybe<ID_Input[] | ID_Input>;
+  uid_not_in?: Maybe<ID_Input[] | ID_Input>;
+  uid_lt?: Maybe<ID_Input>;
+  uid_lte?: Maybe<ID_Input>;
+  uid_gt?: Maybe<ID_Input>;
+  uid_gte?: Maybe<ID_Input>;
+  uid_contains?: Maybe<ID_Input>;
+  uid_not_contains?: Maybe<ID_Input>;
+  uid_starts_with?: Maybe<ID_Input>;
+  uid_not_starts_with?: Maybe<ID_Input>;
+  uid_ends_with?: Maybe<ID_Input>;
+  uid_not_ends_with?: Maybe<ID_Input>;
+  index?: Maybe<Int>;
+  index_not?: Maybe<Int>;
+  index_in?: Maybe<Int[] | Int>;
+  index_not_in?: Maybe<Int[] | Int>;
+  index_lt?: Maybe<Int>;
+  index_lte?: Maybe<Int>;
+  index_gt?: Maybe<Int>;
+  index_gte?: Maybe<Int>;
+  name?: Maybe<String>;
+  name_not?: Maybe<String>;
+  name_in?: Maybe<String[] | String>;
+  name_not_in?: Maybe<String[] | String>;
+  name_lt?: Maybe<String>;
+  name_lte?: Maybe<String>;
+  name_gt?: Maybe<String>;
+  name_gte?: Maybe<String>;
+  name_contains?: Maybe<String>;
+  name_not_contains?: Maybe<String>;
+  name_starts_with?: Maybe<String>;
+  name_not_starts_with?: Maybe<String>;
+  name_ends_with?: Maybe<String>;
+  name_not_ends_with?: Maybe<String>;
+  recipe?: Maybe<RecipeWhereInput>;
+  steps_every?: Maybe<StepWhereInput>;
+  steps_some?: Maybe<StepWhereInput>;
+  steps_none?: Maybe<StepWhereInput>;
+  AND?: Maybe<ItemWhereInput[] | ItemWhereInput>;
+  OR?: Maybe<ItemWhereInput[] | ItemWhereInput>;
+  NOT?: Maybe<ItemWhereInput[] | ItemWhereInput>;
+}
+
+export interface AlterationUpdateManyDataInput {
+  uid?: Maybe<ID_Input>;
+  sourceId?: Maybe<ID_Input>;
+  field?: Maybe<String>;
+  value?: Maybe<String>;
+}
+
+export interface StepWhereInput {
+  id?: Maybe<ID_Input>;
+  id_not?: Maybe<ID_Input>;
+  id_in?: Maybe<ID_Input[] | ID_Input>;
+  id_not_in?: Maybe<ID_Input[] | ID_Input>;
+  id_lt?: Maybe<ID_Input>;
+  id_lte?: Maybe<ID_Input>;
+  id_gt?: Maybe<ID_Input>;
+  id_gte?: Maybe<ID_Input>;
+  id_contains?: Maybe<ID_Input>;
+  id_not_contains?: Maybe<ID_Input>;
+  id_starts_with?: Maybe<ID_Input>;
+  id_not_starts_with?: Maybe<ID_Input>;
+  id_ends_with?: Maybe<ID_Input>;
+  id_not_ends_with?: Maybe<ID_Input>;
+  createdAt?: Maybe<DateTimeInput>;
+  createdAt_not?: Maybe<DateTimeInput>;
+  createdAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  createdAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  createdAt_lt?: Maybe<DateTimeInput>;
+  createdAt_lte?: Maybe<DateTimeInput>;
+  createdAt_gt?: Maybe<DateTimeInput>;
+  createdAt_gte?: Maybe<DateTimeInput>;
+  updatedAt?: Maybe<DateTimeInput>;
+  updatedAt_not?: Maybe<DateTimeInput>;
+  updatedAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  updatedAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  updatedAt_lt?: Maybe<DateTimeInput>;
+  updatedAt_lte?: Maybe<DateTimeInput>;
+  updatedAt_gt?: Maybe<DateTimeInput>;
+  updatedAt_gte?: Maybe<DateTimeInput>;
+  uid?: Maybe<ID_Input>;
+  uid_not?: Maybe<ID_Input>;
+  uid_in?: Maybe<ID_Input[] | ID_Input>;
+  uid_not_in?: Maybe<ID_Input[] | ID_Input>;
+  uid_lt?: Maybe<ID_Input>;
+  uid_lte?: Maybe<ID_Input>;
+  uid_gt?: Maybe<ID_Input>;
+  uid_gte?: Maybe<ID_Input>;
+  uid_contains?: Maybe<ID_Input>;
+  uid_not_contains?: Maybe<ID_Input>;
+  uid_starts_with?: Maybe<ID_Input>;
+  uid_not_starts_with?: Maybe<ID_Input>;
+  uid_ends_with?: Maybe<ID_Input>;
+  uid_not_ends_with?: Maybe<ID_Input>;
+  index?: Maybe<Int>;
+  index_not?: Maybe<Int>;
+  index_in?: Maybe<Int[] | Int>;
+  index_not_in?: Maybe<Int[] | Int>;
+  index_lt?: Maybe<Int>;
+  index_lte?: Maybe<Int>;
+  index_gt?: Maybe<Int>;
+  index_gte?: Maybe<Int>;
+  directions?: Maybe<String>;
+  directions_not?: Maybe<String>;
+  directions_in?: Maybe<String[] | String>;
+  directions_not_in?: Maybe<String[] | String>;
+  directions_lt?: Maybe<String>;
+  directions_lte?: Maybe<String>;
+  directions_gt?: Maybe<String>;
+  directions_gte?: Maybe<String>;
+  directions_contains?: Maybe<String>;
+  directions_not_contains?: Maybe<String>;
+  directions_starts_with?: Maybe<String>;
+  directions_not_starts_with?: Maybe<String>;
+  directions_ends_with?: Maybe<String>;
+  directions_not_ends_with?: Maybe<String>;
+  notes?: Maybe<String>;
+  notes_not?: Maybe<String>;
+  notes_in?: Maybe<String[] | String>;
+  notes_not_in?: Maybe<String[] | String>;
+  notes_lt?: Maybe<String>;
+  notes_lte?: Maybe<String>;
+  notes_gt?: Maybe<String>;
+  notes_gte?: Maybe<String>;
+  notes_contains?: Maybe<String>;
+  notes_not_contains?: Maybe<String>;
+  notes_starts_with?: Maybe<String>;
+  notes_not_starts_with?: Maybe<String>;
+  notes_ends_with?: Maybe<String>;
+  notes_not_ends_with?: Maybe<String>;
+  item?: Maybe<ItemWhereInput>;
+  ingredients_every?: Maybe<IngredientWhereInput>;
+  ingredients_some?: Maybe<IngredientWhereInput>;
+  ingredients_none?: Maybe<IngredientWhereInput>;
+  AND?: Maybe<StepWhereInput[] | StepWhereInput>;
+  OR?: Maybe<StepWhereInput[] | StepWhereInput>;
+  NOT?: Maybe<StepWhereInput[] | StepWhereInput>;
+}
+
+export interface ModificationUpdateremovalsInput {
+  set?: Maybe<ID_Input[] | ID_Input>;
+}
+
+export interface ItemAdditionWhereInput {
   id?: Maybe<ID_Input>;
   id_not?: Maybe<ID_Input>;
   id_in?: Maybe<ID_Input[] | ID_Input>;
@@ -844,99 +1210,43 @@ export interface IngredientAdditionWhereInput {
   name_not_starts_with?: Maybe<String>;
   name_ends_with?: Maybe<String>;
   name_not_ends_with?: Maybe<String>;
-  quantity?: Maybe<String>;
-  quantity_not?: Maybe<String>;
-  quantity_in?: Maybe<String[] | String>;
-  quantity_not_in?: Maybe<String[] | String>;
-  quantity_lt?: Maybe<String>;
-  quantity_lte?: Maybe<String>;
-  quantity_gt?: Maybe<String>;
-  quantity_gte?: Maybe<String>;
-  quantity_contains?: Maybe<String>;
-  quantity_not_contains?: Maybe<String>;
-  quantity_starts_with?: Maybe<String>;
-  quantity_not_starts_with?: Maybe<String>;
-  quantity_ends_with?: Maybe<String>;
-  quantity_not_ends_with?: Maybe<String>;
-  unit?: Maybe<String>;
-  unit_not?: Maybe<String>;
-  unit_in?: Maybe<String[] | String>;
-  unit_not_in?: Maybe<String[] | String>;
-  unit_lt?: Maybe<String>;
-  unit_lte?: Maybe<String>;
-  unit_gt?: Maybe<String>;
-  unit_gte?: Maybe<String>;
-  unit_contains?: Maybe<String>;
-  unit_not_contains?: Maybe<String>;
-  unit_starts_with?: Maybe<String>;
-  unit_not_starts_with?: Maybe<String>;
-  unit_ends_with?: Maybe<String>;
-  unit_not_ends_with?: Maybe<String>;
-  processing?: Maybe<String>;
-  processing_not?: Maybe<String>;
-  processing_in?: Maybe<String[] | String>;
-  processing_not_in?: Maybe<String[] | String>;
-  processing_lt?: Maybe<String>;
-  processing_lte?: Maybe<String>;
-  processing_gt?: Maybe<String>;
-  processing_gte?: Maybe<String>;
-  processing_contains?: Maybe<String>;
-  processing_not_contains?: Maybe<String>;
-  processing_starts_with?: Maybe<String>;
-  processing_not_starts_with?: Maybe<String>;
-  processing_ends_with?: Maybe<String>;
-  processing_not_ends_with?: Maybe<String>;
   modification?: Maybe<ModificationWhereInput>;
-  AND?: Maybe<IngredientAdditionWhereInput[] | IngredientAdditionWhereInput>;
-  OR?: Maybe<IngredientAdditionWhereInput[] | IngredientAdditionWhereInput>;
-  NOT?: Maybe<IngredientAdditionWhereInput[] | IngredientAdditionWhereInput>;
+  AND?: Maybe<ItemAdditionWhereInput[] | ItemAdditionWhereInput>;
+  OR?: Maybe<ItemAdditionWhereInput[] | ItemAdditionWhereInput>;
+  NOT?: Maybe<ItemAdditionWhereInput[] | ItemAdditionWhereInput>;
 }
 
-export interface StepUpdateManyWithoutItemInput {
-  create?: Maybe<StepCreateWithoutItemInput[] | StepCreateWithoutItemInput>;
-  delete?: Maybe<StepWhereUniqueInput[] | StepWhereUniqueInput>;
-  connect?: Maybe<StepWhereUniqueInput[] | StepWhereUniqueInput>;
-  set?: Maybe<StepWhereUniqueInput[] | StepWhereUniqueInput>;
-  disconnect?: Maybe<StepWhereUniqueInput[] | StepWhereUniqueInput>;
+export interface ItemAdditionUpdateManyWithoutModificationInput {
+  create?: Maybe<
+    | ItemAdditionCreateWithoutModificationInput[]
+    | ItemAdditionCreateWithoutModificationInput
+  >;
+  delete?: Maybe<ItemAdditionWhereUniqueInput[] | ItemAdditionWhereUniqueInput>;
+  connect?: Maybe<
+    ItemAdditionWhereUniqueInput[] | ItemAdditionWhereUniqueInput
+  >;
+  set?: Maybe<ItemAdditionWhereUniqueInput[] | ItemAdditionWhereUniqueInput>;
+  disconnect?: Maybe<
+    ItemAdditionWhereUniqueInput[] | ItemAdditionWhereUniqueInput
+  >;
   update?: Maybe<
-    | StepUpdateWithWhereUniqueWithoutItemInput[]
-    | StepUpdateWithWhereUniqueWithoutItemInput
+    | ItemAdditionUpdateWithWhereUniqueWithoutModificationInput[]
+    | ItemAdditionUpdateWithWhereUniqueWithoutModificationInput
   >;
   upsert?: Maybe<
-    | StepUpsertWithWhereUniqueWithoutItemInput[]
-    | StepUpsertWithWhereUniqueWithoutItemInput
+    | ItemAdditionUpsertWithWhereUniqueWithoutModificationInput[]
+    | ItemAdditionUpsertWithWhereUniqueWithoutModificationInput
   >;
-  deleteMany?: Maybe<StepScalarWhereInput[] | StepScalarWhereInput>;
+  deleteMany?: Maybe<
+    ItemAdditionScalarWhereInput[] | ItemAdditionScalarWhereInput
+  >;
   updateMany?: Maybe<
-    StepUpdateManyWithWhereNestedInput[] | StepUpdateManyWithWhereNestedInput
+    | ItemAdditionUpdateManyWithWhereNestedInput[]
+    | ItemAdditionUpdateManyWithWhereNestedInput
   >;
 }
 
-export interface ModificationCreateOneWithoutItemAdditionsInput {
-  create?: Maybe<ModificationCreateWithoutItemAdditionsInput>;
-  connect?: Maybe<ModificationWhereUniqueInput>;
-}
-
-export interface StepUpdateWithWhereUniqueWithoutItemInput {
-  where: StepWhereUniqueInput;
-  data: StepUpdateWithoutItemDataInput;
-}
-
-export interface ItemAdditionUpdateWithoutModificationDataInput {
-  uid?: Maybe<ID_Input>;
-  parentId?: Maybe<ID_Input>;
-  name?: Maybe<String>;
-}
-
-export interface StepUpdateWithoutItemDataInput {
-  uid?: Maybe<ID_Input>;
-  index?: Maybe<Int>;
-  directions?: Maybe<String>;
-  notes?: Maybe<String>;
-  ingredients?: Maybe<IngredientUpdateManyWithoutStepInput>;
-}
-
-export interface RecipePhotoWhereInput {
+export interface AlterationWhereInput {
   id?: Maybe<ID_Input>;
   id_not?: Maybe<ID_Input>;
   id_in?: Maybe<ID_Input[] | ID_Input>;
@@ -967,102 +1277,315 @@ export interface RecipePhotoWhereInput {
   updatedAt_lte?: Maybe<DateTimeInput>;
   updatedAt_gt?: Maybe<DateTimeInput>;
   updatedAt_gte?: Maybe<DateTimeInput>;
-  filename?: Maybe<String>;
-  filename_not?: Maybe<String>;
-  filename_in?: Maybe<String[] | String>;
-  filename_not_in?: Maybe<String[] | String>;
-  filename_lt?: Maybe<String>;
-  filename_lte?: Maybe<String>;
-  filename_gt?: Maybe<String>;
-  filename_gte?: Maybe<String>;
-  filename_contains?: Maybe<String>;
-  filename_not_contains?: Maybe<String>;
-  filename_starts_with?: Maybe<String>;
-  filename_not_starts_with?: Maybe<String>;
-  filename_ends_with?: Maybe<String>;
-  filename_not_ends_with?: Maybe<String>;
-  url?: Maybe<String>;
-  url_not?: Maybe<String>;
-  url_in?: Maybe<String[] | String>;
-  url_not_in?: Maybe<String[] | String>;
-  url_lt?: Maybe<String>;
-  url_lte?: Maybe<String>;
-  url_gt?: Maybe<String>;
-  url_gte?: Maybe<String>;
-  url_contains?: Maybe<String>;
-  url_not_contains?: Maybe<String>;
-  url_starts_with?: Maybe<String>;
-  url_not_starts_with?: Maybe<String>;
-  url_ends_with?: Maybe<String>;
-  url_not_ends_with?: Maybe<String>;
+  uid?: Maybe<ID_Input>;
+  uid_not?: Maybe<ID_Input>;
+  uid_in?: Maybe<ID_Input[] | ID_Input>;
+  uid_not_in?: Maybe<ID_Input[] | ID_Input>;
+  uid_lt?: Maybe<ID_Input>;
+  uid_lte?: Maybe<ID_Input>;
+  uid_gt?: Maybe<ID_Input>;
+  uid_gte?: Maybe<ID_Input>;
+  uid_contains?: Maybe<ID_Input>;
+  uid_not_contains?: Maybe<ID_Input>;
+  uid_starts_with?: Maybe<ID_Input>;
+  uid_not_starts_with?: Maybe<ID_Input>;
+  uid_ends_with?: Maybe<ID_Input>;
+  uid_not_ends_with?: Maybe<ID_Input>;
+  sourceId?: Maybe<ID_Input>;
+  sourceId_not?: Maybe<ID_Input>;
+  sourceId_in?: Maybe<ID_Input[] | ID_Input>;
+  sourceId_not_in?: Maybe<ID_Input[] | ID_Input>;
+  sourceId_lt?: Maybe<ID_Input>;
+  sourceId_lte?: Maybe<ID_Input>;
+  sourceId_gt?: Maybe<ID_Input>;
+  sourceId_gte?: Maybe<ID_Input>;
+  sourceId_contains?: Maybe<ID_Input>;
+  sourceId_not_contains?: Maybe<ID_Input>;
+  sourceId_starts_with?: Maybe<ID_Input>;
+  sourceId_not_starts_with?: Maybe<ID_Input>;
+  sourceId_ends_with?: Maybe<ID_Input>;
+  sourceId_not_ends_with?: Maybe<ID_Input>;
+  field?: Maybe<String>;
+  field_not?: Maybe<String>;
+  field_in?: Maybe<String[] | String>;
+  field_not_in?: Maybe<String[] | String>;
+  field_lt?: Maybe<String>;
+  field_lte?: Maybe<String>;
+  field_gt?: Maybe<String>;
+  field_gte?: Maybe<String>;
+  field_contains?: Maybe<String>;
+  field_not_contains?: Maybe<String>;
+  field_starts_with?: Maybe<String>;
+  field_not_starts_with?: Maybe<String>;
+  field_ends_with?: Maybe<String>;
+  field_not_ends_with?: Maybe<String>;
+  value?: Maybe<String>;
+  value_not?: Maybe<String>;
+  value_in?: Maybe<String[] | String>;
+  value_not_in?: Maybe<String[] | String>;
+  value_lt?: Maybe<String>;
+  value_lte?: Maybe<String>;
+  value_gt?: Maybe<String>;
+  value_gte?: Maybe<String>;
+  value_contains?: Maybe<String>;
+  value_not_contains?: Maybe<String>;
+  value_starts_with?: Maybe<String>;
+  value_not_starts_with?: Maybe<String>;
+  value_ends_with?: Maybe<String>;
+  value_not_ends_with?: Maybe<String>;
+  modification?: Maybe<ModificationWhereInput>;
+  AND?: Maybe<AlterationWhereInput[] | AlterationWhereInput>;
+  OR?: Maybe<AlterationWhereInput[] | AlterationWhereInput>;
+  NOT?: Maybe<AlterationWhereInput[] | AlterationWhereInput>;
+}
+
+export interface ItemAdditionUpdateWithWhereUniqueWithoutModificationInput {
+  where: ItemAdditionWhereUniqueInput;
+  data: ItemAdditionUpdateWithoutModificationDataInput;
+}
+
+export interface SortingWhereInput {
+  id?: Maybe<ID_Input>;
+  id_not?: Maybe<ID_Input>;
+  id_in?: Maybe<ID_Input[] | ID_Input>;
+  id_not_in?: Maybe<ID_Input[] | ID_Input>;
+  id_lt?: Maybe<ID_Input>;
+  id_lte?: Maybe<ID_Input>;
+  id_gt?: Maybe<ID_Input>;
+  id_gte?: Maybe<ID_Input>;
+  id_contains?: Maybe<ID_Input>;
+  id_not_contains?: Maybe<ID_Input>;
+  id_starts_with?: Maybe<ID_Input>;
+  id_not_starts_with?: Maybe<ID_Input>;
+  id_ends_with?: Maybe<ID_Input>;
+  id_not_ends_with?: Maybe<ID_Input>;
+  createdAt?: Maybe<DateTimeInput>;
+  createdAt_not?: Maybe<DateTimeInput>;
+  createdAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  createdAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  createdAt_lt?: Maybe<DateTimeInput>;
+  createdAt_lte?: Maybe<DateTimeInput>;
+  createdAt_gt?: Maybe<DateTimeInput>;
+  createdAt_gte?: Maybe<DateTimeInput>;
+  updatedAt?: Maybe<DateTimeInput>;
+  updatedAt_not?: Maybe<DateTimeInput>;
+  updatedAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  updatedAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  updatedAt_lt?: Maybe<DateTimeInput>;
+  updatedAt_lte?: Maybe<DateTimeInput>;
+  updatedAt_gt?: Maybe<DateTimeInput>;
+  updatedAt_gte?: Maybe<DateTimeInput>;
+  uid?: Maybe<ID_Input>;
+  uid_not?: Maybe<ID_Input>;
+  uid_in?: Maybe<ID_Input[] | ID_Input>;
+  uid_not_in?: Maybe<ID_Input[] | ID_Input>;
+  uid_lt?: Maybe<ID_Input>;
+  uid_lte?: Maybe<ID_Input>;
+  uid_gt?: Maybe<ID_Input>;
+  uid_gte?: Maybe<ID_Input>;
+  uid_contains?: Maybe<ID_Input>;
+  uid_not_contains?: Maybe<ID_Input>;
+  uid_starts_with?: Maybe<ID_Input>;
+  uid_not_starts_with?: Maybe<ID_Input>;
+  uid_ends_with?: Maybe<ID_Input>;
+  uid_not_ends_with?: Maybe<ID_Input>;
+  parentId?: Maybe<ID_Input>;
+  parentId_not?: Maybe<ID_Input>;
+  parentId_in?: Maybe<ID_Input[] | ID_Input>;
+  parentId_not_in?: Maybe<ID_Input[] | ID_Input>;
+  parentId_lt?: Maybe<ID_Input>;
+  parentId_lte?: Maybe<ID_Input>;
+  parentId_gt?: Maybe<ID_Input>;
+  parentId_gte?: Maybe<ID_Input>;
+  parentId_contains?: Maybe<ID_Input>;
+  parentId_not_contains?: Maybe<ID_Input>;
+  parentId_starts_with?: Maybe<ID_Input>;
+  parentId_not_starts_with?: Maybe<ID_Input>;
+  parentId_ends_with?: Maybe<ID_Input>;
+  parentId_not_ends_with?: Maybe<ID_Input>;
+  modification?: Maybe<ModificationWhereInput>;
+  AND?: Maybe<SortingWhereInput[] | SortingWhereInput>;
+  OR?: Maybe<SortingWhereInput[] | SortingWhereInput>;
+  NOT?: Maybe<SortingWhereInput[] | SortingWhereInput>;
+}
+
+export interface ItemAdditionUpdateWithoutModificationDataInput {
+  uid?: Maybe<ID_Input>;
+  parentId?: Maybe<ID_Input>;
+  name?: Maybe<String>;
+}
+
+export interface ModificationWhereInput {
+  id?: Maybe<ID_Input>;
+  id_not?: Maybe<ID_Input>;
+  id_in?: Maybe<ID_Input[] | ID_Input>;
+  id_not_in?: Maybe<ID_Input[] | ID_Input>;
+  id_lt?: Maybe<ID_Input>;
+  id_lte?: Maybe<ID_Input>;
+  id_gt?: Maybe<ID_Input>;
+  id_gte?: Maybe<ID_Input>;
+  id_contains?: Maybe<ID_Input>;
+  id_not_contains?: Maybe<ID_Input>;
+  id_starts_with?: Maybe<ID_Input>;
+  id_not_starts_with?: Maybe<ID_Input>;
+  id_ends_with?: Maybe<ID_Input>;
+  id_not_ends_with?: Maybe<ID_Input>;
+  createdAt?: Maybe<DateTimeInput>;
+  createdAt_not?: Maybe<DateTimeInput>;
+  createdAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  createdAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  createdAt_lt?: Maybe<DateTimeInput>;
+  createdAt_lte?: Maybe<DateTimeInput>;
+  createdAt_gt?: Maybe<DateTimeInput>;
+  createdAt_gte?: Maybe<DateTimeInput>;
+  updatedAt?: Maybe<DateTimeInput>;
+  updatedAt_not?: Maybe<DateTimeInput>;
+  updatedAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  updatedAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  updatedAt_lt?: Maybe<DateTimeInput>;
+  updatedAt_lte?: Maybe<DateTimeInput>;
+  updatedAt_gt?: Maybe<DateTimeInput>;
+  updatedAt_gte?: Maybe<DateTimeInput>;
+  user?: Maybe<UserWhereInput>;
   recipe?: Maybe<RecipeWhereInput>;
-  index?: Maybe<Int>;
-  index_not?: Maybe<Int>;
-  index_in?: Maybe<Int[] | Int>;
-  index_not_in?: Maybe<Int[] | Int>;
-  index_lt?: Maybe<Int>;
-  index_lte?: Maybe<Int>;
-  index_gt?: Maybe<Int>;
-  index_gte?: Maybe<Int>;
-  AND?: Maybe<RecipePhotoWhereInput[] | RecipePhotoWhereInput>;
-  OR?: Maybe<RecipePhotoWhereInput[] | RecipePhotoWhereInput>;
-  NOT?: Maybe<RecipePhotoWhereInput[] | RecipePhotoWhereInput>;
+  sortings_every?: Maybe<SortingWhereInput>;
+  sortings_some?: Maybe<SortingWhereInput>;
+  sortings_none?: Maybe<SortingWhereInput>;
+  alterations_every?: Maybe<AlterationWhereInput>;
+  alterations_some?: Maybe<AlterationWhereInput>;
+  alterations_none?: Maybe<AlterationWhereInput>;
+  itemAdditions_every?: Maybe<ItemAdditionWhereInput>;
+  itemAdditions_some?: Maybe<ItemAdditionWhereInput>;
+  itemAdditions_none?: Maybe<ItemAdditionWhereInput>;
+  stepAdditions_every?: Maybe<StepAdditionWhereInput>;
+  stepAdditions_some?: Maybe<StepAdditionWhereInput>;
+  stepAdditions_none?: Maybe<StepAdditionWhereInput>;
+  ingredientAdditions_every?: Maybe<IngredientAdditionWhereInput>;
+  ingredientAdditions_some?: Maybe<IngredientAdditionWhereInput>;
+  ingredientAdditions_none?: Maybe<IngredientAdditionWhereInput>;
+  AND?: Maybe<ModificationWhereInput[] | ModificationWhereInput>;
+  OR?: Maybe<ModificationWhereInput[] | ModificationWhereInput>;
+  NOT?: Maybe<ModificationWhereInput[] | ModificationWhereInput>;
 }
 
-export interface IngredientUpdateManyWithoutStepInput {
-  create?: Maybe<
-    IngredientCreateWithoutStepInput[] | IngredientCreateWithoutStepInput
-  >;
-  delete?: Maybe<IngredientWhereUniqueInput[] | IngredientWhereUniqueInput>;
-  connect?: Maybe<IngredientWhereUniqueInput[] | IngredientWhereUniqueInput>;
-  set?: Maybe<IngredientWhereUniqueInput[] | IngredientWhereUniqueInput>;
-  disconnect?: Maybe<IngredientWhereUniqueInput[] | IngredientWhereUniqueInput>;
-  update?: Maybe<
-    | IngredientUpdateWithWhereUniqueWithoutStepInput[]
-    | IngredientUpdateWithWhereUniqueWithoutStepInput
-  >;
-  upsert?: Maybe<
-    | IngredientUpsertWithWhereUniqueWithoutStepInput[]
-    | IngredientUpsertWithWhereUniqueWithoutStepInput
-  >;
-  deleteMany?: Maybe<IngredientScalarWhereInput[] | IngredientScalarWhereInput>;
-  updateMany?: Maybe<
-    | IngredientUpdateManyWithWhereNestedInput[]
-    | IngredientUpdateManyWithWhereNestedInput
-  >;
+export interface ItemAdditionUpsertWithWhereUniqueWithoutModificationInput {
+  where: ItemAdditionWhereUniqueInput;
+  update: ItemAdditionUpdateWithoutModificationDataInput;
+  create: ItemAdditionCreateWithoutModificationInput;
 }
 
-export interface UserSubscriptionWhereInput {
-  mutation_in?: Maybe<MutationType[] | MutationType>;
-  updatedFields_contains?: Maybe<String>;
-  updatedFields_contains_every?: Maybe<String[] | String>;
-  updatedFields_contains_some?: Maybe<String[] | String>;
-  node?: Maybe<UserWhereInput>;
-  AND?: Maybe<UserSubscriptionWhereInput[] | UserSubscriptionWhereInput>;
-  OR?: Maybe<UserSubscriptionWhereInput[] | UserSubscriptionWhereInput>;
-  NOT?: Maybe<UserSubscriptionWhereInput[] | UserSubscriptionWhereInput>;
-}
-
-export interface IngredientUpdateWithWhereUniqueWithoutStepInput {
-  where: IngredientWhereUniqueInput;
-  data: IngredientUpdateWithoutStepDataInput;
-}
-
-export interface StepAdditionSubscriptionWhereInput {
-  mutation_in?: Maybe<MutationType[] | MutationType>;
-  updatedFields_contains?: Maybe<String>;
-  updatedFields_contains_every?: Maybe<String[] | String>;
-  updatedFields_contains_some?: Maybe<String[] | String>;
-  node?: Maybe<StepAdditionWhereInput>;
-  AND?: Maybe<
-    StepAdditionSubscriptionWhereInput[] | StepAdditionSubscriptionWhereInput
-  >;
-  OR?: Maybe<
-    StepAdditionSubscriptionWhereInput[] | StepAdditionSubscriptionWhereInput
-  >;
-  NOT?: Maybe<
-    StepAdditionSubscriptionWhereInput[] | StepAdditionSubscriptionWhereInput
-  >;
+export interface UserWhereInput {
+  id?: Maybe<ID_Input>;
+  id_not?: Maybe<ID_Input>;
+  id_in?: Maybe<ID_Input[] | ID_Input>;
+  id_not_in?: Maybe<ID_Input[] | ID_Input>;
+  id_lt?: Maybe<ID_Input>;
+  id_lte?: Maybe<ID_Input>;
+  id_gt?: Maybe<ID_Input>;
+  id_gte?: Maybe<ID_Input>;
+  id_contains?: Maybe<ID_Input>;
+  id_not_contains?: Maybe<ID_Input>;
+  id_starts_with?: Maybe<ID_Input>;
+  id_not_starts_with?: Maybe<ID_Input>;
+  id_ends_with?: Maybe<ID_Input>;
+  id_not_ends_with?: Maybe<ID_Input>;
+  createdAt?: Maybe<DateTimeInput>;
+  createdAt_not?: Maybe<DateTimeInput>;
+  createdAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  createdAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  createdAt_lt?: Maybe<DateTimeInput>;
+  createdAt_lte?: Maybe<DateTimeInput>;
+  createdAt_gt?: Maybe<DateTimeInput>;
+  createdAt_gte?: Maybe<DateTimeInput>;
+  updatedAt?: Maybe<DateTimeInput>;
+  updatedAt_not?: Maybe<DateTimeInput>;
+  updatedAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  updatedAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  updatedAt_lt?: Maybe<DateTimeInput>;
+  updatedAt_lte?: Maybe<DateTimeInput>;
+  updatedAt_gt?: Maybe<DateTimeInput>;
+  updatedAt_gte?: Maybe<DateTimeInput>;
+  email?: Maybe<String>;
+  email_not?: Maybe<String>;
+  email_in?: Maybe<String[] | String>;
+  email_not_in?: Maybe<String[] | String>;
+  email_lt?: Maybe<String>;
+  email_lte?: Maybe<String>;
+  email_gt?: Maybe<String>;
+  email_gte?: Maybe<String>;
+  email_contains?: Maybe<String>;
+  email_not_contains?: Maybe<String>;
+  email_starts_with?: Maybe<String>;
+  email_not_starts_with?: Maybe<String>;
+  email_ends_with?: Maybe<String>;
+  email_not_ends_with?: Maybe<String>;
+  slug?: Maybe<String>;
+  slug_not?: Maybe<String>;
+  slug_in?: Maybe<String[] | String>;
+  slug_not_in?: Maybe<String[] | String>;
+  slug_lt?: Maybe<String>;
+  slug_lte?: Maybe<String>;
+  slug_gt?: Maybe<String>;
+  slug_gte?: Maybe<String>;
+  slug_contains?: Maybe<String>;
+  slug_not_contains?: Maybe<String>;
+  slug_starts_with?: Maybe<String>;
+  slug_not_starts_with?: Maybe<String>;
+  slug_ends_with?: Maybe<String>;
+  slug_not_ends_with?: Maybe<String>;
+  password?: Maybe<String>;
+  password_not?: Maybe<String>;
+  password_in?: Maybe<String[] | String>;
+  password_not_in?: Maybe<String[] | String>;
+  password_lt?: Maybe<String>;
+  password_lte?: Maybe<String>;
+  password_gt?: Maybe<String>;
+  password_gte?: Maybe<String>;
+  password_contains?: Maybe<String>;
+  password_not_contains?: Maybe<String>;
+  password_starts_with?: Maybe<String>;
+  password_not_starts_with?: Maybe<String>;
+  password_ends_with?: Maybe<String>;
+  password_not_ends_with?: Maybe<String>;
+  name?: Maybe<String>;
+  name_not?: Maybe<String>;
+  name_in?: Maybe<String[] | String>;
+  name_not_in?: Maybe<String[] | String>;
+  name_lt?: Maybe<String>;
+  name_lte?: Maybe<String>;
+  name_gt?: Maybe<String>;
+  name_gte?: Maybe<String>;
+  name_contains?: Maybe<String>;
+  name_not_contains?: Maybe<String>;
+  name_starts_with?: Maybe<String>;
+  name_not_starts_with?: Maybe<String>;
+  name_ends_with?: Maybe<String>;
+  name_not_ends_with?: Maybe<String>;
+  avatar?: Maybe<String>;
+  avatar_not?: Maybe<String>;
+  avatar_in?: Maybe<String[] | String>;
+  avatar_not_in?: Maybe<String[] | String>;
+  avatar_lt?: Maybe<String>;
+  avatar_lte?: Maybe<String>;
+  avatar_gt?: Maybe<String>;
+  avatar_gte?: Maybe<String>;
+  avatar_contains?: Maybe<String>;
+  avatar_not_contains?: Maybe<String>;
+  avatar_starts_with?: Maybe<String>;
+  avatar_not_starts_with?: Maybe<String>;
+  avatar_ends_with?: Maybe<String>;
+  avatar_not_ends_with?: Maybe<String>;
+  emailVerified?: Maybe<Boolean>;
+  emailVerified_not?: Maybe<Boolean>;
+  recipes_every?: Maybe<RecipeWhereInput>;
+  recipes_some?: Maybe<RecipeWhereInput>;
+  recipes_none?: Maybe<RecipeWhereInput>;
+  modifications_every?: Maybe<ModificationWhereInput>;
+  modifications_some?: Maybe<ModificationWhereInput>;
+  modifications_none?: Maybe<ModificationWhereInput>;
+  AND?: Maybe<UserWhereInput[] | UserWhereInput>;
+  OR?: Maybe<UserWhereInput[] | UserWhereInput>;
+  NOT?: Maybe<UserWhereInput[] | UserWhereInput>;
 }
 
 export interface IngredientUpdateWithoutStepDataInput {
@@ -1074,15 +1597,13 @@ export interface IngredientUpdateWithoutStepDataInput {
   processing?: Maybe<String>;
 }
 
-export interface StepSubscriptionWhereInput {
-  mutation_in?: Maybe<MutationType[] | MutationType>;
-  updatedFields_contains?: Maybe<String>;
-  updatedFields_contains_every?: Maybe<String[] | String>;
-  updatedFields_contains_some?: Maybe<String[] | String>;
-  node?: Maybe<StepWhereInput>;
-  AND?: Maybe<StepSubscriptionWhereInput[] | StepSubscriptionWhereInput>;
-  OR?: Maybe<StepSubscriptionWhereInput[] | StepSubscriptionWhereInput>;
-  NOT?: Maybe<StepSubscriptionWhereInput[] | StepSubscriptionWhereInput>;
+export interface IngredientAdditionUpdateManyMutationInput {
+  uid?: Maybe<ID_Input>;
+  parentId?: Maybe<ID_Input>;
+  name?: Maybe<String>;
+  quantity?: Maybe<String>;
+  unit?: Maybe<String>;
+  processing?: Maybe<String>;
 }
 
 export interface IngredientUpsertWithWhereUniqueWithoutStepInput {
@@ -1091,15 +1612,82 @@ export interface IngredientUpsertWithWhereUniqueWithoutStepInput {
   create: IngredientCreateWithoutStepInput;
 }
 
-export interface SortingSubscriptionWhereInput {
-  mutation_in?: Maybe<MutationType[] | MutationType>;
-  updatedFields_contains?: Maybe<String>;
-  updatedFields_contains_every?: Maybe<String[] | String>;
-  updatedFields_contains_some?: Maybe<String[] | String>;
-  node?: Maybe<SortingWhereInput>;
-  AND?: Maybe<SortingSubscriptionWhereInput[] | SortingSubscriptionWhereInput>;
-  OR?: Maybe<SortingSubscriptionWhereInput[] | SortingSubscriptionWhereInput>;
-  NOT?: Maybe<SortingSubscriptionWhereInput[] | SortingSubscriptionWhereInput>;
+export interface ItemAdditionScalarWhereInput {
+  id?: Maybe<ID_Input>;
+  id_not?: Maybe<ID_Input>;
+  id_in?: Maybe<ID_Input[] | ID_Input>;
+  id_not_in?: Maybe<ID_Input[] | ID_Input>;
+  id_lt?: Maybe<ID_Input>;
+  id_lte?: Maybe<ID_Input>;
+  id_gt?: Maybe<ID_Input>;
+  id_gte?: Maybe<ID_Input>;
+  id_contains?: Maybe<ID_Input>;
+  id_not_contains?: Maybe<ID_Input>;
+  id_starts_with?: Maybe<ID_Input>;
+  id_not_starts_with?: Maybe<ID_Input>;
+  id_ends_with?: Maybe<ID_Input>;
+  id_not_ends_with?: Maybe<ID_Input>;
+  createdAt?: Maybe<DateTimeInput>;
+  createdAt_not?: Maybe<DateTimeInput>;
+  createdAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  createdAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  createdAt_lt?: Maybe<DateTimeInput>;
+  createdAt_lte?: Maybe<DateTimeInput>;
+  createdAt_gt?: Maybe<DateTimeInput>;
+  createdAt_gte?: Maybe<DateTimeInput>;
+  updatedAt?: Maybe<DateTimeInput>;
+  updatedAt_not?: Maybe<DateTimeInput>;
+  updatedAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  updatedAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  updatedAt_lt?: Maybe<DateTimeInput>;
+  updatedAt_lte?: Maybe<DateTimeInput>;
+  updatedAt_gt?: Maybe<DateTimeInput>;
+  updatedAt_gte?: Maybe<DateTimeInput>;
+  uid?: Maybe<ID_Input>;
+  uid_not?: Maybe<ID_Input>;
+  uid_in?: Maybe<ID_Input[] | ID_Input>;
+  uid_not_in?: Maybe<ID_Input[] | ID_Input>;
+  uid_lt?: Maybe<ID_Input>;
+  uid_lte?: Maybe<ID_Input>;
+  uid_gt?: Maybe<ID_Input>;
+  uid_gte?: Maybe<ID_Input>;
+  uid_contains?: Maybe<ID_Input>;
+  uid_not_contains?: Maybe<ID_Input>;
+  uid_starts_with?: Maybe<ID_Input>;
+  uid_not_starts_with?: Maybe<ID_Input>;
+  uid_ends_with?: Maybe<ID_Input>;
+  uid_not_ends_with?: Maybe<ID_Input>;
+  parentId?: Maybe<ID_Input>;
+  parentId_not?: Maybe<ID_Input>;
+  parentId_in?: Maybe<ID_Input[] | ID_Input>;
+  parentId_not_in?: Maybe<ID_Input[] | ID_Input>;
+  parentId_lt?: Maybe<ID_Input>;
+  parentId_lte?: Maybe<ID_Input>;
+  parentId_gt?: Maybe<ID_Input>;
+  parentId_gte?: Maybe<ID_Input>;
+  parentId_contains?: Maybe<ID_Input>;
+  parentId_not_contains?: Maybe<ID_Input>;
+  parentId_starts_with?: Maybe<ID_Input>;
+  parentId_not_starts_with?: Maybe<ID_Input>;
+  parentId_ends_with?: Maybe<ID_Input>;
+  parentId_not_ends_with?: Maybe<ID_Input>;
+  name?: Maybe<String>;
+  name_not?: Maybe<String>;
+  name_in?: Maybe<String[] | String>;
+  name_not_in?: Maybe<String[] | String>;
+  name_lt?: Maybe<String>;
+  name_lte?: Maybe<String>;
+  name_gt?: Maybe<String>;
+  name_gte?: Maybe<String>;
+  name_contains?: Maybe<String>;
+  name_not_contains?: Maybe<String>;
+  name_starts_with?: Maybe<String>;
+  name_not_starts_with?: Maybe<String>;
+  name_ends_with?: Maybe<String>;
+  name_not_ends_with?: Maybe<String>;
+  AND?: Maybe<ItemAdditionScalarWhereInput[] | ItemAdditionScalarWhereInput>;
+  OR?: Maybe<ItemAdditionScalarWhereInput[] | ItemAdditionScalarWhereInput>;
+  NOT?: Maybe<ItemAdditionScalarWhereInput[] | ItemAdditionScalarWhereInput>;
 }
 
 export interface IngredientScalarWhereInput {
@@ -1216,118 +1804,21 @@ export interface IngredientScalarWhereInput {
   NOT?: Maybe<IngredientScalarWhereInput[] | IngredientScalarWhereInput>;
 }
 
-export interface UserWhereInput {
-  id?: Maybe<ID_Input>;
-  id_not?: Maybe<ID_Input>;
-  id_in?: Maybe<ID_Input[] | ID_Input>;
-  id_not_in?: Maybe<ID_Input[] | ID_Input>;
-  id_lt?: Maybe<ID_Input>;
-  id_lte?: Maybe<ID_Input>;
-  id_gt?: Maybe<ID_Input>;
-  id_gte?: Maybe<ID_Input>;
-  id_contains?: Maybe<ID_Input>;
-  id_not_contains?: Maybe<ID_Input>;
-  id_starts_with?: Maybe<ID_Input>;
-  id_not_starts_with?: Maybe<ID_Input>;
-  id_ends_with?: Maybe<ID_Input>;
-  id_not_ends_with?: Maybe<ID_Input>;
-  createdAt?: Maybe<DateTimeInput>;
-  createdAt_not?: Maybe<DateTimeInput>;
-  createdAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
-  createdAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
-  createdAt_lt?: Maybe<DateTimeInput>;
-  createdAt_lte?: Maybe<DateTimeInput>;
-  createdAt_gt?: Maybe<DateTimeInput>;
-  createdAt_gte?: Maybe<DateTimeInput>;
-  updatedAt?: Maybe<DateTimeInput>;
-  updatedAt_not?: Maybe<DateTimeInput>;
-  updatedAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
-  updatedAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
-  updatedAt_lt?: Maybe<DateTimeInput>;
-  updatedAt_lte?: Maybe<DateTimeInput>;
-  updatedAt_gt?: Maybe<DateTimeInput>;
-  updatedAt_gte?: Maybe<DateTimeInput>;
-  email?: Maybe<String>;
-  email_not?: Maybe<String>;
-  email_in?: Maybe<String[] | String>;
-  email_not_in?: Maybe<String[] | String>;
-  email_lt?: Maybe<String>;
-  email_lte?: Maybe<String>;
-  email_gt?: Maybe<String>;
-  email_gte?: Maybe<String>;
-  email_contains?: Maybe<String>;
-  email_not_contains?: Maybe<String>;
-  email_starts_with?: Maybe<String>;
-  email_not_starts_with?: Maybe<String>;
-  email_ends_with?: Maybe<String>;
-  email_not_ends_with?: Maybe<String>;
-  password?: Maybe<String>;
-  password_not?: Maybe<String>;
-  password_in?: Maybe<String[] | String>;
-  password_not_in?: Maybe<String[] | String>;
-  password_lt?: Maybe<String>;
-  password_lte?: Maybe<String>;
-  password_gt?: Maybe<String>;
-  password_gte?: Maybe<String>;
-  password_contains?: Maybe<String>;
-  password_not_contains?: Maybe<String>;
-  password_starts_with?: Maybe<String>;
-  password_not_starts_with?: Maybe<String>;
-  password_ends_with?: Maybe<String>;
-  password_not_ends_with?: Maybe<String>;
-  name?: Maybe<String>;
-  name_not?: Maybe<String>;
-  name_in?: Maybe<String[] | String>;
-  name_not_in?: Maybe<String[] | String>;
-  name_lt?: Maybe<String>;
-  name_lte?: Maybe<String>;
-  name_gt?: Maybe<String>;
-  name_gte?: Maybe<String>;
-  name_contains?: Maybe<String>;
-  name_not_contains?: Maybe<String>;
-  name_starts_with?: Maybe<String>;
-  name_not_starts_with?: Maybe<String>;
-  name_ends_with?: Maybe<String>;
-  name_not_ends_with?: Maybe<String>;
-  avatar?: Maybe<String>;
-  avatar_not?: Maybe<String>;
-  avatar_in?: Maybe<String[] | String>;
-  avatar_not_in?: Maybe<String[] | String>;
-  avatar_lt?: Maybe<String>;
-  avatar_lte?: Maybe<String>;
-  avatar_gt?: Maybe<String>;
-  avatar_gte?: Maybe<String>;
-  avatar_contains?: Maybe<String>;
-  avatar_not_contains?: Maybe<String>;
-  avatar_starts_with?: Maybe<String>;
-  avatar_not_starts_with?: Maybe<String>;
-  avatar_ends_with?: Maybe<String>;
-  avatar_not_ends_with?: Maybe<String>;
-  slug?: Maybe<String>;
-  slug_not?: Maybe<String>;
-  slug_in?: Maybe<String[] | String>;
-  slug_not_in?: Maybe<String[] | String>;
-  slug_lt?: Maybe<String>;
-  slug_lte?: Maybe<String>;
-  slug_gt?: Maybe<String>;
-  slug_gte?: Maybe<String>;
-  slug_contains?: Maybe<String>;
-  slug_not_contains?: Maybe<String>;
-  slug_starts_with?: Maybe<String>;
-  slug_not_starts_with?: Maybe<String>;
-  slug_ends_with?: Maybe<String>;
-  slug_not_ends_with?: Maybe<String>;
-  emailVerified?: Maybe<Boolean>;
-  emailVerified_not?: Maybe<Boolean>;
-  recipes_every?: Maybe<RecipeWhereInput>;
-  recipes_some?: Maybe<RecipeWhereInput>;
-  recipes_none?: Maybe<RecipeWhereInput>;
-  modifications_every?: Maybe<ModificationWhereInput>;
-  modifications_some?: Maybe<ModificationWhereInput>;
-  modifications_none?: Maybe<ModificationWhereInput>;
-  AND?: Maybe<UserWhereInput[] | UserWhereInput>;
-  OR?: Maybe<UserWhereInput[] | UserWhereInput>;
-  NOT?: Maybe<UserWhereInput[] | UserWhereInput>;
+export interface StepAdditionSubscriptionWhereInput {
+  mutation_in?: Maybe<MutationType[] | MutationType>;
+  updatedFields_contains?: Maybe<String>;
+  updatedFields_contains_every?: Maybe<String[] | String>;
+  updatedFields_contains_some?: Maybe<String[] | String>;
+  node?: Maybe<StepAdditionWhereInput>;
+  AND?: Maybe<
+    StepAdditionSubscriptionWhereInput[] | StepAdditionSubscriptionWhereInput
+  >;
+  OR?: Maybe<
+    StepAdditionSubscriptionWhereInput[] | StepAdditionSubscriptionWhereInput
+  >;
+  NOT?: Maybe<
+    StepAdditionSubscriptionWhereInput[] | StepAdditionSubscriptionWhereInput
+  >;
 }
 
 export interface IngredientUpdateManyWithWhereNestedInput {
@@ -1335,148 +1826,15 @@ export interface IngredientUpdateManyWithWhereNestedInput {
   data: IngredientUpdateManyDataInput;
 }
 
-export interface RecipeWhereInput {
-  id?: Maybe<ID_Input>;
-  id_not?: Maybe<ID_Input>;
-  id_in?: Maybe<ID_Input[] | ID_Input>;
-  id_not_in?: Maybe<ID_Input[] | ID_Input>;
-  id_lt?: Maybe<ID_Input>;
-  id_lte?: Maybe<ID_Input>;
-  id_gt?: Maybe<ID_Input>;
-  id_gte?: Maybe<ID_Input>;
-  id_contains?: Maybe<ID_Input>;
-  id_not_contains?: Maybe<ID_Input>;
-  id_starts_with?: Maybe<ID_Input>;
-  id_not_starts_with?: Maybe<ID_Input>;
-  id_ends_with?: Maybe<ID_Input>;
-  id_not_ends_with?: Maybe<ID_Input>;
-  createdAt?: Maybe<DateTimeInput>;
-  createdAt_not?: Maybe<DateTimeInput>;
-  createdAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
-  createdAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
-  createdAt_lt?: Maybe<DateTimeInput>;
-  createdAt_lte?: Maybe<DateTimeInput>;
-  createdAt_gt?: Maybe<DateTimeInput>;
-  createdAt_gte?: Maybe<DateTimeInput>;
-  updatedAt?: Maybe<DateTimeInput>;
-  updatedAt_not?: Maybe<DateTimeInput>;
-  updatedAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
-  updatedAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
-  updatedAt_lt?: Maybe<DateTimeInput>;
-  updatedAt_lte?: Maybe<DateTimeInput>;
-  updatedAt_gt?: Maybe<DateTimeInput>;
-  updatedAt_gte?: Maybe<DateTimeInput>;
-  uid?: Maybe<ID_Input>;
-  uid_not?: Maybe<ID_Input>;
-  uid_in?: Maybe<ID_Input[] | ID_Input>;
-  uid_not_in?: Maybe<ID_Input[] | ID_Input>;
-  uid_lt?: Maybe<ID_Input>;
-  uid_lte?: Maybe<ID_Input>;
-  uid_gt?: Maybe<ID_Input>;
-  uid_gte?: Maybe<ID_Input>;
-  uid_contains?: Maybe<ID_Input>;
-  uid_not_contains?: Maybe<ID_Input>;
-  uid_starts_with?: Maybe<ID_Input>;
-  uid_not_starts_with?: Maybe<ID_Input>;
-  uid_ends_with?: Maybe<ID_Input>;
-  uid_not_ends_with?: Maybe<ID_Input>;
-  slug?: Maybe<String>;
-  slug_not?: Maybe<String>;
-  slug_in?: Maybe<String[] | String>;
-  slug_not_in?: Maybe<String[] | String>;
-  slug_lt?: Maybe<String>;
-  slug_lte?: Maybe<String>;
-  slug_gt?: Maybe<String>;
-  slug_gte?: Maybe<String>;
-  slug_contains?: Maybe<String>;
-  slug_not_contains?: Maybe<String>;
-  slug_starts_with?: Maybe<String>;
-  slug_not_starts_with?: Maybe<String>;
-  slug_ends_with?: Maybe<String>;
-  slug_not_ends_with?: Maybe<String>;
-  author?: Maybe<UserWhereInput>;
-  title?: Maybe<String>;
-  title_not?: Maybe<String>;
-  title_in?: Maybe<String[] | String>;
-  title_not_in?: Maybe<String[] | String>;
-  title_lt?: Maybe<String>;
-  title_lte?: Maybe<String>;
-  title_gt?: Maybe<String>;
-  title_gte?: Maybe<String>;
-  title_contains?: Maybe<String>;
-  title_not_contains?: Maybe<String>;
-  title_starts_with?: Maybe<String>;
-  title_not_starts_with?: Maybe<String>;
-  title_ends_with?: Maybe<String>;
-  title_not_ends_with?: Maybe<String>;
-  time?: Maybe<String>;
-  time_not?: Maybe<String>;
-  time_in?: Maybe<String[] | String>;
-  time_not_in?: Maybe<String[] | String>;
-  time_lt?: Maybe<String>;
-  time_lte?: Maybe<String>;
-  time_gt?: Maybe<String>;
-  time_gte?: Maybe<String>;
-  time_contains?: Maybe<String>;
-  time_not_contains?: Maybe<String>;
-  time_starts_with?: Maybe<String>;
-  time_not_starts_with?: Maybe<String>;
-  time_ends_with?: Maybe<String>;
-  time_not_ends_with?: Maybe<String>;
-  servingAmount?: Maybe<String>;
-  servingAmount_not?: Maybe<String>;
-  servingAmount_in?: Maybe<String[] | String>;
-  servingAmount_not_in?: Maybe<String[] | String>;
-  servingAmount_lt?: Maybe<String>;
-  servingAmount_lte?: Maybe<String>;
-  servingAmount_gt?: Maybe<String>;
-  servingAmount_gte?: Maybe<String>;
-  servingAmount_contains?: Maybe<String>;
-  servingAmount_not_contains?: Maybe<String>;
-  servingAmount_starts_with?: Maybe<String>;
-  servingAmount_not_starts_with?: Maybe<String>;
-  servingAmount_ends_with?: Maybe<String>;
-  servingAmount_not_ends_with?: Maybe<String>;
-  servingType?: Maybe<String>;
-  servingType_not?: Maybe<String>;
-  servingType_in?: Maybe<String[] | String>;
-  servingType_not_in?: Maybe<String[] | String>;
-  servingType_lt?: Maybe<String>;
-  servingType_lte?: Maybe<String>;
-  servingType_gt?: Maybe<String>;
-  servingType_gte?: Maybe<String>;
-  servingType_contains?: Maybe<String>;
-  servingType_not_contains?: Maybe<String>;
-  servingType_starts_with?: Maybe<String>;
-  servingType_not_starts_with?: Maybe<String>;
-  servingType_ends_with?: Maybe<String>;
-  servingType_not_ends_with?: Maybe<String>;
-  description?: Maybe<String>;
-  description_not?: Maybe<String>;
-  description_in?: Maybe<String[] | String>;
-  description_not_in?: Maybe<String[] | String>;
-  description_lt?: Maybe<String>;
-  description_lte?: Maybe<String>;
-  description_gt?: Maybe<String>;
-  description_gte?: Maybe<String>;
-  description_contains?: Maybe<String>;
-  description_not_contains?: Maybe<String>;
-  description_starts_with?: Maybe<String>;
-  description_not_starts_with?: Maybe<String>;
-  description_ends_with?: Maybe<String>;
-  description_not_ends_with?: Maybe<String>;
-  items_every?: Maybe<ItemWhereInput>;
-  items_some?: Maybe<ItemWhereInput>;
-  items_none?: Maybe<ItemWhereInput>;
-  modifications_every?: Maybe<ModificationWhereInput>;
-  modifications_some?: Maybe<ModificationWhereInput>;
-  modifications_none?: Maybe<ModificationWhereInput>;
-  photos_every?: Maybe<RecipePhotoWhereInput>;
-  photos_some?: Maybe<RecipePhotoWhereInput>;
-  photos_none?: Maybe<RecipePhotoWhereInput>;
-  AND?: Maybe<RecipeWhereInput[] | RecipeWhereInput>;
-  OR?: Maybe<RecipeWhereInput[] | RecipeWhereInput>;
-  NOT?: Maybe<RecipeWhereInput[] | RecipeWhereInput>;
+export interface SortingSubscriptionWhereInput {
+  mutation_in?: Maybe<MutationType[] | MutationType>;
+  updatedFields_contains?: Maybe<String>;
+  updatedFields_contains_every?: Maybe<String[] | String>;
+  updatedFields_contains_some?: Maybe<String[] | String>;
+  node?: Maybe<SortingWhereInput>;
+  AND?: Maybe<SortingSubscriptionWhereInput[] | SortingSubscriptionWhereInput>;
+  OR?: Maybe<SortingSubscriptionWhereInput[] | SortingSubscriptionWhereInput>;
+  NOT?: Maybe<SortingSubscriptionWhereInput[] | SortingSubscriptionWhereInput>;
 }
 
 export interface IngredientUpdateManyDataInput {
@@ -1630,13 +1988,21 @@ export interface StepUpdateManyWithWhereNestedInput {
   data: StepUpdateManyDataInput;
 }
 
-export interface UserUpdateManyMutationInput {
-  email?: Maybe<String>;
-  password?: Maybe<String>;
-  name?: Maybe<String>;
-  avatar?: Maybe<String>;
-  slug?: Maybe<String>;
-  emailVerified?: Maybe<Boolean>;
+export interface AlterationSubscriptionWhereInput {
+  mutation_in?: Maybe<MutationType[] | MutationType>;
+  updatedFields_contains?: Maybe<String>;
+  updatedFields_contains_every?: Maybe<String[] | String>;
+  updatedFields_contains_some?: Maybe<String[] | String>;
+  node?: Maybe<AlterationWhereInput>;
+  AND?: Maybe<
+    AlterationSubscriptionWhereInput[] | AlterationSubscriptionWhereInput
+  >;
+  OR?: Maybe<
+    AlterationSubscriptionWhereInput[] | AlterationSubscriptionWhereInput
+  >;
+  NOT?: Maybe<
+    AlterationSubscriptionWhereInput[] | AlterationSubscriptionWhereInput
+  >;
 }
 
 export interface StepUpdateManyDataInput {
@@ -1646,16 +2012,15 @@ export interface StepUpdateManyDataInput {
   notes?: Maybe<String>;
 }
 
-export interface UserCreateInput {
-  id?: Maybe<ID_Input>;
-  email: String;
-  password: String;
-  name: String;
-  avatar?: Maybe<String>;
+export interface UserUpdateInput {
+  email?: Maybe<String>;
   slug?: Maybe<String>;
+  password?: Maybe<String>;
+  name?: Maybe<String>;
+  avatar?: Maybe<String>;
   emailVerified?: Maybe<Boolean>;
-  recipes?: Maybe<RecipeCreateManyWithoutAuthorInput>;
-  modifications?: Maybe<ModificationCreateManyWithoutUserInput>;
+  recipes?: Maybe<RecipeUpdateManyWithoutAuthorInput>;
+  modifications?: Maybe<ModificationUpdateManyWithoutUserInput>;
 }
 
 export interface ItemUpsertWithWhereUniqueWithoutRecipeInput {
@@ -1664,9 +2029,16 @@ export interface ItemUpsertWithWhereUniqueWithoutRecipeInput {
   create: ItemCreateWithoutRecipeInput;
 }
 
-export interface ModificationUpsertWithoutStepAdditionsInput {
-  update: ModificationUpdateWithoutStepAdditionsDataInput;
-  create: ModificationCreateWithoutStepAdditionsInput;
+export interface UserCreateInput {
+  id?: Maybe<ID_Input>;
+  email: String;
+  slug: String;
+  password: String;
+  name: String;
+  avatar?: Maybe<String>;
+  emailVerified?: Maybe<Boolean>;
+  recipes?: Maybe<RecipeCreateManyWithoutAuthorInput>;
+  modifications?: Maybe<ModificationCreateManyWithoutUserInput>;
 }
 
 export interface ItemScalarWhereInput {
@@ -1741,6 +2113,16 @@ export interface ItemScalarWhereInput {
   NOT?: Maybe<ItemScalarWhereInput[] | ItemScalarWhereInput>;
 }
 
+export interface ModificationUpsertWithoutStepAdditionsInput {
+  update: ModificationUpdateWithoutStepAdditionsDataInput;
+  create: ModificationCreateWithoutStepAdditionsInput;
+}
+
+export interface ItemUpdateManyWithWhereNestedInput {
+  where: ItemScalarWhereInput;
+  data: ItemUpdateManyDataInput;
+}
+
 export interface ModificationUpdateWithoutStepAdditionsDataInput {
   user?: Maybe<UserUpdateOneRequiredWithoutModificationsInput>;
   recipe?: Maybe<RecipeUpdateOneRequiredWithoutModificationsInput>;
@@ -1753,9 +2135,10 @@ export interface ModificationUpdateWithoutStepAdditionsDataInput {
   >;
 }
 
-export interface ItemUpdateManyWithWhereNestedInput {
-  where: ItemScalarWhereInput;
-  data: ItemUpdateManyDataInput;
+export interface ItemUpdateManyDataInput {
+  uid?: Maybe<ID_Input>;
+  index?: Maybe<Int>;
+  name?: Maybe<String>;
 }
 
 export interface StepAdditionUpdateInput {
@@ -1764,25 +2147,6 @@ export interface StepAdditionUpdateInput {
   directions?: Maybe<String>;
   notes?: Maybe<String>;
   modification?: Maybe<ModificationUpdateOneRequiredWithoutStepAdditionsInput>;
-}
-
-export interface ItemUpdateManyDataInput {
-  uid?: Maybe<ID_Input>;
-  index?: Maybe<Int>;
-  name?: Maybe<String>;
-}
-
-export interface ModificationCreateWithoutStepAdditionsInput {
-  id?: Maybe<ID_Input>;
-  user: UserCreateOneWithoutModificationsInput;
-  recipe: RecipeCreateOneWithoutModificationsInput;
-  sortings?: Maybe<SortingCreateManyWithoutModificationInput>;
-  alterations?: Maybe<AlterationCreateManyWithoutModificationInput>;
-  removals?: Maybe<ModificationCreateremovalsInput>;
-  itemAdditions?: Maybe<ItemAdditionCreateManyWithoutModificationInput>;
-  ingredientAdditions?: Maybe<
-    IngredientAdditionCreateManyWithoutModificationInput
-  >;
 }
 
 export interface ModificationUpdateManyWithoutRecipeInput {
@@ -1815,13 +2179,17 @@ export interface ModificationUpdateManyWithoutRecipeInput {
   >;
 }
 
-export interface StepAdditionCreateInput {
+export interface ModificationCreateWithoutStepAdditionsInput {
   id?: Maybe<ID_Input>;
-  uid: ID_Input;
-  parentId: ID_Input;
-  directions: String;
-  notes: String;
-  modification: ModificationCreateOneWithoutStepAdditionsInput;
+  user: UserCreateOneWithoutModificationsInput;
+  recipe: RecipeCreateOneWithoutModificationsInput;
+  sortings?: Maybe<SortingCreateManyWithoutModificationInput>;
+  alterations?: Maybe<AlterationCreateManyWithoutModificationInput>;
+  removals?: Maybe<ModificationCreateremovalsInput>;
+  itemAdditions?: Maybe<ItemAdditionCreateManyWithoutModificationInput>;
+  ingredientAdditions?: Maybe<
+    IngredientAdditionCreateManyWithoutModificationInput
+  >;
 }
 
 export interface ModificationUpdateWithWhereUniqueWithoutRecipeInput {
@@ -1829,11 +2197,13 @@ export interface ModificationUpdateWithWhereUniqueWithoutRecipeInput {
   data: ModificationUpdateWithoutRecipeDataInput;
 }
 
-export interface StepUpdateManyMutationInput {
-  uid?: Maybe<ID_Input>;
-  index?: Maybe<Int>;
-  directions?: Maybe<String>;
-  notes?: Maybe<String>;
+export interface StepAdditionCreateInput {
+  id?: Maybe<ID_Input>;
+  uid: ID_Input;
+  parentId: ID_Input;
+  directions: String;
+  notes: String;
+  modification: ModificationCreateOneWithoutStepAdditionsInput;
 }
 
 export interface ModificationUpdateWithoutRecipeDataInput {
@@ -1848,14 +2218,11 @@ export interface ModificationUpdateWithoutRecipeDataInput {
   >;
 }
 
-export interface StepCreateInput {
-  id?: Maybe<ID_Input>;
-  uid: ID_Input;
-  index: Int;
+export interface StepUpdateManyMutationInput {
+  uid?: Maybe<ID_Input>;
+  index?: Maybe<Int>;
   directions?: Maybe<String>;
   notes?: Maybe<String>;
-  item: ItemCreateOneWithoutStepsInput;
-  ingredients?: Maybe<IngredientCreateManyWithoutStepInput>;
 }
 
 export interface SortingUpdateManyWithoutModificationInput {
@@ -1882,15 +2249,31 @@ export interface SortingUpdateManyWithoutModificationInput {
   >;
 }
 
+export interface StepCreateInput {
+  id?: Maybe<ID_Input>;
+  uid: ID_Input;
+  index: Int;
+  directions?: Maybe<String>;
+  notes?: Maybe<String>;
+  item: ItemCreateOneWithoutStepsInput;
+  ingredients?: Maybe<IngredientCreateManyWithoutStepInput>;
+}
+
+export interface SortingUpdateWithWhereUniqueWithoutModificationInput {
+  where: SortingWhereUniqueInput;
+  data: SortingUpdateWithoutModificationDataInput;
+}
+
 export interface SortingUpdateManyMutationInput {
   uid?: Maybe<ID_Input>;
   parentId?: Maybe<ID_Input>;
   order?: Maybe<SortingUpdateorderInput>;
 }
 
-export interface SortingUpdateWithWhereUniqueWithoutModificationInput {
-  where: SortingWhereUniqueInput;
-  data: SortingUpdateWithoutModificationDataInput;
+export interface SortingUpdateWithoutModificationDataInput {
+  uid?: Maybe<ID_Input>;
+  parentId?: Maybe<ID_Input>;
+  order?: Maybe<SortingUpdateorderInput>;
 }
 
 export interface ModificationUpdateWithoutSortingsDataInput {
@@ -1905,10 +2288,8 @@ export interface ModificationUpdateWithoutSortingsDataInput {
   >;
 }
 
-export interface SortingUpdateWithoutModificationDataInput {
-  uid?: Maybe<ID_Input>;
-  parentId?: Maybe<ID_Input>;
-  order?: Maybe<SortingUpdateorderInput>;
+export interface SortingUpdateorderInput {
+  set?: Maybe<ID_Input[] | ID_Input>;
 }
 
 export interface ModificationUpdateOneRequiredWithoutSortingsInput {
@@ -1918,8 +2299,10 @@ export interface ModificationUpdateOneRequiredWithoutSortingsInput {
   connect?: Maybe<ModificationWhereUniqueInput>;
 }
 
-export interface SortingUpdateorderInput {
-  set?: Maybe<ID_Input[] | ID_Input>;
+export interface SortingUpsertWithWhereUniqueWithoutModificationInput {
+  where: SortingWhereUniqueInput;
+  update: SortingUpdateWithoutModificationDataInput;
+  create: SortingCreateWithoutModificationInput;
 }
 
 export interface ModificationCreateWithoutSortingsInput {
@@ -1935,10 +2318,16 @@ export interface ModificationCreateWithoutSortingsInput {
   >;
 }
 
-export interface SortingUpsertWithWhereUniqueWithoutModificationInput {
-  where: SortingWhereUniqueInput;
-  update: SortingUpdateWithoutModificationDataInput;
-  create: SortingCreateWithoutModificationInput;
+export interface ModificationUpdateWithoutItemAdditionsDataInput {
+  user?: Maybe<UserUpdateOneRequiredWithoutModificationsInput>;
+  recipe?: Maybe<RecipeUpdateOneRequiredWithoutModificationsInput>;
+  sortings?: Maybe<SortingUpdateManyWithoutModificationInput>;
+  alterations?: Maybe<AlterationUpdateManyWithoutModificationInput>;
+  removals?: Maybe<ModificationUpdateremovalsInput>;
+  stepAdditions?: Maybe<StepAdditionUpdateManyWithoutModificationInput>;
+  ingredientAdditions?: Maybe<
+    IngredientAdditionUpdateManyWithoutModificationInput
+  >;
 }
 
 export interface ModificationCreateOneWithoutSortingsInput {
@@ -1946,84 +2335,20 @@ export interface ModificationCreateOneWithoutSortingsInput {
   connect?: Maybe<ModificationWhereUniqueInput>;
 }
 
-export interface SortingScalarWhereInput {
-  id?: Maybe<ID_Input>;
-  id_not?: Maybe<ID_Input>;
-  id_in?: Maybe<ID_Input[] | ID_Input>;
-  id_not_in?: Maybe<ID_Input[] | ID_Input>;
-  id_lt?: Maybe<ID_Input>;
-  id_lte?: Maybe<ID_Input>;
-  id_gt?: Maybe<ID_Input>;
-  id_gte?: Maybe<ID_Input>;
-  id_contains?: Maybe<ID_Input>;
-  id_not_contains?: Maybe<ID_Input>;
-  id_starts_with?: Maybe<ID_Input>;
-  id_not_starts_with?: Maybe<ID_Input>;
-  id_ends_with?: Maybe<ID_Input>;
-  id_not_ends_with?: Maybe<ID_Input>;
-  createdAt?: Maybe<DateTimeInput>;
-  createdAt_not?: Maybe<DateTimeInput>;
-  createdAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
-  createdAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
-  createdAt_lt?: Maybe<DateTimeInput>;
-  createdAt_lte?: Maybe<DateTimeInput>;
-  createdAt_gt?: Maybe<DateTimeInput>;
-  createdAt_gte?: Maybe<DateTimeInput>;
-  updatedAt?: Maybe<DateTimeInput>;
-  updatedAt_not?: Maybe<DateTimeInput>;
-  updatedAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
-  updatedAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
-  updatedAt_lt?: Maybe<DateTimeInput>;
-  updatedAt_lte?: Maybe<DateTimeInput>;
-  updatedAt_gt?: Maybe<DateTimeInput>;
-  updatedAt_gte?: Maybe<DateTimeInput>;
-  uid?: Maybe<ID_Input>;
-  uid_not?: Maybe<ID_Input>;
-  uid_in?: Maybe<ID_Input[] | ID_Input>;
-  uid_not_in?: Maybe<ID_Input[] | ID_Input>;
-  uid_lt?: Maybe<ID_Input>;
-  uid_lte?: Maybe<ID_Input>;
-  uid_gt?: Maybe<ID_Input>;
-  uid_gte?: Maybe<ID_Input>;
-  uid_contains?: Maybe<ID_Input>;
-  uid_not_contains?: Maybe<ID_Input>;
-  uid_starts_with?: Maybe<ID_Input>;
-  uid_not_starts_with?: Maybe<ID_Input>;
-  uid_ends_with?: Maybe<ID_Input>;
-  uid_not_ends_with?: Maybe<ID_Input>;
-  parentId?: Maybe<ID_Input>;
-  parentId_not?: Maybe<ID_Input>;
-  parentId_in?: Maybe<ID_Input[] | ID_Input>;
-  parentId_not_in?: Maybe<ID_Input[] | ID_Input>;
-  parentId_lt?: Maybe<ID_Input>;
-  parentId_lte?: Maybe<ID_Input>;
-  parentId_gt?: Maybe<ID_Input>;
-  parentId_gte?: Maybe<ID_Input>;
-  parentId_contains?: Maybe<ID_Input>;
-  parentId_not_contains?: Maybe<ID_Input>;
-  parentId_starts_with?: Maybe<ID_Input>;
-  parentId_not_starts_with?: Maybe<ID_Input>;
-  parentId_ends_with?: Maybe<ID_Input>;
-  parentId_not_ends_with?: Maybe<ID_Input>;
-  AND?: Maybe<SortingScalarWhereInput[] | SortingScalarWhereInput>;
-  OR?: Maybe<SortingScalarWhereInput[] | SortingScalarWhereInput>;
-  NOT?: Maybe<SortingScalarWhereInput[] | SortingScalarWhereInput>;
-}
-
-export interface RecipePhotoUpdateManyMutationInput {
-  filename?: Maybe<String>;
-  url?: Maybe<String>;
-  index?: Maybe<Int>;
-}
-
 export interface SortingUpdateManyWithWhereNestedInput {
   where: SortingScalarWhereInput;
   data: SortingUpdateManyDataInput;
 }
 
-export interface RecipeUpsertWithoutPhotosInput {
-  update: RecipeUpdateWithoutPhotosDataInput;
-  create: RecipeCreateWithoutPhotosInput;
+export interface RecipeUpdateManyMutationInput {
+  uid?: Maybe<ID_Input>;
+  slug?: Maybe<String>;
+  title?: Maybe<String>;
+  time?: Maybe<String>;
+  servingAmount?: Maybe<String>;
+  servingType?: Maybe<String>;
+  description?: Maybe<String>;
+  photo?: Maybe<String>;
 }
 
 export interface SortingUpdateManyDataInput {
@@ -2032,11 +2357,18 @@ export interface SortingUpdateManyDataInput {
   order?: Maybe<SortingUpdateorderInput>;
 }
 
-export interface RecipeUpdateOneRequiredWithoutPhotosInput {
-  create?: Maybe<RecipeCreateWithoutPhotosInput>;
-  update?: Maybe<RecipeUpdateWithoutPhotosDataInput>;
-  upsert?: Maybe<RecipeUpsertWithoutPhotosInput>;
-  connect?: Maybe<RecipeWhereUniqueInput>;
+export interface RecipeUpdateInput {
+  uid?: Maybe<ID_Input>;
+  slug?: Maybe<String>;
+  author?: Maybe<UserUpdateOneRequiredWithoutRecipesInput>;
+  title?: Maybe<String>;
+  time?: Maybe<String>;
+  servingAmount?: Maybe<String>;
+  servingType?: Maybe<String>;
+  description?: Maybe<String>;
+  items?: Maybe<ItemUpdateManyWithoutRecipeInput>;
+  modifications?: Maybe<ModificationUpdateManyWithoutRecipeInput>;
+  photo?: Maybe<String>;
 }
 
 export interface AlterationUpdateManyWithoutModificationInput {
@@ -2063,170 +2395,13 @@ export interface AlterationUpdateManyWithoutModificationInput {
   >;
 }
 
-export interface RecipePhotoUpdateInput {
-  filename?: Maybe<String>;
-  url?: Maybe<String>;
-  recipe?: Maybe<RecipeUpdateOneRequiredWithoutPhotosInput>;
-  index?: Maybe<Int>;
+export interface ModificationUpdateManyMutationInput {
+  removals?: Maybe<ModificationUpdateremovalsInput>;
 }
 
-export interface ModificationUpdateOneRequiredWithoutItemAdditionsInput {
-  create?: Maybe<ModificationCreateWithoutItemAdditionsInput>;
-  update?: Maybe<ModificationUpdateWithoutItemAdditionsDataInput>;
-  upsert?: Maybe<ModificationUpsertWithoutItemAdditionsInput>;
-  connect?: Maybe<ModificationWhereUniqueInput>;
-}
-
-export interface RecipeCreateOneWithoutPhotosInput {
-  create?: Maybe<RecipeCreateWithoutPhotosInput>;
-  connect?: Maybe<RecipeWhereUniqueInput>;
-}
-
-export interface AlterationUpdateWithoutModificationDataInput {
-  uid?: Maybe<ID_Input>;
-  sourceId?: Maybe<ID_Input>;
-  field?: Maybe<String>;
-  value?: Maybe<String>;
-}
-
-export interface RecipePhotoCreateInput {
-  id?: Maybe<ID_Input>;
-  filename: String;
-  url: String;
-  recipe: RecipeCreateOneWithoutPhotosInput;
-  index: Int;
-}
-
-export interface AlterationUpsertWithWhereUniqueWithoutModificationInput {
+export interface AlterationUpdateWithWhereUniqueWithoutModificationInput {
   where: AlterationWhereUniqueInput;
-  update: AlterationUpdateWithoutModificationDataInput;
-  create: AlterationCreateWithoutModificationInput;
-}
-
-export interface RecipeUpdateInput {
-  uid?: Maybe<ID_Input>;
-  slug?: Maybe<String>;
-  author?: Maybe<UserUpdateOneRequiredWithoutRecipesInput>;
-  title?: Maybe<String>;
-  time?: Maybe<String>;
-  servingAmount?: Maybe<String>;
-  servingType?: Maybe<String>;
-  description?: Maybe<String>;
-  items?: Maybe<ItemUpdateManyWithoutRecipeInput>;
-  modifications?: Maybe<ModificationUpdateManyWithoutRecipeInput>;
-  photos?: Maybe<RecipePhotoUpdateManyWithoutRecipeInput>;
-}
-
-export interface AlterationScalarWhereInput {
-  id?: Maybe<ID_Input>;
-  id_not?: Maybe<ID_Input>;
-  id_in?: Maybe<ID_Input[] | ID_Input>;
-  id_not_in?: Maybe<ID_Input[] | ID_Input>;
-  id_lt?: Maybe<ID_Input>;
-  id_lte?: Maybe<ID_Input>;
-  id_gt?: Maybe<ID_Input>;
-  id_gte?: Maybe<ID_Input>;
-  id_contains?: Maybe<ID_Input>;
-  id_not_contains?: Maybe<ID_Input>;
-  id_starts_with?: Maybe<ID_Input>;
-  id_not_starts_with?: Maybe<ID_Input>;
-  id_ends_with?: Maybe<ID_Input>;
-  id_not_ends_with?: Maybe<ID_Input>;
-  createdAt?: Maybe<DateTimeInput>;
-  createdAt_not?: Maybe<DateTimeInput>;
-  createdAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
-  createdAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
-  createdAt_lt?: Maybe<DateTimeInput>;
-  createdAt_lte?: Maybe<DateTimeInput>;
-  createdAt_gt?: Maybe<DateTimeInput>;
-  createdAt_gte?: Maybe<DateTimeInput>;
-  updatedAt?: Maybe<DateTimeInput>;
-  updatedAt_not?: Maybe<DateTimeInput>;
-  updatedAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
-  updatedAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
-  updatedAt_lt?: Maybe<DateTimeInput>;
-  updatedAt_lte?: Maybe<DateTimeInput>;
-  updatedAt_gt?: Maybe<DateTimeInput>;
-  updatedAt_gte?: Maybe<DateTimeInput>;
-  uid?: Maybe<ID_Input>;
-  uid_not?: Maybe<ID_Input>;
-  uid_in?: Maybe<ID_Input[] | ID_Input>;
-  uid_not_in?: Maybe<ID_Input[] | ID_Input>;
-  uid_lt?: Maybe<ID_Input>;
-  uid_lte?: Maybe<ID_Input>;
-  uid_gt?: Maybe<ID_Input>;
-  uid_gte?: Maybe<ID_Input>;
-  uid_contains?: Maybe<ID_Input>;
-  uid_not_contains?: Maybe<ID_Input>;
-  uid_starts_with?: Maybe<ID_Input>;
-  uid_not_starts_with?: Maybe<ID_Input>;
-  uid_ends_with?: Maybe<ID_Input>;
-  uid_not_ends_with?: Maybe<ID_Input>;
-  sourceId?: Maybe<ID_Input>;
-  sourceId_not?: Maybe<ID_Input>;
-  sourceId_in?: Maybe<ID_Input[] | ID_Input>;
-  sourceId_not_in?: Maybe<ID_Input[] | ID_Input>;
-  sourceId_lt?: Maybe<ID_Input>;
-  sourceId_lte?: Maybe<ID_Input>;
-  sourceId_gt?: Maybe<ID_Input>;
-  sourceId_gte?: Maybe<ID_Input>;
-  sourceId_contains?: Maybe<ID_Input>;
-  sourceId_not_contains?: Maybe<ID_Input>;
-  sourceId_starts_with?: Maybe<ID_Input>;
-  sourceId_not_starts_with?: Maybe<ID_Input>;
-  sourceId_ends_with?: Maybe<ID_Input>;
-  sourceId_not_ends_with?: Maybe<ID_Input>;
-  field?: Maybe<String>;
-  field_not?: Maybe<String>;
-  field_in?: Maybe<String[] | String>;
-  field_not_in?: Maybe<String[] | String>;
-  field_lt?: Maybe<String>;
-  field_lte?: Maybe<String>;
-  field_gt?: Maybe<String>;
-  field_gte?: Maybe<String>;
-  field_contains?: Maybe<String>;
-  field_not_contains?: Maybe<String>;
-  field_starts_with?: Maybe<String>;
-  field_not_starts_with?: Maybe<String>;
-  field_ends_with?: Maybe<String>;
-  field_not_ends_with?: Maybe<String>;
-  value?: Maybe<String>;
-  value_not?: Maybe<String>;
-  value_in?: Maybe<String[] | String>;
-  value_not_in?: Maybe<String[] | String>;
-  value_lt?: Maybe<String>;
-  value_lte?: Maybe<String>;
-  value_gt?: Maybe<String>;
-  value_gte?: Maybe<String>;
-  value_contains?: Maybe<String>;
-  value_not_contains?: Maybe<String>;
-  value_starts_with?: Maybe<String>;
-  value_not_starts_with?: Maybe<String>;
-  value_ends_with?: Maybe<String>;
-  value_not_ends_with?: Maybe<String>;
-  AND?: Maybe<AlterationScalarWhereInput[] | AlterationScalarWhereInput>;
-  OR?: Maybe<AlterationScalarWhereInput[] | AlterationScalarWhereInput>;
-  NOT?: Maybe<AlterationScalarWhereInput[] | AlterationScalarWhereInput>;
-}
-
-export interface RecipeCreateInput {
-  id?: Maybe<ID_Input>;
-  uid: ID_Input;
-  slug: String;
-  author: UserCreateOneWithoutRecipesInput;
-  title?: Maybe<String>;
-  time?: Maybe<String>;
-  servingAmount?: Maybe<String>;
-  servingType?: Maybe<String>;
-  description?: Maybe<String>;
-  items?: Maybe<ItemCreateManyWithoutRecipeInput>;
-  modifications?: Maybe<ModificationCreateManyWithoutRecipeInput>;
-  photos?: Maybe<RecipePhotoCreateManyWithoutRecipeInput>;
-}
-
-export interface AlterationUpdateManyWithWhereNestedInput {
-  where: AlterationScalarWhereInput;
-  data: AlterationUpdateManyDataInput;
+  data: AlterationUpdateWithoutModificationDataInput;
 }
 
 export interface ModificationUpdateInput {
@@ -2242,64 +2417,23 @@ export interface ModificationUpdateInput {
   >;
 }
 
-export interface AlterationUpdateManyDataInput {
+export interface AlterationUpdateWithoutModificationDataInput {
   uid?: Maybe<ID_Input>;
   sourceId?: Maybe<ID_Input>;
   field?: Maybe<String>;
   value?: Maybe<String>;
 }
 
-export interface ModificationCreateInput {
-  id?: Maybe<ID_Input>;
-  user: UserCreateOneWithoutModificationsInput;
-  recipe: RecipeCreateOneWithoutModificationsInput;
-  sortings?: Maybe<SortingCreateManyWithoutModificationInput>;
-  alterations?: Maybe<AlterationCreateManyWithoutModificationInput>;
-  removals?: Maybe<ModificationCreateremovalsInput>;
-  itemAdditions?: Maybe<ItemAdditionCreateManyWithoutModificationInput>;
-  stepAdditions?: Maybe<StepAdditionCreateManyWithoutModificationInput>;
-  ingredientAdditions?: Maybe<
-    IngredientAdditionCreateManyWithoutModificationInput
-  >;
+export interface ItemAdditionUpdateManyMutationInput {
+  uid?: Maybe<ID_Input>;
+  parentId?: Maybe<ID_Input>;
+  name?: Maybe<String>;
 }
 
-export interface ModificationUpdateremovalsInput {
-  set?: Maybe<ID_Input[] | ID_Input>;
-}
-
-export interface ModificationUpsertWithoutItemAdditionsInput {
-  update: ModificationUpdateWithoutItemAdditionsDataInput;
-  create: ModificationCreateWithoutItemAdditionsInput;
-}
-
-export interface ItemAdditionUpdateManyWithoutModificationInput {
-  create?: Maybe<
-    | ItemAdditionCreateWithoutModificationInput[]
-    | ItemAdditionCreateWithoutModificationInput
-  >;
-  delete?: Maybe<ItemAdditionWhereUniqueInput[] | ItemAdditionWhereUniqueInput>;
-  connect?: Maybe<
-    ItemAdditionWhereUniqueInput[] | ItemAdditionWhereUniqueInput
-  >;
-  set?: Maybe<ItemAdditionWhereUniqueInput[] | ItemAdditionWhereUniqueInput>;
-  disconnect?: Maybe<
-    ItemAdditionWhereUniqueInput[] | ItemAdditionWhereUniqueInput
-  >;
-  update?: Maybe<
-    | ItemAdditionUpdateWithWhereUniqueWithoutModificationInput[]
-    | ItemAdditionUpdateWithWhereUniqueWithoutModificationInput
-  >;
-  upsert?: Maybe<
-    | ItemAdditionUpsertWithWhereUniqueWithoutModificationInput[]
-    | ItemAdditionUpsertWithWhereUniqueWithoutModificationInput
-  >;
-  deleteMany?: Maybe<
-    ItemAdditionScalarWhereInput[] | ItemAdditionScalarWhereInput
-  >;
-  updateMany?: Maybe<
-    | ItemAdditionUpdateManyWithWhereNestedInput[]
-    | ItemAdditionUpdateManyWithWhereNestedInput
-  >;
+export interface AlterationUpsertWithWhereUniqueWithoutModificationInput {
+  where: AlterationWhereUniqueInput;
+  update: AlterationUpdateWithoutModificationDataInput;
+  create: AlterationCreateWithoutModificationInput;
 }
 
 export interface ModificationCreateOneWithoutAlterationsInput {
@@ -2307,196 +2441,7 @@ export interface ModificationCreateOneWithoutAlterationsInput {
   connect?: Maybe<ModificationWhereUniqueInput>;
 }
 
-export interface ItemWhereInput {
-  id?: Maybe<ID_Input>;
-  id_not?: Maybe<ID_Input>;
-  id_in?: Maybe<ID_Input[] | ID_Input>;
-  id_not_in?: Maybe<ID_Input[] | ID_Input>;
-  id_lt?: Maybe<ID_Input>;
-  id_lte?: Maybe<ID_Input>;
-  id_gt?: Maybe<ID_Input>;
-  id_gte?: Maybe<ID_Input>;
-  id_contains?: Maybe<ID_Input>;
-  id_not_contains?: Maybe<ID_Input>;
-  id_starts_with?: Maybe<ID_Input>;
-  id_not_starts_with?: Maybe<ID_Input>;
-  id_ends_with?: Maybe<ID_Input>;
-  id_not_ends_with?: Maybe<ID_Input>;
-  createdAt?: Maybe<DateTimeInput>;
-  createdAt_not?: Maybe<DateTimeInput>;
-  createdAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
-  createdAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
-  createdAt_lt?: Maybe<DateTimeInput>;
-  createdAt_lte?: Maybe<DateTimeInput>;
-  createdAt_gt?: Maybe<DateTimeInput>;
-  createdAt_gte?: Maybe<DateTimeInput>;
-  updatedAt?: Maybe<DateTimeInput>;
-  updatedAt_not?: Maybe<DateTimeInput>;
-  updatedAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
-  updatedAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
-  updatedAt_lt?: Maybe<DateTimeInput>;
-  updatedAt_lte?: Maybe<DateTimeInput>;
-  updatedAt_gt?: Maybe<DateTimeInput>;
-  updatedAt_gte?: Maybe<DateTimeInput>;
-  uid?: Maybe<ID_Input>;
-  uid_not?: Maybe<ID_Input>;
-  uid_in?: Maybe<ID_Input[] | ID_Input>;
-  uid_not_in?: Maybe<ID_Input[] | ID_Input>;
-  uid_lt?: Maybe<ID_Input>;
-  uid_lte?: Maybe<ID_Input>;
-  uid_gt?: Maybe<ID_Input>;
-  uid_gte?: Maybe<ID_Input>;
-  uid_contains?: Maybe<ID_Input>;
-  uid_not_contains?: Maybe<ID_Input>;
-  uid_starts_with?: Maybe<ID_Input>;
-  uid_not_starts_with?: Maybe<ID_Input>;
-  uid_ends_with?: Maybe<ID_Input>;
-  uid_not_ends_with?: Maybe<ID_Input>;
-  index?: Maybe<Int>;
-  index_not?: Maybe<Int>;
-  index_in?: Maybe<Int[] | Int>;
-  index_not_in?: Maybe<Int[] | Int>;
-  index_lt?: Maybe<Int>;
-  index_lte?: Maybe<Int>;
-  index_gt?: Maybe<Int>;
-  index_gte?: Maybe<Int>;
-  name?: Maybe<String>;
-  name_not?: Maybe<String>;
-  name_in?: Maybe<String[] | String>;
-  name_not_in?: Maybe<String[] | String>;
-  name_lt?: Maybe<String>;
-  name_lte?: Maybe<String>;
-  name_gt?: Maybe<String>;
-  name_gte?: Maybe<String>;
-  name_contains?: Maybe<String>;
-  name_not_contains?: Maybe<String>;
-  name_starts_with?: Maybe<String>;
-  name_not_starts_with?: Maybe<String>;
-  name_ends_with?: Maybe<String>;
-  name_not_ends_with?: Maybe<String>;
-  recipe?: Maybe<RecipeWhereInput>;
-  steps_every?: Maybe<StepWhereInput>;
-  steps_some?: Maybe<StepWhereInput>;
-  steps_none?: Maybe<StepWhereInput>;
-  AND?: Maybe<ItemWhereInput[] | ItemWhereInput>;
-  OR?: Maybe<ItemWhereInput[] | ItemWhereInput>;
-  NOT?: Maybe<ItemWhereInput[] | ItemWhereInput>;
-}
-
-export interface UserCreateOneWithoutModificationsInput {
-  create?: Maybe<UserCreateWithoutModificationsInput>;
-  connect?: Maybe<UserWhereUniqueInput>;
-}
-
-export interface StepWhereInput {
-  id?: Maybe<ID_Input>;
-  id_not?: Maybe<ID_Input>;
-  id_in?: Maybe<ID_Input[] | ID_Input>;
-  id_not_in?: Maybe<ID_Input[] | ID_Input>;
-  id_lt?: Maybe<ID_Input>;
-  id_lte?: Maybe<ID_Input>;
-  id_gt?: Maybe<ID_Input>;
-  id_gte?: Maybe<ID_Input>;
-  id_contains?: Maybe<ID_Input>;
-  id_not_contains?: Maybe<ID_Input>;
-  id_starts_with?: Maybe<ID_Input>;
-  id_not_starts_with?: Maybe<ID_Input>;
-  id_ends_with?: Maybe<ID_Input>;
-  id_not_ends_with?: Maybe<ID_Input>;
-  createdAt?: Maybe<DateTimeInput>;
-  createdAt_not?: Maybe<DateTimeInput>;
-  createdAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
-  createdAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
-  createdAt_lt?: Maybe<DateTimeInput>;
-  createdAt_lte?: Maybe<DateTimeInput>;
-  createdAt_gt?: Maybe<DateTimeInput>;
-  createdAt_gte?: Maybe<DateTimeInput>;
-  updatedAt?: Maybe<DateTimeInput>;
-  updatedAt_not?: Maybe<DateTimeInput>;
-  updatedAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
-  updatedAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
-  updatedAt_lt?: Maybe<DateTimeInput>;
-  updatedAt_lte?: Maybe<DateTimeInput>;
-  updatedAt_gt?: Maybe<DateTimeInput>;
-  updatedAt_gte?: Maybe<DateTimeInput>;
-  uid?: Maybe<ID_Input>;
-  uid_not?: Maybe<ID_Input>;
-  uid_in?: Maybe<ID_Input[] | ID_Input>;
-  uid_not_in?: Maybe<ID_Input[] | ID_Input>;
-  uid_lt?: Maybe<ID_Input>;
-  uid_lte?: Maybe<ID_Input>;
-  uid_gt?: Maybe<ID_Input>;
-  uid_gte?: Maybe<ID_Input>;
-  uid_contains?: Maybe<ID_Input>;
-  uid_not_contains?: Maybe<ID_Input>;
-  uid_starts_with?: Maybe<ID_Input>;
-  uid_not_starts_with?: Maybe<ID_Input>;
-  uid_ends_with?: Maybe<ID_Input>;
-  uid_not_ends_with?: Maybe<ID_Input>;
-  index?: Maybe<Int>;
-  index_not?: Maybe<Int>;
-  index_in?: Maybe<Int[] | Int>;
-  index_not_in?: Maybe<Int[] | Int>;
-  index_lt?: Maybe<Int>;
-  index_lte?: Maybe<Int>;
-  index_gt?: Maybe<Int>;
-  index_gte?: Maybe<Int>;
-  directions?: Maybe<String>;
-  directions_not?: Maybe<String>;
-  directions_in?: Maybe<String[] | String>;
-  directions_not_in?: Maybe<String[] | String>;
-  directions_lt?: Maybe<String>;
-  directions_lte?: Maybe<String>;
-  directions_gt?: Maybe<String>;
-  directions_gte?: Maybe<String>;
-  directions_contains?: Maybe<String>;
-  directions_not_contains?: Maybe<String>;
-  directions_starts_with?: Maybe<String>;
-  directions_not_starts_with?: Maybe<String>;
-  directions_ends_with?: Maybe<String>;
-  directions_not_ends_with?: Maybe<String>;
-  notes?: Maybe<String>;
-  notes_not?: Maybe<String>;
-  notes_in?: Maybe<String[] | String>;
-  notes_not_in?: Maybe<String[] | String>;
-  notes_lt?: Maybe<String>;
-  notes_lte?: Maybe<String>;
-  notes_gt?: Maybe<String>;
-  notes_gte?: Maybe<String>;
-  notes_contains?: Maybe<String>;
-  notes_not_contains?: Maybe<String>;
-  notes_starts_with?: Maybe<String>;
-  notes_not_starts_with?: Maybe<String>;
-  notes_ends_with?: Maybe<String>;
-  notes_not_ends_with?: Maybe<String>;
-  item?: Maybe<ItemWhereInput>;
-  ingredients_every?: Maybe<IngredientWhereInput>;
-  ingredients_some?: Maybe<IngredientWhereInput>;
-  ingredients_none?: Maybe<IngredientWhereInput>;
-  AND?: Maybe<StepWhereInput[] | StepWhereInput>;
-  OR?: Maybe<StepWhereInput[] | StepWhereInput>;
-  NOT?: Maybe<StepWhereInput[] | StepWhereInput>;
-}
-
-export interface RecipeCreateManyWithoutAuthorInput {
-  create?: Maybe<
-    RecipeCreateWithoutAuthorInput[] | RecipeCreateWithoutAuthorInput
-  >;
-  connect?: Maybe<RecipeWhereUniqueInput[] | RecipeWhereUniqueInput>;
-}
-
-export interface ItemAdditionUpsertWithWhereUniqueWithoutModificationInput {
-  where: ItemAdditionWhereUniqueInput;
-  update: ItemAdditionUpdateWithoutModificationDataInput;
-  create: ItemAdditionCreateWithoutModificationInput;
-}
-
-export interface ItemCreateManyWithoutRecipeInput {
-  create?: Maybe<ItemCreateWithoutRecipeInput[] | ItemCreateWithoutRecipeInput>;
-  connect?: Maybe<ItemWhereUniqueInput[] | ItemWhereUniqueInput>;
-}
-
-export interface ItemAdditionScalarWhereInput {
+export interface IngredientAdditionWhereInput {
   id?: Maybe<ID_Input>;
   id_not?: Maybe<ID_Input>;
   id_in?: Maybe<ID_Input[] | ID_Input>;
@@ -2569,9 +2514,198 @@ export interface ItemAdditionScalarWhereInput {
   name_not_starts_with?: Maybe<String>;
   name_ends_with?: Maybe<String>;
   name_not_ends_with?: Maybe<String>;
-  AND?: Maybe<ItemAdditionScalarWhereInput[] | ItemAdditionScalarWhereInput>;
-  OR?: Maybe<ItemAdditionScalarWhereInput[] | ItemAdditionScalarWhereInput>;
-  NOT?: Maybe<ItemAdditionScalarWhereInput[] | ItemAdditionScalarWhereInput>;
+  quantity?: Maybe<String>;
+  quantity_not?: Maybe<String>;
+  quantity_in?: Maybe<String[] | String>;
+  quantity_not_in?: Maybe<String[] | String>;
+  quantity_lt?: Maybe<String>;
+  quantity_lte?: Maybe<String>;
+  quantity_gt?: Maybe<String>;
+  quantity_gte?: Maybe<String>;
+  quantity_contains?: Maybe<String>;
+  quantity_not_contains?: Maybe<String>;
+  quantity_starts_with?: Maybe<String>;
+  quantity_not_starts_with?: Maybe<String>;
+  quantity_ends_with?: Maybe<String>;
+  quantity_not_ends_with?: Maybe<String>;
+  unit?: Maybe<String>;
+  unit_not?: Maybe<String>;
+  unit_in?: Maybe<String[] | String>;
+  unit_not_in?: Maybe<String[] | String>;
+  unit_lt?: Maybe<String>;
+  unit_lte?: Maybe<String>;
+  unit_gt?: Maybe<String>;
+  unit_gte?: Maybe<String>;
+  unit_contains?: Maybe<String>;
+  unit_not_contains?: Maybe<String>;
+  unit_starts_with?: Maybe<String>;
+  unit_not_starts_with?: Maybe<String>;
+  unit_ends_with?: Maybe<String>;
+  unit_not_ends_with?: Maybe<String>;
+  processing?: Maybe<String>;
+  processing_not?: Maybe<String>;
+  processing_in?: Maybe<String[] | String>;
+  processing_not_in?: Maybe<String[] | String>;
+  processing_lt?: Maybe<String>;
+  processing_lte?: Maybe<String>;
+  processing_gt?: Maybe<String>;
+  processing_gte?: Maybe<String>;
+  processing_contains?: Maybe<String>;
+  processing_not_contains?: Maybe<String>;
+  processing_starts_with?: Maybe<String>;
+  processing_not_starts_with?: Maybe<String>;
+  processing_ends_with?: Maybe<String>;
+  processing_not_ends_with?: Maybe<String>;
+  modification?: Maybe<ModificationWhereInput>;
+  AND?: Maybe<IngredientAdditionWhereInput[] | IngredientAdditionWhereInput>;
+  OR?: Maybe<IngredientAdditionWhereInput[] | IngredientAdditionWhereInput>;
+  NOT?: Maybe<IngredientAdditionWhereInput[] | IngredientAdditionWhereInput>;
+}
+
+export interface UserCreateOneWithoutModificationsInput {
+  create?: Maybe<UserCreateWithoutModificationsInput>;
+  connect?: Maybe<UserWhereUniqueInput>;
+}
+
+export interface ModificationUpdateOneRequiredWithoutItemAdditionsInput {
+  create?: Maybe<ModificationCreateWithoutItemAdditionsInput>;
+  update?: Maybe<ModificationUpdateWithoutItemAdditionsDataInput>;
+  upsert?: Maybe<ModificationUpsertWithoutItemAdditionsInput>;
+  connect?: Maybe<ModificationWhereUniqueInput>;
+}
+
+export interface RecipeCreateManyWithoutAuthorInput {
+  create?: Maybe<
+    RecipeCreateWithoutAuthorInput[] | RecipeCreateWithoutAuthorInput
+  >;
+  connect?: Maybe<RecipeWhereUniqueInput[] | RecipeWhereUniqueInput>;
+}
+
+export interface IngredientWhereInput {
+  id?: Maybe<ID_Input>;
+  id_not?: Maybe<ID_Input>;
+  id_in?: Maybe<ID_Input[] | ID_Input>;
+  id_not_in?: Maybe<ID_Input[] | ID_Input>;
+  id_lt?: Maybe<ID_Input>;
+  id_lte?: Maybe<ID_Input>;
+  id_gt?: Maybe<ID_Input>;
+  id_gte?: Maybe<ID_Input>;
+  id_contains?: Maybe<ID_Input>;
+  id_not_contains?: Maybe<ID_Input>;
+  id_starts_with?: Maybe<ID_Input>;
+  id_not_starts_with?: Maybe<ID_Input>;
+  id_ends_with?: Maybe<ID_Input>;
+  id_not_ends_with?: Maybe<ID_Input>;
+  createdAt?: Maybe<DateTimeInput>;
+  createdAt_not?: Maybe<DateTimeInput>;
+  createdAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  createdAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  createdAt_lt?: Maybe<DateTimeInput>;
+  createdAt_lte?: Maybe<DateTimeInput>;
+  createdAt_gt?: Maybe<DateTimeInput>;
+  createdAt_gte?: Maybe<DateTimeInput>;
+  updatedAt?: Maybe<DateTimeInput>;
+  updatedAt_not?: Maybe<DateTimeInput>;
+  updatedAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  updatedAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  updatedAt_lt?: Maybe<DateTimeInput>;
+  updatedAt_lte?: Maybe<DateTimeInput>;
+  updatedAt_gt?: Maybe<DateTimeInput>;
+  updatedAt_gte?: Maybe<DateTimeInput>;
+  uid?: Maybe<ID_Input>;
+  uid_not?: Maybe<ID_Input>;
+  uid_in?: Maybe<ID_Input[] | ID_Input>;
+  uid_not_in?: Maybe<ID_Input[] | ID_Input>;
+  uid_lt?: Maybe<ID_Input>;
+  uid_lte?: Maybe<ID_Input>;
+  uid_gt?: Maybe<ID_Input>;
+  uid_gte?: Maybe<ID_Input>;
+  uid_contains?: Maybe<ID_Input>;
+  uid_not_contains?: Maybe<ID_Input>;
+  uid_starts_with?: Maybe<ID_Input>;
+  uid_not_starts_with?: Maybe<ID_Input>;
+  uid_ends_with?: Maybe<ID_Input>;
+  uid_not_ends_with?: Maybe<ID_Input>;
+  index?: Maybe<Int>;
+  index_not?: Maybe<Int>;
+  index_in?: Maybe<Int[] | Int>;
+  index_not_in?: Maybe<Int[] | Int>;
+  index_lt?: Maybe<Int>;
+  index_lte?: Maybe<Int>;
+  index_gt?: Maybe<Int>;
+  index_gte?: Maybe<Int>;
+  name?: Maybe<String>;
+  name_not?: Maybe<String>;
+  name_in?: Maybe<String[] | String>;
+  name_not_in?: Maybe<String[] | String>;
+  name_lt?: Maybe<String>;
+  name_lte?: Maybe<String>;
+  name_gt?: Maybe<String>;
+  name_gte?: Maybe<String>;
+  name_contains?: Maybe<String>;
+  name_not_contains?: Maybe<String>;
+  name_starts_with?: Maybe<String>;
+  name_not_starts_with?: Maybe<String>;
+  name_ends_with?: Maybe<String>;
+  name_not_ends_with?: Maybe<String>;
+  quantity?: Maybe<String>;
+  quantity_not?: Maybe<String>;
+  quantity_in?: Maybe<String[] | String>;
+  quantity_not_in?: Maybe<String[] | String>;
+  quantity_lt?: Maybe<String>;
+  quantity_lte?: Maybe<String>;
+  quantity_gt?: Maybe<String>;
+  quantity_gte?: Maybe<String>;
+  quantity_contains?: Maybe<String>;
+  quantity_not_contains?: Maybe<String>;
+  quantity_starts_with?: Maybe<String>;
+  quantity_not_starts_with?: Maybe<String>;
+  quantity_ends_with?: Maybe<String>;
+  quantity_not_ends_with?: Maybe<String>;
+  unit?: Maybe<String>;
+  unit_not?: Maybe<String>;
+  unit_in?: Maybe<String[] | String>;
+  unit_not_in?: Maybe<String[] | String>;
+  unit_lt?: Maybe<String>;
+  unit_lte?: Maybe<String>;
+  unit_gt?: Maybe<String>;
+  unit_gte?: Maybe<String>;
+  unit_contains?: Maybe<String>;
+  unit_not_contains?: Maybe<String>;
+  unit_starts_with?: Maybe<String>;
+  unit_not_starts_with?: Maybe<String>;
+  unit_ends_with?: Maybe<String>;
+  unit_not_ends_with?: Maybe<String>;
+  processing?: Maybe<String>;
+  processing_not?: Maybe<String>;
+  processing_in?: Maybe<String[] | String>;
+  processing_not_in?: Maybe<String[] | String>;
+  processing_lt?: Maybe<String>;
+  processing_lte?: Maybe<String>;
+  processing_gt?: Maybe<String>;
+  processing_gte?: Maybe<String>;
+  processing_contains?: Maybe<String>;
+  processing_not_contains?: Maybe<String>;
+  processing_starts_with?: Maybe<String>;
+  processing_not_starts_with?: Maybe<String>;
+  processing_ends_with?: Maybe<String>;
+  processing_not_ends_with?: Maybe<String>;
+  step?: Maybe<StepWhereInput>;
+  AND?: Maybe<IngredientWhereInput[] | IngredientWhereInput>;
+  OR?: Maybe<IngredientWhereInput[] | IngredientWhereInput>;
+  NOT?: Maybe<IngredientWhereInput[] | IngredientWhereInput>;
+}
+
+export interface ItemCreateManyWithoutRecipeInput {
+  create?: Maybe<ItemCreateWithoutRecipeInput[] | ItemCreateWithoutRecipeInput>;
+  connect?: Maybe<ItemWhereUniqueInput[] | ItemWhereUniqueInput>;
+}
+
+export interface ItemAdditionUpdateInput {
+  uid?: Maybe<ID_Input>;
+  parentId?: Maybe<ID_Input>;
+  name?: Maybe<String>;
+  modification?: Maybe<ModificationUpdateOneRequiredWithoutItemAdditionsInput>;
 }
 
 export interface StepCreateManyWithoutItemInput {
@@ -2579,9 +2713,17 @@ export interface StepCreateManyWithoutItemInput {
   connect?: Maybe<StepWhereUniqueInput[] | StepWhereUniqueInput>;
 }
 
-export interface ItemAdditionUpdateManyWithWhereNestedInput {
-  where: ItemAdditionScalarWhereInput;
-  data: ItemAdditionUpdateManyDataInput;
+export interface ModificationCreateWithoutItemAdditionsInput {
+  id?: Maybe<ID_Input>;
+  user: UserCreateOneWithoutModificationsInput;
+  recipe: RecipeCreateOneWithoutModificationsInput;
+  sortings?: Maybe<SortingCreateManyWithoutModificationInput>;
+  alterations?: Maybe<AlterationCreateManyWithoutModificationInput>;
+  removals?: Maybe<ModificationCreateremovalsInput>;
+  stepAdditions?: Maybe<StepAdditionCreateManyWithoutModificationInput>;
+  ingredientAdditions?: Maybe<
+    IngredientAdditionCreateManyWithoutModificationInput
+  >;
 }
 
 export interface IngredientCreateManyWithoutStepInput {
@@ -2591,10 +2733,9 @@ export interface IngredientCreateManyWithoutStepInput {
   connect?: Maybe<IngredientWhereUniqueInput[] | IngredientWhereUniqueInput>;
 }
 
-export interface ItemAdditionUpdateManyDataInput {
-  uid?: Maybe<ID_Input>;
-  parentId?: Maybe<ID_Input>;
-  name?: Maybe<String>;
+export interface ModificationCreateOneWithoutItemAdditionsInput {
+  create?: Maybe<ModificationCreateWithoutItemAdditionsInput>;
+  connect?: Maybe<ModificationWhereUniqueInput>;
 }
 
 export interface ModificationCreateManyWithoutRecipeInput {
@@ -2604,6 +2745,226 @@ export interface ModificationCreateManyWithoutRecipeInput {
   >;
   connect?: Maybe<
     ModificationWhereUniqueInput[] | ModificationWhereUniqueInput
+  >;
+}
+
+export interface ItemAdditionCreateInput {
+  id?: Maybe<ID_Input>;
+  uid: ID_Input;
+  parentId: ID_Input;
+  name: String;
+  modification: ModificationCreateOneWithoutItemAdditionsInput;
+}
+
+export interface SortingCreateManyWithoutModificationInput {
+  create?: Maybe<
+    | SortingCreateWithoutModificationInput[]
+    | SortingCreateWithoutModificationInput
+  >;
+  connect?: Maybe<SortingWhereUniqueInput[] | SortingWhereUniqueInput>;
+}
+
+export interface RecipeWhereInput {
+  id?: Maybe<ID_Input>;
+  id_not?: Maybe<ID_Input>;
+  id_in?: Maybe<ID_Input[] | ID_Input>;
+  id_not_in?: Maybe<ID_Input[] | ID_Input>;
+  id_lt?: Maybe<ID_Input>;
+  id_lte?: Maybe<ID_Input>;
+  id_gt?: Maybe<ID_Input>;
+  id_gte?: Maybe<ID_Input>;
+  id_contains?: Maybe<ID_Input>;
+  id_not_contains?: Maybe<ID_Input>;
+  id_starts_with?: Maybe<ID_Input>;
+  id_not_starts_with?: Maybe<ID_Input>;
+  id_ends_with?: Maybe<ID_Input>;
+  id_not_ends_with?: Maybe<ID_Input>;
+  createdAt?: Maybe<DateTimeInput>;
+  createdAt_not?: Maybe<DateTimeInput>;
+  createdAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  createdAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  createdAt_lt?: Maybe<DateTimeInput>;
+  createdAt_lte?: Maybe<DateTimeInput>;
+  createdAt_gt?: Maybe<DateTimeInput>;
+  createdAt_gte?: Maybe<DateTimeInput>;
+  updatedAt?: Maybe<DateTimeInput>;
+  updatedAt_not?: Maybe<DateTimeInput>;
+  updatedAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  updatedAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  updatedAt_lt?: Maybe<DateTimeInput>;
+  updatedAt_lte?: Maybe<DateTimeInput>;
+  updatedAt_gt?: Maybe<DateTimeInput>;
+  updatedAt_gte?: Maybe<DateTimeInput>;
+  uid?: Maybe<ID_Input>;
+  uid_not?: Maybe<ID_Input>;
+  uid_in?: Maybe<ID_Input[] | ID_Input>;
+  uid_not_in?: Maybe<ID_Input[] | ID_Input>;
+  uid_lt?: Maybe<ID_Input>;
+  uid_lte?: Maybe<ID_Input>;
+  uid_gt?: Maybe<ID_Input>;
+  uid_gte?: Maybe<ID_Input>;
+  uid_contains?: Maybe<ID_Input>;
+  uid_not_contains?: Maybe<ID_Input>;
+  uid_starts_with?: Maybe<ID_Input>;
+  uid_not_starts_with?: Maybe<ID_Input>;
+  uid_ends_with?: Maybe<ID_Input>;
+  uid_not_ends_with?: Maybe<ID_Input>;
+  slug?: Maybe<String>;
+  slug_not?: Maybe<String>;
+  slug_in?: Maybe<String[] | String>;
+  slug_not_in?: Maybe<String[] | String>;
+  slug_lt?: Maybe<String>;
+  slug_lte?: Maybe<String>;
+  slug_gt?: Maybe<String>;
+  slug_gte?: Maybe<String>;
+  slug_contains?: Maybe<String>;
+  slug_not_contains?: Maybe<String>;
+  slug_starts_with?: Maybe<String>;
+  slug_not_starts_with?: Maybe<String>;
+  slug_ends_with?: Maybe<String>;
+  slug_not_ends_with?: Maybe<String>;
+  author?: Maybe<UserWhereInput>;
+  title?: Maybe<String>;
+  title_not?: Maybe<String>;
+  title_in?: Maybe<String[] | String>;
+  title_not_in?: Maybe<String[] | String>;
+  title_lt?: Maybe<String>;
+  title_lte?: Maybe<String>;
+  title_gt?: Maybe<String>;
+  title_gte?: Maybe<String>;
+  title_contains?: Maybe<String>;
+  title_not_contains?: Maybe<String>;
+  title_starts_with?: Maybe<String>;
+  title_not_starts_with?: Maybe<String>;
+  title_ends_with?: Maybe<String>;
+  title_not_ends_with?: Maybe<String>;
+  time?: Maybe<String>;
+  time_not?: Maybe<String>;
+  time_in?: Maybe<String[] | String>;
+  time_not_in?: Maybe<String[] | String>;
+  time_lt?: Maybe<String>;
+  time_lte?: Maybe<String>;
+  time_gt?: Maybe<String>;
+  time_gte?: Maybe<String>;
+  time_contains?: Maybe<String>;
+  time_not_contains?: Maybe<String>;
+  time_starts_with?: Maybe<String>;
+  time_not_starts_with?: Maybe<String>;
+  time_ends_with?: Maybe<String>;
+  time_not_ends_with?: Maybe<String>;
+  servingAmount?: Maybe<String>;
+  servingAmount_not?: Maybe<String>;
+  servingAmount_in?: Maybe<String[] | String>;
+  servingAmount_not_in?: Maybe<String[] | String>;
+  servingAmount_lt?: Maybe<String>;
+  servingAmount_lte?: Maybe<String>;
+  servingAmount_gt?: Maybe<String>;
+  servingAmount_gte?: Maybe<String>;
+  servingAmount_contains?: Maybe<String>;
+  servingAmount_not_contains?: Maybe<String>;
+  servingAmount_starts_with?: Maybe<String>;
+  servingAmount_not_starts_with?: Maybe<String>;
+  servingAmount_ends_with?: Maybe<String>;
+  servingAmount_not_ends_with?: Maybe<String>;
+  servingType?: Maybe<String>;
+  servingType_not?: Maybe<String>;
+  servingType_in?: Maybe<String[] | String>;
+  servingType_not_in?: Maybe<String[] | String>;
+  servingType_lt?: Maybe<String>;
+  servingType_lte?: Maybe<String>;
+  servingType_gt?: Maybe<String>;
+  servingType_gte?: Maybe<String>;
+  servingType_contains?: Maybe<String>;
+  servingType_not_contains?: Maybe<String>;
+  servingType_starts_with?: Maybe<String>;
+  servingType_not_starts_with?: Maybe<String>;
+  servingType_ends_with?: Maybe<String>;
+  servingType_not_ends_with?: Maybe<String>;
+  description?: Maybe<String>;
+  description_not?: Maybe<String>;
+  description_in?: Maybe<String[] | String>;
+  description_not_in?: Maybe<String[] | String>;
+  description_lt?: Maybe<String>;
+  description_lte?: Maybe<String>;
+  description_gt?: Maybe<String>;
+  description_gte?: Maybe<String>;
+  description_contains?: Maybe<String>;
+  description_not_contains?: Maybe<String>;
+  description_starts_with?: Maybe<String>;
+  description_not_starts_with?: Maybe<String>;
+  description_ends_with?: Maybe<String>;
+  description_not_ends_with?: Maybe<String>;
+  items_every?: Maybe<ItemWhereInput>;
+  items_some?: Maybe<ItemWhereInput>;
+  items_none?: Maybe<ItemWhereInput>;
+  modifications_every?: Maybe<ModificationWhereInput>;
+  modifications_some?: Maybe<ModificationWhereInput>;
+  modifications_none?: Maybe<ModificationWhereInput>;
+  photo?: Maybe<String>;
+  photo_not?: Maybe<String>;
+  photo_in?: Maybe<String[] | String>;
+  photo_not_in?: Maybe<String[] | String>;
+  photo_lt?: Maybe<String>;
+  photo_lte?: Maybe<String>;
+  photo_gt?: Maybe<String>;
+  photo_gte?: Maybe<String>;
+  photo_contains?: Maybe<String>;
+  photo_not_contains?: Maybe<String>;
+  photo_starts_with?: Maybe<String>;
+  photo_not_starts_with?: Maybe<String>;
+  photo_ends_with?: Maybe<String>;
+  photo_not_ends_with?: Maybe<String>;
+  AND?: Maybe<RecipeWhereInput[] | RecipeWhereInput>;
+  OR?: Maybe<RecipeWhereInput[] | RecipeWhereInput>;
+  NOT?: Maybe<RecipeWhereInput[] | RecipeWhereInput>;
+}
+
+export interface SortingCreateorderInput {
+  set?: Maybe<ID_Input[] | ID_Input>;
+}
+
+export interface ItemUpdateManyMutationInput {
+  uid?: Maybe<ID_Input>;
+  index?: Maybe<Int>;
+  name?: Maybe<String>;
+}
+
+export interface AlterationCreateWithoutModificationInput {
+  id?: Maybe<ID_Input>;
+  uid: ID_Input;
+  sourceId: ID_Input;
+  field: String;
+  value: String;
+}
+
+export interface ItemAdditionUpdateManyWithWhereNestedInput {
+  where: ItemAdditionScalarWhereInput;
+  data: ItemAdditionUpdateManyDataInput;
+}
+
+export interface ItemAdditionCreateManyWithoutModificationInput {
+  create?: Maybe<
+    | ItemAdditionCreateWithoutModificationInput[]
+    | ItemAdditionCreateWithoutModificationInput
+  >;
+  connect?: Maybe<
+    ItemAdditionWhereUniqueInput[] | ItemAdditionWhereUniqueInput
+  >;
+}
+
+export interface ItemAdditionUpdateManyDataInput {
+  uid?: Maybe<ID_Input>;
+  parentId?: Maybe<ID_Input>;
+  name?: Maybe<String>;
+}
+
+export interface StepAdditionCreateManyWithoutModificationInput {
+  create?: Maybe<
+    | StepAdditionCreateWithoutModificationInput[]
+    | StepAdditionCreateWithoutModificationInput
+  >;
+  connect?: Maybe<
+    StepAdditionWhereUniqueInput[] | StepAdditionWhereUniqueInput
   >;
 }
 
@@ -2637,12 +2998,14 @@ export interface StepAdditionUpdateManyWithoutModificationInput {
   >;
 }
 
-export interface SortingCreateManyWithoutModificationInput {
+export interface IngredientAdditionCreateManyWithoutModificationInput {
   create?: Maybe<
-    | SortingCreateWithoutModificationInput[]
-    | SortingCreateWithoutModificationInput
+    | IngredientAdditionCreateWithoutModificationInput[]
+    | IngredientAdditionCreateWithoutModificationInput
   >;
-  connect?: Maybe<SortingWhereUniqueInput[] | SortingWhereUniqueInput>;
+  connect?: Maybe<
+    IngredientAdditionWhereUniqueInput[] | IngredientAdditionWhereUniqueInput
+  >;
 }
 
 export interface StepAdditionUpdateWithWhereUniqueWithoutModificationInput {
@@ -2650,8 +3013,9 @@ export interface StepAdditionUpdateWithWhereUniqueWithoutModificationInput {
   data: StepAdditionUpdateWithoutModificationDataInput;
 }
 
-export interface SortingCreateorderInput {
-  set?: Maybe<ID_Input[] | ID_Input>;
+export interface RecipeCreateOneWithoutModificationsInput {
+  create?: Maybe<RecipeCreateWithoutModificationsInput>;
+  connect?: Maybe<RecipeWhereUniqueInput>;
 }
 
 export interface StepAdditionUpdateWithoutModificationDataInput {
@@ -2661,12 +3025,9 @@ export interface StepAdditionUpdateWithoutModificationDataInput {
   notes?: Maybe<String>;
 }
 
-export interface AlterationCreateWithoutModificationInput {
-  id?: Maybe<ID_Input>;
-  uid: ID_Input;
-  sourceId: ID_Input;
-  field: String;
-  value: String;
+export interface UserCreateOneWithoutRecipesInput {
+  create?: Maybe<UserCreateWithoutRecipesInput>;
+  connect?: Maybe<UserWhereUniqueInput>;
 }
 
 export interface StepAdditionUpsertWithWhereUniqueWithoutModificationInput {
@@ -2675,13 +3036,12 @@ export interface StepAdditionUpsertWithWhereUniqueWithoutModificationInput {
   create: StepAdditionCreateWithoutModificationInput;
 }
 
-export interface ItemAdditionCreateManyWithoutModificationInput {
+export interface ModificationCreateManyWithoutUserInput {
   create?: Maybe<
-    | ItemAdditionCreateWithoutModificationInput[]
-    | ItemAdditionCreateWithoutModificationInput
+    ModificationCreateWithoutUserInput[] | ModificationCreateWithoutUserInput
   >;
   connect?: Maybe<
-    ItemAdditionWhereUniqueInput[] | ItemAdditionWhereUniqueInput
+    ModificationWhereUniqueInput[] | ModificationWhereUniqueInput
   >;
 }
 
@@ -2777,14 +3137,12 @@ export interface StepAdditionScalarWhereInput {
   NOT?: Maybe<StepAdditionScalarWhereInput[] | StepAdditionScalarWhereInput>;
 }
 
-export interface StepAdditionCreateManyWithoutModificationInput {
-  create?: Maybe<
-    | StepAdditionCreateWithoutModificationInput[]
-    | StepAdditionCreateWithoutModificationInput
-  >;
-  connect?: Maybe<
-    StepAdditionWhereUniqueInput[] | StepAdditionWhereUniqueInput
-  >;
+export interface AlterationUpdateInput {
+  uid?: Maybe<ID_Input>;
+  sourceId?: Maybe<ID_Input>;
+  field?: Maybe<String>;
+  value?: Maybe<String>;
+  modification?: Maybe<ModificationUpdateOneRequiredWithoutAlterationsInput>;
 }
 
 export interface StepAdditionUpdateManyWithWhereNestedInput {
@@ -2792,13 +3150,15 @@ export interface StepAdditionUpdateManyWithWhereNestedInput {
   data: StepAdditionUpdateManyDataInput;
 }
 
-export interface IngredientAdditionCreateManyWithoutModificationInput {
-  create?: Maybe<
-    | IngredientAdditionCreateWithoutModificationInput[]
-    | IngredientAdditionCreateWithoutModificationInput
-  >;
-  connect?: Maybe<
-    IngredientAdditionWhereUniqueInput[] | IngredientAdditionWhereUniqueInput
+export interface ModificationUpdateWithoutAlterationsDataInput {
+  user?: Maybe<UserUpdateOneRequiredWithoutModificationsInput>;
+  recipe?: Maybe<RecipeUpdateOneRequiredWithoutModificationsInput>;
+  sortings?: Maybe<SortingUpdateManyWithoutModificationInput>;
+  removals?: Maybe<ModificationUpdateremovalsInput>;
+  itemAdditions?: Maybe<ItemAdditionUpdateManyWithoutModificationInput>;
+  stepAdditions?: Maybe<StepAdditionUpdateManyWithoutModificationInput>;
+  ingredientAdditions?: Maybe<
+    IngredientAdditionUpdateManyWithoutModificationInput
   >;
 }
 
@@ -2809,11 +3169,14 @@ export interface StepAdditionUpdateManyDataInput {
   notes?: Maybe<String>;
 }
 
-export interface RecipePhotoCreateManyWithoutRecipeInput {
-  create?: Maybe<
-    RecipePhotoCreateWithoutRecipeInput[] | RecipePhotoCreateWithoutRecipeInput
-  >;
-  connect?: Maybe<RecipePhotoWhereUniqueInput[] | RecipePhotoWhereUniqueInput>;
+export interface UserUpdateWithoutModificationsDataInput {
+  email?: Maybe<String>;
+  slug?: Maybe<String>;
+  password?: Maybe<String>;
+  name?: Maybe<String>;
+  avatar?: Maybe<String>;
+  emailVerified?: Maybe<Boolean>;
+  recipes?: Maybe<RecipeUpdateManyWithoutAuthorInput>;
 }
 
 export interface IngredientAdditionUpdateManyWithoutModificationInput {
@@ -2850,9 +3213,9 @@ export interface IngredientAdditionUpdateManyWithoutModificationInput {
   >;
 }
 
-export interface RecipeCreateOneWithoutModificationsInput {
-  create?: Maybe<RecipeCreateWithoutModificationsInput>;
-  connect?: Maybe<RecipeWhereUniqueInput>;
+export interface RecipeUpdateWithWhereUniqueWithoutAuthorInput {
+  where: RecipeWhereUniqueInput;
+  data: RecipeUpdateWithoutAuthorDataInput;
 }
 
 export interface IngredientAdditionUpdateWithWhereUniqueWithoutModificationInput {
@@ -2860,9 +3223,24 @@ export interface IngredientAdditionUpdateWithWhereUniqueWithoutModificationInput
   data: IngredientAdditionUpdateWithoutModificationDataInput;
 }
 
-export interface UserCreateOneWithoutRecipesInput {
-  create?: Maybe<UserCreateWithoutRecipesInput>;
-  connect?: Maybe<UserWhereUniqueInput>;
+export interface ItemUpdateManyWithoutRecipeInput {
+  create?: Maybe<ItemCreateWithoutRecipeInput[] | ItemCreateWithoutRecipeInput>;
+  delete?: Maybe<ItemWhereUniqueInput[] | ItemWhereUniqueInput>;
+  connect?: Maybe<ItemWhereUniqueInput[] | ItemWhereUniqueInput>;
+  set?: Maybe<ItemWhereUniqueInput[] | ItemWhereUniqueInput>;
+  disconnect?: Maybe<ItemWhereUniqueInput[] | ItemWhereUniqueInput>;
+  update?: Maybe<
+    | ItemUpdateWithWhereUniqueWithoutRecipeInput[]
+    | ItemUpdateWithWhereUniqueWithoutRecipeInput
+  >;
+  upsert?: Maybe<
+    | ItemUpsertWithWhereUniqueWithoutRecipeInput[]
+    | ItemUpsertWithWhereUniqueWithoutRecipeInput
+  >;
+  deleteMany?: Maybe<ItemScalarWhereInput[] | ItemScalarWhereInput>;
+  updateMany?: Maybe<
+    ItemUpdateManyWithWhereNestedInput[] | ItemUpdateManyWithWhereNestedInput
+  >;
 }
 
 export interface IngredientAdditionUpdateWithoutModificationDataInput {
@@ -2874,13 +3252,11 @@ export interface IngredientAdditionUpdateWithoutModificationDataInput {
   processing?: Maybe<String>;
 }
 
-export interface ModificationCreateManyWithoutUserInput {
-  create?: Maybe<
-    ModificationCreateWithoutUserInput[] | ModificationCreateWithoutUserInput
-  >;
-  connect?: Maybe<
-    ModificationWhereUniqueInput[] | ModificationWhereUniqueInput
-  >;
+export interface ItemUpdateWithoutRecipeDataInput {
+  uid?: Maybe<ID_Input>;
+  index?: Maybe<Int>;
+  name?: Maybe<String>;
+  steps?: Maybe<StepUpdateManyWithoutItemInput>;
 }
 
 export interface IngredientAdditionUpsertWithWhereUniqueWithoutModificationInput {
@@ -2889,12 +3265,9 @@ export interface IngredientAdditionUpsertWithWhereUniqueWithoutModificationInput
   create: IngredientAdditionCreateWithoutModificationInput;
 }
 
-export interface AlterationUpdateInput {
-  uid?: Maybe<ID_Input>;
-  sourceId?: Maybe<ID_Input>;
-  field?: Maybe<String>;
-  value?: Maybe<String>;
-  modification?: Maybe<ModificationUpdateOneRequiredWithoutAlterationsInput>;
+export interface StepUpdateWithWhereUniqueWithoutItemInput {
+  where: StepWhereUniqueInput;
+  data: StepUpdateWithoutItemDataInput;
 }
 
 export interface IngredientAdditionScalarWhereInput {
@@ -3023,15 +3396,26 @@ export interface IngredientAdditionScalarWhereInput {
   >;
 }
 
-export interface ModificationUpdateWithoutAlterationsDataInput {
-  user?: Maybe<UserUpdateOneRequiredWithoutModificationsInput>;
-  recipe?: Maybe<RecipeUpdateOneRequiredWithoutModificationsInput>;
-  sortings?: Maybe<SortingUpdateManyWithoutModificationInput>;
-  removals?: Maybe<ModificationUpdateremovalsInput>;
-  itemAdditions?: Maybe<ItemAdditionUpdateManyWithoutModificationInput>;
-  stepAdditions?: Maybe<StepAdditionUpdateManyWithoutModificationInput>;
-  ingredientAdditions?: Maybe<
-    IngredientAdditionUpdateManyWithoutModificationInput
+export interface IngredientUpdateManyWithoutStepInput {
+  create?: Maybe<
+    IngredientCreateWithoutStepInput[] | IngredientCreateWithoutStepInput
+  >;
+  delete?: Maybe<IngredientWhereUniqueInput[] | IngredientWhereUniqueInput>;
+  connect?: Maybe<IngredientWhereUniqueInput[] | IngredientWhereUniqueInput>;
+  set?: Maybe<IngredientWhereUniqueInput[] | IngredientWhereUniqueInput>;
+  disconnect?: Maybe<IngredientWhereUniqueInput[] | IngredientWhereUniqueInput>;
+  update?: Maybe<
+    | IngredientUpdateWithWhereUniqueWithoutStepInput[]
+    | IngredientUpdateWithWhereUniqueWithoutStepInput
+  >;
+  upsert?: Maybe<
+    | IngredientUpsertWithWhereUniqueWithoutStepInput[]
+    | IngredientUpsertWithWhereUniqueWithoutStepInput
+  >;
+  deleteMany?: Maybe<IngredientScalarWhereInput[] | IngredientScalarWhereInput>;
+  updateMany?: Maybe<
+    | IngredientUpdateManyWithWhereNestedInput[]
+    | IngredientUpdateManyWithWhereNestedInput
   >;
 }
 
@@ -3040,14 +3424,15 @@ export interface IngredientAdditionUpdateManyWithWhereNestedInput {
   data: IngredientAdditionUpdateManyDataInput;
 }
 
-export interface UserUpdateWithoutModificationsDataInput {
-  email?: Maybe<String>;
-  password?: Maybe<String>;
-  name?: Maybe<String>;
-  avatar?: Maybe<String>;
-  slug?: Maybe<String>;
-  emailVerified?: Maybe<Boolean>;
-  recipes?: Maybe<RecipeUpdateManyWithoutAuthorInput>;
+export interface UserSubscriptionWhereInput {
+  mutation_in?: Maybe<MutationType[] | MutationType>;
+  updatedFields_contains?: Maybe<String>;
+  updatedFields_contains_every?: Maybe<String[] | String>;
+  updatedFields_contains_some?: Maybe<String[] | String>;
+  node?: Maybe<UserWhereInput>;
+  AND?: Maybe<UserSubscriptionWhereInput[] | UserSubscriptionWhereInput>;
+  OR?: Maybe<UserSubscriptionWhereInput[] | UserSubscriptionWhereInput>;
+  NOT?: Maybe<UserSubscriptionWhereInput[] | UserSubscriptionWhereInput>;
 }
 
 export interface IngredientAdditionUpdateManyDataInput {
@@ -3059,9 +3444,15 @@ export interface IngredientAdditionUpdateManyDataInput {
   processing?: Maybe<String>;
 }
 
-export interface RecipeUpdateWithWhereUniqueWithoutAuthorInput {
-  where: RecipeWhereUniqueInput;
-  data: RecipeUpdateWithoutAuthorDataInput;
+export interface RecipeSubscriptionWhereInput {
+  mutation_in?: Maybe<MutationType[] | MutationType>;
+  updatedFields_contains?: Maybe<String>;
+  updatedFields_contains_every?: Maybe<String[] | String>;
+  updatedFields_contains_some?: Maybe<String[] | String>;
+  node?: Maybe<RecipeWhereInput>;
+  AND?: Maybe<RecipeSubscriptionWhereInput[] | RecipeSubscriptionWhereInput>;
+  OR?: Maybe<RecipeSubscriptionWhereInput[] | RecipeSubscriptionWhereInput>;
+  NOT?: Maybe<RecipeSubscriptionWhereInput[] | RecipeSubscriptionWhereInput>;
 }
 
 export interface ModificationUpsertWithWhereUniqueWithoutRecipeInput {
@@ -3070,23 +3461,23 @@ export interface ModificationUpsertWithWhereUniqueWithoutRecipeInput {
   create: ModificationCreateWithoutRecipeInput;
 }
 
-export interface ItemUpdateManyWithoutRecipeInput {
-  create?: Maybe<ItemCreateWithoutRecipeInput[] | ItemCreateWithoutRecipeInput>;
-  delete?: Maybe<ItemWhereUniqueInput[] | ItemWhereUniqueInput>;
-  connect?: Maybe<ItemWhereUniqueInput[] | ItemWhereUniqueInput>;
-  set?: Maybe<ItemWhereUniqueInput[] | ItemWhereUniqueInput>;
-  disconnect?: Maybe<ItemWhereUniqueInput[] | ItemWhereUniqueInput>;
-  update?: Maybe<
-    | ItemUpdateWithWhereUniqueWithoutRecipeInput[]
-    | ItemUpdateWithWhereUniqueWithoutRecipeInput
+export interface IngredientAdditionSubscriptionWhereInput {
+  mutation_in?: Maybe<MutationType[] | MutationType>;
+  updatedFields_contains?: Maybe<String>;
+  updatedFields_contains_every?: Maybe<String[] | String>;
+  updatedFields_contains_some?: Maybe<String[] | String>;
+  node?: Maybe<IngredientAdditionWhereInput>;
+  AND?: Maybe<
+    | IngredientAdditionSubscriptionWhereInput[]
+    | IngredientAdditionSubscriptionWhereInput
   >;
-  upsert?: Maybe<
-    | ItemUpsertWithWhereUniqueWithoutRecipeInput[]
-    | ItemUpsertWithWhereUniqueWithoutRecipeInput
+  OR?: Maybe<
+    | IngredientAdditionSubscriptionWhereInput[]
+    | IngredientAdditionSubscriptionWhereInput
   >;
-  deleteMany?: Maybe<ItemScalarWhereInput[] | ItemScalarWhereInput>;
-  updateMany?: Maybe<
-    ItemUpdateManyWithWhereNestedInput[] | ItemUpdateManyWithWhereNestedInput
+  NOT?: Maybe<
+    | IngredientAdditionSubscriptionWhereInput[]
+    | IngredientAdditionSubscriptionWhereInput
   >;
 }
 
@@ -3126,11 +3517,13 @@ export interface ModificationScalarWhereInput {
   NOT?: Maybe<ModificationScalarWhereInput[] | ModificationScalarWhereInput>;
 }
 
-export interface ItemUpdateWithoutRecipeDataInput {
-  uid?: Maybe<ID_Input>;
-  index?: Maybe<Int>;
+export interface UserUpdateManyMutationInput {
+  email?: Maybe<String>;
+  slug?: Maybe<String>;
+  password?: Maybe<String>;
   name?: Maybe<String>;
-  steps?: Maybe<StepUpdateManyWithoutItemInput>;
+  avatar?: Maybe<String>;
+  emailVerified?: Maybe<Boolean>;
 }
 
 export interface ModificationUpdateManyWithWhereNestedInput {
@@ -3138,432 +3531,23 @@ export interface ModificationUpdateManyWithWhereNestedInput {
   data: ModificationUpdateManyDataInput;
 }
 
-export interface StepAdditionWhereInput {
-  id?: Maybe<ID_Input>;
-  id_not?: Maybe<ID_Input>;
-  id_in?: Maybe<ID_Input[] | ID_Input>;
-  id_not_in?: Maybe<ID_Input[] | ID_Input>;
-  id_lt?: Maybe<ID_Input>;
-  id_lte?: Maybe<ID_Input>;
-  id_gt?: Maybe<ID_Input>;
-  id_gte?: Maybe<ID_Input>;
-  id_contains?: Maybe<ID_Input>;
-  id_not_contains?: Maybe<ID_Input>;
-  id_starts_with?: Maybe<ID_Input>;
-  id_not_starts_with?: Maybe<ID_Input>;
-  id_ends_with?: Maybe<ID_Input>;
-  id_not_ends_with?: Maybe<ID_Input>;
-  createdAt?: Maybe<DateTimeInput>;
-  createdAt_not?: Maybe<DateTimeInput>;
-  createdAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
-  createdAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
-  createdAt_lt?: Maybe<DateTimeInput>;
-  createdAt_lte?: Maybe<DateTimeInput>;
-  createdAt_gt?: Maybe<DateTimeInput>;
-  createdAt_gte?: Maybe<DateTimeInput>;
-  updatedAt?: Maybe<DateTimeInput>;
-  updatedAt_not?: Maybe<DateTimeInput>;
-  updatedAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
-  updatedAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
-  updatedAt_lt?: Maybe<DateTimeInput>;
-  updatedAt_lte?: Maybe<DateTimeInput>;
-  updatedAt_gt?: Maybe<DateTimeInput>;
-  updatedAt_gte?: Maybe<DateTimeInput>;
+export interface StepAdditionUpdateManyMutationInput {
   uid?: Maybe<ID_Input>;
-  uid_not?: Maybe<ID_Input>;
-  uid_in?: Maybe<ID_Input[] | ID_Input>;
-  uid_not_in?: Maybe<ID_Input[] | ID_Input>;
-  uid_lt?: Maybe<ID_Input>;
-  uid_lte?: Maybe<ID_Input>;
-  uid_gt?: Maybe<ID_Input>;
-  uid_gte?: Maybe<ID_Input>;
-  uid_contains?: Maybe<ID_Input>;
-  uid_not_contains?: Maybe<ID_Input>;
-  uid_starts_with?: Maybe<ID_Input>;
-  uid_not_starts_with?: Maybe<ID_Input>;
-  uid_ends_with?: Maybe<ID_Input>;
-  uid_not_ends_with?: Maybe<ID_Input>;
   parentId?: Maybe<ID_Input>;
-  parentId_not?: Maybe<ID_Input>;
-  parentId_in?: Maybe<ID_Input[] | ID_Input>;
-  parentId_not_in?: Maybe<ID_Input[] | ID_Input>;
-  parentId_lt?: Maybe<ID_Input>;
-  parentId_lte?: Maybe<ID_Input>;
-  parentId_gt?: Maybe<ID_Input>;
-  parentId_gte?: Maybe<ID_Input>;
-  parentId_contains?: Maybe<ID_Input>;
-  parentId_not_contains?: Maybe<ID_Input>;
-  parentId_starts_with?: Maybe<ID_Input>;
-  parentId_not_starts_with?: Maybe<ID_Input>;
-  parentId_ends_with?: Maybe<ID_Input>;
-  parentId_not_ends_with?: Maybe<ID_Input>;
   directions?: Maybe<String>;
-  directions_not?: Maybe<String>;
-  directions_in?: Maybe<String[] | String>;
-  directions_not_in?: Maybe<String[] | String>;
-  directions_lt?: Maybe<String>;
-  directions_lte?: Maybe<String>;
-  directions_gt?: Maybe<String>;
-  directions_gte?: Maybe<String>;
-  directions_contains?: Maybe<String>;
-  directions_not_contains?: Maybe<String>;
-  directions_starts_with?: Maybe<String>;
-  directions_not_starts_with?: Maybe<String>;
-  directions_ends_with?: Maybe<String>;
-  directions_not_ends_with?: Maybe<String>;
   notes?: Maybe<String>;
-  notes_not?: Maybe<String>;
-  notes_in?: Maybe<String[] | String>;
-  notes_not_in?: Maybe<String[] | String>;
-  notes_lt?: Maybe<String>;
-  notes_lte?: Maybe<String>;
-  notes_gt?: Maybe<String>;
-  notes_gte?: Maybe<String>;
-  notes_contains?: Maybe<String>;
-  notes_not_contains?: Maybe<String>;
-  notes_starts_with?: Maybe<String>;
-  notes_not_starts_with?: Maybe<String>;
-  notes_ends_with?: Maybe<String>;
-  notes_not_ends_with?: Maybe<String>;
-  modification?: Maybe<ModificationWhereInput>;
-  AND?: Maybe<StepAdditionWhereInput[] | StepAdditionWhereInput>;
-  OR?: Maybe<StepAdditionWhereInput[] | StepAdditionWhereInput>;
-  NOT?: Maybe<StepAdditionWhereInput[] | StepAdditionWhereInput>;
 }
 
 export interface ModificationUpdateManyDataInput {
   removals?: Maybe<ModificationUpdateremovalsInput>;
 }
 
-export interface AlterationWhereInput {
-  id?: Maybe<ID_Input>;
-  id_not?: Maybe<ID_Input>;
-  id_in?: Maybe<ID_Input[] | ID_Input>;
-  id_not_in?: Maybe<ID_Input[] | ID_Input>;
-  id_lt?: Maybe<ID_Input>;
-  id_lte?: Maybe<ID_Input>;
-  id_gt?: Maybe<ID_Input>;
-  id_gte?: Maybe<ID_Input>;
-  id_contains?: Maybe<ID_Input>;
-  id_not_contains?: Maybe<ID_Input>;
-  id_starts_with?: Maybe<ID_Input>;
-  id_not_starts_with?: Maybe<ID_Input>;
-  id_ends_with?: Maybe<ID_Input>;
-  id_not_ends_with?: Maybe<ID_Input>;
-  createdAt?: Maybe<DateTimeInput>;
-  createdAt_not?: Maybe<DateTimeInput>;
-  createdAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
-  createdAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
-  createdAt_lt?: Maybe<DateTimeInput>;
-  createdAt_lte?: Maybe<DateTimeInput>;
-  createdAt_gt?: Maybe<DateTimeInput>;
-  createdAt_gte?: Maybe<DateTimeInput>;
-  updatedAt?: Maybe<DateTimeInput>;
-  updatedAt_not?: Maybe<DateTimeInput>;
-  updatedAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
-  updatedAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
-  updatedAt_lt?: Maybe<DateTimeInput>;
-  updatedAt_lte?: Maybe<DateTimeInput>;
-  updatedAt_gt?: Maybe<DateTimeInput>;
-  updatedAt_gte?: Maybe<DateTimeInput>;
-  uid?: Maybe<ID_Input>;
-  uid_not?: Maybe<ID_Input>;
-  uid_in?: Maybe<ID_Input[] | ID_Input>;
-  uid_not_in?: Maybe<ID_Input[] | ID_Input>;
-  uid_lt?: Maybe<ID_Input>;
-  uid_lte?: Maybe<ID_Input>;
-  uid_gt?: Maybe<ID_Input>;
-  uid_gte?: Maybe<ID_Input>;
-  uid_contains?: Maybe<ID_Input>;
-  uid_not_contains?: Maybe<ID_Input>;
-  uid_starts_with?: Maybe<ID_Input>;
-  uid_not_starts_with?: Maybe<ID_Input>;
-  uid_ends_with?: Maybe<ID_Input>;
-  uid_not_ends_with?: Maybe<ID_Input>;
-  sourceId?: Maybe<ID_Input>;
-  sourceId_not?: Maybe<ID_Input>;
-  sourceId_in?: Maybe<ID_Input[] | ID_Input>;
-  sourceId_not_in?: Maybe<ID_Input[] | ID_Input>;
-  sourceId_lt?: Maybe<ID_Input>;
-  sourceId_lte?: Maybe<ID_Input>;
-  sourceId_gt?: Maybe<ID_Input>;
-  sourceId_gte?: Maybe<ID_Input>;
-  sourceId_contains?: Maybe<ID_Input>;
-  sourceId_not_contains?: Maybe<ID_Input>;
-  sourceId_starts_with?: Maybe<ID_Input>;
-  sourceId_not_starts_with?: Maybe<ID_Input>;
-  sourceId_ends_with?: Maybe<ID_Input>;
-  sourceId_not_ends_with?: Maybe<ID_Input>;
-  field?: Maybe<String>;
-  field_not?: Maybe<String>;
-  field_in?: Maybe<String[] | String>;
-  field_not_in?: Maybe<String[] | String>;
-  field_lt?: Maybe<String>;
-  field_lte?: Maybe<String>;
-  field_gt?: Maybe<String>;
-  field_gte?: Maybe<String>;
-  field_contains?: Maybe<String>;
-  field_not_contains?: Maybe<String>;
-  field_starts_with?: Maybe<String>;
-  field_not_starts_with?: Maybe<String>;
-  field_ends_with?: Maybe<String>;
-  field_not_ends_with?: Maybe<String>;
-  value?: Maybe<String>;
-  value_not?: Maybe<String>;
-  value_in?: Maybe<String[] | String>;
-  value_not_in?: Maybe<String[] | String>;
-  value_lt?: Maybe<String>;
-  value_lte?: Maybe<String>;
-  value_gt?: Maybe<String>;
-  value_gte?: Maybe<String>;
-  value_contains?: Maybe<String>;
-  value_not_contains?: Maybe<String>;
-  value_starts_with?: Maybe<String>;
-  value_not_starts_with?: Maybe<String>;
-  value_ends_with?: Maybe<String>;
-  value_not_ends_with?: Maybe<String>;
-  modification?: Maybe<ModificationWhereInput>;
-  AND?: Maybe<AlterationWhereInput[] | AlterationWhereInput>;
-  OR?: Maybe<AlterationWhereInput[] | AlterationWhereInput>;
-  NOT?: Maybe<AlterationWhereInput[] | AlterationWhereInput>;
+export interface ModificationUpdateOneRequiredWithoutStepAdditionsInput {
+  create?: Maybe<ModificationCreateWithoutStepAdditionsInput>;
+  update?: Maybe<ModificationUpdateWithoutStepAdditionsDataInput>;
+  upsert?: Maybe<ModificationUpsertWithoutStepAdditionsInput>;
+  connect?: Maybe<ModificationWhereUniqueInput>;
 }
-
-export interface RecipePhotoUpdateManyWithoutRecipeInput {
-  create?: Maybe<
-    RecipePhotoCreateWithoutRecipeInput[] | RecipePhotoCreateWithoutRecipeInput
-  >;
-  delete?: Maybe<RecipePhotoWhereUniqueInput[] | RecipePhotoWhereUniqueInput>;
-  connect?: Maybe<RecipePhotoWhereUniqueInput[] | RecipePhotoWhereUniqueInput>;
-  set?: Maybe<RecipePhotoWhereUniqueInput[] | RecipePhotoWhereUniqueInput>;
-  disconnect?: Maybe<
-    RecipePhotoWhereUniqueInput[] | RecipePhotoWhereUniqueInput
-  >;
-  update?: Maybe<
-    | RecipePhotoUpdateWithWhereUniqueWithoutRecipeInput[]
-    | RecipePhotoUpdateWithWhereUniqueWithoutRecipeInput
-  >;
-  upsert?: Maybe<
-    | RecipePhotoUpsertWithWhereUniqueWithoutRecipeInput[]
-    | RecipePhotoUpsertWithWhereUniqueWithoutRecipeInput
-  >;
-  deleteMany?: Maybe<
-    RecipePhotoScalarWhereInput[] | RecipePhotoScalarWhereInput
-  >;
-  updateMany?: Maybe<
-    | RecipePhotoUpdateManyWithWhereNestedInput[]
-    | RecipePhotoUpdateManyWithWhereNestedInput
-  >;
-}
-
-export interface ModificationWhereInput {
-  id?: Maybe<ID_Input>;
-  id_not?: Maybe<ID_Input>;
-  id_in?: Maybe<ID_Input[] | ID_Input>;
-  id_not_in?: Maybe<ID_Input[] | ID_Input>;
-  id_lt?: Maybe<ID_Input>;
-  id_lte?: Maybe<ID_Input>;
-  id_gt?: Maybe<ID_Input>;
-  id_gte?: Maybe<ID_Input>;
-  id_contains?: Maybe<ID_Input>;
-  id_not_contains?: Maybe<ID_Input>;
-  id_starts_with?: Maybe<ID_Input>;
-  id_not_starts_with?: Maybe<ID_Input>;
-  id_ends_with?: Maybe<ID_Input>;
-  id_not_ends_with?: Maybe<ID_Input>;
-  createdAt?: Maybe<DateTimeInput>;
-  createdAt_not?: Maybe<DateTimeInput>;
-  createdAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
-  createdAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
-  createdAt_lt?: Maybe<DateTimeInput>;
-  createdAt_lte?: Maybe<DateTimeInput>;
-  createdAt_gt?: Maybe<DateTimeInput>;
-  createdAt_gte?: Maybe<DateTimeInput>;
-  updatedAt?: Maybe<DateTimeInput>;
-  updatedAt_not?: Maybe<DateTimeInput>;
-  updatedAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
-  updatedAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
-  updatedAt_lt?: Maybe<DateTimeInput>;
-  updatedAt_lte?: Maybe<DateTimeInput>;
-  updatedAt_gt?: Maybe<DateTimeInput>;
-  updatedAt_gte?: Maybe<DateTimeInput>;
-  user?: Maybe<UserWhereInput>;
-  recipe?: Maybe<RecipeWhereInput>;
-  sortings_every?: Maybe<SortingWhereInput>;
-  sortings_some?: Maybe<SortingWhereInput>;
-  sortings_none?: Maybe<SortingWhereInput>;
-  alterations_every?: Maybe<AlterationWhereInput>;
-  alterations_some?: Maybe<AlterationWhereInput>;
-  alterations_none?: Maybe<AlterationWhereInput>;
-  itemAdditions_every?: Maybe<ItemAdditionWhereInput>;
-  itemAdditions_some?: Maybe<ItemAdditionWhereInput>;
-  itemAdditions_none?: Maybe<ItemAdditionWhereInput>;
-  stepAdditions_every?: Maybe<StepAdditionWhereInput>;
-  stepAdditions_some?: Maybe<StepAdditionWhereInput>;
-  stepAdditions_none?: Maybe<StepAdditionWhereInput>;
-  ingredientAdditions_every?: Maybe<IngredientAdditionWhereInput>;
-  ingredientAdditions_some?: Maybe<IngredientAdditionWhereInput>;
-  ingredientAdditions_none?: Maybe<IngredientAdditionWhereInput>;
-  AND?: Maybe<ModificationWhereInput[] | ModificationWhereInput>;
-  OR?: Maybe<ModificationWhereInput[] | ModificationWhereInput>;
-  NOT?: Maybe<ModificationWhereInput[] | ModificationWhereInput>;
-}
-
-export interface RecipePhotoUpdateWithWhereUniqueWithoutRecipeInput {
-  where: RecipePhotoWhereUniqueInput;
-  data: RecipePhotoUpdateWithoutRecipeDataInput;
-}
-
-export interface RecipeSubscriptionWhereInput {
-  mutation_in?: Maybe<MutationType[] | MutationType>;
-  updatedFields_contains?: Maybe<String>;
-  updatedFields_contains_every?: Maybe<String[] | String>;
-  updatedFields_contains_some?: Maybe<String[] | String>;
-  node?: Maybe<RecipeWhereInput>;
-  AND?: Maybe<RecipeSubscriptionWhereInput[] | RecipeSubscriptionWhereInput>;
-  OR?: Maybe<RecipeSubscriptionWhereInput[] | RecipeSubscriptionWhereInput>;
-  NOT?: Maybe<RecipeSubscriptionWhereInput[] | RecipeSubscriptionWhereInput>;
-}
-
-export interface RecipePhotoUpdateWithoutRecipeDataInput {
-  filename?: Maybe<String>;
-  url?: Maybe<String>;
-  index?: Maybe<Int>;
-}
-
-export interface IngredientAdditionSubscriptionWhereInput {
-  mutation_in?: Maybe<MutationType[] | MutationType>;
-  updatedFields_contains?: Maybe<String>;
-  updatedFields_contains_every?: Maybe<String[] | String>;
-  updatedFields_contains_some?: Maybe<String[] | String>;
-  node?: Maybe<IngredientAdditionWhereInput>;
-  AND?: Maybe<
-    | IngredientAdditionSubscriptionWhereInput[]
-    | IngredientAdditionSubscriptionWhereInput
-  >;
-  OR?: Maybe<
-    | IngredientAdditionSubscriptionWhereInput[]
-    | IngredientAdditionSubscriptionWhereInput
-  >;
-  NOT?: Maybe<
-    | IngredientAdditionSubscriptionWhereInput[]
-    | IngredientAdditionSubscriptionWhereInput
-  >;
-}
-
-export interface RecipePhotoUpsertWithWhereUniqueWithoutRecipeInput {
-  where: RecipePhotoWhereUniqueInput;
-  update: RecipePhotoUpdateWithoutRecipeDataInput;
-  create: RecipePhotoCreateWithoutRecipeInput;
-}
-
-export interface UserUpdateInput {
-  email?: Maybe<String>;
-  password?: Maybe<String>;
-  name?: Maybe<String>;
-  avatar?: Maybe<String>;
-  slug?: Maybe<String>;
-  emailVerified?: Maybe<Boolean>;
-  recipes?: Maybe<RecipeUpdateManyWithoutAuthorInput>;
-  modifications?: Maybe<ModificationUpdateManyWithoutUserInput>;
-}
-
-export interface RecipePhotoScalarWhereInput {
-  id?: Maybe<ID_Input>;
-  id_not?: Maybe<ID_Input>;
-  id_in?: Maybe<ID_Input[] | ID_Input>;
-  id_not_in?: Maybe<ID_Input[] | ID_Input>;
-  id_lt?: Maybe<ID_Input>;
-  id_lte?: Maybe<ID_Input>;
-  id_gt?: Maybe<ID_Input>;
-  id_gte?: Maybe<ID_Input>;
-  id_contains?: Maybe<ID_Input>;
-  id_not_contains?: Maybe<ID_Input>;
-  id_starts_with?: Maybe<ID_Input>;
-  id_not_starts_with?: Maybe<ID_Input>;
-  id_ends_with?: Maybe<ID_Input>;
-  id_not_ends_with?: Maybe<ID_Input>;
-  createdAt?: Maybe<DateTimeInput>;
-  createdAt_not?: Maybe<DateTimeInput>;
-  createdAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
-  createdAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
-  createdAt_lt?: Maybe<DateTimeInput>;
-  createdAt_lte?: Maybe<DateTimeInput>;
-  createdAt_gt?: Maybe<DateTimeInput>;
-  createdAt_gte?: Maybe<DateTimeInput>;
-  updatedAt?: Maybe<DateTimeInput>;
-  updatedAt_not?: Maybe<DateTimeInput>;
-  updatedAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
-  updatedAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
-  updatedAt_lt?: Maybe<DateTimeInput>;
-  updatedAt_lte?: Maybe<DateTimeInput>;
-  updatedAt_gt?: Maybe<DateTimeInput>;
-  updatedAt_gte?: Maybe<DateTimeInput>;
-  filename?: Maybe<String>;
-  filename_not?: Maybe<String>;
-  filename_in?: Maybe<String[] | String>;
-  filename_not_in?: Maybe<String[] | String>;
-  filename_lt?: Maybe<String>;
-  filename_lte?: Maybe<String>;
-  filename_gt?: Maybe<String>;
-  filename_gte?: Maybe<String>;
-  filename_contains?: Maybe<String>;
-  filename_not_contains?: Maybe<String>;
-  filename_starts_with?: Maybe<String>;
-  filename_not_starts_with?: Maybe<String>;
-  filename_ends_with?: Maybe<String>;
-  filename_not_ends_with?: Maybe<String>;
-  url?: Maybe<String>;
-  url_not?: Maybe<String>;
-  url_in?: Maybe<String[] | String>;
-  url_not_in?: Maybe<String[] | String>;
-  url_lt?: Maybe<String>;
-  url_lte?: Maybe<String>;
-  url_gt?: Maybe<String>;
-  url_gte?: Maybe<String>;
-  url_contains?: Maybe<String>;
-  url_not_contains?: Maybe<String>;
-  url_starts_with?: Maybe<String>;
-  url_not_starts_with?: Maybe<String>;
-  url_ends_with?: Maybe<String>;
-  url_not_ends_with?: Maybe<String>;
-  index?: Maybe<Int>;
-  index_not?: Maybe<Int>;
-  index_in?: Maybe<Int[] | Int>;
-  index_not_in?: Maybe<Int[] | Int>;
-  index_lt?: Maybe<Int>;
-  index_lte?: Maybe<Int>;
-  index_gt?: Maybe<Int>;
-  index_gte?: Maybe<Int>;
-  AND?: Maybe<RecipePhotoScalarWhereInput[] | RecipePhotoScalarWhereInput>;
-  OR?: Maybe<RecipePhotoScalarWhereInput[] | RecipePhotoScalarWhereInput>;
-  NOT?: Maybe<RecipePhotoScalarWhereInput[] | RecipePhotoScalarWhereInput>;
-}
-
-export type IngredientWhereUniqueInput = AtLeastOne<{
-  id: Maybe<ID_Input>;
-  uid?: Maybe<ID_Input>;
-}>;
-
-export interface RecipePhotoUpdateManyWithWhereNestedInput {
-  where: RecipePhotoScalarWhereInput;
-  data: RecipePhotoUpdateManyDataInput;
-}
-
-export type IngredientAdditionWhereUniqueInput = AtLeastOne<{
-  id: Maybe<ID_Input>;
-  uid?: Maybe<ID_Input>;
-}>;
-
-export interface RecipePhotoUpdateManyDataInput {
-  filename?: Maybe<String>;
-  url?: Maybe<String>;
-  index?: Maybe<Int>;
-}
-
-export type ItemWhereUniqueInput = AtLeastOne<{
-  id: Maybe<ID_Input>;
-  uid?: Maybe<ID_Input>;
-}>;
 
 export interface RecipeUpsertWithWhereUniqueWithoutAuthorInput {
   where: RecipeWhereUniqueInput;
@@ -3571,10 +3555,10 @@ export interface RecipeUpsertWithWhereUniqueWithoutAuthorInput {
   create: RecipeCreateWithoutAuthorInput;
 }
 
-export type ItemAdditionWhereUniqueInput = AtLeastOne<{
-  id: Maybe<ID_Input>;
-  uid?: Maybe<ID_Input>;
-}>;
+export interface ModificationCreateOneWithoutStepAdditionsInput {
+  create?: Maybe<ModificationCreateWithoutStepAdditionsInput>;
+  connect?: Maybe<ModificationWhereUniqueInput>;
+}
 
 export interface RecipeScalarWhereInput {
   id?: Maybe<ID_Input>;
@@ -3705,25 +3689,43 @@ export interface RecipeScalarWhereInput {
   description_not_starts_with?: Maybe<String>;
   description_ends_with?: Maybe<String>;
   description_not_ends_with?: Maybe<String>;
+  photo?: Maybe<String>;
+  photo_not?: Maybe<String>;
+  photo_in?: Maybe<String[] | String>;
+  photo_not_in?: Maybe<String[] | String>;
+  photo_lt?: Maybe<String>;
+  photo_lte?: Maybe<String>;
+  photo_gt?: Maybe<String>;
+  photo_gte?: Maybe<String>;
+  photo_contains?: Maybe<String>;
+  photo_not_contains?: Maybe<String>;
+  photo_starts_with?: Maybe<String>;
+  photo_not_starts_with?: Maybe<String>;
+  photo_ends_with?: Maybe<String>;
+  photo_not_ends_with?: Maybe<String>;
   AND?: Maybe<RecipeScalarWhereInput[] | RecipeScalarWhereInput>;
   OR?: Maybe<RecipeScalarWhereInput[] | RecipeScalarWhereInput>;
   NOT?: Maybe<RecipeScalarWhereInput[] | RecipeScalarWhereInput>;
 }
 
-export type ModificationWhereUniqueInput = AtLeastOne<{
-  id: Maybe<ID_Input>;
-}>;
+export interface StepUpdateInput {
+  uid?: Maybe<ID_Input>;
+  index?: Maybe<Int>;
+  directions?: Maybe<String>;
+  notes?: Maybe<String>;
+  item?: Maybe<ItemUpdateOneRequiredWithoutStepsInput>;
+  ingredients?: Maybe<IngredientUpdateManyWithoutStepInput>;
+}
 
 export interface RecipeUpdateManyWithWhereNestedInput {
   where: RecipeScalarWhereInput;
   data: RecipeUpdateManyDataInput;
 }
 
-export type RecipeWhereUniqueInput = AtLeastOne<{
-  id: Maybe<ID_Input>;
-  uid?: Maybe<ID_Input>;
-  slug?: Maybe<String>;
-}>;
+export interface ModificationUpsertWithoutSortingsInput {
+  update: ModificationUpdateWithoutSortingsDataInput;
+  create: ModificationCreateWithoutSortingsInput;
+}
 
 export interface RecipeUpdateManyDataInput {
   uid?: Maybe<ID_Input>;
@@ -3733,21 +3735,28 @@ export interface RecipeUpdateManyDataInput {
   servingAmount?: Maybe<String>;
   servingType?: Maybe<String>;
   description?: Maybe<String>;
+  photo?: Maybe<String>;
 }
 
-export type RecipePhotoWhereUniqueInput = AtLeastOne<{
-  id: Maybe<ID_Input>;
-}>;
+export interface SortingUpdateInput {
+  uid?: Maybe<ID_Input>;
+  parentId?: Maybe<ID_Input>;
+  order?: Maybe<SortingUpdateorderInput>;
+  modification?: Maybe<ModificationUpdateOneRequiredWithoutSortingsInput>;
+}
 
 export interface UserUpsertWithoutModificationsInput {
   update: UserUpdateWithoutModificationsDataInput;
   create: UserCreateWithoutModificationsInput;
 }
 
-export type SortingWhereUniqueInput = AtLeastOne<{
-  id: Maybe<ID_Input>;
-  uid?: Maybe<ID_Input>;
-}>;
+export interface SortingCreateInput {
+  id?: Maybe<ID_Input>;
+  uid: ID_Input;
+  parentId: ID_Input;
+  order?: Maybe<SortingCreateorderInput>;
+  modification: ModificationCreateOneWithoutSortingsInput;
+}
 
 export interface RecipeUpdateOneRequiredWithoutModificationsInput {
   create?: Maybe<RecipeCreateWithoutModificationsInput>;
@@ -3756,10 +3765,20 @@ export interface RecipeUpdateOneRequiredWithoutModificationsInput {
   connect?: Maybe<RecipeWhereUniqueInput>;
 }
 
-export type StepWhereUniqueInput = AtLeastOne<{
-  id: Maybe<ID_Input>;
-  uid?: Maybe<ID_Input>;
-}>;
+export interface RecipeCreateInput {
+  id?: Maybe<ID_Input>;
+  uid: ID_Input;
+  slug: String;
+  author: UserCreateOneWithoutRecipesInput;
+  title?: Maybe<String>;
+  time?: Maybe<String>;
+  servingAmount?: Maybe<String>;
+  servingType?: Maybe<String>;
+  description?: Maybe<String>;
+  items?: Maybe<ItemCreateManyWithoutRecipeInput>;
+  modifications?: Maybe<ModificationCreateManyWithoutRecipeInput>;
+  photo?: Maybe<String>;
+}
 
 export interface RecipeUpdateWithoutModificationsDataInput {
   uid?: Maybe<ID_Input>;
@@ -3771,13 +3790,22 @@ export interface RecipeUpdateWithoutModificationsDataInput {
   servingType?: Maybe<String>;
   description?: Maybe<String>;
   items?: Maybe<ItemUpdateManyWithoutRecipeInput>;
-  photos?: Maybe<RecipePhotoUpdateManyWithoutRecipeInput>;
+  photo?: Maybe<String>;
 }
 
-export type StepAdditionWhereUniqueInput = AtLeastOne<{
-  id: Maybe<ID_Input>;
-  uid?: Maybe<ID_Input>;
-}>;
+export interface ModificationCreateInput {
+  id?: Maybe<ID_Input>;
+  user: UserCreateOneWithoutModificationsInput;
+  recipe: RecipeCreateOneWithoutModificationsInput;
+  sortings?: Maybe<SortingCreateManyWithoutModificationInput>;
+  alterations?: Maybe<AlterationCreateManyWithoutModificationInput>;
+  removals?: Maybe<ModificationCreateremovalsInput>;
+  itemAdditions?: Maybe<ItemAdditionCreateManyWithoutModificationInput>;
+  stepAdditions?: Maybe<StepAdditionCreateManyWithoutModificationInput>;
+  ingredientAdditions?: Maybe<
+    IngredientAdditionCreateManyWithoutModificationInput
+  >;
+}
 
 export interface UserUpdateOneRequiredWithoutRecipesInput {
   create?: Maybe<UserCreateWithoutRecipesInput>;
@@ -3786,31 +3814,34 @@ export interface UserUpdateOneRequiredWithoutRecipesInput {
   connect?: Maybe<UserWhereUniqueInput>;
 }
 
-export type UserWhereUniqueInput = AtLeastOne<{
-  id: Maybe<ID_Input>;
-  email?: Maybe<String>;
-}>;
+export interface AlterationCreateInput {
+  id?: Maybe<ID_Input>;
+  uid: ID_Input;
+  sourceId: ID_Input;
+  field: String;
+  value: String;
+  modification: ModificationCreateOneWithoutAlterationsInput;
+}
 
 export interface UserUpdateWithoutRecipesDataInput {
   email?: Maybe<String>;
+  slug?: Maybe<String>;
   password?: Maybe<String>;
   name?: Maybe<String>;
   avatar?: Maybe<String>;
-  slug?: Maybe<String>;
   emailVerified?: Maybe<Boolean>;
   modifications?: Maybe<ModificationUpdateManyWithoutUserInput>;
 }
 
-export interface ModificationUpdateWithoutItemAdditionsDataInput {
-  user?: Maybe<UserUpdateOneRequiredWithoutModificationsInput>;
-  recipe?: Maybe<RecipeUpdateOneRequiredWithoutModificationsInput>;
-  sortings?: Maybe<SortingUpdateManyWithoutModificationInput>;
-  alterations?: Maybe<AlterationUpdateManyWithoutModificationInput>;
-  removals?: Maybe<ModificationUpdateremovalsInput>;
-  stepAdditions?: Maybe<StepAdditionUpdateManyWithoutModificationInput>;
-  ingredientAdditions?: Maybe<
-    IngredientAdditionUpdateManyWithoutModificationInput
-  >;
+export interface UserCreateWithoutModificationsInput {
+  id?: Maybe<ID_Input>;
+  email: String;
+  slug: String;
+  password: String;
+  name: String;
+  avatar?: Maybe<String>;
+  emailVerified?: Maybe<Boolean>;
+  recipes?: Maybe<RecipeCreateManyWithoutAuthorInput>;
 }
 
 export interface ModificationUpdateManyWithoutUserInput {
@@ -3842,17 +3873,12 @@ export interface ModificationUpdateManyWithoutUserInput {
   >;
 }
 
-export interface ModificationCreateWithoutAlterationsInput {
+export interface ItemCreateWithoutRecipeInput {
   id?: Maybe<ID_Input>;
-  user: UserCreateOneWithoutModificationsInput;
-  recipe: RecipeCreateOneWithoutModificationsInput;
-  sortings?: Maybe<SortingCreateManyWithoutModificationInput>;
-  removals?: Maybe<ModificationCreateremovalsInput>;
-  itemAdditions?: Maybe<ItemAdditionCreateManyWithoutModificationInput>;
-  stepAdditions?: Maybe<StepAdditionCreateManyWithoutModificationInput>;
-  ingredientAdditions?: Maybe<
-    IngredientAdditionCreateManyWithoutModificationInput
-  >;
+  uid: ID_Input;
+  index: Int;
+  name?: Maybe<String>;
+  steps?: Maybe<StepCreateManyWithoutItemInput>;
 }
 
 export interface ModificationUpdateWithWhereUniqueWithoutUserInput {
@@ -3860,18 +3886,14 @@ export interface ModificationUpdateWithWhereUniqueWithoutUserInput {
   data: ModificationUpdateWithoutUserDataInput;
 }
 
-export interface RecipeCreateWithoutAuthorInput {
+export interface IngredientCreateWithoutStepInput {
   id?: Maybe<ID_Input>;
   uid: ID_Input;
-  slug: String;
-  title?: Maybe<String>;
-  time?: Maybe<String>;
-  servingAmount?: Maybe<String>;
-  servingType?: Maybe<String>;
-  description?: Maybe<String>;
-  items?: Maybe<ItemCreateManyWithoutRecipeInput>;
-  modifications?: Maybe<ModificationCreateManyWithoutRecipeInput>;
-  photos?: Maybe<RecipePhotoCreateManyWithoutRecipeInput>;
+  index: Int;
+  name?: Maybe<String>;
+  quantity?: Maybe<String>;
+  unit?: Maybe<String>;
+  processing?: Maybe<String>;
 }
 
 export interface ModificationUpdateWithoutUserDataInput {
@@ -3886,13 +3908,11 @@ export interface ModificationUpdateWithoutUserDataInput {
   >;
 }
 
-export interface StepCreateWithoutItemInput {
+export interface SortingCreateWithoutModificationInput {
   id?: Maybe<ID_Input>;
   uid: ID_Input;
-  index: Int;
-  directions?: Maybe<String>;
-  notes?: Maybe<String>;
-  ingredients?: Maybe<IngredientCreateManyWithoutStepInput>;
+  parentId: ID_Input;
+  order?: Maybe<SortingCreateorderInput>;
 }
 
 export interface ModificationUpsertWithWhereUniqueWithoutUserInput {
@@ -3901,17 +3921,8 @@ export interface ModificationUpsertWithWhereUniqueWithoutUserInput {
   create: ModificationCreateWithoutUserInput;
 }
 
-export interface ModificationCreateWithoutRecipeInput {
-  id?: Maybe<ID_Input>;
-  user: UserCreateOneWithoutModificationsInput;
-  sortings?: Maybe<SortingCreateManyWithoutModificationInput>;
-  alterations?: Maybe<AlterationCreateManyWithoutModificationInput>;
-  removals?: Maybe<ModificationCreateremovalsInput>;
-  itemAdditions?: Maybe<ItemAdditionCreateManyWithoutModificationInput>;
-  stepAdditions?: Maybe<StepAdditionCreateManyWithoutModificationInput>;
-  ingredientAdditions?: Maybe<
-    IngredientAdditionCreateManyWithoutModificationInput
-  >;
+export interface ModificationCreateremovalsInput {
+  set?: Maybe<ID_Input[] | ID_Input>;
 }
 
 export interface UserUpsertWithoutRecipesInput {
@@ -3919,46 +3930,17 @@ export interface UserUpsertWithoutRecipesInput {
   create: UserCreateWithoutRecipesInput;
 }
 
-export interface AlterationCreateManyWithoutModificationInput {
-  create?: Maybe<
-    | AlterationCreateWithoutModificationInput[]
-    | AlterationCreateWithoutModificationInput
-  >;
-  connect?: Maybe<AlterationWhereUniqueInput[] | AlterationWhereUniqueInput>;
+export interface StepAdditionCreateWithoutModificationInput {
+  id?: Maybe<ID_Input>;
+  uid: ID_Input;
+  parentId: ID_Input;
+  directions: String;
+  notes: String;
 }
 
 export interface RecipeUpsertWithoutModificationsInput {
   update: RecipeUpdateWithoutModificationsDataInput;
   create: RecipeCreateWithoutModificationsInput;
-}
-
-export interface ItemAdditionCreateWithoutModificationInput {
-  id?: Maybe<ID_Input>;
-  uid: ID_Input;
-  parentId: ID_Input;
-  name: String;
-}
-
-export interface ModificationUpsertWithoutAlterationsInput {
-  update: ModificationUpdateWithoutAlterationsDataInput;
-  create: ModificationCreateWithoutAlterationsInput;
-}
-
-export interface IngredientAdditionCreateWithoutModificationInput {
-  id?: Maybe<ID_Input>;
-  uid: ID_Input;
-  parentId: ID_Input;
-  name: String;
-  quantity: String;
-  unit: String;
-  processing: String;
-}
-
-export interface AlterationUpdateManyMutationInput {
-  uid?: Maybe<ID_Input>;
-  sourceId?: Maybe<ID_Input>;
-  field?: Maybe<String>;
-  value?: Maybe<String>;
 }
 
 export interface RecipeCreateWithoutModificationsInput {
@@ -3972,14 +3954,12 @@ export interface RecipeCreateWithoutModificationsInput {
   servingType?: Maybe<String>;
   description?: Maybe<String>;
   items?: Maybe<ItemCreateManyWithoutRecipeInput>;
-  photos?: Maybe<RecipePhotoCreateManyWithoutRecipeInput>;
+  photo?: Maybe<String>;
 }
 
-export interface ItemAdditionUpdateInput {
-  uid?: Maybe<ID_Input>;
-  parentId?: Maybe<ID_Input>;
-  name?: Maybe<String>;
-  modification?: Maybe<ModificationUpdateOneRequiredWithoutItemAdditionsInput>;
+export interface ModificationUpsertWithoutAlterationsInput {
+  update: ModificationUpdateWithoutAlterationsDataInput;
+  create: ModificationCreateWithoutAlterationsInput;
 }
 
 export interface ModificationCreateWithoutUserInput {
@@ -3995,17 +3975,11 @@ export interface ModificationCreateWithoutUserInput {
   >;
 }
 
-export interface ModificationCreateWithoutItemAdditionsInput {
-  id?: Maybe<ID_Input>;
-  user: UserCreateOneWithoutModificationsInput;
-  recipe: RecipeCreateOneWithoutModificationsInput;
-  sortings?: Maybe<SortingCreateManyWithoutModificationInput>;
-  alterations?: Maybe<AlterationCreateManyWithoutModificationInput>;
-  removals?: Maybe<ModificationCreateremovalsInput>;
-  stepAdditions?: Maybe<StepAdditionCreateManyWithoutModificationInput>;
-  ingredientAdditions?: Maybe<
-    IngredientAdditionCreateManyWithoutModificationInput
-  >;
+export interface AlterationUpdateManyMutationInput {
+  uid?: Maybe<ID_Input>;
+  sourceId?: Maybe<ID_Input>;
+  field?: Maybe<String>;
+  value?: Maybe<String>;
 }
 
 export interface UserUpdateOneRequiredWithoutModificationsInput {
@@ -4013,6 +3987,56 @@ export interface UserUpdateOneRequiredWithoutModificationsInput {
   update?: Maybe<UserUpdateWithoutModificationsDataInput>;
   upsert?: Maybe<UserUpsertWithoutModificationsInput>;
   connect?: Maybe<UserWhereUniqueInput>;
+}
+
+export interface ItemUpdateInput {
+  uid?: Maybe<ID_Input>;
+  index?: Maybe<Int>;
+  name?: Maybe<String>;
+  recipe?: Maybe<RecipeUpdateOneRequiredWithoutItemsInput>;
+  steps?: Maybe<StepUpdateManyWithoutItemInput>;
+}
+
+export interface RecipeUpdateWithoutAuthorDataInput {
+  uid?: Maybe<ID_Input>;
+  slug?: Maybe<String>;
+  title?: Maybe<String>;
+  time?: Maybe<String>;
+  servingAmount?: Maybe<String>;
+  servingType?: Maybe<String>;
+  description?: Maybe<String>;
+  items?: Maybe<ItemUpdateManyWithoutRecipeInput>;
+  modifications?: Maybe<ModificationUpdateManyWithoutRecipeInput>;
+  photo?: Maybe<String>;
+}
+
+export interface ItemCreateInput {
+  id?: Maybe<ID_Input>;
+  uid: ID_Input;
+  index: Int;
+  name?: Maybe<String>;
+  recipe: RecipeCreateOneWithoutItemsInput;
+  steps?: Maybe<StepCreateManyWithoutItemInput>;
+}
+
+export interface StepUpdateManyWithoutItemInput {
+  create?: Maybe<StepCreateWithoutItemInput[] | StepCreateWithoutItemInput>;
+  delete?: Maybe<StepWhereUniqueInput[] | StepWhereUniqueInput>;
+  connect?: Maybe<StepWhereUniqueInput[] | StepWhereUniqueInput>;
+  set?: Maybe<StepWhereUniqueInput[] | StepWhereUniqueInput>;
+  disconnect?: Maybe<StepWhereUniqueInput[] | StepWhereUniqueInput>;
+  update?: Maybe<
+    | StepUpdateWithWhereUniqueWithoutItemInput[]
+    | StepUpdateWithWhereUniqueWithoutItemInput
+  >;
+  upsert?: Maybe<
+    | StepUpsertWithWhereUniqueWithoutItemInput[]
+    | StepUpsertWithWhereUniqueWithoutItemInput
+  >;
+  deleteMany?: Maybe<StepScalarWhereInput[] | StepScalarWhereInput>;
+  updateMany?: Maybe<
+    StepUpdateManyWithWhereNestedInput[] | StepUpdateManyWithWhereNestedInput
+  >;
 }
 
 export interface IngredientCreateInput {
@@ -4026,216 +4050,14 @@ export interface IngredientCreateInput {
   step: StepCreateOneWithoutIngredientsInput;
 }
 
-export interface RecipeUpdateWithoutAuthorDataInput {
-  uid?: Maybe<ID_Input>;
-  slug?: Maybe<String>;
-  title?: Maybe<String>;
-  time?: Maybe<String>;
-  servingAmount?: Maybe<String>;
-  servingType?: Maybe<String>;
-  description?: Maybe<String>;
-  items?: Maybe<ItemUpdateManyWithoutRecipeInput>;
-  modifications?: Maybe<ModificationUpdateManyWithoutRecipeInput>;
-  photos?: Maybe<RecipePhotoUpdateManyWithoutRecipeInput>;
+export interface IngredientUpdateWithWhereUniqueWithoutStepInput {
+  where: IngredientWhereUniqueInput;
+  data: IngredientUpdateWithoutStepDataInput;
 }
 
 export interface StepCreateOneWithoutIngredientsInput {
   create?: Maybe<StepCreateWithoutIngredientsInput>;
   connect?: Maybe<StepWhereUniqueInput>;
-}
-
-export interface IngredientWhereInput {
-  id?: Maybe<ID_Input>;
-  id_not?: Maybe<ID_Input>;
-  id_in?: Maybe<ID_Input[] | ID_Input>;
-  id_not_in?: Maybe<ID_Input[] | ID_Input>;
-  id_lt?: Maybe<ID_Input>;
-  id_lte?: Maybe<ID_Input>;
-  id_gt?: Maybe<ID_Input>;
-  id_gte?: Maybe<ID_Input>;
-  id_contains?: Maybe<ID_Input>;
-  id_not_contains?: Maybe<ID_Input>;
-  id_starts_with?: Maybe<ID_Input>;
-  id_not_starts_with?: Maybe<ID_Input>;
-  id_ends_with?: Maybe<ID_Input>;
-  id_not_ends_with?: Maybe<ID_Input>;
-  createdAt?: Maybe<DateTimeInput>;
-  createdAt_not?: Maybe<DateTimeInput>;
-  createdAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
-  createdAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
-  createdAt_lt?: Maybe<DateTimeInput>;
-  createdAt_lte?: Maybe<DateTimeInput>;
-  createdAt_gt?: Maybe<DateTimeInput>;
-  createdAt_gte?: Maybe<DateTimeInput>;
-  updatedAt?: Maybe<DateTimeInput>;
-  updatedAt_not?: Maybe<DateTimeInput>;
-  updatedAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
-  updatedAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
-  updatedAt_lt?: Maybe<DateTimeInput>;
-  updatedAt_lte?: Maybe<DateTimeInput>;
-  updatedAt_gt?: Maybe<DateTimeInput>;
-  updatedAt_gte?: Maybe<DateTimeInput>;
-  uid?: Maybe<ID_Input>;
-  uid_not?: Maybe<ID_Input>;
-  uid_in?: Maybe<ID_Input[] | ID_Input>;
-  uid_not_in?: Maybe<ID_Input[] | ID_Input>;
-  uid_lt?: Maybe<ID_Input>;
-  uid_lte?: Maybe<ID_Input>;
-  uid_gt?: Maybe<ID_Input>;
-  uid_gte?: Maybe<ID_Input>;
-  uid_contains?: Maybe<ID_Input>;
-  uid_not_contains?: Maybe<ID_Input>;
-  uid_starts_with?: Maybe<ID_Input>;
-  uid_not_starts_with?: Maybe<ID_Input>;
-  uid_ends_with?: Maybe<ID_Input>;
-  uid_not_ends_with?: Maybe<ID_Input>;
-  index?: Maybe<Int>;
-  index_not?: Maybe<Int>;
-  index_in?: Maybe<Int[] | Int>;
-  index_not_in?: Maybe<Int[] | Int>;
-  index_lt?: Maybe<Int>;
-  index_lte?: Maybe<Int>;
-  index_gt?: Maybe<Int>;
-  index_gte?: Maybe<Int>;
-  name?: Maybe<String>;
-  name_not?: Maybe<String>;
-  name_in?: Maybe<String[] | String>;
-  name_not_in?: Maybe<String[] | String>;
-  name_lt?: Maybe<String>;
-  name_lte?: Maybe<String>;
-  name_gt?: Maybe<String>;
-  name_gte?: Maybe<String>;
-  name_contains?: Maybe<String>;
-  name_not_contains?: Maybe<String>;
-  name_starts_with?: Maybe<String>;
-  name_not_starts_with?: Maybe<String>;
-  name_ends_with?: Maybe<String>;
-  name_not_ends_with?: Maybe<String>;
-  quantity?: Maybe<String>;
-  quantity_not?: Maybe<String>;
-  quantity_in?: Maybe<String[] | String>;
-  quantity_not_in?: Maybe<String[] | String>;
-  quantity_lt?: Maybe<String>;
-  quantity_lte?: Maybe<String>;
-  quantity_gt?: Maybe<String>;
-  quantity_gte?: Maybe<String>;
-  quantity_contains?: Maybe<String>;
-  quantity_not_contains?: Maybe<String>;
-  quantity_starts_with?: Maybe<String>;
-  quantity_not_starts_with?: Maybe<String>;
-  quantity_ends_with?: Maybe<String>;
-  quantity_not_ends_with?: Maybe<String>;
-  unit?: Maybe<String>;
-  unit_not?: Maybe<String>;
-  unit_in?: Maybe<String[] | String>;
-  unit_not_in?: Maybe<String[] | String>;
-  unit_lt?: Maybe<String>;
-  unit_lte?: Maybe<String>;
-  unit_gt?: Maybe<String>;
-  unit_gte?: Maybe<String>;
-  unit_contains?: Maybe<String>;
-  unit_not_contains?: Maybe<String>;
-  unit_starts_with?: Maybe<String>;
-  unit_not_starts_with?: Maybe<String>;
-  unit_ends_with?: Maybe<String>;
-  unit_not_ends_with?: Maybe<String>;
-  processing?: Maybe<String>;
-  processing_not?: Maybe<String>;
-  processing_in?: Maybe<String[] | String>;
-  processing_not_in?: Maybe<String[] | String>;
-  processing_lt?: Maybe<String>;
-  processing_lte?: Maybe<String>;
-  processing_gt?: Maybe<String>;
-  processing_gte?: Maybe<String>;
-  processing_contains?: Maybe<String>;
-  processing_not_contains?: Maybe<String>;
-  processing_starts_with?: Maybe<String>;
-  processing_not_starts_with?: Maybe<String>;
-  processing_ends_with?: Maybe<String>;
-  processing_not_ends_with?: Maybe<String>;
-  step?: Maybe<StepWhereInput>;
-  AND?: Maybe<IngredientWhereInput[] | IngredientWhereInput>;
-  OR?: Maybe<IngredientWhereInput[] | IngredientWhereInput>;
-  NOT?: Maybe<IngredientWhereInput[] | IngredientWhereInput>;
-}
-
-export interface StepCreateWithoutIngredientsInput {
-  id?: Maybe<ID_Input>;
-  uid: ID_Input;
-  index: Int;
-  directions?: Maybe<String>;
-  notes?: Maybe<String>;
-  item: ItemCreateOneWithoutStepsInput;
-}
-
-export interface SortingWhereInput {
-  id?: Maybe<ID_Input>;
-  id_not?: Maybe<ID_Input>;
-  id_in?: Maybe<ID_Input[] | ID_Input>;
-  id_not_in?: Maybe<ID_Input[] | ID_Input>;
-  id_lt?: Maybe<ID_Input>;
-  id_lte?: Maybe<ID_Input>;
-  id_gt?: Maybe<ID_Input>;
-  id_gte?: Maybe<ID_Input>;
-  id_contains?: Maybe<ID_Input>;
-  id_not_contains?: Maybe<ID_Input>;
-  id_starts_with?: Maybe<ID_Input>;
-  id_not_starts_with?: Maybe<ID_Input>;
-  id_ends_with?: Maybe<ID_Input>;
-  id_not_ends_with?: Maybe<ID_Input>;
-  createdAt?: Maybe<DateTimeInput>;
-  createdAt_not?: Maybe<DateTimeInput>;
-  createdAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
-  createdAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
-  createdAt_lt?: Maybe<DateTimeInput>;
-  createdAt_lte?: Maybe<DateTimeInput>;
-  createdAt_gt?: Maybe<DateTimeInput>;
-  createdAt_gte?: Maybe<DateTimeInput>;
-  updatedAt?: Maybe<DateTimeInput>;
-  updatedAt_not?: Maybe<DateTimeInput>;
-  updatedAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
-  updatedAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
-  updatedAt_lt?: Maybe<DateTimeInput>;
-  updatedAt_lte?: Maybe<DateTimeInput>;
-  updatedAt_gt?: Maybe<DateTimeInput>;
-  updatedAt_gte?: Maybe<DateTimeInput>;
-  uid?: Maybe<ID_Input>;
-  uid_not?: Maybe<ID_Input>;
-  uid_in?: Maybe<ID_Input[] | ID_Input>;
-  uid_not_in?: Maybe<ID_Input[] | ID_Input>;
-  uid_lt?: Maybe<ID_Input>;
-  uid_lte?: Maybe<ID_Input>;
-  uid_gt?: Maybe<ID_Input>;
-  uid_gte?: Maybe<ID_Input>;
-  uid_contains?: Maybe<ID_Input>;
-  uid_not_contains?: Maybe<ID_Input>;
-  uid_starts_with?: Maybe<ID_Input>;
-  uid_not_starts_with?: Maybe<ID_Input>;
-  uid_ends_with?: Maybe<ID_Input>;
-  uid_not_ends_with?: Maybe<ID_Input>;
-  parentId?: Maybe<ID_Input>;
-  parentId_not?: Maybe<ID_Input>;
-  parentId_in?: Maybe<ID_Input[] | ID_Input>;
-  parentId_not_in?: Maybe<ID_Input[] | ID_Input>;
-  parentId_lt?: Maybe<ID_Input>;
-  parentId_lte?: Maybe<ID_Input>;
-  parentId_gt?: Maybe<ID_Input>;
-  parentId_gte?: Maybe<ID_Input>;
-  parentId_contains?: Maybe<ID_Input>;
-  parentId_not_contains?: Maybe<ID_Input>;
-  parentId_starts_with?: Maybe<ID_Input>;
-  parentId_not_starts_with?: Maybe<ID_Input>;
-  parentId_ends_with?: Maybe<ID_Input>;
-  parentId_not_ends_with?: Maybe<ID_Input>;
-  modification?: Maybe<ModificationWhereInput>;
-  AND?: Maybe<SortingWhereInput[] | SortingWhereInput>;
-  OR?: Maybe<SortingWhereInput[] | SortingWhereInput>;
-  NOT?: Maybe<SortingWhereInput[] | SortingWhereInput>;
-}
-
-export interface ItemCreateOneWithoutStepsInput {
-  create?: Maybe<ItemCreateWithoutStepsInput>;
-  connect?: Maybe<ItemWhereUniqueInput>;
 }
 
 export interface ItemAdditionSubscriptionWhereInput {
@@ -4255,6 +4077,30 @@ export interface ItemAdditionSubscriptionWhereInput {
   >;
 }
 
+export interface StepCreateWithoutIngredientsInput {
+  id?: Maybe<ID_Input>;
+  uid: ID_Input;
+  index: Int;
+  directions?: Maybe<String>;
+  notes?: Maybe<String>;
+  item: ItemCreateOneWithoutStepsInput;
+}
+
+export type IngredientAdditionWhereUniqueInput = AtLeastOne<{
+  id: Maybe<ID_Input>;
+  uid?: Maybe<ID_Input>;
+}>;
+
+export interface ItemCreateOneWithoutStepsInput {
+  create?: Maybe<ItemCreateWithoutStepsInput>;
+  connect?: Maybe<ItemWhereUniqueInput>;
+}
+
+export type ItemAdditionWhereUniqueInput = AtLeastOne<{
+  id: Maybe<ID_Input>;
+  uid?: Maybe<ID_Input>;
+}>;
+
 export interface ItemCreateWithoutStepsInput {
   id?: Maybe<ID_Input>;
   uid: ID_Input;
@@ -4263,22 +4109,21 @@ export interface ItemCreateWithoutStepsInput {
   recipe: RecipeCreateOneWithoutItemsInput;
 }
 
-export interface StepAdditionUpdateManyMutationInput {
+export type RecipeWhereUniqueInput = AtLeastOne<{
+  id: Maybe<ID_Input>;
   uid?: Maybe<ID_Input>;
-  parentId?: Maybe<ID_Input>;
-  directions?: Maybe<String>;
-  notes?: Maybe<String>;
-}
+  slug?: Maybe<String>;
+}>;
 
 export interface RecipeCreateOneWithoutItemsInput {
   create?: Maybe<RecipeCreateWithoutItemsInput>;
   connect?: Maybe<RecipeWhereUniqueInput>;
 }
 
-export interface ModificationCreateOneWithoutStepAdditionsInput {
-  create?: Maybe<ModificationCreateWithoutStepAdditionsInput>;
-  connect?: Maybe<ModificationWhereUniqueInput>;
-}
+export type StepWhereUniqueInput = AtLeastOne<{
+  id: Maybe<ID_Input>;
+  uid?: Maybe<ID_Input>;
+}>;
 
 export interface RecipeCreateWithoutItemsInput {
   id?: Maybe<ID_Input>;
@@ -4291,13 +4136,14 @@ export interface RecipeCreateWithoutItemsInput {
   servingType?: Maybe<String>;
   description?: Maybe<String>;
   modifications?: Maybe<ModificationCreateManyWithoutRecipeInput>;
-  photos?: Maybe<RecipePhotoCreateManyWithoutRecipeInput>;
+  photo?: Maybe<String>;
 }
 
-export interface ModificationUpsertWithoutSortingsInput {
-  update: ModificationUpdateWithoutSortingsDataInput;
-  create: ModificationCreateWithoutSortingsInput;
-}
+export type UserWhereUniqueInput = AtLeastOne<{
+  id: Maybe<ID_Input>;
+  email?: Maybe<String>;
+  slug?: Maybe<String>;
+}>;
 
 export interface IngredientUpdateInput {
   uid?: Maybe<ID_Input>;
@@ -4309,12 +4155,17 @@ export interface IngredientUpdateInput {
   step?: Maybe<StepUpdateOneRequiredWithoutIngredientsInput>;
 }
 
-export interface SortingCreateInput {
+export interface ModificationCreateWithoutAlterationsInput {
   id?: Maybe<ID_Input>;
-  uid: ID_Input;
-  parentId: ID_Input;
-  order?: Maybe<SortingCreateorderInput>;
-  modification: ModificationCreateOneWithoutSortingsInput;
+  user: UserCreateOneWithoutModificationsInput;
+  recipe: RecipeCreateOneWithoutModificationsInput;
+  sortings?: Maybe<SortingCreateManyWithoutModificationInput>;
+  removals?: Maybe<ModificationCreateremovalsInput>;
+  itemAdditions?: Maybe<ItemAdditionCreateManyWithoutModificationInput>;
+  stepAdditions?: Maybe<StepAdditionCreateManyWithoutModificationInput>;
+  ingredientAdditions?: Maybe<
+    IngredientAdditionCreateManyWithoutModificationInput
+  >;
 }
 
 export interface StepUpdateOneRequiredWithoutIngredientsInput {
@@ -4324,18 +4175,13 @@ export interface StepUpdateOneRequiredWithoutIngredientsInput {
   connect?: Maybe<StepWhereUniqueInput>;
 }
 
-export interface RecipeCreateWithoutPhotosInput {
+export interface StepCreateWithoutItemInput {
   id?: Maybe<ID_Input>;
   uid: ID_Input;
-  slug: String;
-  author: UserCreateOneWithoutRecipesInput;
-  title?: Maybe<String>;
-  time?: Maybe<String>;
-  servingAmount?: Maybe<String>;
-  servingType?: Maybe<String>;
-  description?: Maybe<String>;
-  items?: Maybe<ItemCreateManyWithoutRecipeInput>;
-  modifications?: Maybe<ModificationCreateManyWithoutRecipeInput>;
+  index: Int;
+  directions?: Maybe<String>;
+  notes?: Maybe<String>;
+  ingredients?: Maybe<IngredientCreateManyWithoutStepInput>;
 }
 
 export interface StepUpdateWithoutIngredientsDataInput {
@@ -4346,8 +4192,12 @@ export interface StepUpdateWithoutIngredientsDataInput {
   item?: Maybe<ItemUpdateOneRequiredWithoutStepsInput>;
 }
 
-export interface ModificationUpdateManyMutationInput {
-  removals?: Maybe<ModificationUpdateremovalsInput>;
+export interface AlterationCreateManyWithoutModificationInput {
+  create?: Maybe<
+    | AlterationCreateWithoutModificationInput[]
+    | AlterationCreateWithoutModificationInput
+  >;
+  connect?: Maybe<AlterationWhereUniqueInput[] | AlterationWhereUniqueInput>;
 }
 
 export interface ItemUpdateOneRequiredWithoutStepsInput {
@@ -4357,13 +4207,14 @@ export interface ItemUpdateOneRequiredWithoutStepsInput {
   connect?: Maybe<ItemWhereUniqueInput>;
 }
 
-export interface AlterationCreateInput {
+export interface IngredientAdditionCreateWithoutModificationInput {
   id?: Maybe<ID_Input>;
   uid: ID_Input;
-  sourceId: ID_Input;
-  field: String;
-  value: String;
-  modification: ModificationCreateOneWithoutAlterationsInput;
+  parentId: ID_Input;
+  name: String;
+  quantity: String;
+  unit: String;
+  processing: String;
 }
 
 export interface ItemUpdateWithoutStepsDataInput {
@@ -4373,12 +4224,11 @@ export interface ItemUpdateWithoutStepsDataInput {
   recipe?: Maybe<RecipeUpdateOneRequiredWithoutItemsInput>;
 }
 
-export interface ItemCreateWithoutRecipeInput {
-  id?: Maybe<ID_Input>;
-  uid: ID_Input;
-  index: Int;
-  name?: Maybe<String>;
-  steps?: Maybe<StepCreateManyWithoutItemInput>;
+export interface ModificationUpdateOneRequiredWithoutAlterationsInput {
+  create?: Maybe<ModificationCreateWithoutAlterationsInput>;
+  update?: Maybe<ModificationUpdateWithoutAlterationsDataInput>;
+  upsert?: Maybe<ModificationUpsertWithoutAlterationsInput>;
+  connect?: Maybe<ModificationWhereUniqueInput>;
 }
 
 export interface RecipeUpdateOneRequiredWithoutItemsInput {
@@ -4388,11 +4238,9 @@ export interface RecipeUpdateOneRequiredWithoutItemsInput {
   connect?: Maybe<RecipeWhereUniqueInput>;
 }
 
-export interface SortingCreateWithoutModificationInput {
-  id?: Maybe<ID_Input>;
-  uid: ID_Input;
-  parentId: ID_Input;
-  order?: Maybe<SortingCreateorderInput>;
+export interface ItemUpdateWithWhereUniqueWithoutRecipeInput {
+  where: ItemWhereUniqueInput;
+  data: ItemUpdateWithoutRecipeDataInput;
 }
 
 export interface RecipeUpdateWithoutItemsDataInput {
@@ -4405,15 +4253,18 @@ export interface RecipeUpdateWithoutItemsDataInput {
   servingType?: Maybe<String>;
   description?: Maybe<String>;
   modifications?: Maybe<ModificationUpdateManyWithoutRecipeInput>;
-  photos?: Maybe<RecipePhotoUpdateManyWithoutRecipeInput>;
+  photo?: Maybe<String>;
 }
 
-export interface StepAdditionCreateWithoutModificationInput {
-  id?: Maybe<ID_Input>;
-  uid: ID_Input;
-  parentId: ID_Input;
-  directions: String;
-  notes: String;
+export interface StepSubscriptionWhereInput {
+  mutation_in?: Maybe<MutationType[] | MutationType>;
+  updatedFields_contains?: Maybe<String>;
+  updatedFields_contains_every?: Maybe<String[] | String>;
+  updatedFields_contains_some?: Maybe<String[] | String>;
+  node?: Maybe<StepWhereInput>;
+  AND?: Maybe<StepSubscriptionWhereInput[] | StepSubscriptionWhereInput>;
+  OR?: Maybe<StepSubscriptionWhereInput[] | StepSubscriptionWhereInput>;
+  NOT?: Maybe<StepSubscriptionWhereInput[] | StepSubscriptionWhereInput>;
 }
 
 export interface RecipeUpsertWithoutItemsInput {
@@ -4421,21 +4272,146 @@ export interface RecipeUpsertWithoutItemsInput {
   create: RecipeCreateWithoutItemsInput;
 }
 
-export interface UserCreateWithoutRecipesInput {
-  id?: Maybe<ID_Input>;
-  email: String;
-  password: String;
-  name: String;
-  avatar?: Maybe<String>;
-  slug?: Maybe<String>;
-  emailVerified?: Maybe<Boolean>;
-  modifications?: Maybe<ModificationCreateManyWithoutUserInput>;
-}
+export type ItemWhereUniqueInput = AtLeastOne<{
+  id: Maybe<ID_Input>;
+  uid?: Maybe<ID_Input>;
+}>;
 
 export interface ItemUpsertWithoutStepsInput {
   update: ItemUpdateWithoutStepsDataInput;
   create: ItemCreateWithoutStepsInput;
 }
+
+export type SortingWhereUniqueInput = AtLeastOne<{
+  id: Maybe<ID_Input>;
+  uid?: Maybe<ID_Input>;
+}>;
+
+export interface StepUpsertWithoutIngredientsInput {
+  update: StepUpdateWithoutIngredientsDataInput;
+  create: StepCreateWithoutIngredientsInput;
+}
+
+export interface ModificationUpsertWithoutItemAdditionsInput {
+  update: ModificationUpdateWithoutItemAdditionsDataInput;
+  create: ModificationCreateWithoutItemAdditionsInput;
+}
+
+export interface IngredientUpdateManyMutationInput {
+  uid?: Maybe<ID_Input>;
+  index?: Maybe<Int>;
+  name?: Maybe<String>;
+  quantity?: Maybe<String>;
+  unit?: Maybe<String>;
+  processing?: Maybe<String>;
+}
+
+export interface ModificationCreateWithoutRecipeInput {
+  id?: Maybe<ID_Input>;
+  user: UserCreateOneWithoutModificationsInput;
+  sortings?: Maybe<SortingCreateManyWithoutModificationInput>;
+  alterations?: Maybe<AlterationCreateManyWithoutModificationInput>;
+  removals?: Maybe<ModificationCreateremovalsInput>;
+  itemAdditions?: Maybe<ItemAdditionCreateManyWithoutModificationInput>;
+  stepAdditions?: Maybe<StepAdditionCreateManyWithoutModificationInput>;
+  ingredientAdditions?: Maybe<
+    IngredientAdditionCreateManyWithoutModificationInput
+  >;
+}
+
+export interface IngredientAdditionCreateInput {
+  id?: Maybe<ID_Input>;
+  uid: ID_Input;
+  parentId: ID_Input;
+  name: String;
+  quantity: String;
+  unit: String;
+  processing: String;
+  modification: ModificationCreateOneWithoutIngredientAdditionsInput;
+}
+
+export interface UserCreateWithoutRecipesInput {
+  id?: Maybe<ID_Input>;
+  email: String;
+  slug: String;
+  password: String;
+  name: String;
+  avatar?: Maybe<String>;
+  emailVerified?: Maybe<Boolean>;
+  modifications?: Maybe<ModificationCreateManyWithoutUserInput>;
+}
+
+export interface ModificationCreateOneWithoutIngredientAdditionsInput {
+  create?: Maybe<ModificationCreateWithoutIngredientAdditionsInput>;
+  connect?: Maybe<ModificationWhereUniqueInput>;
+}
+
+export interface StepUpdateWithoutItemDataInput {
+  uid?: Maybe<ID_Input>;
+  index?: Maybe<Int>;
+  directions?: Maybe<String>;
+  notes?: Maybe<String>;
+  ingredients?: Maybe<IngredientUpdateManyWithoutStepInput>;
+}
+
+export interface ModificationCreateWithoutIngredientAdditionsInput {
+  id?: Maybe<ID_Input>;
+  user: UserCreateOneWithoutModificationsInput;
+  recipe: RecipeCreateOneWithoutModificationsInput;
+  sortings?: Maybe<SortingCreateManyWithoutModificationInput>;
+  alterations?: Maybe<AlterationCreateManyWithoutModificationInput>;
+  removals?: Maybe<ModificationCreateremovalsInput>;
+  itemAdditions?: Maybe<ItemAdditionCreateManyWithoutModificationInput>;
+  stepAdditions?: Maybe<StepAdditionCreateManyWithoutModificationInput>;
+}
+
+export type ModificationWhereUniqueInput = AtLeastOne<{
+  id: Maybe<ID_Input>;
+}>;
+
+export interface ModificationUpsertWithoutIngredientAdditionsInput {
+  update: ModificationUpdateWithoutIngredientAdditionsDataInput;
+  create: ModificationCreateWithoutIngredientAdditionsInput;
+}
+
+export interface ModificationUpdateWithoutIngredientAdditionsDataInput {
+  user?: Maybe<UserUpdateOneRequiredWithoutModificationsInput>;
+  recipe?: Maybe<RecipeUpdateOneRequiredWithoutModificationsInput>;
+  sortings?: Maybe<SortingUpdateManyWithoutModificationInput>;
+  alterations?: Maybe<AlterationUpdateManyWithoutModificationInput>;
+  removals?: Maybe<ModificationUpdateremovalsInput>;
+  itemAdditions?: Maybe<ItemAdditionUpdateManyWithoutModificationInput>;
+  stepAdditions?: Maybe<StepAdditionUpdateManyWithoutModificationInput>;
+}
+
+export interface ModificationUpdateOneRequiredWithoutIngredientAdditionsInput {
+  create?: Maybe<ModificationCreateWithoutIngredientAdditionsInput>;
+  update?: Maybe<ModificationUpdateWithoutIngredientAdditionsDataInput>;
+  upsert?: Maybe<ModificationUpsertWithoutIngredientAdditionsInput>;
+  connect?: Maybe<ModificationWhereUniqueInput>;
+}
+
+export interface IngredientAdditionUpdateInput {
+  uid?: Maybe<ID_Input>;
+  parentId?: Maybe<ID_Input>;
+  name?: Maybe<String>;
+  quantity?: Maybe<String>;
+  unit?: Maybe<String>;
+  processing?: Maybe<String>;
+  modification?: Maybe<
+    ModificationUpdateOneRequiredWithoutIngredientAdditionsInput
+  >;
+}
+
+export type StepAdditionWhereUniqueInput = AtLeastOne<{
+  id: Maybe<ID_Input>;
+  uid?: Maybe<ID_Input>;
+}>;
+
+export type IngredientWhereUniqueInput = AtLeastOne<{
+  id: Maybe<ID_Input>;
+  uid?: Maybe<ID_Input>;
+}>;
 
 export interface RecipeUpdateManyWithoutAuthorInput {
   create?: Maybe<
@@ -4460,328 +4436,25 @@ export interface RecipeUpdateManyWithoutAuthorInput {
   >;
 }
 
-export interface StepUpsertWithoutIngredientsInput {
-  update: StepUpdateWithoutIngredientsDataInput;
-  create: StepCreateWithoutIngredientsInput;
-}
-
-export interface ItemAdditionWhereInput {
-  id?: Maybe<ID_Input>;
-  id_not?: Maybe<ID_Input>;
-  id_in?: Maybe<ID_Input[] | ID_Input>;
-  id_not_in?: Maybe<ID_Input[] | ID_Input>;
-  id_lt?: Maybe<ID_Input>;
-  id_lte?: Maybe<ID_Input>;
-  id_gt?: Maybe<ID_Input>;
-  id_gte?: Maybe<ID_Input>;
-  id_contains?: Maybe<ID_Input>;
-  id_not_contains?: Maybe<ID_Input>;
-  id_starts_with?: Maybe<ID_Input>;
-  id_not_starts_with?: Maybe<ID_Input>;
-  id_ends_with?: Maybe<ID_Input>;
-  id_not_ends_with?: Maybe<ID_Input>;
-  createdAt?: Maybe<DateTimeInput>;
-  createdAt_not?: Maybe<DateTimeInput>;
-  createdAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
-  createdAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
-  createdAt_lt?: Maybe<DateTimeInput>;
-  createdAt_lte?: Maybe<DateTimeInput>;
-  createdAt_gt?: Maybe<DateTimeInput>;
-  createdAt_gte?: Maybe<DateTimeInput>;
-  updatedAt?: Maybe<DateTimeInput>;
-  updatedAt_not?: Maybe<DateTimeInput>;
-  updatedAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
-  updatedAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
-  updatedAt_lt?: Maybe<DateTimeInput>;
-  updatedAt_lte?: Maybe<DateTimeInput>;
-  updatedAt_gt?: Maybe<DateTimeInput>;
-  updatedAt_gte?: Maybe<DateTimeInput>;
-  uid?: Maybe<ID_Input>;
-  uid_not?: Maybe<ID_Input>;
-  uid_in?: Maybe<ID_Input[] | ID_Input>;
-  uid_not_in?: Maybe<ID_Input[] | ID_Input>;
-  uid_lt?: Maybe<ID_Input>;
-  uid_lte?: Maybe<ID_Input>;
-  uid_gt?: Maybe<ID_Input>;
-  uid_gte?: Maybe<ID_Input>;
-  uid_contains?: Maybe<ID_Input>;
-  uid_not_contains?: Maybe<ID_Input>;
-  uid_starts_with?: Maybe<ID_Input>;
-  uid_not_starts_with?: Maybe<ID_Input>;
-  uid_ends_with?: Maybe<ID_Input>;
-  uid_not_ends_with?: Maybe<ID_Input>;
-  parentId?: Maybe<ID_Input>;
-  parentId_not?: Maybe<ID_Input>;
-  parentId_in?: Maybe<ID_Input[] | ID_Input>;
-  parentId_not_in?: Maybe<ID_Input[] | ID_Input>;
-  parentId_lt?: Maybe<ID_Input>;
-  parentId_lte?: Maybe<ID_Input>;
-  parentId_gt?: Maybe<ID_Input>;
-  parentId_gte?: Maybe<ID_Input>;
-  parentId_contains?: Maybe<ID_Input>;
-  parentId_not_contains?: Maybe<ID_Input>;
-  parentId_starts_with?: Maybe<ID_Input>;
-  parentId_not_starts_with?: Maybe<ID_Input>;
-  parentId_ends_with?: Maybe<ID_Input>;
-  parentId_not_ends_with?: Maybe<ID_Input>;
-  name?: Maybe<String>;
-  name_not?: Maybe<String>;
-  name_in?: Maybe<String[] | String>;
-  name_not_in?: Maybe<String[] | String>;
-  name_lt?: Maybe<String>;
-  name_lte?: Maybe<String>;
-  name_gt?: Maybe<String>;
-  name_gte?: Maybe<String>;
-  name_contains?: Maybe<String>;
-  name_not_contains?: Maybe<String>;
-  name_starts_with?: Maybe<String>;
-  name_not_starts_with?: Maybe<String>;
-  name_ends_with?: Maybe<String>;
-  name_not_ends_with?: Maybe<String>;
-  modification?: Maybe<ModificationWhereInput>;
-  AND?: Maybe<ItemAdditionWhereInput[] | ItemAdditionWhereInput>;
-  OR?: Maybe<ItemAdditionWhereInput[] | ItemAdditionWhereInput>;
-  NOT?: Maybe<ItemAdditionWhereInput[] | ItemAdditionWhereInput>;
-}
-
-export interface IngredientUpdateManyMutationInput {
-  uid?: Maybe<ID_Input>;
-  index?: Maybe<Int>;
-  name?: Maybe<String>;
-  quantity?: Maybe<String>;
-  unit?: Maybe<String>;
-  processing?: Maybe<String>;
-}
-
-export interface AlterationSubscriptionWhereInput {
-  mutation_in?: Maybe<MutationType[] | MutationType>;
-  updatedFields_contains?: Maybe<String>;
-  updatedFields_contains_every?: Maybe<String[] | String>;
-  updatedFields_contains_some?: Maybe<String[] | String>;
-  node?: Maybe<AlterationWhereInput>;
-  AND?: Maybe<
-    AlterationSubscriptionWhereInput[] | AlterationSubscriptionWhereInput
-  >;
-  OR?: Maybe<
-    AlterationSubscriptionWhereInput[] | AlterationSubscriptionWhereInput
-  >;
-  NOT?: Maybe<
-    AlterationSubscriptionWhereInput[] | AlterationSubscriptionWhereInput
-  >;
-}
-
-export interface IngredientAdditionCreateInput {
+export interface ItemAdditionCreateWithoutModificationInput {
   id?: Maybe<ID_Input>;
   uid: ID_Input;
   parentId: ID_Input;
   name: String;
-  quantity: String;
-  unit: String;
-  processing: String;
-  modification: ModificationCreateOneWithoutIngredientAdditionsInput;
 }
 
-export interface StepUpdateInput {
-  uid?: Maybe<ID_Input>;
-  index?: Maybe<Int>;
-  directions?: Maybe<String>;
-  notes?: Maybe<String>;
-  item?: Maybe<ItemUpdateOneRequiredWithoutStepsInput>;
-  ingredients?: Maybe<IngredientUpdateManyWithoutStepInput>;
-}
-
-export interface ModificationCreateOneWithoutIngredientAdditionsInput {
-  create?: Maybe<ModificationCreateWithoutIngredientAdditionsInput>;
-  connect?: Maybe<ModificationWhereUniqueInput>;
-}
-
-export interface RecipeUpdateWithoutPhotosDataInput {
-  uid?: Maybe<ID_Input>;
-  slug?: Maybe<String>;
-  author?: Maybe<UserUpdateOneRequiredWithoutRecipesInput>;
+export interface RecipeCreateWithoutAuthorInput {
+  id?: Maybe<ID_Input>;
+  uid: ID_Input;
+  slug: String;
   title?: Maybe<String>;
   time?: Maybe<String>;
   servingAmount?: Maybe<String>;
   servingType?: Maybe<String>;
   description?: Maybe<String>;
-  items?: Maybe<ItemUpdateManyWithoutRecipeInput>;
-  modifications?: Maybe<ModificationUpdateManyWithoutRecipeInput>;
-}
-
-export interface ModificationCreateWithoutIngredientAdditionsInput {
-  id?: Maybe<ID_Input>;
-  user: UserCreateOneWithoutModificationsInput;
-  recipe: RecipeCreateOneWithoutModificationsInput;
-  sortings?: Maybe<SortingCreateManyWithoutModificationInput>;
-  alterations?: Maybe<AlterationCreateManyWithoutModificationInput>;
-  removals?: Maybe<ModificationCreateremovalsInput>;
-  itemAdditions?: Maybe<ItemAdditionCreateManyWithoutModificationInput>;
-  stepAdditions?: Maybe<StepAdditionCreateManyWithoutModificationInput>;
-}
-
-export interface ItemAdditionUpdateManyMutationInput {
-  uid?: Maybe<ID_Input>;
-  parentId?: Maybe<ID_Input>;
-  name?: Maybe<String>;
-}
-
-export interface IngredientAdditionUpdateInput {
-  uid?: Maybe<ID_Input>;
-  parentId?: Maybe<ID_Input>;
-  name?: Maybe<String>;
-  quantity?: Maybe<String>;
-  unit?: Maybe<String>;
-  processing?: Maybe<String>;
-  modification?: Maybe<
-    ModificationUpdateOneRequiredWithoutIngredientAdditionsInput
-  >;
-}
-
-export interface IngredientCreateWithoutStepInput {
-  id?: Maybe<ID_Input>;
-  uid: ID_Input;
-  index: Int;
-  name?: Maybe<String>;
-  quantity?: Maybe<String>;
-  unit?: Maybe<String>;
-  processing?: Maybe<String>;
-}
-
-export interface ModificationUpdateOneRequiredWithoutIngredientAdditionsInput {
-  create?: Maybe<ModificationCreateWithoutIngredientAdditionsInput>;
-  update?: Maybe<ModificationUpdateWithoutIngredientAdditionsDataInput>;
-  upsert?: Maybe<ModificationUpsertWithoutIngredientAdditionsInput>;
-  connect?: Maybe<ModificationWhereUniqueInput>;
-}
-
-export interface RecipePhotoCreateWithoutRecipeInput {
-  id?: Maybe<ID_Input>;
-  filename: String;
-  url: String;
-  index: Int;
-}
-
-export interface ModificationUpdateWithoutIngredientAdditionsDataInput {
-  user?: Maybe<UserUpdateOneRequiredWithoutModificationsInput>;
-  recipe?: Maybe<RecipeUpdateOneRequiredWithoutModificationsInput>;
-  sortings?: Maybe<SortingUpdateManyWithoutModificationInput>;
-  alterations?: Maybe<AlterationUpdateManyWithoutModificationInput>;
-  removals?: Maybe<ModificationUpdateremovalsInput>;
-  itemAdditions?: Maybe<ItemAdditionUpdateManyWithoutModificationInput>;
-  stepAdditions?: Maybe<StepAdditionUpdateManyWithoutModificationInput>;
-}
-
-export interface ItemUpdateWithWhereUniqueWithoutRecipeInput {
-  where: ItemWhereUniqueInput;
-  data: ItemUpdateWithoutRecipeDataInput;
-}
-
-export interface ModificationUpsertWithoutIngredientAdditionsInput {
-  update: ModificationUpdateWithoutIngredientAdditionsDataInput;
-  create: ModificationCreateWithoutIngredientAdditionsInput;
-}
-
-export interface ModificationUpdateOneRequiredWithoutStepAdditionsInput {
-  create?: Maybe<ModificationCreateWithoutStepAdditionsInput>;
-  update?: Maybe<ModificationUpdateWithoutStepAdditionsDataInput>;
-  upsert?: Maybe<ModificationUpsertWithoutStepAdditionsInput>;
-  connect?: Maybe<ModificationWhereUniqueInput>;
-}
-
-export interface IngredientAdditionUpdateManyMutationInput {
-  uid?: Maybe<ID_Input>;
-  parentId?: Maybe<ID_Input>;
-  name?: Maybe<String>;
-  quantity?: Maybe<String>;
-  unit?: Maybe<String>;
-  processing?: Maybe<String>;
-}
-
-export interface RecipeUpdateManyMutationInput {
-  uid?: Maybe<ID_Input>;
-  slug?: Maybe<String>;
-  title?: Maybe<String>;
-  time?: Maybe<String>;
-  servingAmount?: Maybe<String>;
-  servingType?: Maybe<String>;
-  description?: Maybe<String>;
-}
-
-export interface ItemAdditionCreateInput {
-  id?: Maybe<ID_Input>;
-  uid: ID_Input;
-  parentId: ID_Input;
-  name: String;
-  modification: ModificationCreateOneWithoutItemAdditionsInput;
-}
-
-export interface ItemUpdateManyMutationInput {
-  uid?: Maybe<ID_Input>;
-  index?: Maybe<Int>;
-  name?: Maybe<String>;
-}
-
-export interface ItemUpdateInput {
-  uid?: Maybe<ID_Input>;
-  index?: Maybe<Int>;
-  name?: Maybe<String>;
-  recipe?: Maybe<RecipeUpdateOneRequiredWithoutItemsInput>;
-  steps?: Maybe<StepUpdateManyWithoutItemInput>;
-}
-
-export interface ItemCreateInput {
-  id?: Maybe<ID_Input>;
-  uid: ID_Input;
-  index: Int;
-  name?: Maybe<String>;
-  recipe: RecipeCreateOneWithoutItemsInput;
-  steps?: Maybe<StepCreateManyWithoutItemInput>;
-}
-
-export interface UserCreateWithoutModificationsInput {
-  id?: Maybe<ID_Input>;
-  email: String;
-  password: String;
-  name: String;
-  avatar?: Maybe<String>;
-  slug?: Maybe<String>;
-  emailVerified?: Maybe<Boolean>;
-  recipes?: Maybe<RecipeCreateManyWithoutAuthorInput>;
-}
-
-export interface SortingUpdateInput {
-  uid?: Maybe<ID_Input>;
-  parentId?: Maybe<ID_Input>;
-  order?: Maybe<SortingUpdateorderInput>;
-  modification?: Maybe<ModificationUpdateOneRequiredWithoutSortingsInput>;
-}
-
-export interface RecipePhotoSubscriptionWhereInput {
-  mutation_in?: Maybe<MutationType[] | MutationType>;
-  updatedFields_contains?: Maybe<String>;
-  updatedFields_contains_every?: Maybe<String[] | String>;
-  updatedFields_contains_some?: Maybe<String[] | String>;
-  node?: Maybe<RecipePhotoWhereInput>;
-  AND?: Maybe<
-    RecipePhotoSubscriptionWhereInput[] | RecipePhotoSubscriptionWhereInput
-  >;
-  OR?: Maybe<
-    RecipePhotoSubscriptionWhereInput[] | RecipePhotoSubscriptionWhereInput
-  >;
-  NOT?: Maybe<
-    RecipePhotoSubscriptionWhereInput[] | RecipePhotoSubscriptionWhereInput
-  >;
-}
-
-export interface ModificationUpdateOneRequiredWithoutAlterationsInput {
-  create?: Maybe<ModificationCreateWithoutAlterationsInput>;
-  update?: Maybe<ModificationUpdateWithoutAlterationsDataInput>;
-  upsert?: Maybe<ModificationUpsertWithoutAlterationsInput>;
-  connect?: Maybe<ModificationWhereUniqueInput>;
-}
-
-export interface ModificationCreateremovalsInput {
-  set?: Maybe<ID_Input[] | ID_Input>;
+  items?: Maybe<ItemCreateManyWithoutRecipeInput>;
+  modifications?: Maybe<ModificationCreateManyWithoutRecipeInput>;
+  photo?: Maybe<String>;
 }
 
 export interface NodeNode {
@@ -4793,10 +4466,10 @@ export interface UserPreviousValues {
   createdAt: DateTimeOutput;
   updatedAt: DateTimeOutput;
   email: String;
+  slug: String;
   password: String;
   name: String;
   avatar?: String;
-  slug?: String;
   emailVerified: Boolean;
 }
 
@@ -4807,10 +4480,10 @@ export interface UserPreviousValuesPromise
   createdAt: () => Promise<DateTimeOutput>;
   updatedAt: () => Promise<DateTimeOutput>;
   email: () => Promise<String>;
+  slug: () => Promise<String>;
   password: () => Promise<String>;
   name: () => Promise<String>;
   avatar: () => Promise<String>;
-  slug: () => Promise<String>;
   emailVerified: () => Promise<Boolean>;
 }
 
@@ -4821,27 +4494,228 @@ export interface UserPreviousValuesSubscription
   createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
   updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
   email: () => Promise<AsyncIterator<String>>;
+  slug: () => Promise<AsyncIterator<String>>;
   password: () => Promise<AsyncIterator<String>>;
   name: () => Promise<AsyncIterator<String>>;
   avatar: () => Promise<AsyncIterator<String>>;
-  slug: () => Promise<AsyncIterator<String>>;
   emailVerified: () => Promise<AsyncIterator<Boolean>>;
 }
 
-export interface AggregateAlteration {
+export interface IngredientAdditionConnection {
+  pageInfo: PageInfo;
+  edges: IngredientAdditionEdge[];
+}
+
+export interface IngredientAdditionConnectionPromise
+  extends Promise<IngredientAdditionConnection>,
+    Fragmentable {
+  pageInfo: <T = PageInfoPromise>() => T;
+  edges: <T = FragmentableArray<IngredientAdditionEdge>>() => T;
+  aggregate: <T = AggregateIngredientAdditionPromise>() => T;
+}
+
+export interface IngredientAdditionConnectionSubscription
+  extends Promise<AsyncIterator<IngredientAdditionConnection>>,
+    Fragmentable {
+  pageInfo: <T = PageInfoSubscription>() => T;
+  edges: <
+    T = Promise<AsyncIterator<IngredientAdditionEdgeSubscription>>
+  >() => T;
+  aggregate: <T = AggregateIngredientAdditionSubscription>() => T;
+}
+
+export interface Sorting {
+  id: ID_Output;
+  createdAt: DateTimeOutput;
+  updatedAt: DateTimeOutput;
+  uid: ID_Output;
+  parentId: ID_Output;
+  order: ID_Output[];
+}
+
+export interface SortingPromise extends Promise<Sorting>, Fragmentable {
+  id: () => Promise<ID_Output>;
+  createdAt: () => Promise<DateTimeOutput>;
+  updatedAt: () => Promise<DateTimeOutput>;
+  uid: () => Promise<ID_Output>;
+  parentId: () => Promise<ID_Output>;
+  order: () => Promise<ID_Output[]>;
+  modification: <T = ModificationPromise>() => T;
+}
+
+export interface SortingSubscription
+  extends Promise<AsyncIterator<Sorting>>,
+    Fragmentable {
+  id: () => Promise<AsyncIterator<ID_Output>>;
+  createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  uid: () => Promise<AsyncIterator<ID_Output>>;
+  parentId: () => Promise<AsyncIterator<ID_Output>>;
+  order: () => Promise<AsyncIterator<ID_Output[]>>;
+  modification: <T = ModificationSubscription>() => T;
+}
+
+export interface SortingNullablePromise
+  extends Promise<Sorting | null>,
+    Fragmentable {
+  id: () => Promise<ID_Output>;
+  createdAt: () => Promise<DateTimeOutput>;
+  updatedAt: () => Promise<DateTimeOutput>;
+  uid: () => Promise<ID_Output>;
+  parentId: () => Promise<ID_Output>;
+  order: () => Promise<ID_Output[]>;
+  modification: <T = ModificationPromise>() => T;
+}
+
+export interface IngredientAdditionEdge {
+  node: IngredientAddition;
+  cursor: String;
+}
+
+export interface IngredientAdditionEdgePromise
+  extends Promise<IngredientAdditionEdge>,
+    Fragmentable {
+  node: <T = IngredientAdditionPromise>() => T;
+  cursor: () => Promise<String>;
+}
+
+export interface IngredientAdditionEdgeSubscription
+  extends Promise<AsyncIterator<IngredientAdditionEdge>>,
+    Fragmentable {
+  node: <T = IngredientAdditionSubscription>() => T;
+  cursor: () => Promise<AsyncIterator<String>>;
+}
+
+export interface ItemAddition {
+  id: ID_Output;
+  createdAt: DateTimeOutput;
+  updatedAt: DateTimeOutput;
+  uid: ID_Output;
+  parentId: ID_Output;
+  name: String;
+}
+
+export interface ItemAdditionPromise
+  extends Promise<ItemAddition>,
+    Fragmentable {
+  id: () => Promise<ID_Output>;
+  createdAt: () => Promise<DateTimeOutput>;
+  updatedAt: () => Promise<DateTimeOutput>;
+  uid: () => Promise<ID_Output>;
+  parentId: () => Promise<ID_Output>;
+  name: () => Promise<String>;
+  modification: <T = ModificationPromise>() => T;
+}
+
+export interface ItemAdditionSubscription
+  extends Promise<AsyncIterator<ItemAddition>>,
+    Fragmentable {
+  id: () => Promise<AsyncIterator<ID_Output>>;
+  createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  uid: () => Promise<AsyncIterator<ID_Output>>;
+  parentId: () => Promise<AsyncIterator<ID_Output>>;
+  name: () => Promise<AsyncIterator<String>>;
+  modification: <T = ModificationSubscription>() => T;
+}
+
+export interface ItemAdditionNullablePromise
+  extends Promise<ItemAddition | null>,
+    Fragmentable {
+  id: () => Promise<ID_Output>;
+  createdAt: () => Promise<DateTimeOutput>;
+  updatedAt: () => Promise<DateTimeOutput>;
+  uid: () => Promise<ID_Output>;
+  parentId: () => Promise<ID_Output>;
+  name: () => Promise<String>;
+  modification: <T = ModificationPromise>() => T;
+}
+
+export interface BatchPayload {
+  count: Long;
+}
+
+export interface BatchPayloadPromise
+  extends Promise<BatchPayload>,
+    Fragmentable {
+  count: () => Promise<Long>;
+}
+
+export interface BatchPayloadSubscription
+  extends Promise<AsyncIterator<BatchPayload>>,
+    Fragmentable {
+  count: () => Promise<AsyncIterator<Long>>;
+}
+
+export interface AggregateIngredient {
   count: Int;
 }
 
-export interface AggregateAlterationPromise
-  extends Promise<AggregateAlteration>,
+export interface AggregateIngredientPromise
+  extends Promise<AggregateIngredient>,
     Fragmentable {
   count: () => Promise<Int>;
 }
 
-export interface AggregateAlterationSubscription
-  extends Promise<AsyncIterator<AggregateAlteration>>,
+export interface AggregateIngredientSubscription
+  extends Promise<AsyncIterator<AggregateIngredient>>,
     Fragmentable {
   count: () => Promise<AsyncIterator<Int>>;
+}
+
+export interface Ingredient {
+  id: ID_Output;
+  createdAt: DateTimeOutput;
+  updatedAt: DateTimeOutput;
+  uid: ID_Output;
+  index: Int;
+  name: String;
+  quantity: String;
+  unit: String;
+  processing: String;
+}
+
+export interface IngredientPromise extends Promise<Ingredient>, Fragmentable {
+  id: () => Promise<ID_Output>;
+  createdAt: () => Promise<DateTimeOutput>;
+  updatedAt: () => Promise<DateTimeOutput>;
+  uid: () => Promise<ID_Output>;
+  index: () => Promise<Int>;
+  name: () => Promise<String>;
+  quantity: () => Promise<String>;
+  unit: () => Promise<String>;
+  processing: () => Promise<String>;
+  step: <T = StepPromise>() => T;
+}
+
+export interface IngredientSubscription
+  extends Promise<AsyncIterator<Ingredient>>,
+    Fragmentable {
+  id: () => Promise<AsyncIterator<ID_Output>>;
+  createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  uid: () => Promise<AsyncIterator<ID_Output>>;
+  index: () => Promise<AsyncIterator<Int>>;
+  name: () => Promise<AsyncIterator<String>>;
+  quantity: () => Promise<AsyncIterator<String>>;
+  unit: () => Promise<AsyncIterator<String>>;
+  processing: () => Promise<AsyncIterator<String>>;
+  step: <T = StepSubscription>() => T;
+}
+
+export interface IngredientNullablePromise
+  extends Promise<Ingredient | null>,
+    Fragmentable {
+  id: () => Promise<ID_Output>;
+  createdAt: () => Promise<DateTimeOutput>;
+  updatedAt: () => Promise<DateTimeOutput>;
+  uid: () => Promise<ID_Output>;
+  index: () => Promise<Int>;
+  name: () => Promise<String>;
+  quantity: () => Promise<String>;
+  unit: () => Promise<String>;
+  processing: () => Promise<String>;
+  step: <T = StepPromise>() => T;
 }
 
 export interface Item {
@@ -4914,6 +4788,386 @@ export interface ItemNullablePromise
   }) => T;
 }
 
+export interface IngredientEdge {
+  node: Ingredient;
+  cursor: String;
+}
+
+export interface IngredientEdgePromise
+  extends Promise<IngredientEdge>,
+    Fragmentable {
+  node: <T = IngredientPromise>() => T;
+  cursor: () => Promise<String>;
+}
+
+export interface IngredientEdgeSubscription
+  extends Promise<AsyncIterator<IngredientEdge>>,
+    Fragmentable {
+  node: <T = IngredientSubscription>() => T;
+  cursor: () => Promise<AsyncIterator<String>>;
+}
+
+export interface UserSubscriptionPayload {
+  mutation: MutationType;
+  node: User;
+  updatedFields: String[];
+  previousValues: UserPreviousValues;
+}
+
+export interface UserSubscriptionPayloadPromise
+  extends Promise<UserSubscriptionPayload>,
+    Fragmentable {
+  mutation: () => Promise<MutationType>;
+  node: <T = UserPromise>() => T;
+  updatedFields: () => Promise<String[]>;
+  previousValues: <T = UserPreviousValuesPromise>() => T;
+}
+
+export interface UserSubscriptionPayloadSubscription
+  extends Promise<AsyncIterator<UserSubscriptionPayload>>,
+    Fragmentable {
+  mutation: () => Promise<AsyncIterator<MutationType>>;
+  node: <T = UserSubscription>() => T;
+  updatedFields: () => Promise<AsyncIterator<String[]>>;
+  previousValues: <T = UserPreviousValuesSubscription>() => T;
+}
+
+export interface IngredientConnection {
+  pageInfo: PageInfo;
+  edges: IngredientEdge[];
+}
+
+export interface IngredientConnectionPromise
+  extends Promise<IngredientConnection>,
+    Fragmentable {
+  pageInfo: <T = PageInfoPromise>() => T;
+  edges: <T = FragmentableArray<IngredientEdge>>() => T;
+  aggregate: <T = AggregateIngredientPromise>() => T;
+}
+
+export interface IngredientConnectionSubscription
+  extends Promise<AsyncIterator<IngredientConnection>>,
+    Fragmentable {
+  pageInfo: <T = PageInfoSubscription>() => T;
+  edges: <T = Promise<AsyncIterator<IngredientEdgeSubscription>>>() => T;
+  aggregate: <T = AggregateIngredientSubscription>() => T;
+}
+
+export interface AggregateUser {
+  count: Int;
+}
+
+export interface AggregateUserPromise
+  extends Promise<AggregateUser>,
+    Fragmentable {
+  count: () => Promise<Int>;
+}
+
+export interface AggregateUserSubscription
+  extends Promise<AsyncIterator<AggregateUser>>,
+    Fragmentable {
+  count: () => Promise<AsyncIterator<Int>>;
+}
+
+export interface Alteration {
+  id: ID_Output;
+  createdAt: DateTimeOutput;
+  updatedAt: DateTimeOutput;
+  uid: ID_Output;
+  sourceId: ID_Output;
+  field: String;
+  value: String;
+}
+
+export interface AlterationPromise extends Promise<Alteration>, Fragmentable {
+  id: () => Promise<ID_Output>;
+  createdAt: () => Promise<DateTimeOutput>;
+  updatedAt: () => Promise<DateTimeOutput>;
+  uid: () => Promise<ID_Output>;
+  sourceId: () => Promise<ID_Output>;
+  field: () => Promise<String>;
+  value: () => Promise<String>;
+  modification: <T = ModificationPromise>() => T;
+}
+
+export interface AlterationSubscription
+  extends Promise<AsyncIterator<Alteration>>,
+    Fragmentable {
+  id: () => Promise<AsyncIterator<ID_Output>>;
+  createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  uid: () => Promise<AsyncIterator<ID_Output>>;
+  sourceId: () => Promise<AsyncIterator<ID_Output>>;
+  field: () => Promise<AsyncIterator<String>>;
+  value: () => Promise<AsyncIterator<String>>;
+  modification: <T = ModificationSubscription>() => T;
+}
+
+export interface AlterationNullablePromise
+  extends Promise<Alteration | null>,
+    Fragmentable {
+  id: () => Promise<ID_Output>;
+  createdAt: () => Promise<DateTimeOutput>;
+  updatedAt: () => Promise<DateTimeOutput>;
+  uid: () => Promise<ID_Output>;
+  sourceId: () => Promise<ID_Output>;
+  field: () => Promise<String>;
+  value: () => Promise<String>;
+  modification: <T = ModificationPromise>() => T;
+}
+
+export interface UserConnection {
+  pageInfo: PageInfo;
+  edges: UserEdge[];
+}
+
+export interface UserConnectionPromise
+  extends Promise<UserConnection>,
+    Fragmentable {
+  pageInfo: <T = PageInfoPromise>() => T;
+  edges: <T = FragmentableArray<UserEdge>>() => T;
+  aggregate: <T = AggregateUserPromise>() => T;
+}
+
+export interface UserConnectionSubscription
+  extends Promise<AsyncIterator<UserConnection>>,
+    Fragmentable {
+  pageInfo: <T = PageInfoSubscription>() => T;
+  edges: <T = Promise<AsyncIterator<UserEdgeSubscription>>>() => T;
+  aggregate: <T = AggregateUserSubscription>() => T;
+}
+
+export interface AlterationSubscriptionPayload {
+  mutation: MutationType;
+  node: Alteration;
+  updatedFields: String[];
+  previousValues: AlterationPreviousValues;
+}
+
+export interface AlterationSubscriptionPayloadPromise
+  extends Promise<AlterationSubscriptionPayload>,
+    Fragmentable {
+  mutation: () => Promise<MutationType>;
+  node: <T = AlterationPromise>() => T;
+  updatedFields: () => Promise<String[]>;
+  previousValues: <T = AlterationPreviousValuesPromise>() => T;
+}
+
+export interface AlterationSubscriptionPayloadSubscription
+  extends Promise<AsyncIterator<AlterationSubscriptionPayload>>,
+    Fragmentable {
+  mutation: () => Promise<AsyncIterator<MutationType>>;
+  node: <T = AlterationSubscription>() => T;
+  updatedFields: () => Promise<AsyncIterator<String[]>>;
+  previousValues: <T = AlterationPreviousValuesSubscription>() => T;
+}
+
+export interface AggregateStepAddition {
+  count: Int;
+}
+
+export interface AggregateStepAdditionPromise
+  extends Promise<AggregateStepAddition>,
+    Fragmentable {
+  count: () => Promise<Int>;
+}
+
+export interface AggregateStepAdditionSubscription
+  extends Promise<AsyncIterator<AggregateStepAddition>>,
+    Fragmentable {
+  count: () => Promise<AsyncIterator<Int>>;
+}
+
+export interface AlterationPreviousValues {
+  id: ID_Output;
+  createdAt: DateTimeOutput;
+  updatedAt: DateTimeOutput;
+  uid: ID_Output;
+  sourceId: ID_Output;
+  field: String;
+  value: String;
+}
+
+export interface AlterationPreviousValuesPromise
+  extends Promise<AlterationPreviousValues>,
+    Fragmentable {
+  id: () => Promise<ID_Output>;
+  createdAt: () => Promise<DateTimeOutput>;
+  updatedAt: () => Promise<DateTimeOutput>;
+  uid: () => Promise<ID_Output>;
+  sourceId: () => Promise<ID_Output>;
+  field: () => Promise<String>;
+  value: () => Promise<String>;
+}
+
+export interface AlterationPreviousValuesSubscription
+  extends Promise<AsyncIterator<AlterationPreviousValues>>,
+    Fragmentable {
+  id: () => Promise<AsyncIterator<ID_Output>>;
+  createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  uid: () => Promise<AsyncIterator<ID_Output>>;
+  sourceId: () => Promise<AsyncIterator<ID_Output>>;
+  field: () => Promise<AsyncIterator<String>>;
+  value: () => Promise<AsyncIterator<String>>;
+}
+
+export interface StepAdditionConnection {
+  pageInfo: PageInfo;
+  edges: StepAdditionEdge[];
+}
+
+export interface StepAdditionConnectionPromise
+  extends Promise<StepAdditionConnection>,
+    Fragmentable {
+  pageInfo: <T = PageInfoPromise>() => T;
+  edges: <T = FragmentableArray<StepAdditionEdge>>() => T;
+  aggregate: <T = AggregateStepAdditionPromise>() => T;
+}
+
+export interface StepAdditionConnectionSubscription
+  extends Promise<AsyncIterator<StepAdditionConnection>>,
+    Fragmentable {
+  pageInfo: <T = PageInfoSubscription>() => T;
+  edges: <T = Promise<AsyncIterator<StepAdditionEdgeSubscription>>>() => T;
+  aggregate: <T = AggregateStepAdditionSubscription>() => T;
+}
+
+export interface AggregateAlteration {
+  count: Int;
+}
+
+export interface AggregateAlterationPromise
+  extends Promise<AggregateAlteration>,
+    Fragmentable {
+  count: () => Promise<Int>;
+}
+
+export interface AggregateAlterationSubscription
+  extends Promise<AsyncIterator<AggregateAlteration>>,
+    Fragmentable {
+  count: () => Promise<AsyncIterator<Int>>;
+}
+
+export interface StepEdge {
+  node: Step;
+  cursor: String;
+}
+
+export interface StepEdgePromise extends Promise<StepEdge>, Fragmentable {
+  node: <T = StepPromise>() => T;
+  cursor: () => Promise<String>;
+}
+
+export interface StepEdgeSubscription
+  extends Promise<AsyncIterator<StepEdge>>,
+    Fragmentable {
+  node: <T = StepSubscription>() => T;
+  cursor: () => Promise<AsyncIterator<String>>;
+}
+
+export interface IngredientSubscriptionPayload {
+  mutation: MutationType;
+  node: Ingredient;
+  updatedFields: String[];
+  previousValues: IngredientPreviousValues;
+}
+
+export interface IngredientSubscriptionPayloadPromise
+  extends Promise<IngredientSubscriptionPayload>,
+    Fragmentable {
+  mutation: () => Promise<MutationType>;
+  node: <T = IngredientPromise>() => T;
+  updatedFields: () => Promise<String[]>;
+  previousValues: <T = IngredientPreviousValuesPromise>() => T;
+}
+
+export interface IngredientSubscriptionPayloadSubscription
+  extends Promise<AsyncIterator<IngredientSubscriptionPayload>>,
+    Fragmentable {
+  mutation: () => Promise<AsyncIterator<MutationType>>;
+  node: <T = IngredientSubscription>() => T;
+  updatedFields: () => Promise<AsyncIterator<String[]>>;
+  previousValues: <T = IngredientPreviousValuesSubscription>() => T;
+}
+
+export interface AggregateSorting {
+  count: Int;
+}
+
+export interface AggregateSortingPromise
+  extends Promise<AggregateSorting>,
+    Fragmentable {
+  count: () => Promise<Int>;
+}
+
+export interface AggregateSortingSubscription
+  extends Promise<AsyncIterator<AggregateSorting>>,
+    Fragmentable {
+  count: () => Promise<AsyncIterator<Int>>;
+}
+
+export interface IngredientPreviousValues {
+  id: ID_Output;
+  createdAt: DateTimeOutput;
+  updatedAt: DateTimeOutput;
+  uid: ID_Output;
+  index: Int;
+  name: String;
+  quantity: String;
+  unit: String;
+  processing: String;
+}
+
+export interface IngredientPreviousValuesPromise
+  extends Promise<IngredientPreviousValues>,
+    Fragmentable {
+  id: () => Promise<ID_Output>;
+  createdAt: () => Promise<DateTimeOutput>;
+  updatedAt: () => Promise<DateTimeOutput>;
+  uid: () => Promise<ID_Output>;
+  index: () => Promise<Int>;
+  name: () => Promise<String>;
+  quantity: () => Promise<String>;
+  unit: () => Promise<String>;
+  processing: () => Promise<String>;
+}
+
+export interface IngredientPreviousValuesSubscription
+  extends Promise<AsyncIterator<IngredientPreviousValues>>,
+    Fragmentable {
+  id: () => Promise<AsyncIterator<ID_Output>>;
+  createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  uid: () => Promise<AsyncIterator<ID_Output>>;
+  index: () => Promise<AsyncIterator<Int>>;
+  name: () => Promise<AsyncIterator<String>>;
+  quantity: () => Promise<AsyncIterator<String>>;
+  unit: () => Promise<AsyncIterator<String>>;
+  processing: () => Promise<AsyncIterator<String>>;
+}
+
+export interface SortingConnection {
+  pageInfo: PageInfo;
+  edges: SortingEdge[];
+}
+
+export interface SortingConnectionPromise
+  extends Promise<SortingConnection>,
+    Fragmentable {
+  pageInfo: <T = PageInfoPromise>() => T;
+  edges: <T = FragmentableArray<SortingEdge>>() => T;
+  aggregate: <T = AggregateSortingPromise>() => T;
+}
+
+export interface SortingConnectionSubscription
+  extends Promise<AsyncIterator<SortingConnection>>,
+    Fragmentable {
+  pageInfo: <T = PageInfoSubscription>() => T;
+  edges: <T = Promise<AsyncIterator<SortingEdgeSubscription>>>() => T;
+  aggregate: <T = AggregateSortingSubscription>() => T;
+}
+
 export interface AlterationEdge {
   node: Alteration;
   cursor: String;
@@ -4931,6 +5185,125 @@ export interface AlterationEdgeSubscription
     Fragmentable {
   node: <T = AlterationSubscription>() => T;
   cursor: () => Promise<AsyncIterator<String>>;
+}
+
+export interface RecipeEdge {
+  node: Recipe;
+  cursor: String;
+}
+
+export interface RecipeEdgePromise extends Promise<RecipeEdge>, Fragmentable {
+  node: <T = RecipePromise>() => T;
+  cursor: () => Promise<String>;
+}
+
+export interface RecipeEdgeSubscription
+  extends Promise<AsyncIterator<RecipeEdge>>,
+    Fragmentable {
+  node: <T = RecipeSubscription>() => T;
+  cursor: () => Promise<AsyncIterator<String>>;
+}
+
+export interface IngredientAdditionSubscriptionPayload {
+  mutation: MutationType;
+  node: IngredientAddition;
+  updatedFields: String[];
+  previousValues: IngredientAdditionPreviousValues;
+}
+
+export interface IngredientAdditionSubscriptionPayloadPromise
+  extends Promise<IngredientAdditionSubscriptionPayload>,
+    Fragmentable {
+  mutation: () => Promise<MutationType>;
+  node: <T = IngredientAdditionPromise>() => T;
+  updatedFields: () => Promise<String[]>;
+  previousValues: <T = IngredientAdditionPreviousValuesPromise>() => T;
+}
+
+export interface IngredientAdditionSubscriptionPayloadSubscription
+  extends Promise<AsyncIterator<IngredientAdditionSubscriptionPayload>>,
+    Fragmentable {
+  mutation: () => Promise<AsyncIterator<MutationType>>;
+  node: <T = IngredientAdditionSubscription>() => T;
+  updatedFields: () => Promise<AsyncIterator<String[]>>;
+  previousValues: <T = IngredientAdditionPreviousValuesSubscription>() => T;
+}
+
+export interface AggregateModification {
+  count: Int;
+}
+
+export interface AggregateModificationPromise
+  extends Promise<AggregateModification>,
+    Fragmentable {
+  count: () => Promise<Int>;
+}
+
+export interface AggregateModificationSubscription
+  extends Promise<AsyncIterator<AggregateModification>>,
+    Fragmentable {
+  count: () => Promise<AsyncIterator<Int>>;
+}
+
+export interface IngredientAdditionPreviousValues {
+  id: ID_Output;
+  createdAt: DateTimeOutput;
+  updatedAt: DateTimeOutput;
+  uid: ID_Output;
+  parentId: ID_Output;
+  name: String;
+  quantity: String;
+  unit: String;
+  processing: String;
+}
+
+export interface IngredientAdditionPreviousValuesPromise
+  extends Promise<IngredientAdditionPreviousValues>,
+    Fragmentable {
+  id: () => Promise<ID_Output>;
+  createdAt: () => Promise<DateTimeOutput>;
+  updatedAt: () => Promise<DateTimeOutput>;
+  uid: () => Promise<ID_Output>;
+  parentId: () => Promise<ID_Output>;
+  name: () => Promise<String>;
+  quantity: () => Promise<String>;
+  unit: () => Promise<String>;
+  processing: () => Promise<String>;
+}
+
+export interface IngredientAdditionPreviousValuesSubscription
+  extends Promise<AsyncIterator<IngredientAdditionPreviousValues>>,
+    Fragmentable {
+  id: () => Promise<AsyncIterator<ID_Output>>;
+  createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  uid: () => Promise<AsyncIterator<ID_Output>>;
+  parentId: () => Promise<AsyncIterator<ID_Output>>;
+  name: () => Promise<AsyncIterator<String>>;
+  quantity: () => Promise<AsyncIterator<String>>;
+  unit: () => Promise<AsyncIterator<String>>;
+  processing: () => Promise<AsyncIterator<String>>;
+}
+
+export interface ModificationConnection {
+  pageInfo: PageInfo;
+  edges: ModificationEdge[];
+}
+
+export interface ModificationConnectionPromise
+  extends Promise<ModificationConnection>,
+    Fragmentable {
+  pageInfo: <T = PageInfoPromise>() => T;
+  edges: <T = FragmentableArray<ModificationEdge>>() => T;
+  aggregate: <T = AggregateModificationPromise>() => T;
+}
+
+export interface ModificationConnectionSubscription
+  extends Promise<AsyncIterator<ModificationConnection>>,
+    Fragmentable {
+  pageInfo: <T = PageInfoSubscription>() => T;
+  edges: <T = Promise<AsyncIterator<ModificationEdgeSubscription>>>() => T;
+  aggregate: <T = AggregateModificationSubscription>() => T;
 }
 
 export interface PageInfo {
@@ -4956,36 +5329,116 @@ export interface PageInfoSubscription
   endCursor: () => Promise<AsyncIterator<String>>;
 }
 
-export interface BatchPayload {
-  count: Long;
+export interface ItemAdditionEdge {
+  node: ItemAddition;
+  cursor: String;
 }
 
-export interface BatchPayloadPromise
-  extends Promise<BatchPayload>,
+export interface ItemAdditionEdgePromise
+  extends Promise<ItemAdditionEdge>,
     Fragmentable {
-  count: () => Promise<Long>;
+  node: <T = ItemAdditionPromise>() => T;
+  cursor: () => Promise<String>;
 }
 
-export interface BatchPayloadSubscription
-  extends Promise<AsyncIterator<BatchPayload>>,
+export interface ItemAdditionEdgeSubscription
+  extends Promise<AsyncIterator<ItemAdditionEdge>>,
     Fragmentable {
-  count: () => Promise<AsyncIterator<Long>>;
+  node: <T = ItemAdditionSubscription>() => T;
+  cursor: () => Promise<AsyncIterator<String>>;
 }
 
-export interface AggregateUser {
+export interface ItemSubscriptionPayload {
+  mutation: MutationType;
+  node: Item;
+  updatedFields: String[];
+  previousValues: ItemPreviousValues;
+}
+
+export interface ItemSubscriptionPayloadPromise
+  extends Promise<ItemSubscriptionPayload>,
+    Fragmentable {
+  mutation: () => Promise<MutationType>;
+  node: <T = ItemPromise>() => T;
+  updatedFields: () => Promise<String[]>;
+  previousValues: <T = ItemPreviousValuesPromise>() => T;
+}
+
+export interface ItemSubscriptionPayloadSubscription
+  extends Promise<AsyncIterator<ItemSubscriptionPayload>>,
+    Fragmentable {
+  mutation: () => Promise<AsyncIterator<MutationType>>;
+  node: <T = ItemSubscription>() => T;
+  updatedFields: () => Promise<AsyncIterator<String[]>>;
+  previousValues: <T = ItemPreviousValuesSubscription>() => T;
+}
+
+export interface AggregateItem {
   count: Int;
 }
 
-export interface AggregateUserPromise
-  extends Promise<AggregateUser>,
+export interface AggregateItemPromise
+  extends Promise<AggregateItem>,
     Fragmentable {
   count: () => Promise<Int>;
 }
 
-export interface AggregateUserSubscription
-  extends Promise<AsyncIterator<AggregateUser>>,
+export interface AggregateItemSubscription
+  extends Promise<AsyncIterator<AggregateItem>>,
     Fragmentable {
   count: () => Promise<AsyncIterator<Int>>;
+}
+
+export interface ItemPreviousValues {
+  id: ID_Output;
+  createdAt: DateTimeOutput;
+  updatedAt: DateTimeOutput;
+  uid: ID_Output;
+  index: Int;
+  name: String;
+}
+
+export interface ItemPreviousValuesPromise
+  extends Promise<ItemPreviousValues>,
+    Fragmentable {
+  id: () => Promise<ID_Output>;
+  createdAt: () => Promise<DateTimeOutput>;
+  updatedAt: () => Promise<DateTimeOutput>;
+  uid: () => Promise<ID_Output>;
+  index: () => Promise<Int>;
+  name: () => Promise<String>;
+}
+
+export interface ItemPreviousValuesSubscription
+  extends Promise<AsyncIterator<ItemPreviousValues>>,
+    Fragmentable {
+  id: () => Promise<AsyncIterator<ID_Output>>;
+  createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  uid: () => Promise<AsyncIterator<ID_Output>>;
+  index: () => Promise<AsyncIterator<Int>>;
+  name: () => Promise<AsyncIterator<String>>;
+}
+
+export interface ItemConnection {
+  pageInfo: PageInfo;
+  edges: ItemEdge[];
+}
+
+export interface ItemConnectionPromise
+  extends Promise<ItemConnection>,
+    Fragmentable {
+  pageInfo: <T = PageInfoPromise>() => T;
+  edges: <T = FragmentableArray<ItemEdge>>() => T;
+  aggregate: <T = AggregateItemPromise>() => T;
+}
+
+export interface ItemConnectionSubscription
+  extends Promise<AsyncIterator<ItemConnection>>,
+    Fragmentable {
+  pageInfo: <T = PageInfoSubscription>() => T;
+  edges: <T = Promise<AsyncIterator<ItemEdgeSubscription>>>() => T;
+  aggregate: <T = AggregateItemSubscription>() => T;
 }
 
 export interface AlterationConnection {
@@ -5009,25 +5462,274 @@ export interface AlterationConnectionSubscription
   aggregate: <T = AggregateAlterationSubscription>() => T;
 }
 
-export interface UserConnection {
-  pageInfo: PageInfo;
-  edges: UserEdge[];
+export interface Step {
+  id: ID_Output;
+  createdAt: DateTimeOutput;
+  updatedAt: DateTimeOutput;
+  uid: ID_Output;
+  index: Int;
+  directions: String;
+  notes: String;
 }
 
-export interface UserConnectionPromise
-  extends Promise<UserConnection>,
-    Fragmentable {
-  pageInfo: <T = PageInfoPromise>() => T;
-  edges: <T = FragmentableArray<UserEdge>>() => T;
-  aggregate: <T = AggregateUserPromise>() => T;
+export interface StepPromise extends Promise<Step>, Fragmentable {
+  id: () => Promise<ID_Output>;
+  createdAt: () => Promise<DateTimeOutput>;
+  updatedAt: () => Promise<DateTimeOutput>;
+  uid: () => Promise<ID_Output>;
+  index: () => Promise<Int>;
+  directions: () => Promise<String>;
+  notes: () => Promise<String>;
+  item: <T = ItemPromise>() => T;
+  ingredients: <T = FragmentableArray<Ingredient>>(args?: {
+    where?: IngredientWhereInput;
+    orderBy?: IngredientOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
 }
 
-export interface UserConnectionSubscription
-  extends Promise<AsyncIterator<UserConnection>>,
+export interface StepSubscription
+  extends Promise<AsyncIterator<Step>>,
     Fragmentable {
-  pageInfo: <T = PageInfoSubscription>() => T;
-  edges: <T = Promise<AsyncIterator<UserEdgeSubscription>>>() => T;
-  aggregate: <T = AggregateUserSubscription>() => T;
+  id: () => Promise<AsyncIterator<ID_Output>>;
+  createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  uid: () => Promise<AsyncIterator<ID_Output>>;
+  index: () => Promise<AsyncIterator<Int>>;
+  directions: () => Promise<AsyncIterator<String>>;
+  notes: () => Promise<AsyncIterator<String>>;
+  item: <T = ItemSubscription>() => T;
+  ingredients: <T = Promise<AsyncIterator<IngredientSubscription>>>(args?: {
+    where?: IngredientWhereInput;
+    orderBy?: IngredientOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
+}
+
+export interface StepNullablePromise
+  extends Promise<Step | null>,
+    Fragmentable {
+  id: () => Promise<ID_Output>;
+  createdAt: () => Promise<DateTimeOutput>;
+  updatedAt: () => Promise<DateTimeOutput>;
+  uid: () => Promise<ID_Output>;
+  index: () => Promise<Int>;
+  directions: () => Promise<String>;
+  notes: () => Promise<String>;
+  item: <T = ItemPromise>() => T;
+  ingredients: <T = FragmentableArray<Ingredient>>(args?: {
+    where?: IngredientWhereInput;
+    orderBy?: IngredientOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
+}
+
+export interface ItemAdditionSubscriptionPayload {
+  mutation: MutationType;
+  node: ItemAddition;
+  updatedFields: String[];
+  previousValues: ItemAdditionPreviousValues;
+}
+
+export interface ItemAdditionSubscriptionPayloadPromise
+  extends Promise<ItemAdditionSubscriptionPayload>,
+    Fragmentable {
+  mutation: () => Promise<MutationType>;
+  node: <T = ItemAdditionPromise>() => T;
+  updatedFields: () => Promise<String[]>;
+  previousValues: <T = ItemAdditionPreviousValuesPromise>() => T;
+}
+
+export interface ItemAdditionSubscriptionPayloadSubscription
+  extends Promise<AsyncIterator<ItemAdditionSubscriptionPayload>>,
+    Fragmentable {
+  mutation: () => Promise<AsyncIterator<MutationType>>;
+  node: <T = ItemAdditionSubscription>() => T;
+  updatedFields: () => Promise<AsyncIterator<String[]>>;
+  previousValues: <T = ItemAdditionPreviousValuesSubscription>() => T;
+}
+
+export interface User {
+  id: ID_Output;
+  createdAt: DateTimeOutput;
+  updatedAt: DateTimeOutput;
+  email: String;
+  slug: String;
+  password: String;
+  name: String;
+  avatar?: String;
+  emailVerified: Boolean;
+}
+
+export interface UserPromise extends Promise<User>, Fragmentable {
+  id: () => Promise<ID_Output>;
+  createdAt: () => Promise<DateTimeOutput>;
+  updatedAt: () => Promise<DateTimeOutput>;
+  email: () => Promise<String>;
+  slug: () => Promise<String>;
+  password: () => Promise<String>;
+  name: () => Promise<String>;
+  avatar: () => Promise<String>;
+  emailVerified: () => Promise<Boolean>;
+  recipes: <T = FragmentableArray<Recipe>>(args?: {
+    where?: RecipeWhereInput;
+    orderBy?: RecipeOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
+  modifications: <T = FragmentableArray<Modification>>(args?: {
+    where?: ModificationWhereInput;
+    orderBy?: ModificationOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
+}
+
+export interface UserSubscription
+  extends Promise<AsyncIterator<User>>,
+    Fragmentable {
+  id: () => Promise<AsyncIterator<ID_Output>>;
+  createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  email: () => Promise<AsyncIterator<String>>;
+  slug: () => Promise<AsyncIterator<String>>;
+  password: () => Promise<AsyncIterator<String>>;
+  name: () => Promise<AsyncIterator<String>>;
+  avatar: () => Promise<AsyncIterator<String>>;
+  emailVerified: () => Promise<AsyncIterator<Boolean>>;
+  recipes: <T = Promise<AsyncIterator<RecipeSubscription>>>(args?: {
+    where?: RecipeWhereInput;
+    orderBy?: RecipeOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
+  modifications: <T = Promise<AsyncIterator<ModificationSubscription>>>(args?: {
+    where?: ModificationWhereInput;
+    orderBy?: ModificationOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
+}
+
+export interface UserNullablePromise
+  extends Promise<User | null>,
+    Fragmentable {
+  id: () => Promise<ID_Output>;
+  createdAt: () => Promise<DateTimeOutput>;
+  updatedAt: () => Promise<DateTimeOutput>;
+  email: () => Promise<String>;
+  slug: () => Promise<String>;
+  password: () => Promise<String>;
+  name: () => Promise<String>;
+  avatar: () => Promise<String>;
+  emailVerified: () => Promise<Boolean>;
+  recipes: <T = FragmentableArray<Recipe>>(args?: {
+    where?: RecipeWhereInput;
+    orderBy?: RecipeOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
+  modifications: <T = FragmentableArray<Modification>>(args?: {
+    where?: ModificationWhereInput;
+    orderBy?: ModificationOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
+}
+
+export interface ItemAdditionPreviousValues {
+  id: ID_Output;
+  createdAt: DateTimeOutput;
+  updatedAt: DateTimeOutput;
+  uid: ID_Output;
+  parentId: ID_Output;
+  name: String;
+}
+
+export interface ItemAdditionPreviousValuesPromise
+  extends Promise<ItemAdditionPreviousValues>,
+    Fragmentable {
+  id: () => Promise<ID_Output>;
+  createdAt: () => Promise<DateTimeOutput>;
+  updatedAt: () => Promise<DateTimeOutput>;
+  uid: () => Promise<ID_Output>;
+  parentId: () => Promise<ID_Output>;
+  name: () => Promise<String>;
+}
+
+export interface ItemAdditionPreviousValuesSubscription
+  extends Promise<AsyncIterator<ItemAdditionPreviousValues>>,
+    Fragmentable {
+  id: () => Promise<AsyncIterator<ID_Output>>;
+  createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  uid: () => Promise<AsyncIterator<ID_Output>>;
+  parentId: () => Promise<AsyncIterator<ID_Output>>;
+  name: () => Promise<AsyncIterator<String>>;
+}
+
+export interface StepAdditionPreviousValues {
+  id: ID_Output;
+  createdAt: DateTimeOutput;
+  updatedAt: DateTimeOutput;
+  uid: ID_Output;
+  parentId: ID_Output;
+  directions: String;
+  notes: String;
+}
+
+export interface StepAdditionPreviousValuesPromise
+  extends Promise<StepAdditionPreviousValues>,
+    Fragmentable {
+  id: () => Promise<ID_Output>;
+  createdAt: () => Promise<DateTimeOutput>;
+  updatedAt: () => Promise<DateTimeOutput>;
+  uid: () => Promise<ID_Output>;
+  parentId: () => Promise<ID_Output>;
+  directions: () => Promise<String>;
+  notes: () => Promise<String>;
+}
+
+export interface StepAdditionPreviousValuesSubscription
+  extends Promise<AsyncIterator<StepAdditionPreviousValues>>,
+    Fragmentable {
+  id: () => Promise<AsyncIterator<ID_Output>>;
+  createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  uid: () => Promise<AsyncIterator<ID_Output>>;
+  parentId: () => Promise<AsyncIterator<ID_Output>>;
+  directions: () => Promise<AsyncIterator<String>>;
+  notes: () => Promise<AsyncIterator<String>>;
 }
 
 export interface IngredientAddition {
@@ -5087,235 +5789,354 @@ export interface IngredientAdditionNullablePromise
   modification: <T = ModificationPromise>() => T;
 }
 
-export interface AggregateStepAddition {
+export interface AggregateStep {
   count: Int;
 }
 
-export interface AggregateStepAdditionPromise
-  extends Promise<AggregateStepAddition>,
+export interface AggregateStepPromise
+  extends Promise<AggregateStep>,
     Fragmentable {
   count: () => Promise<Int>;
 }
 
-export interface AggregateStepAdditionSubscription
-  extends Promise<AsyncIterator<AggregateStepAddition>>,
+export interface AggregateStepSubscription
+  extends Promise<AsyncIterator<AggregateStep>>,
     Fragmentable {
   count: () => Promise<AsyncIterator<Int>>;
 }
 
-export interface StepAdditionPreviousValues {
-  id: ID_Output;
-  createdAt: DateTimeOutput;
-  updatedAt: DateTimeOutput;
-  uid: ID_Output;
-  parentId: ID_Output;
-  directions: String;
-  notes: String;
+export interface ModificationSubscriptionPayload {
+  mutation: MutationType;
+  node: Modification;
+  updatedFields: String[];
+  previousValues: ModificationPreviousValues;
 }
 
-export interface StepAdditionPreviousValuesPromise
-  extends Promise<StepAdditionPreviousValues>,
+export interface ModificationSubscriptionPayloadPromise
+  extends Promise<ModificationSubscriptionPayload>,
     Fragmentable {
-  id: () => Promise<ID_Output>;
-  createdAt: () => Promise<DateTimeOutput>;
-  updatedAt: () => Promise<DateTimeOutput>;
-  uid: () => Promise<ID_Output>;
-  parentId: () => Promise<ID_Output>;
-  directions: () => Promise<String>;
-  notes: () => Promise<String>;
+  mutation: () => Promise<MutationType>;
+  node: <T = ModificationPromise>() => T;
+  updatedFields: () => Promise<String[]>;
+  previousValues: <T = ModificationPreviousValuesPromise>() => T;
 }
 
-export interface StepAdditionPreviousValuesSubscription
-  extends Promise<AsyncIterator<StepAdditionPreviousValues>>,
+export interface ModificationSubscriptionPayloadSubscription
+  extends Promise<AsyncIterator<ModificationSubscriptionPayload>>,
     Fragmentable {
-  id: () => Promise<AsyncIterator<ID_Output>>;
-  createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
-  updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
-  uid: () => Promise<AsyncIterator<ID_Output>>;
-  parentId: () => Promise<AsyncIterator<ID_Output>>;
-  directions: () => Promise<AsyncIterator<String>>;
-  notes: () => Promise<AsyncIterator<String>>;
+  mutation: () => Promise<AsyncIterator<MutationType>>;
+  node: <T = ModificationSubscription>() => T;
+  updatedFields: () => Promise<AsyncIterator<String[]>>;
+  previousValues: <T = ModificationPreviousValuesSubscription>() => T;
 }
 
-export interface StepAdditionConnection {
-  pageInfo: PageInfo;
-  edges: StepAdditionEdge[];
-}
-
-export interface StepAdditionConnectionPromise
-  extends Promise<StepAdditionConnection>,
-    Fragmentable {
-  pageInfo: <T = PageInfoPromise>() => T;
-  edges: <T = FragmentableArray<StepAdditionEdge>>() => T;
-  aggregate: <T = AggregateStepAdditionPromise>() => T;
-}
-
-export interface StepAdditionConnectionSubscription
-  extends Promise<AsyncIterator<StepAdditionConnection>>,
-    Fragmentable {
-  pageInfo: <T = PageInfoSubscription>() => T;
-  edges: <T = Promise<AsyncIterator<StepAdditionEdgeSubscription>>>() => T;
-  aggregate: <T = AggregateStepAdditionSubscription>() => T;
-}
-
-export interface Alteration {
-  id: ID_Output;
-  createdAt: DateTimeOutput;
-  updatedAt: DateTimeOutput;
-  uid: ID_Output;
-  sourceId: ID_Output;
-  field: String;
-  value: String;
-}
-
-export interface AlterationPromise extends Promise<Alteration>, Fragmentable {
-  id: () => Promise<ID_Output>;
-  createdAt: () => Promise<DateTimeOutput>;
-  updatedAt: () => Promise<DateTimeOutput>;
-  uid: () => Promise<ID_Output>;
-  sourceId: () => Promise<ID_Output>;
-  field: () => Promise<String>;
-  value: () => Promise<String>;
-  modification: <T = ModificationPromise>() => T;
-}
-
-export interface AlterationSubscription
-  extends Promise<AsyncIterator<Alteration>>,
-    Fragmentable {
-  id: () => Promise<AsyncIterator<ID_Output>>;
-  createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
-  updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
-  uid: () => Promise<AsyncIterator<ID_Output>>;
-  sourceId: () => Promise<AsyncIterator<ID_Output>>;
-  field: () => Promise<AsyncIterator<String>>;
-  value: () => Promise<AsyncIterator<String>>;
-  modification: <T = ModificationSubscription>() => T;
-}
-
-export interface AlterationNullablePromise
-  extends Promise<Alteration | null>,
-    Fragmentable {
-  id: () => Promise<ID_Output>;
-  createdAt: () => Promise<DateTimeOutput>;
-  updatedAt: () => Promise<DateTimeOutput>;
-  uid: () => Promise<ID_Output>;
-  sourceId: () => Promise<ID_Output>;
-  field: () => Promise<String>;
-  value: () => Promise<String>;
-  modification: <T = ModificationPromise>() => T;
-}
-
-export interface StepEdge {
-  node: Step;
+export interface SortingEdge {
+  node: Sorting;
   cursor: String;
 }
 
-export interface StepEdgePromise extends Promise<StepEdge>, Fragmentable {
-  node: <T = StepPromise>() => T;
+export interface SortingEdgePromise extends Promise<SortingEdge>, Fragmentable {
+  node: <T = SortingPromise>() => T;
   cursor: () => Promise<String>;
 }
 
-export interface StepEdgeSubscription
-  extends Promise<AsyncIterator<StepEdge>>,
+export interface SortingEdgeSubscription
+  extends Promise<AsyncIterator<SortingEdge>>,
     Fragmentable {
-  node: <T = StepSubscription>() => T;
+  node: <T = SortingSubscription>() => T;
   cursor: () => Promise<AsyncIterator<String>>;
 }
 
-export interface AlterationSubscriptionPayload {
-  mutation: MutationType;
-  node: Alteration;
-  updatedFields: String[];
-  previousValues: AlterationPreviousValues;
+export interface ModificationPreviousValues {
+  id: ID_Output;
+  createdAt: DateTimeOutput;
+  updatedAt: DateTimeOutput;
+  removals: ID_Output[];
 }
 
-export interface AlterationSubscriptionPayloadPromise
-  extends Promise<AlterationSubscriptionPayload>,
+export interface ModificationPreviousValuesPromise
+  extends Promise<ModificationPreviousValues>,
+    Fragmentable {
+  id: () => Promise<ID_Output>;
+  createdAt: () => Promise<DateTimeOutput>;
+  updatedAt: () => Promise<DateTimeOutput>;
+  removals: () => Promise<ID_Output[]>;
+}
+
+export interface ModificationPreviousValuesSubscription
+  extends Promise<AsyncIterator<ModificationPreviousValues>>,
+    Fragmentable {
+  id: () => Promise<AsyncIterator<ID_Output>>;
+  createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  removals: () => Promise<AsyncIterator<ID_Output[]>>;
+}
+
+export interface RecipeConnection {
+  pageInfo: PageInfo;
+  edges: RecipeEdge[];
+}
+
+export interface RecipeConnectionPromise
+  extends Promise<RecipeConnection>,
+    Fragmentable {
+  pageInfo: <T = PageInfoPromise>() => T;
+  edges: <T = FragmentableArray<RecipeEdge>>() => T;
+  aggregate: <T = AggregateRecipePromise>() => T;
+}
+
+export interface RecipeConnectionSubscription
+  extends Promise<AsyncIterator<RecipeConnection>>,
+    Fragmentable {
+  pageInfo: <T = PageInfoSubscription>() => T;
+  edges: <T = Promise<AsyncIterator<RecipeEdgeSubscription>>>() => T;
+  aggregate: <T = AggregateRecipeSubscription>() => T;
+}
+
+export interface StepAdditionSubscriptionPayload {
+  mutation: MutationType;
+  node: StepAddition;
+  updatedFields: String[];
+  previousValues: StepAdditionPreviousValues;
+}
+
+export interface StepAdditionSubscriptionPayloadPromise
+  extends Promise<StepAdditionSubscriptionPayload>,
     Fragmentable {
   mutation: () => Promise<MutationType>;
-  node: <T = AlterationPromise>() => T;
+  node: <T = StepAdditionPromise>() => T;
   updatedFields: () => Promise<String[]>;
-  previousValues: <T = AlterationPreviousValuesPromise>() => T;
+  previousValues: <T = StepAdditionPreviousValuesPromise>() => T;
 }
 
-export interface AlterationSubscriptionPayloadSubscription
-  extends Promise<AsyncIterator<AlterationSubscriptionPayload>>,
+export interface StepAdditionSubscriptionPayloadSubscription
+  extends Promise<AsyncIterator<StepAdditionSubscriptionPayload>>,
     Fragmentable {
   mutation: () => Promise<AsyncIterator<MutationType>>;
-  node: <T = AlterationSubscription>() => T;
+  node: <T = StepAdditionSubscription>() => T;
   updatedFields: () => Promise<AsyncIterator<String[]>>;
-  previousValues: <T = AlterationPreviousValuesSubscription>() => T;
+  previousValues: <T = StepAdditionPreviousValuesSubscription>() => T;
 }
 
-export interface AggregateSorting {
+export interface AggregateItemAddition {
   count: Int;
 }
 
-export interface AggregateSortingPromise
-  extends Promise<AggregateSorting>,
+export interface AggregateItemAdditionPromise
+  extends Promise<AggregateItemAddition>,
     Fragmentable {
   count: () => Promise<Int>;
 }
 
-export interface AggregateSortingSubscription
-  extends Promise<AsyncIterator<AggregateSorting>>,
+export interface AggregateItemAdditionSubscription
+  extends Promise<AsyncIterator<AggregateItemAddition>>,
     Fragmentable {
   count: () => Promise<AsyncIterator<Int>>;
 }
 
-export interface AlterationPreviousValues {
+export interface RecipeSubscriptionPayload {
+  mutation: MutationType;
+  node: Recipe;
+  updatedFields: String[];
+  previousValues: RecipePreviousValues;
+}
+
+export interface RecipeSubscriptionPayloadPromise
+  extends Promise<RecipeSubscriptionPayload>,
+    Fragmentable {
+  mutation: () => Promise<MutationType>;
+  node: <T = RecipePromise>() => T;
+  updatedFields: () => Promise<String[]>;
+  previousValues: <T = RecipePreviousValuesPromise>() => T;
+}
+
+export interface RecipeSubscriptionPayloadSubscription
+  extends Promise<AsyncIterator<RecipeSubscriptionPayload>>,
+    Fragmentable {
+  mutation: () => Promise<AsyncIterator<MutationType>>;
+  node: <T = RecipeSubscription>() => T;
+  updatedFields: () => Promise<AsyncIterator<String[]>>;
+  previousValues: <T = RecipePreviousValuesSubscription>() => T;
+}
+
+export interface ItemEdge {
+  node: Item;
+  cursor: String;
+}
+
+export interface ItemEdgePromise extends Promise<ItemEdge>, Fragmentable {
+  node: <T = ItemPromise>() => T;
+  cursor: () => Promise<String>;
+}
+
+export interface ItemEdgeSubscription
+  extends Promise<AsyncIterator<ItemEdge>>,
+    Fragmentable {
+  node: <T = ItemSubscription>() => T;
+  cursor: () => Promise<AsyncIterator<String>>;
+}
+
+export interface RecipePreviousValues {
   id: ID_Output;
   createdAt: DateTimeOutput;
   updatedAt: DateTimeOutput;
   uid: ID_Output;
-  sourceId: ID_Output;
-  field: String;
-  value: String;
+  slug: String;
+  title: String;
+  time: String;
+  servingAmount: String;
+  servingType: String;
+  description: String;
+  photo?: String;
 }
 
-export interface AlterationPreviousValuesPromise
-  extends Promise<AlterationPreviousValues>,
+export interface RecipePreviousValuesPromise
+  extends Promise<RecipePreviousValues>,
     Fragmentable {
   id: () => Promise<ID_Output>;
   createdAt: () => Promise<DateTimeOutput>;
   updatedAt: () => Promise<DateTimeOutput>;
   uid: () => Promise<ID_Output>;
-  sourceId: () => Promise<ID_Output>;
-  field: () => Promise<String>;
-  value: () => Promise<String>;
+  slug: () => Promise<String>;
+  title: () => Promise<String>;
+  time: () => Promise<String>;
+  servingAmount: () => Promise<String>;
+  servingType: () => Promise<String>;
+  description: () => Promise<String>;
+  photo: () => Promise<String>;
 }
 
-export interface AlterationPreviousValuesSubscription
-  extends Promise<AsyncIterator<AlterationPreviousValues>>,
+export interface RecipePreviousValuesSubscription
+  extends Promise<AsyncIterator<RecipePreviousValues>>,
     Fragmentable {
   id: () => Promise<AsyncIterator<ID_Output>>;
   createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
   updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
   uid: () => Promise<AsyncIterator<ID_Output>>;
-  sourceId: () => Promise<AsyncIterator<ID_Output>>;
-  field: () => Promise<AsyncIterator<String>>;
-  value: () => Promise<AsyncIterator<String>>;
+  slug: () => Promise<AsyncIterator<String>>;
+  title: () => Promise<AsyncIterator<String>>;
+  time: () => Promise<AsyncIterator<String>>;
+  servingAmount: () => Promise<AsyncIterator<String>>;
+  servingType: () => Promise<AsyncIterator<String>>;
+  description: () => Promise<AsyncIterator<String>>;
+  photo: () => Promise<AsyncIterator<String>>;
 }
 
-export interface SortingConnection {
-  pageInfo: PageInfo;
-  edges: SortingEdge[];
+export interface Recipe {
+  id: ID_Output;
+  createdAt: DateTimeOutput;
+  updatedAt: DateTimeOutput;
+  uid: ID_Output;
+  slug: String;
+  title: String;
+  time: String;
+  servingAmount: String;
+  servingType: String;
+  description: String;
+  photo?: String;
 }
 
-export interface SortingConnectionPromise
-  extends Promise<SortingConnection>,
+export interface RecipePromise extends Promise<Recipe>, Fragmentable {
+  id: () => Promise<ID_Output>;
+  createdAt: () => Promise<DateTimeOutput>;
+  updatedAt: () => Promise<DateTimeOutput>;
+  uid: () => Promise<ID_Output>;
+  slug: () => Promise<String>;
+  author: <T = UserPromise>() => T;
+  title: () => Promise<String>;
+  time: () => Promise<String>;
+  servingAmount: () => Promise<String>;
+  servingType: () => Promise<String>;
+  description: () => Promise<String>;
+  items: <T = FragmentableArray<Item>>(args?: {
+    where?: ItemWhereInput;
+    orderBy?: ItemOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
+  modifications: <T = FragmentableArray<Modification>>(args?: {
+    where?: ModificationWhereInput;
+    orderBy?: ModificationOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
+  photo: () => Promise<String>;
+}
+
+export interface RecipeSubscription
+  extends Promise<AsyncIterator<Recipe>>,
     Fragmentable {
-  pageInfo: <T = PageInfoPromise>() => T;
-  edges: <T = FragmentableArray<SortingEdge>>() => T;
-  aggregate: <T = AggregateSortingPromise>() => T;
+  id: () => Promise<AsyncIterator<ID_Output>>;
+  createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  uid: () => Promise<AsyncIterator<ID_Output>>;
+  slug: () => Promise<AsyncIterator<String>>;
+  author: <T = UserSubscription>() => T;
+  title: () => Promise<AsyncIterator<String>>;
+  time: () => Promise<AsyncIterator<String>>;
+  servingAmount: () => Promise<AsyncIterator<String>>;
+  servingType: () => Promise<AsyncIterator<String>>;
+  description: () => Promise<AsyncIterator<String>>;
+  items: <T = Promise<AsyncIterator<ItemSubscription>>>(args?: {
+    where?: ItemWhereInput;
+    orderBy?: ItemOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
+  modifications: <T = Promise<AsyncIterator<ModificationSubscription>>>(args?: {
+    where?: ModificationWhereInput;
+    orderBy?: ModificationOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
+  photo: () => Promise<AsyncIterator<String>>;
 }
 
-export interface SortingConnectionSubscription
-  extends Promise<AsyncIterator<SortingConnection>>,
+export interface RecipeNullablePromise
+  extends Promise<Recipe | null>,
     Fragmentable {
-  pageInfo: <T = PageInfoSubscription>() => T;
-  edges: <T = Promise<AsyncIterator<SortingEdgeSubscription>>>() => T;
-  aggregate: <T = AggregateSortingSubscription>() => T;
+  id: () => Promise<ID_Output>;
+  createdAt: () => Promise<DateTimeOutput>;
+  updatedAt: () => Promise<DateTimeOutput>;
+  uid: () => Promise<ID_Output>;
+  slug: () => Promise<String>;
+  author: <T = UserPromise>() => T;
+  title: () => Promise<String>;
+  time: () => Promise<String>;
+  servingAmount: () => Promise<String>;
+  servingType: () => Promise<String>;
+  description: () => Promise<String>;
+  items: <T = FragmentableArray<Item>>(args?: {
+    where?: ItemWhereInput;
+    orderBy?: ItemOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
+  modifications: <T = FragmentableArray<Modification>>(args?: {
+    where?: ModificationWhereInput;
+    orderBy?: ModificationOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
+  photo: () => Promise<String>;
 }
 
 export interface StepAddition {
@@ -5367,48 +6188,48 @@ export interface StepAdditionNullablePromise
   modification: <T = ModificationPromise>() => T;
 }
 
-export interface RecipePhotoEdge {
-  node: RecipePhoto;
+export interface StepAdditionEdge {
+  node: StepAddition;
   cursor: String;
 }
 
-export interface RecipePhotoEdgePromise
-  extends Promise<RecipePhotoEdge>,
+export interface StepAdditionEdgePromise
+  extends Promise<StepAdditionEdge>,
     Fragmentable {
-  node: <T = RecipePhotoPromise>() => T;
+  node: <T = StepAdditionPromise>() => T;
   cursor: () => Promise<String>;
 }
 
-export interface RecipePhotoEdgeSubscription
-  extends Promise<AsyncIterator<RecipePhotoEdge>>,
+export interface StepAdditionEdgeSubscription
+  extends Promise<AsyncIterator<StepAdditionEdge>>,
     Fragmentable {
-  node: <T = RecipePhotoSubscription>() => T;
+  node: <T = StepAdditionSubscription>() => T;
   cursor: () => Promise<AsyncIterator<String>>;
 }
 
-export interface IngredientSubscriptionPayload {
+export interface SortingSubscriptionPayload {
   mutation: MutationType;
-  node: Ingredient;
+  node: Sorting;
   updatedFields: String[];
-  previousValues: IngredientPreviousValues;
+  previousValues: SortingPreviousValues;
 }
 
-export interface IngredientSubscriptionPayloadPromise
-  extends Promise<IngredientSubscriptionPayload>,
+export interface SortingSubscriptionPayloadPromise
+  extends Promise<SortingSubscriptionPayload>,
     Fragmentable {
   mutation: () => Promise<MutationType>;
-  node: <T = IngredientPromise>() => T;
+  node: <T = SortingPromise>() => T;
   updatedFields: () => Promise<String[]>;
-  previousValues: <T = IngredientPreviousValuesPromise>() => T;
+  previousValues: <T = SortingPreviousValuesPromise>() => T;
 }
 
-export interface IngredientSubscriptionPayloadSubscription
-  extends Promise<AsyncIterator<IngredientSubscriptionPayload>>,
+export interface SortingSubscriptionPayloadSubscription
+  extends Promise<AsyncIterator<SortingSubscriptionPayload>>,
     Fragmentable {
   mutation: () => Promise<AsyncIterator<MutationType>>;
-  node: <T = IngredientSubscription>() => T;
+  node: <T = SortingSubscription>() => T;
   updatedFields: () => Promise<AsyncIterator<String[]>>;
-  previousValues: <T = IngredientPreviousValuesSubscription>() => T;
+  previousValues: <T = SortingPreviousValuesSubscription>() => T;
 }
 
 export interface AggregateRecipe {
@@ -5427,65 +6248,84 @@ export interface AggregateRecipeSubscription
   count: () => Promise<AsyncIterator<Int>>;
 }
 
-export interface IngredientPreviousValues {
+export interface ItemAdditionConnection {
+  pageInfo: PageInfo;
+  edges: ItemAdditionEdge[];
+}
+
+export interface ItemAdditionConnectionPromise
+  extends Promise<ItemAdditionConnection>,
+    Fragmentable {
+  pageInfo: <T = PageInfoPromise>() => T;
+  edges: <T = FragmentableArray<ItemAdditionEdge>>() => T;
+  aggregate: <T = AggregateItemAdditionPromise>() => T;
+}
+
+export interface ItemAdditionConnectionSubscription
+  extends Promise<AsyncIterator<ItemAdditionConnection>>,
+    Fragmentable {
+  pageInfo: <T = PageInfoSubscription>() => T;
+  edges: <T = Promise<AsyncIterator<ItemAdditionEdgeSubscription>>>() => T;
+  aggregate: <T = AggregateItemAdditionSubscription>() => T;
+}
+
+export interface StepPreviousValues {
   id: ID_Output;
   createdAt: DateTimeOutput;
   updatedAt: DateTimeOutput;
   uid: ID_Output;
   index: Int;
-  name: String;
-  quantity: String;
-  unit: String;
-  processing: String;
+  directions: String;
+  notes: String;
 }
 
-export interface IngredientPreviousValuesPromise
-  extends Promise<IngredientPreviousValues>,
+export interface StepPreviousValuesPromise
+  extends Promise<StepPreviousValues>,
     Fragmentable {
   id: () => Promise<ID_Output>;
   createdAt: () => Promise<DateTimeOutput>;
   updatedAt: () => Promise<DateTimeOutput>;
   uid: () => Promise<ID_Output>;
   index: () => Promise<Int>;
-  name: () => Promise<String>;
-  quantity: () => Promise<String>;
-  unit: () => Promise<String>;
-  processing: () => Promise<String>;
+  directions: () => Promise<String>;
+  notes: () => Promise<String>;
 }
 
-export interface IngredientPreviousValuesSubscription
-  extends Promise<AsyncIterator<IngredientPreviousValues>>,
+export interface StepPreviousValuesSubscription
+  extends Promise<AsyncIterator<StepPreviousValues>>,
     Fragmentable {
   id: () => Promise<AsyncIterator<ID_Output>>;
   createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
   updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
   uid: () => Promise<AsyncIterator<ID_Output>>;
   index: () => Promise<AsyncIterator<Int>>;
-  name: () => Promise<AsyncIterator<String>>;
-  quantity: () => Promise<AsyncIterator<String>>;
-  unit: () => Promise<AsyncIterator<String>>;
-  processing: () => Promise<AsyncIterator<String>>;
+  directions: () => Promise<AsyncIterator<String>>;
+  notes: () => Promise<AsyncIterator<String>>;
 }
 
-export interface RecipeConnection {
-  pageInfo: PageInfo;
-  edges: RecipeEdge[];
+export interface StepSubscriptionPayload {
+  mutation: MutationType;
+  node: Step;
+  updatedFields: String[];
+  previousValues: StepPreviousValues;
 }
 
-export interface RecipeConnectionPromise
-  extends Promise<RecipeConnection>,
+export interface StepSubscriptionPayloadPromise
+  extends Promise<StepSubscriptionPayload>,
     Fragmentable {
-  pageInfo: <T = PageInfoPromise>() => T;
-  edges: <T = FragmentableArray<RecipeEdge>>() => T;
-  aggregate: <T = AggregateRecipePromise>() => T;
+  mutation: () => Promise<MutationType>;
+  node: <T = StepPromise>() => T;
+  updatedFields: () => Promise<String[]>;
+  previousValues: <T = StepPreviousValuesPromise>() => T;
 }
 
-export interface RecipeConnectionSubscription
-  extends Promise<AsyncIterator<RecipeConnection>>,
+export interface StepSubscriptionPayloadSubscription
+  extends Promise<AsyncIterator<StepSubscriptionPayload>>,
     Fragmentable {
-  pageInfo: <T = PageInfoSubscription>() => T;
-  edges: <T = Promise<AsyncIterator<RecipeEdgeSubscription>>>() => T;
-  aggregate: <T = AggregateRecipeSubscription>() => T;
+  mutation: () => Promise<AsyncIterator<MutationType>>;
+  node: <T = StepSubscription>() => T;
+  updatedFields: () => Promise<AsyncIterator<String[]>>;
+  previousValues: <T = StepPreviousValuesSubscription>() => T;
 }
 
 export interface Modification {
@@ -5665,1346 +6505,6 @@ export interface ModificationNullablePromise
   }) => T;
 }
 
-export interface ModificationEdge {
-  node: Modification;
-  cursor: String;
-}
-
-export interface ModificationEdgePromise
-  extends Promise<ModificationEdge>,
-    Fragmentable {
-  node: <T = ModificationPromise>() => T;
-  cursor: () => Promise<String>;
-}
-
-export interface ModificationEdgeSubscription
-  extends Promise<AsyncIterator<ModificationEdge>>,
-    Fragmentable {
-  node: <T = ModificationSubscription>() => T;
-  cursor: () => Promise<AsyncIterator<String>>;
-}
-
-export interface IngredientAdditionSubscriptionPayload {
-  mutation: MutationType;
-  node: IngredientAddition;
-  updatedFields: String[];
-  previousValues: IngredientAdditionPreviousValues;
-}
-
-export interface IngredientAdditionSubscriptionPayloadPromise
-  extends Promise<IngredientAdditionSubscriptionPayload>,
-    Fragmentable {
-  mutation: () => Promise<MutationType>;
-  node: <T = IngredientAdditionPromise>() => T;
-  updatedFields: () => Promise<String[]>;
-  previousValues: <T = IngredientAdditionPreviousValuesPromise>() => T;
-}
-
-export interface IngredientAdditionSubscriptionPayloadSubscription
-  extends Promise<AsyncIterator<IngredientAdditionSubscriptionPayload>>,
-    Fragmentable {
-  mutation: () => Promise<AsyncIterator<MutationType>>;
-  node: <T = IngredientAdditionSubscription>() => T;
-  updatedFields: () => Promise<AsyncIterator<String[]>>;
-  previousValues: <T = IngredientAdditionPreviousValuesSubscription>() => T;
-}
-
-export interface AggregateItemAddition {
-  count: Int;
-}
-
-export interface AggregateItemAdditionPromise
-  extends Promise<AggregateItemAddition>,
-    Fragmentable {
-  count: () => Promise<Int>;
-}
-
-export interface AggregateItemAdditionSubscription
-  extends Promise<AsyncIterator<AggregateItemAddition>>,
-    Fragmentable {
-  count: () => Promise<AsyncIterator<Int>>;
-}
-
-export interface IngredientAdditionPreviousValues {
-  id: ID_Output;
-  createdAt: DateTimeOutput;
-  updatedAt: DateTimeOutput;
-  uid: ID_Output;
-  parentId: ID_Output;
-  name: String;
-  quantity: String;
-  unit: String;
-  processing: String;
-}
-
-export interface IngredientAdditionPreviousValuesPromise
-  extends Promise<IngredientAdditionPreviousValues>,
-    Fragmentable {
-  id: () => Promise<ID_Output>;
-  createdAt: () => Promise<DateTimeOutput>;
-  updatedAt: () => Promise<DateTimeOutput>;
-  uid: () => Promise<ID_Output>;
-  parentId: () => Promise<ID_Output>;
-  name: () => Promise<String>;
-  quantity: () => Promise<String>;
-  unit: () => Promise<String>;
-  processing: () => Promise<String>;
-}
-
-export interface IngredientAdditionPreviousValuesSubscription
-  extends Promise<AsyncIterator<IngredientAdditionPreviousValues>>,
-    Fragmentable {
-  id: () => Promise<AsyncIterator<ID_Output>>;
-  createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
-  updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
-  uid: () => Promise<AsyncIterator<ID_Output>>;
-  parentId: () => Promise<AsyncIterator<ID_Output>>;
-  name: () => Promise<AsyncIterator<String>>;
-  quantity: () => Promise<AsyncIterator<String>>;
-  unit: () => Promise<AsyncIterator<String>>;
-  processing: () => Promise<AsyncIterator<String>>;
-}
-
-export interface ItemAdditionConnection {
-  pageInfo: PageInfo;
-  edges: ItemAdditionEdge[];
-}
-
-export interface ItemAdditionConnectionPromise
-  extends Promise<ItemAdditionConnection>,
-    Fragmentable {
-  pageInfo: <T = PageInfoPromise>() => T;
-  edges: <T = FragmentableArray<ItemAdditionEdge>>() => T;
-  aggregate: <T = AggregateItemAdditionPromise>() => T;
-}
-
-export interface ItemAdditionConnectionSubscription
-  extends Promise<AsyncIterator<ItemAdditionConnection>>,
-    Fragmentable {
-  pageInfo: <T = PageInfoSubscription>() => T;
-  edges: <T = Promise<AsyncIterator<ItemAdditionEdgeSubscription>>>() => T;
-  aggregate: <T = AggregateItemAdditionSubscription>() => T;
-}
-
-export interface ItemAddition {
-  id: ID_Output;
-  createdAt: DateTimeOutput;
-  updatedAt: DateTimeOutput;
-  uid: ID_Output;
-  parentId: ID_Output;
-  name: String;
-}
-
-export interface ItemAdditionPromise
-  extends Promise<ItemAddition>,
-    Fragmentable {
-  id: () => Promise<ID_Output>;
-  createdAt: () => Promise<DateTimeOutput>;
-  updatedAt: () => Promise<DateTimeOutput>;
-  uid: () => Promise<ID_Output>;
-  parentId: () => Promise<ID_Output>;
-  name: () => Promise<String>;
-  modification: <T = ModificationPromise>() => T;
-}
-
-export interface ItemAdditionSubscription
-  extends Promise<AsyncIterator<ItemAddition>>,
-    Fragmentable {
-  id: () => Promise<AsyncIterator<ID_Output>>;
-  createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
-  updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
-  uid: () => Promise<AsyncIterator<ID_Output>>;
-  parentId: () => Promise<AsyncIterator<ID_Output>>;
-  name: () => Promise<AsyncIterator<String>>;
-  modification: <T = ModificationSubscription>() => T;
-}
-
-export interface ItemAdditionNullablePromise
-  extends Promise<ItemAddition | null>,
-    Fragmentable {
-  id: () => Promise<ID_Output>;
-  createdAt: () => Promise<DateTimeOutput>;
-  updatedAt: () => Promise<DateTimeOutput>;
-  uid: () => Promise<ID_Output>;
-  parentId: () => Promise<ID_Output>;
-  name: () => Promise<String>;
-  modification: <T = ModificationPromise>() => T;
-}
-
-export interface ItemEdge {
-  node: Item;
-  cursor: String;
-}
-
-export interface ItemEdgePromise extends Promise<ItemEdge>, Fragmentable {
-  node: <T = ItemPromise>() => T;
-  cursor: () => Promise<String>;
-}
-
-export interface ItemEdgeSubscription
-  extends Promise<AsyncIterator<ItemEdge>>,
-    Fragmentable {
-  node: <T = ItemSubscription>() => T;
-  cursor: () => Promise<AsyncIterator<String>>;
-}
-
-export interface ItemSubscriptionPayload {
-  mutation: MutationType;
-  node: Item;
-  updatedFields: String[];
-  previousValues: ItemPreviousValues;
-}
-
-export interface ItemSubscriptionPayloadPromise
-  extends Promise<ItemSubscriptionPayload>,
-    Fragmentable {
-  mutation: () => Promise<MutationType>;
-  node: <T = ItemPromise>() => T;
-  updatedFields: () => Promise<String[]>;
-  previousValues: <T = ItemPreviousValuesPromise>() => T;
-}
-
-export interface ItemSubscriptionPayloadSubscription
-  extends Promise<AsyncIterator<ItemSubscriptionPayload>>,
-    Fragmentable {
-  mutation: () => Promise<AsyncIterator<MutationType>>;
-  node: <T = ItemSubscription>() => T;
-  updatedFields: () => Promise<AsyncIterator<String[]>>;
-  previousValues: <T = ItemPreviousValuesSubscription>() => T;
-}
-
-export interface AggregateIngredientAddition {
-  count: Int;
-}
-
-export interface AggregateIngredientAdditionPromise
-  extends Promise<AggregateIngredientAddition>,
-    Fragmentable {
-  count: () => Promise<Int>;
-}
-
-export interface AggregateIngredientAdditionSubscription
-  extends Promise<AsyncIterator<AggregateIngredientAddition>>,
-    Fragmentable {
-  count: () => Promise<AsyncIterator<Int>>;
-}
-
-export interface ItemPreviousValues {
-  id: ID_Output;
-  createdAt: DateTimeOutput;
-  updatedAt: DateTimeOutput;
-  uid: ID_Output;
-  index: Int;
-  name: String;
-}
-
-export interface ItemPreviousValuesPromise
-  extends Promise<ItemPreviousValues>,
-    Fragmentable {
-  id: () => Promise<ID_Output>;
-  createdAt: () => Promise<DateTimeOutput>;
-  updatedAt: () => Promise<DateTimeOutput>;
-  uid: () => Promise<ID_Output>;
-  index: () => Promise<Int>;
-  name: () => Promise<String>;
-}
-
-export interface ItemPreviousValuesSubscription
-  extends Promise<AsyncIterator<ItemPreviousValues>>,
-    Fragmentable {
-  id: () => Promise<AsyncIterator<ID_Output>>;
-  createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
-  updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
-  uid: () => Promise<AsyncIterator<ID_Output>>;
-  index: () => Promise<AsyncIterator<Int>>;
-  name: () => Promise<AsyncIterator<String>>;
-}
-
-export interface IngredientAdditionConnection {
-  pageInfo: PageInfo;
-  edges: IngredientAdditionEdge[];
-}
-
-export interface IngredientAdditionConnectionPromise
-  extends Promise<IngredientAdditionConnection>,
-    Fragmentable {
-  pageInfo: <T = PageInfoPromise>() => T;
-  edges: <T = FragmentableArray<IngredientAdditionEdge>>() => T;
-  aggregate: <T = AggregateIngredientAdditionPromise>() => T;
-}
-
-export interface IngredientAdditionConnectionSubscription
-  extends Promise<AsyncIterator<IngredientAdditionConnection>>,
-    Fragmentable {
-  pageInfo: <T = PageInfoSubscription>() => T;
-  edges: <
-    T = Promise<AsyncIterator<IngredientAdditionEdgeSubscription>>
-  >() => T;
-  aggregate: <T = AggregateIngredientAdditionSubscription>() => T;
-}
-
-export interface User {
-  id: ID_Output;
-  createdAt: DateTimeOutput;
-  updatedAt: DateTimeOutput;
-  email: String;
-  password: String;
-  name: String;
-  avatar?: String;
-  slug?: String;
-  emailVerified: Boolean;
-}
-
-export interface UserPromise extends Promise<User>, Fragmentable {
-  id: () => Promise<ID_Output>;
-  createdAt: () => Promise<DateTimeOutput>;
-  updatedAt: () => Promise<DateTimeOutput>;
-  email: () => Promise<String>;
-  password: () => Promise<String>;
-  name: () => Promise<String>;
-  avatar: () => Promise<String>;
-  slug: () => Promise<String>;
-  emailVerified: () => Promise<Boolean>;
-  recipes: <T = FragmentableArray<Recipe>>(args?: {
-    where?: RecipeWhereInput;
-    orderBy?: RecipeOrderByInput;
-    skip?: Int;
-    after?: String;
-    before?: String;
-    first?: Int;
-    last?: Int;
-  }) => T;
-  modifications: <T = FragmentableArray<Modification>>(args?: {
-    where?: ModificationWhereInput;
-    orderBy?: ModificationOrderByInput;
-    skip?: Int;
-    after?: String;
-    before?: String;
-    first?: Int;
-    last?: Int;
-  }) => T;
-}
-
-export interface UserSubscription
-  extends Promise<AsyncIterator<User>>,
-    Fragmentable {
-  id: () => Promise<AsyncIterator<ID_Output>>;
-  createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
-  updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
-  email: () => Promise<AsyncIterator<String>>;
-  password: () => Promise<AsyncIterator<String>>;
-  name: () => Promise<AsyncIterator<String>>;
-  avatar: () => Promise<AsyncIterator<String>>;
-  slug: () => Promise<AsyncIterator<String>>;
-  emailVerified: () => Promise<AsyncIterator<Boolean>>;
-  recipes: <T = Promise<AsyncIterator<RecipeSubscription>>>(args?: {
-    where?: RecipeWhereInput;
-    orderBy?: RecipeOrderByInput;
-    skip?: Int;
-    after?: String;
-    before?: String;
-    first?: Int;
-    last?: Int;
-  }) => T;
-  modifications: <T = Promise<AsyncIterator<ModificationSubscription>>>(args?: {
-    where?: ModificationWhereInput;
-    orderBy?: ModificationOrderByInput;
-    skip?: Int;
-    after?: String;
-    before?: String;
-    first?: Int;
-    last?: Int;
-  }) => T;
-}
-
-export interface UserNullablePromise
-  extends Promise<User | null>,
-    Fragmentable {
-  id: () => Promise<ID_Output>;
-  createdAt: () => Promise<DateTimeOutput>;
-  updatedAt: () => Promise<DateTimeOutput>;
-  email: () => Promise<String>;
-  password: () => Promise<String>;
-  name: () => Promise<String>;
-  avatar: () => Promise<String>;
-  slug: () => Promise<String>;
-  emailVerified: () => Promise<Boolean>;
-  recipes: <T = FragmentableArray<Recipe>>(args?: {
-    where?: RecipeWhereInput;
-    orderBy?: RecipeOrderByInput;
-    skip?: Int;
-    after?: String;
-    before?: String;
-    first?: Int;
-    last?: Int;
-  }) => T;
-  modifications: <T = FragmentableArray<Modification>>(args?: {
-    where?: ModificationWhereInput;
-    orderBy?: ModificationOrderByInput;
-    skip?: Int;
-    after?: String;
-    before?: String;
-    first?: Int;
-    last?: Int;
-  }) => T;
-}
-
-export interface IngredientEdge {
-  node: Ingredient;
-  cursor: String;
-}
-
-export interface IngredientEdgePromise
-  extends Promise<IngredientEdge>,
-    Fragmentable {
-  node: <T = IngredientPromise>() => T;
-  cursor: () => Promise<String>;
-}
-
-export interface IngredientEdgeSubscription
-  extends Promise<AsyncIterator<IngredientEdge>>,
-    Fragmentable {
-  node: <T = IngredientSubscription>() => T;
-  cursor: () => Promise<AsyncIterator<String>>;
-}
-
-export interface ItemAdditionSubscriptionPayload {
-  mutation: MutationType;
-  node: ItemAddition;
-  updatedFields: String[];
-  previousValues: ItemAdditionPreviousValues;
-}
-
-export interface ItemAdditionSubscriptionPayloadPromise
-  extends Promise<ItemAdditionSubscriptionPayload>,
-    Fragmentable {
-  mutation: () => Promise<MutationType>;
-  node: <T = ItemAdditionPromise>() => T;
-  updatedFields: () => Promise<String[]>;
-  previousValues: <T = ItemAdditionPreviousValuesPromise>() => T;
-}
-
-export interface ItemAdditionSubscriptionPayloadSubscription
-  extends Promise<AsyncIterator<ItemAdditionSubscriptionPayload>>,
-    Fragmentable {
-  mutation: () => Promise<AsyncIterator<MutationType>>;
-  node: <T = ItemAdditionSubscription>() => T;
-  updatedFields: () => Promise<AsyncIterator<String[]>>;
-  previousValues: <T = ItemAdditionPreviousValuesSubscription>() => T;
-}
-
-export interface UserSubscriptionPayload {
-  mutation: MutationType;
-  node: User;
-  updatedFields: String[];
-  previousValues: UserPreviousValues;
-}
-
-export interface UserSubscriptionPayloadPromise
-  extends Promise<UserSubscriptionPayload>,
-    Fragmentable {
-  mutation: () => Promise<MutationType>;
-  node: <T = UserPromise>() => T;
-  updatedFields: () => Promise<String[]>;
-  previousValues: <T = UserPreviousValuesPromise>() => T;
-}
-
-export interface UserSubscriptionPayloadSubscription
-  extends Promise<AsyncIterator<UserSubscriptionPayload>>,
-    Fragmentable {
-  mutation: () => Promise<AsyncIterator<MutationType>>;
-  node: <T = UserSubscription>() => T;
-  updatedFields: () => Promise<AsyncIterator<String[]>>;
-  previousValues: <T = UserPreviousValuesSubscription>() => T;
-}
-
-export interface ItemAdditionPreviousValues {
-  id: ID_Output;
-  createdAt: DateTimeOutput;
-  updatedAt: DateTimeOutput;
-  uid: ID_Output;
-  parentId: ID_Output;
-  name: String;
-}
-
-export interface ItemAdditionPreviousValuesPromise
-  extends Promise<ItemAdditionPreviousValues>,
-    Fragmentable {
-  id: () => Promise<ID_Output>;
-  createdAt: () => Promise<DateTimeOutput>;
-  updatedAt: () => Promise<DateTimeOutput>;
-  uid: () => Promise<ID_Output>;
-  parentId: () => Promise<ID_Output>;
-  name: () => Promise<String>;
-}
-
-export interface ItemAdditionPreviousValuesSubscription
-  extends Promise<AsyncIterator<ItemAdditionPreviousValues>>,
-    Fragmentable {
-  id: () => Promise<AsyncIterator<ID_Output>>;
-  createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
-  updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
-  uid: () => Promise<AsyncIterator<ID_Output>>;
-  parentId: () => Promise<AsyncIterator<ID_Output>>;
-  name: () => Promise<AsyncIterator<String>>;
-}
-
-export interface Recipe {
-  id: ID_Output;
-  createdAt: DateTimeOutput;
-  updatedAt: DateTimeOutput;
-  uid: ID_Output;
-  slug: String;
-  title: String;
-  time: String;
-  servingAmount: String;
-  servingType: String;
-  description: String;
-}
-
-export interface RecipePromise extends Promise<Recipe>, Fragmentable {
-  id: () => Promise<ID_Output>;
-  createdAt: () => Promise<DateTimeOutput>;
-  updatedAt: () => Promise<DateTimeOutput>;
-  uid: () => Promise<ID_Output>;
-  slug: () => Promise<String>;
-  author: <T = UserPromise>() => T;
-  title: () => Promise<String>;
-  time: () => Promise<String>;
-  servingAmount: () => Promise<String>;
-  servingType: () => Promise<String>;
-  description: () => Promise<String>;
-  items: <T = FragmentableArray<Item>>(args?: {
-    where?: ItemWhereInput;
-    orderBy?: ItemOrderByInput;
-    skip?: Int;
-    after?: String;
-    before?: String;
-    first?: Int;
-    last?: Int;
-  }) => T;
-  modifications: <T = FragmentableArray<Modification>>(args?: {
-    where?: ModificationWhereInput;
-    orderBy?: ModificationOrderByInput;
-    skip?: Int;
-    after?: String;
-    before?: String;
-    first?: Int;
-    last?: Int;
-  }) => T;
-  photos: <T = FragmentableArray<RecipePhoto>>(args?: {
-    where?: RecipePhotoWhereInput;
-    orderBy?: RecipePhotoOrderByInput;
-    skip?: Int;
-    after?: String;
-    before?: String;
-    first?: Int;
-    last?: Int;
-  }) => T;
-}
-
-export interface RecipeSubscription
-  extends Promise<AsyncIterator<Recipe>>,
-    Fragmentable {
-  id: () => Promise<AsyncIterator<ID_Output>>;
-  createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
-  updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
-  uid: () => Promise<AsyncIterator<ID_Output>>;
-  slug: () => Promise<AsyncIterator<String>>;
-  author: <T = UserSubscription>() => T;
-  title: () => Promise<AsyncIterator<String>>;
-  time: () => Promise<AsyncIterator<String>>;
-  servingAmount: () => Promise<AsyncIterator<String>>;
-  servingType: () => Promise<AsyncIterator<String>>;
-  description: () => Promise<AsyncIterator<String>>;
-  items: <T = Promise<AsyncIterator<ItemSubscription>>>(args?: {
-    where?: ItemWhereInput;
-    orderBy?: ItemOrderByInput;
-    skip?: Int;
-    after?: String;
-    before?: String;
-    first?: Int;
-    last?: Int;
-  }) => T;
-  modifications: <T = Promise<AsyncIterator<ModificationSubscription>>>(args?: {
-    where?: ModificationWhereInput;
-    orderBy?: ModificationOrderByInput;
-    skip?: Int;
-    after?: String;
-    before?: String;
-    first?: Int;
-    last?: Int;
-  }) => T;
-  photos: <T = Promise<AsyncIterator<RecipePhotoSubscription>>>(args?: {
-    where?: RecipePhotoWhereInput;
-    orderBy?: RecipePhotoOrderByInput;
-    skip?: Int;
-    after?: String;
-    before?: String;
-    first?: Int;
-    last?: Int;
-  }) => T;
-}
-
-export interface RecipeNullablePromise
-  extends Promise<Recipe | null>,
-    Fragmentable {
-  id: () => Promise<ID_Output>;
-  createdAt: () => Promise<DateTimeOutput>;
-  updatedAt: () => Promise<DateTimeOutput>;
-  uid: () => Promise<ID_Output>;
-  slug: () => Promise<String>;
-  author: <T = UserPromise>() => T;
-  title: () => Promise<String>;
-  time: () => Promise<String>;
-  servingAmount: () => Promise<String>;
-  servingType: () => Promise<String>;
-  description: () => Promise<String>;
-  items: <T = FragmentableArray<Item>>(args?: {
-    where?: ItemWhereInput;
-    orderBy?: ItemOrderByInput;
-    skip?: Int;
-    after?: String;
-    before?: String;
-    first?: Int;
-    last?: Int;
-  }) => T;
-  modifications: <T = FragmentableArray<Modification>>(args?: {
-    where?: ModificationWhereInput;
-    orderBy?: ModificationOrderByInput;
-    skip?: Int;
-    after?: String;
-    before?: String;
-    first?: Int;
-    last?: Int;
-  }) => T;
-  photos: <T = FragmentableArray<RecipePhoto>>(args?: {
-    where?: RecipePhotoWhereInput;
-    orderBy?: RecipePhotoOrderByInput;
-    skip?: Int;
-    after?: String;
-    before?: String;
-    first?: Int;
-    last?: Int;
-  }) => T;
-}
-
-export interface StepAdditionSubscriptionPayload {
-  mutation: MutationType;
-  node: StepAddition;
-  updatedFields: String[];
-  previousValues: StepAdditionPreviousValues;
-}
-
-export interface StepAdditionSubscriptionPayloadPromise
-  extends Promise<StepAdditionSubscriptionPayload>,
-    Fragmentable {
-  mutation: () => Promise<MutationType>;
-  node: <T = StepAdditionPromise>() => T;
-  updatedFields: () => Promise<String[]>;
-  previousValues: <T = StepAdditionPreviousValuesPromise>() => T;
-}
-
-export interface StepAdditionSubscriptionPayloadSubscription
-  extends Promise<AsyncIterator<StepAdditionSubscriptionPayload>>,
-    Fragmentable {
-  mutation: () => Promise<AsyncIterator<MutationType>>;
-  node: <T = StepAdditionSubscription>() => T;
-  updatedFields: () => Promise<AsyncIterator<String[]>>;
-  previousValues: <T = StepAdditionPreviousValuesSubscription>() => T;
-}
-
-export interface AggregateStep {
-  count: Int;
-}
-
-export interface AggregateStepPromise
-  extends Promise<AggregateStep>,
-    Fragmentable {
-  count: () => Promise<Int>;
-}
-
-export interface AggregateStepSubscription
-  extends Promise<AsyncIterator<AggregateStep>>,
-    Fragmentable {
-  count: () => Promise<AsyncIterator<Int>>;
-}
-
-export interface ModificationSubscriptionPayload {
-  mutation: MutationType;
-  node: Modification;
-  updatedFields: String[];
-  previousValues: ModificationPreviousValues;
-}
-
-export interface ModificationSubscriptionPayloadPromise
-  extends Promise<ModificationSubscriptionPayload>,
-    Fragmentable {
-  mutation: () => Promise<MutationType>;
-  node: <T = ModificationPromise>() => T;
-  updatedFields: () => Promise<String[]>;
-  previousValues: <T = ModificationPreviousValuesPromise>() => T;
-}
-
-export interface ModificationSubscriptionPayloadSubscription
-  extends Promise<AsyncIterator<ModificationSubscriptionPayload>>,
-    Fragmentable {
-  mutation: () => Promise<AsyncIterator<MutationType>>;
-  node: <T = ModificationSubscription>() => T;
-  updatedFields: () => Promise<AsyncIterator<String[]>>;
-  previousValues: <T = ModificationPreviousValuesSubscription>() => T;
-}
-
-export interface SortingEdge {
-  node: Sorting;
-  cursor: String;
-}
-
-export interface SortingEdgePromise extends Promise<SortingEdge>, Fragmentable {
-  node: <T = SortingPromise>() => T;
-  cursor: () => Promise<String>;
-}
-
-export interface SortingEdgeSubscription
-  extends Promise<AsyncIterator<SortingEdge>>,
-    Fragmentable {
-  node: <T = SortingSubscription>() => T;
-  cursor: () => Promise<AsyncIterator<String>>;
-}
-
-export interface ModificationPreviousValues {
-  id: ID_Output;
-  createdAt: DateTimeOutput;
-  updatedAt: DateTimeOutput;
-  removals: ID_Output[];
-}
-
-export interface ModificationPreviousValuesPromise
-  extends Promise<ModificationPreviousValues>,
-    Fragmentable {
-  id: () => Promise<ID_Output>;
-  createdAt: () => Promise<DateTimeOutput>;
-  updatedAt: () => Promise<DateTimeOutput>;
-  removals: () => Promise<ID_Output[]>;
-}
-
-export interface ModificationPreviousValuesSubscription
-  extends Promise<AsyncIterator<ModificationPreviousValues>>,
-    Fragmentable {
-  id: () => Promise<AsyncIterator<ID_Output>>;
-  createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
-  updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
-  removals: () => Promise<AsyncIterator<ID_Output[]>>;
-}
-
-export interface RecipePhotoConnection {
-  pageInfo: PageInfo;
-  edges: RecipePhotoEdge[];
-}
-
-export interface RecipePhotoConnectionPromise
-  extends Promise<RecipePhotoConnection>,
-    Fragmentable {
-  pageInfo: <T = PageInfoPromise>() => T;
-  edges: <T = FragmentableArray<RecipePhotoEdge>>() => T;
-  aggregate: <T = AggregateRecipePhotoPromise>() => T;
-}
-
-export interface RecipePhotoConnectionSubscription
-  extends Promise<AsyncIterator<RecipePhotoConnection>>,
-    Fragmentable {
-  pageInfo: <T = PageInfoSubscription>() => T;
-  edges: <T = Promise<AsyncIterator<RecipePhotoEdgeSubscription>>>() => T;
-  aggregate: <T = AggregateRecipePhotoSubscription>() => T;
-}
-
-export interface Sorting {
-  id: ID_Output;
-  createdAt: DateTimeOutput;
-  updatedAt: DateTimeOutput;
-  uid: ID_Output;
-  parentId: ID_Output;
-  order: ID_Output[];
-}
-
-export interface SortingPromise extends Promise<Sorting>, Fragmentable {
-  id: () => Promise<ID_Output>;
-  createdAt: () => Promise<DateTimeOutput>;
-  updatedAt: () => Promise<DateTimeOutput>;
-  uid: () => Promise<ID_Output>;
-  parentId: () => Promise<ID_Output>;
-  order: () => Promise<ID_Output[]>;
-  modification: <T = ModificationPromise>() => T;
-}
-
-export interface SortingSubscription
-  extends Promise<AsyncIterator<Sorting>>,
-    Fragmentable {
-  id: () => Promise<AsyncIterator<ID_Output>>;
-  createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
-  updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
-  uid: () => Promise<AsyncIterator<ID_Output>>;
-  parentId: () => Promise<AsyncIterator<ID_Output>>;
-  order: () => Promise<AsyncIterator<ID_Output[]>>;
-  modification: <T = ModificationSubscription>() => T;
-}
-
-export interface SortingNullablePromise
-  extends Promise<Sorting | null>,
-    Fragmentable {
-  id: () => Promise<ID_Output>;
-  createdAt: () => Promise<DateTimeOutput>;
-  updatedAt: () => Promise<DateTimeOutput>;
-  uid: () => Promise<ID_Output>;
-  parentId: () => Promise<ID_Output>;
-  order: () => Promise<ID_Output[]>;
-  modification: <T = ModificationPromise>() => T;
-}
-
-export interface AggregateModification {
-  count: Int;
-}
-
-export interface AggregateModificationPromise
-  extends Promise<AggregateModification>,
-    Fragmentable {
-  count: () => Promise<Int>;
-}
-
-export interface AggregateModificationSubscription
-  extends Promise<AsyncIterator<AggregateModification>>,
-    Fragmentable {
-  count: () => Promise<AsyncIterator<Int>>;
-}
-
-export interface RecipeSubscriptionPayload {
-  mutation: MutationType;
-  node: Recipe;
-  updatedFields: String[];
-  previousValues: RecipePreviousValues;
-}
-
-export interface RecipeSubscriptionPayloadPromise
-  extends Promise<RecipeSubscriptionPayload>,
-    Fragmentable {
-  mutation: () => Promise<MutationType>;
-  node: <T = RecipePromise>() => T;
-  updatedFields: () => Promise<String[]>;
-  previousValues: <T = RecipePreviousValuesPromise>() => T;
-}
-
-export interface RecipeSubscriptionPayloadSubscription
-  extends Promise<AsyncIterator<RecipeSubscriptionPayload>>,
-    Fragmentable {
-  mutation: () => Promise<AsyncIterator<MutationType>>;
-  node: <T = RecipeSubscription>() => T;
-  updatedFields: () => Promise<AsyncIterator<String[]>>;
-  previousValues: <T = RecipePreviousValuesSubscription>() => T;
-}
-
-export interface ItemAdditionEdge {
-  node: ItemAddition;
-  cursor: String;
-}
-
-export interface ItemAdditionEdgePromise
-  extends Promise<ItemAdditionEdge>,
-    Fragmentable {
-  node: <T = ItemAdditionPromise>() => T;
-  cursor: () => Promise<String>;
-}
-
-export interface ItemAdditionEdgeSubscription
-  extends Promise<AsyncIterator<ItemAdditionEdge>>,
-    Fragmentable {
-  node: <T = ItemAdditionSubscription>() => T;
-  cursor: () => Promise<AsyncIterator<String>>;
-}
-
-export interface RecipePreviousValues {
-  id: ID_Output;
-  createdAt: DateTimeOutput;
-  updatedAt: DateTimeOutput;
-  uid: ID_Output;
-  slug: String;
-  title: String;
-  time: String;
-  servingAmount: String;
-  servingType: String;
-  description: String;
-}
-
-export interface RecipePreviousValuesPromise
-  extends Promise<RecipePreviousValues>,
-    Fragmentable {
-  id: () => Promise<ID_Output>;
-  createdAt: () => Promise<DateTimeOutput>;
-  updatedAt: () => Promise<DateTimeOutput>;
-  uid: () => Promise<ID_Output>;
-  slug: () => Promise<String>;
-  title: () => Promise<String>;
-  time: () => Promise<String>;
-  servingAmount: () => Promise<String>;
-  servingType: () => Promise<String>;
-  description: () => Promise<String>;
-}
-
-export interface RecipePreviousValuesSubscription
-  extends Promise<AsyncIterator<RecipePreviousValues>>,
-    Fragmentable {
-  id: () => Promise<AsyncIterator<ID_Output>>;
-  createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
-  updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
-  uid: () => Promise<AsyncIterator<ID_Output>>;
-  slug: () => Promise<AsyncIterator<String>>;
-  title: () => Promise<AsyncIterator<String>>;
-  time: () => Promise<AsyncIterator<String>>;
-  servingAmount: () => Promise<AsyncIterator<String>>;
-  servingType: () => Promise<AsyncIterator<String>>;
-  description: () => Promise<AsyncIterator<String>>;
-}
-
-export interface ItemConnection {
-  pageInfo: PageInfo;
-  edges: ItemEdge[];
-}
-
-export interface ItemConnectionPromise
-  extends Promise<ItemConnection>,
-    Fragmentable {
-  pageInfo: <T = PageInfoPromise>() => T;
-  edges: <T = FragmentableArray<ItemEdge>>() => T;
-  aggregate: <T = AggregateItemPromise>() => T;
-}
-
-export interface ItemConnectionSubscription
-  extends Promise<AsyncIterator<ItemConnection>>,
-    Fragmentable {
-  pageInfo: <T = PageInfoSubscription>() => T;
-  edges: <T = Promise<AsyncIterator<ItemEdgeSubscription>>>() => T;
-  aggregate: <T = AggregateItemSubscription>() => T;
-}
-
-export interface RecipePhoto {
-  id: ID_Output;
-  createdAt: DateTimeOutput;
-  updatedAt: DateTimeOutput;
-  filename: String;
-  url: String;
-  index: Int;
-}
-
-export interface RecipePhotoPromise extends Promise<RecipePhoto>, Fragmentable {
-  id: () => Promise<ID_Output>;
-  createdAt: () => Promise<DateTimeOutput>;
-  updatedAt: () => Promise<DateTimeOutput>;
-  filename: () => Promise<String>;
-  url: () => Promise<String>;
-  recipe: <T = RecipePromise>() => T;
-  index: () => Promise<Int>;
-}
-
-export interface RecipePhotoSubscription
-  extends Promise<AsyncIterator<RecipePhoto>>,
-    Fragmentable {
-  id: () => Promise<AsyncIterator<ID_Output>>;
-  createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
-  updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
-  filename: () => Promise<AsyncIterator<String>>;
-  url: () => Promise<AsyncIterator<String>>;
-  recipe: <T = RecipeSubscription>() => T;
-  index: () => Promise<AsyncIterator<Int>>;
-}
-
-export interface RecipePhotoNullablePromise
-  extends Promise<RecipePhoto | null>,
-    Fragmentable {
-  id: () => Promise<ID_Output>;
-  createdAt: () => Promise<DateTimeOutput>;
-  updatedAt: () => Promise<DateTimeOutput>;
-  filename: () => Promise<String>;
-  url: () => Promise<String>;
-  recipe: <T = RecipePromise>() => T;
-  index: () => Promise<Int>;
-}
-
-export interface AggregateIngredient {
-  count: Int;
-}
-
-export interface AggregateIngredientPromise
-  extends Promise<AggregateIngredient>,
-    Fragmentable {
-  count: () => Promise<Int>;
-}
-
-export interface AggregateIngredientSubscription
-  extends Promise<AsyncIterator<AggregateIngredient>>,
-    Fragmentable {
-  count: () => Promise<AsyncIterator<Int>>;
-}
-
-export interface RecipePhotoSubscriptionPayload {
-  mutation: MutationType;
-  node: RecipePhoto;
-  updatedFields: String[];
-  previousValues: RecipePhotoPreviousValues;
-}
-
-export interface RecipePhotoSubscriptionPayloadPromise
-  extends Promise<RecipePhotoSubscriptionPayload>,
-    Fragmentable {
-  mutation: () => Promise<MutationType>;
-  node: <T = RecipePhotoPromise>() => T;
-  updatedFields: () => Promise<String[]>;
-  previousValues: <T = RecipePhotoPreviousValuesPromise>() => T;
-}
-
-export interface RecipePhotoSubscriptionPayloadSubscription
-  extends Promise<AsyncIterator<RecipePhotoSubscriptionPayload>>,
-    Fragmentable {
-  mutation: () => Promise<AsyncIterator<MutationType>>;
-  node: <T = RecipePhotoSubscription>() => T;
-  updatedFields: () => Promise<AsyncIterator<String[]>>;
-  previousValues: <T = RecipePhotoPreviousValuesSubscription>() => T;
-}
-
-export interface UserEdge {
-  node: User;
-  cursor: String;
-}
-
-export interface UserEdgePromise extends Promise<UserEdge>, Fragmentable {
-  node: <T = UserPromise>() => T;
-  cursor: () => Promise<String>;
-}
-
-export interface UserEdgeSubscription
-  extends Promise<AsyncIterator<UserEdge>>,
-    Fragmentable {
-  node: <T = UserSubscription>() => T;
-  cursor: () => Promise<AsyncIterator<String>>;
-}
-
-export interface RecipePhotoPreviousValues {
-  id: ID_Output;
-  createdAt: DateTimeOutput;
-  updatedAt: DateTimeOutput;
-  filename: String;
-  url: String;
-  index: Int;
-}
-
-export interface RecipePhotoPreviousValuesPromise
-  extends Promise<RecipePhotoPreviousValues>,
-    Fragmentable {
-  id: () => Promise<ID_Output>;
-  createdAt: () => Promise<DateTimeOutput>;
-  updatedAt: () => Promise<DateTimeOutput>;
-  filename: () => Promise<String>;
-  url: () => Promise<String>;
-  index: () => Promise<Int>;
-}
-
-export interface RecipePhotoPreviousValuesSubscription
-  extends Promise<AsyncIterator<RecipePhotoPreviousValues>>,
-    Fragmentable {
-  id: () => Promise<AsyncIterator<ID_Output>>;
-  createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
-  updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
-  filename: () => Promise<AsyncIterator<String>>;
-  url: () => Promise<AsyncIterator<String>>;
-  index: () => Promise<AsyncIterator<Int>>;
-}
-
-export interface StepConnection {
-  pageInfo: PageInfo;
-  edges: StepEdge[];
-}
-
-export interface StepConnectionPromise
-  extends Promise<StepConnection>,
-    Fragmentable {
-  pageInfo: <T = PageInfoPromise>() => T;
-  edges: <T = FragmentableArray<StepEdge>>() => T;
-  aggregate: <T = AggregateStepPromise>() => T;
-}
-
-export interface StepConnectionSubscription
-  extends Promise<AsyncIterator<StepConnection>>,
-    Fragmentable {
-  pageInfo: <T = PageInfoSubscription>() => T;
-  edges: <T = Promise<AsyncIterator<StepEdgeSubscription>>>() => T;
-  aggregate: <T = AggregateStepSubscription>() => T;
-}
-
-export interface Ingredient {
-  id: ID_Output;
-  createdAt: DateTimeOutput;
-  updatedAt: DateTimeOutput;
-  uid: ID_Output;
-  index: Int;
-  name: String;
-  quantity: String;
-  unit: String;
-  processing: String;
-}
-
-export interface IngredientPromise extends Promise<Ingredient>, Fragmentable {
-  id: () => Promise<ID_Output>;
-  createdAt: () => Promise<DateTimeOutput>;
-  updatedAt: () => Promise<DateTimeOutput>;
-  uid: () => Promise<ID_Output>;
-  index: () => Promise<Int>;
-  name: () => Promise<String>;
-  quantity: () => Promise<String>;
-  unit: () => Promise<String>;
-  processing: () => Promise<String>;
-  step: <T = StepPromise>() => T;
-}
-
-export interface IngredientSubscription
-  extends Promise<AsyncIterator<Ingredient>>,
-    Fragmentable {
-  id: () => Promise<AsyncIterator<ID_Output>>;
-  createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
-  updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
-  uid: () => Promise<AsyncIterator<ID_Output>>;
-  index: () => Promise<AsyncIterator<Int>>;
-  name: () => Promise<AsyncIterator<String>>;
-  quantity: () => Promise<AsyncIterator<String>>;
-  unit: () => Promise<AsyncIterator<String>>;
-  processing: () => Promise<AsyncIterator<String>>;
-  step: <T = StepSubscription>() => T;
-}
-
-export interface IngredientNullablePromise
-  extends Promise<Ingredient | null>,
-    Fragmentable {
-  id: () => Promise<ID_Output>;
-  createdAt: () => Promise<DateTimeOutput>;
-  updatedAt: () => Promise<DateTimeOutput>;
-  uid: () => Promise<ID_Output>;
-  index: () => Promise<Int>;
-  name: () => Promise<String>;
-  quantity: () => Promise<String>;
-  unit: () => Promise<String>;
-  processing: () => Promise<String>;
-  step: <T = StepPromise>() => T;
-}
-
-export interface RecipeEdge {
-  node: Recipe;
-  cursor: String;
-}
-
-export interface RecipeEdgePromise extends Promise<RecipeEdge>, Fragmentable {
-  node: <T = RecipePromise>() => T;
-  cursor: () => Promise<String>;
-}
-
-export interface RecipeEdgeSubscription
-  extends Promise<AsyncIterator<RecipeEdge>>,
-    Fragmentable {
-  node: <T = RecipeSubscription>() => T;
-  cursor: () => Promise<AsyncIterator<String>>;
-}
-
-export interface SortingSubscriptionPayload {
-  mutation: MutationType;
-  node: Sorting;
-  updatedFields: String[];
-  previousValues: SortingPreviousValues;
-}
-
-export interface SortingSubscriptionPayloadPromise
-  extends Promise<SortingSubscriptionPayload>,
-    Fragmentable {
-  mutation: () => Promise<MutationType>;
-  node: <T = SortingPromise>() => T;
-  updatedFields: () => Promise<String[]>;
-  previousValues: <T = SortingPreviousValuesPromise>() => T;
-}
-
-export interface SortingSubscriptionPayloadSubscription
-  extends Promise<AsyncIterator<SortingSubscriptionPayload>>,
-    Fragmentable {
-  mutation: () => Promise<AsyncIterator<MutationType>>;
-  node: <T = SortingSubscription>() => T;
-  updatedFields: () => Promise<AsyncIterator<String[]>>;
-  previousValues: <T = SortingPreviousValuesSubscription>() => T;
-}
-
-export interface AggregateItem {
-  count: Int;
-}
-
-export interface AggregateItemPromise
-  extends Promise<AggregateItem>,
-    Fragmentable {
-  count: () => Promise<Int>;
-}
-
-export interface AggregateItemSubscription
-  extends Promise<AsyncIterator<AggregateItem>>,
-    Fragmentable {
-  count: () => Promise<AsyncIterator<Int>>;
-}
-
-export interface IngredientConnection {
-  pageInfo: PageInfo;
-  edges: IngredientEdge[];
-}
-
-export interface IngredientConnectionPromise
-  extends Promise<IngredientConnection>,
-    Fragmentable {
-  pageInfo: <T = PageInfoPromise>() => T;
-  edges: <T = FragmentableArray<IngredientEdge>>() => T;
-  aggregate: <T = AggregateIngredientPromise>() => T;
-}
-
-export interface IngredientConnectionSubscription
-  extends Promise<AsyncIterator<IngredientConnection>>,
-    Fragmentable {
-  pageInfo: <T = PageInfoSubscription>() => T;
-  edges: <T = Promise<AsyncIterator<IngredientEdgeSubscription>>>() => T;
-  aggregate: <T = AggregateIngredientSubscription>() => T;
-}
-
-export interface StepPreviousValues {
-  id: ID_Output;
-  createdAt: DateTimeOutput;
-  updatedAt: DateTimeOutput;
-  uid: ID_Output;
-  index: Int;
-  directions: String;
-  notes: String;
-}
-
-export interface StepPreviousValuesPromise
-  extends Promise<StepPreviousValues>,
-    Fragmentable {
-  id: () => Promise<ID_Output>;
-  createdAt: () => Promise<DateTimeOutput>;
-  updatedAt: () => Promise<DateTimeOutput>;
-  uid: () => Promise<ID_Output>;
-  index: () => Promise<Int>;
-  directions: () => Promise<String>;
-  notes: () => Promise<String>;
-}
-
-export interface StepPreviousValuesSubscription
-  extends Promise<AsyncIterator<StepPreviousValues>>,
-    Fragmentable {
-  id: () => Promise<AsyncIterator<ID_Output>>;
-  createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
-  updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
-  uid: () => Promise<AsyncIterator<ID_Output>>;
-  index: () => Promise<AsyncIterator<Int>>;
-  directions: () => Promise<AsyncIterator<String>>;
-  notes: () => Promise<AsyncIterator<String>>;
-}
-
-export interface StepSubscriptionPayload {
-  mutation: MutationType;
-  node: Step;
-  updatedFields: String[];
-  previousValues: StepPreviousValues;
-}
-
-export interface StepSubscriptionPayloadPromise
-  extends Promise<StepSubscriptionPayload>,
-    Fragmentable {
-  mutation: () => Promise<MutationType>;
-  node: <T = StepPromise>() => T;
-  updatedFields: () => Promise<String[]>;
-  previousValues: <T = StepPreviousValuesPromise>() => T;
-}
-
-export interface StepSubscriptionPayloadSubscription
-  extends Promise<AsyncIterator<StepSubscriptionPayload>>,
-    Fragmentable {
-  mutation: () => Promise<AsyncIterator<MutationType>>;
-  node: <T = StepSubscription>() => T;
-  updatedFields: () => Promise<AsyncIterator<String[]>>;
-  previousValues: <T = StepPreviousValuesSubscription>() => T;
-}
-
-export interface Step {
-  id: ID_Output;
-  createdAt: DateTimeOutput;
-  updatedAt: DateTimeOutput;
-  uid: ID_Output;
-  index: Int;
-  directions: String;
-  notes: String;
-}
-
-export interface StepPromise extends Promise<Step>, Fragmentable {
-  id: () => Promise<ID_Output>;
-  createdAt: () => Promise<DateTimeOutput>;
-  updatedAt: () => Promise<DateTimeOutput>;
-  uid: () => Promise<ID_Output>;
-  index: () => Promise<Int>;
-  directions: () => Promise<String>;
-  notes: () => Promise<String>;
-  item: <T = ItemPromise>() => T;
-  ingredients: <T = FragmentableArray<Ingredient>>(args?: {
-    where?: IngredientWhereInput;
-    orderBy?: IngredientOrderByInput;
-    skip?: Int;
-    after?: String;
-    before?: String;
-    first?: Int;
-    last?: Int;
-  }) => T;
-}
-
-export interface StepSubscription
-  extends Promise<AsyncIterator<Step>>,
-    Fragmentable {
-  id: () => Promise<AsyncIterator<ID_Output>>;
-  createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
-  updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
-  uid: () => Promise<AsyncIterator<ID_Output>>;
-  index: () => Promise<AsyncIterator<Int>>;
-  directions: () => Promise<AsyncIterator<String>>;
-  notes: () => Promise<AsyncIterator<String>>;
-  item: <T = ItemSubscription>() => T;
-  ingredients: <T = Promise<AsyncIterator<IngredientSubscription>>>(args?: {
-    where?: IngredientWhereInput;
-    orderBy?: IngredientOrderByInput;
-    skip?: Int;
-    after?: String;
-    before?: String;
-    first?: Int;
-    last?: Int;
-  }) => T;
-}
-
-export interface StepNullablePromise
-  extends Promise<Step | null>,
-    Fragmentable {
-  id: () => Promise<ID_Output>;
-  createdAt: () => Promise<DateTimeOutput>;
-  updatedAt: () => Promise<DateTimeOutput>;
-  uid: () => Promise<ID_Output>;
-  index: () => Promise<Int>;
-  directions: () => Promise<String>;
-  notes: () => Promise<String>;
-  item: <T = ItemPromise>() => T;
-  ingredients: <T = FragmentableArray<Ingredient>>(args?: {
-    where?: IngredientWhereInput;
-    orderBy?: IngredientOrderByInput;
-    skip?: Int;
-    after?: String;
-    before?: String;
-    first?: Int;
-    last?: Int;
-  }) => T;
-}
-
 export interface SortingPreviousValues {
   id: ID_Output;
   createdAt: DateTimeOutput;
@@ -7036,87 +6536,90 @@ export interface SortingPreviousValuesSubscription
   order: () => Promise<AsyncIterator<ID_Output[]>>;
 }
 
-export interface StepAdditionEdge {
-  node: StepAddition;
-  cursor: String;
-}
-
-export interface StepAdditionEdgePromise
-  extends Promise<StepAdditionEdge>,
-    Fragmentable {
-  node: <T = StepAdditionPromise>() => T;
-  cursor: () => Promise<String>;
-}
-
-export interface StepAdditionEdgeSubscription
-  extends Promise<AsyncIterator<StepAdditionEdge>>,
-    Fragmentable {
-  node: <T = StepAdditionSubscription>() => T;
-  cursor: () => Promise<AsyncIterator<String>>;
-}
-
-export interface IngredientAdditionEdge {
-  node: IngredientAddition;
-  cursor: String;
-}
-
-export interface IngredientAdditionEdgePromise
-  extends Promise<IngredientAdditionEdge>,
-    Fragmentable {
-  node: <T = IngredientAdditionPromise>() => T;
-  cursor: () => Promise<String>;
-}
-
-export interface IngredientAdditionEdgeSubscription
-  extends Promise<AsyncIterator<IngredientAdditionEdge>>,
-    Fragmentable {
-  node: <T = IngredientAdditionSubscription>() => T;
-  cursor: () => Promise<AsyncIterator<String>>;
-}
-
-export interface ModificationConnection {
-  pageInfo: PageInfo;
-  edges: ModificationEdge[];
-}
-
-export interface ModificationConnectionPromise
-  extends Promise<ModificationConnection>,
-    Fragmentable {
-  pageInfo: <T = PageInfoPromise>() => T;
-  edges: <T = FragmentableArray<ModificationEdge>>() => T;
-  aggregate: <T = AggregateModificationPromise>() => T;
-}
-
-export interface ModificationConnectionSubscription
-  extends Promise<AsyncIterator<ModificationConnection>>,
-    Fragmentable {
-  pageInfo: <T = PageInfoSubscription>() => T;
-  edges: <T = Promise<AsyncIterator<ModificationEdgeSubscription>>>() => T;
-  aggregate: <T = AggregateModificationSubscription>() => T;
-}
-
-export interface AggregateRecipePhoto {
+export interface AggregateIngredientAddition {
   count: Int;
 }
 
-export interface AggregateRecipePhotoPromise
-  extends Promise<AggregateRecipePhoto>,
+export interface AggregateIngredientAdditionPromise
+  extends Promise<AggregateIngredientAddition>,
     Fragmentable {
   count: () => Promise<Int>;
 }
 
-export interface AggregateRecipePhotoSubscription
-  extends Promise<AsyncIterator<AggregateRecipePhoto>>,
+export interface AggregateIngredientAdditionSubscription
+  extends Promise<AsyncIterator<AggregateIngredientAddition>>,
     Fragmentable {
   count: () => Promise<AsyncIterator<Int>>;
 }
+
+export interface ModificationEdge {
+  node: Modification;
+  cursor: String;
+}
+
+export interface ModificationEdgePromise
+  extends Promise<ModificationEdge>,
+    Fragmentable {
+  node: <T = ModificationPromise>() => T;
+  cursor: () => Promise<String>;
+}
+
+export interface ModificationEdgeSubscription
+  extends Promise<AsyncIterator<ModificationEdge>>,
+    Fragmentable {
+  node: <T = ModificationSubscription>() => T;
+  cursor: () => Promise<AsyncIterator<String>>;
+}
+
+export interface StepConnection {
+  pageInfo: PageInfo;
+  edges: StepEdge[];
+}
+
+export interface StepConnectionPromise
+  extends Promise<StepConnection>,
+    Fragmentable {
+  pageInfo: <T = PageInfoPromise>() => T;
+  edges: <T = FragmentableArray<StepEdge>>() => T;
+  aggregate: <T = AggregateStepPromise>() => T;
+}
+
+export interface StepConnectionSubscription
+  extends Promise<AsyncIterator<StepConnection>>,
+    Fragmentable {
+  pageInfo: <T = PageInfoSubscription>() => T;
+  edges: <T = Promise<AsyncIterator<StepEdgeSubscription>>>() => T;
+  aggregate: <T = AggregateStepSubscription>() => T;
+}
+
+export interface UserEdge {
+  node: User;
+  cursor: String;
+}
+
+export interface UserEdgePromise extends Promise<UserEdge>, Fragmentable {
+  node: <T = UserPromise>() => T;
+  cursor: () => Promise<String>;
+}
+
+export interface UserEdgeSubscription
+  extends Promise<AsyncIterator<UserEdge>>,
+    Fragmentable {
+  node: <T = UserSubscription>() => T;
+  cursor: () => Promise<AsyncIterator<String>>;
+}
+
+export type Long = string;
+
+/*
+The `Boolean` scalar type represents `true` or `false`.
+*/
+export type Boolean = boolean;
 
 /*
 The `Int` scalar type represents non-fractional signed whole numeric values. Int can represent values between -(2^31) and 2^31 - 1.
 */
 export type Int = number;
-
-export type Long = string;
 
 /*
 The `ID` scalar type represents a unique identifier, often used to refetch an object or as key for a cache. The ID type appears in a JSON response as a String; however, it is not intended to be human-readable. When expected as an input type, any string (such as `"4"`) or integer (such as `4`) input value will be accepted as an ID.
@@ -7138,11 +6641,6 @@ export type DateTimeOutput = string;
 The `String` scalar type represents textual data, represented as UTF-8 character sequences. The String type is most often used by GraphQL to represent free-form human-readable text.
 */
 export type String = string;
-
-/*
-The `Boolean` scalar type represents `true` or `false`.
-*/
-export type Boolean = boolean;
 
 /**
  * Model Metadata
@@ -7167,10 +6665,6 @@ export const models: Model[] = [
   },
   {
     name: "Ingredient",
-    embedded: false
-  },
-  {
-    name: "RecipePhoto",
     embedded: false
   },
   {

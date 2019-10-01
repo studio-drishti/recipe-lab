@@ -6,6 +6,7 @@ async function main() {
     email: 'jay@recipelab.io',
     emailVerified: true,
     name: 'Jay',
+    slug: 'jay',
     password: '$2b$10$dqyYw5XovLjpmkYNiRDEWuwKaRAvLaG45fnXE5b3KTccKZcRPka2m', // "secret42"
     recipes: {
       create: [
@@ -257,6 +258,7 @@ async function main() {
     email: 'emma@recipelab.io',
     emailVerified: true,
     name: 'Emma',
+    slug: 'emma',
     password: '$2b$10$dqyYw5XovLjpmkYNiRDEWuwKaRAvLaG45fnXE5b3KTccKZcRPka2m', // "secret42"
     recipes: {
       create: [
