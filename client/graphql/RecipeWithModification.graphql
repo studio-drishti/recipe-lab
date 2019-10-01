@@ -8,7 +8,7 @@ query recipe($slug: String!, $user: ID) {
     servingAmount
     servingType
     time
-    photoUrl
+    photo
     items {
       uid
       name

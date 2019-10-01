@@ -44,7 +44,7 @@ const RecipePhoto = ({ recipe, setRecipePhoto, className }) => {
       }
     })
       .then(res => {
-        setRecipePhoto(res.data.recipePhotoUpload.photoUrl);
+        setRecipePhoto(res.data.recipePhotoUpload.photo);
         load(res);
       })
       .catch(err => error(err));
@@ -65,9 +65,9 @@ const RecipePhoto = ({ recipe, setRecipePhoto, className }) => {
 
   return (
     <div className={classnames(className)}>
-      {recipe.photoUrl ? (
+      {recipe.photo ? (
         <div
-          style={{ backgroundImage: `url(${recipe.photoUrl})` }}
+          style={{ backgroundImage: `url(${recipe.photo})` }}
           className={css.slide}
         />
       ) : (

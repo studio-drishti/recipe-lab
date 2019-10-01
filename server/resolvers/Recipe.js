@@ -7,7 +7,7 @@ module.exports = {
   items: ({ uid }, args, ctx) => {
     return ctx.prisma.recipe({ uid }).items({ orderBy: 'index_ASC' });
   },
-  photoUrl: async ({ uid }, args, ctx) => {
+  photo: async ({ uid }, args, ctx) => {
     const recipe = await ctx.prisma.recipe({ uid }).$fragment(`
       fragment RecipeWithAuthor on Recipe {
         photo

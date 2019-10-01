@@ -1,5 +1,5 @@
 mutation RecipePhotoUpload($file: Upload!, $recipeId: ID!) {
   recipePhotoUpload(file: $file, recipeId: $recipeId) {
-    photoUrl
+    photo
   }
 }

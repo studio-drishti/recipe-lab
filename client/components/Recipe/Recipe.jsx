@@ -37,7 +37,7 @@ export default class Recipe extends Component {
       servingAmount: PropTypes.string,
       servingType: PropTypes.string,
       items: PropTypes.arrayOf(PropTypes.object),
-      photoUrl: PropTypes.string
+      photo: PropTypes.string
     }),
     modification: PropTypes.object
   };
@@ -396,10 +396,9 @@ export default class Recipe extends Component {
     return mod !== undefined ? mod : source[fieldName];
   };
 
-  setRecipePhoto = photoUrl => {
+  setRecipePhoto = photo => {
     const { recipe } = this.state;
-    recipe.photoUrl = photoUrl;
-    this.setState({ recipe });
+    this.setState({ recipe: { ...recipe, photo } });
   };
 
   render() {
