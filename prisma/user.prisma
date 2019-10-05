@@ -3,10 +3,10 @@ type User {
   createdAt: DateTime! @createdAt
   updatedAt: DateTime! @updatedAt
   email: String! @unique
+  slug: String! @unique
   password: String!
   name: String!
   avatar: String
-  slug: String
   emailVerified: Boolean! @default(value: false)
   recipes: [Recipe!]! @relation(name: "RecipeAuthor", onDelete: CASCADE)
   modifications: [Modification!]!

@@ -25,3 +25,7 @@
   --color-highlight: rgb(252, 251, 198);
   --color-error: red;
 }
+
+/* Breakpoints
+-------------- */
+@custom-media --medium-viewport screen and (min-width: 800px);
