@@ -9,6 +9,10 @@
   }
 }
 
+.error {
+  color: var(--color-error);
+}
+
 .titleInput {
   margin-bottom: 1rem;
 }

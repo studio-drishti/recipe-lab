@@ -26,6 +26,9 @@
     opacity: 0;
     transition: visibility 0s linear 0.2s, opacity 0.2s linear;
     pointer-events: none;
+    font-size: 1rem;
+    font-family: var(--body-font-family);
+    letter-spacing: initial;
   }
 
   & [role='tooltip']::after {

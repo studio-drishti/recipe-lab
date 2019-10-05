@@ -19,6 +19,7 @@ import TextButton from '../TextButton';
 import TextButtonGroup from '../TextButtonGroup';
 import TextInput from '../TextInput';
 import Textarea from '../Textarea';
+import Tooltip from '../Tooltip';
 import Select from '../Select';
 import css from './RecipeDetails.css';
 import CreateRecipeMutation from '../../graphql/CreateRecipe.graphql';
@@ -152,12 +153,24 @@ const RecipeDetails = ({ recipe, className, recipeMods, saveAlteration }) => {
   };
 
   const renderWithMods = fieldName => {
+    if (edits[fieldName] !== undefined && errors[fieldName]) {
+      return (
+        <Tooltip tip={errors[fieldName]}>
+          <DiffText
+            className={css.error}
+            original={recipe[fieldName]}
+            modified={edits[fieldName]}
+          />
+        </Tooltip>
+      );
+    }
+
     const mod = recipeMods.find(mod => mod.field === fieldName);
     if (mod !== undefined) {
       return <DiffText original={recipe[fieldName]} modified={mod.value} />;
-    } else {
-      return recipe[fieldName];
     }
+
+    return recipe[fieldName];
   };
 
   const validate = (fieldName, value) => {
@@ -242,13 +255,13 @@ const RecipeDetails = ({ recipe, className, recipeMods, saveAlteration }) => {
               <i>
                 <MdTimer />
               </i>
-              {getRecipeValue('time')}
+              {renderWithMods('time')}
             </a>
             <a onClick={() => enableEditing('servingAmount')}>
               <i>
                 <MdLocalDining />
               </i>
-              {getRecipeValue('servingAmount')} {getRecipeValue('servingType')}
+              {renderWithMods('servingAmount')} {renderWithMods('servingType')}
             </a>
           </>
         ) : (
