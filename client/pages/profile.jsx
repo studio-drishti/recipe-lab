@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Mutation } from 'react-apollo';
+import React, { useContext } from 'react';
+import { useMutation } from 'react-apollo';
 import { FilePond, registerPlugin } from 'react-filepond';
 import FilePondPluginImageCrop from 'filepond-plugin-image-crop';
 import FilePondPluginImageResize from 'filepond-plugin-image-resize';
@@ -16,65 +16,56 @@ registerPlugin(
   FilePondPluginImageResize
 );
 
-const ProfilePage = () => (
-  const [contextType] = useState(UserContext);
-);
+const ProfilePage = () => {
+  const { user, refreshUser } = useContext(UserContext);
+  const [uploadFile] = useMutation(AvatarUploadMutation);
+  let pond;
 
-class ProfilePage extends Component {
-  static displayName = 'ProfilePage';
-  static contextType = UserContext;
+  const processUpload = (
+    fieldName,
+    file,
+    metadata,
+    load,
+    error,
+    progress,
+    abort
+  ) => {
+    const controller = new AbortController();
+    uploadFile({ variables: { file } })
+      .then(data => load(data))
+      .catch(err => error(err));
 
-  handleUploadComplete = () => {
-    setTimeout(() => {
-      this.pond.removeFiles();
-    }, 1000);
-    this.context.refreshUser();
+    return {
+      abort: () => {
+        controller.abort();
+        abort();
+      }
+    };
   };
 
-  render() {
-    const { user } = this.context;
+  const handleUploadComplete = () => {
+    setTimeout(() => {
+      pond.removeFiles();
+      refreshUser();
+    }, 1000);
+  };
 
-    return (
-      <Page>
-        <h1>{`${user.name}'s`} Profile</h1>
-        <Mutation mutation={AvatarUploadMutation}>
-          {uploadFile => (
-            <FilePond
-              name="avatar"
-              ref={ref => (this.pond = ref)}
-              server={{
-                process: (
-                  fieldName,
-                  file,
-                  metadata,
-                  load,
-                  error,
-                  progress,
-                  abort
-                ) => {
-                  uploadFile({ variables: { file } })
-                    .then(data => load(data))
-                    .catch(err => error(err));
-
-                  return {
-                    abort: () => {
-                      abort();
-                    }
-                  };
-                }
-              }}
-              allowRevert={false}
-              imageTransformOutputMimeType="image/jpeg"
-              imageCropAspectRatio="1:1"
-              imageResizeTargetWidth="300"
-              onprocessfile={this.handleUploadComplete}
-            />
-          )}
-        </Mutation>
-        <img src={user.avatar} />
-      </Page>
-    );
-  }
-}
+  return (
+    <Page>
+      <h1>{`${user.name}'s`} Profile</h1>
+      <FilePond
+        name="avatar"
+        ref={ref => (pond = ref)}
+        server={{ process: processUpload }}
+        allowRevert={false}
+        imageTransformOutputMimeType="image/jpeg"
+        imageCropAspectRatio="1:1"
+        imageResizeTargetWidth="300"
+        onprocessfile={handleUploadComplete}
+      />
+      <img src={user.avatar} />
+    </Page>
+  );
+};
 
 export default withAuthGuard(ProfilePage);
