@@ -1,7 +1,5 @@
 .details {
-  & a {
-    text-decoration: none;
-    color: inherit;
+  & [role='button'] {
     cursor: pointer;
   }
 
