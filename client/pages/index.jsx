@@ -1,15 +1,11 @@
-import React, { Component } from 'react';
+import React from 'react';
 import Page from '../layouts/Main';
 
-export default class IndexPage extends Component {
-  static displayName = 'IndexPage';
+const IndexPage = () => (
+  <Page>
+    <h1>Welcome to Recipe Lab!</h1>
+    <p>Play with your food.</p>
+  </Page>
+);
 
-  render() {
-    return (
-      <Page>
-        <h1>Welcome to Recipe Lab!</h1>
-        <p>Play with your food.</p>
-      </Page>
-    );
-  }
-}
+export default IndexPage;

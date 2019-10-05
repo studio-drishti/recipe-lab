@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import { Mutation } from 'react-apollo';
 import { FilePond, registerPlugin } from 'react-filepond';
 import FilePondPluginImageCrop from 'filepond-plugin-image-crop';
@@ -14,6 +14,10 @@ registerPlugin(
   FilePondPluginImageTransform,
   FilePondPluginImageCrop,
   FilePondPluginImageResize
+);
+
+const ProfilePage = () => (
+  const [contextType] = useState(UserContext);
 );
 
 class ProfilePage extends Component {
