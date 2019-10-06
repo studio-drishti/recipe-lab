@@ -1,3 +1,10 @@
+enum UserRole {
+  EXECUTIVE_CHEF
+  SOUS_CHEF
+  COMMIS_CHEF
+  KITCHEN_PORTER
+}
+
 type User {
   id: ID! @id
   createdAt: DateTime! @createdAt
@@ -8,6 +15,7 @@ type User {
   name: String!
   avatar: String
   emailVerified: Boolean! @default(value: false)
+  role: UserRole! @default(value: KITCHEN_PORTER)
   recipes: [Recipe!]! @relation(name: "RecipeAuthor", onDelete: CASCADE)
   modifications: [Modification!]!
     @relation(name: "ModificationOwner", onDelete: CASCADE)
