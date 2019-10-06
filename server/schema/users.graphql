@@ -6,6 +6,7 @@ type User {
   avatar: String
   slug: String
   emailVerified: Boolean!
+  role: String!
   recipes: [Recipe!]!
 }
 

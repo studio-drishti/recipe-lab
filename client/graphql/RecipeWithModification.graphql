@@ -26,6 +26,7 @@ query recipe($slug: String!, $user: ID) {
       }
     }
     author {
+      id
       name
       avatar
     }
