@@ -1,3 +1,3 @@
-mutation RecipePhotoDelete($photoId: ID!) {
-  recipePhotoDelete(photoId: $photoId)
+mutation RecipePhotoDelete($recipeId: ID!) {
+  recipePhotoDelete(recipeId: $recipeId)
 }

@@ -1,14 +1,14 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import { useMutation } from 'react-apollo';
-
 import { FilePond, registerPlugin } from 'react-filepond';
 import FilePondPluginImageCrop from 'filepond-plugin-image-crop';
 import FilePondPluginImageResize from 'filepond-plugin-image-resize';
 import FilePondPluginImageTransform from 'filepond-plugin-image-transform';
 
 import RecipePhotoUploadMutation from '../../graphql/RecipePhotoUpload.graphql';
+import UserContext from '../../utils/UserContext';
 
 import css from './RecipePhoto.css';
 
@@ -20,7 +20,12 @@ registerPlugin(
 
 const RecipePhoto = ({ recipe, setRecipePhoto, className }) => {
   const [uploadFile] = useMutation(RecipePhotoUploadMutation);
+  const { user } = useContext(UserContext);
   let pond;
+
+  const canUploadPhoto = Boolean(
+    (user && user.id === recipe.author.id) || user.role === 'EXECUTIVE_CHEF'
+  );
 
   const processUpload = (
     fieldName,
@@ -65,7 +70,7 @@ const RecipePhoto = ({ recipe, setRecipePhoto, className }) => {
 
   return (
     <div className={classnames(className)}>
-      {recipe.photo ? (
+      {recipe && recipe.photo ? (
         <div
           style={{ backgroundImage: `url(${recipe.photo})` }}
           className={css.slide}
@@ -73,18 +78,20 @@ const RecipePhoto = ({ recipe, setRecipePhoto, className }) => {
       ) : (
         <img src="https://via.placeholder.com/600x300" />
       )}
-      <FilePond
-        name="avatar"
-        ref={ref => (pond = ref)}
-        className={css.filepond}
-        server={{ process: processUpload }}
-        allowRevert={false}
-        allowMultiple={false}
-        imageTransformOutputMimeType="image/jpeg"
-        imageCropAspectRatio="3:2"
-        imageResizeTargetWidth="600"
-        onprocessfile={handleUploadComplete}
-      />
+      {canUploadPhoto && (
+        <FilePond
+          name="avatar"
+          ref={ref => (pond = ref)}
+          className={css.filepond}
+          server={{ process: processUpload }}
+          allowRevert={false}
+          allowMultiple={false}
+          imageTransformOutputMimeType="image/jpeg"
+          imageCropAspectRatio="3:2"
+          imageResizeTargetWidth="600"
+          onprocessfile={handleUploadComplete}
+        />
+      )}
     </div>
   );
 };

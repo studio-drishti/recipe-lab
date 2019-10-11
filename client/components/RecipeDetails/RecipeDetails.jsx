@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useContext } from 'react';
 import PropTypes from 'prop-types';
 import Router from 'next/router';
 import {
@@ -7,13 +7,17 @@ import {
   MdTimer,
   MdLocalDining,
   MdAddAPhoto,
-  MdDoNotDisturb
+  MdDoNotDisturb,
+  MdDeleteForever
 } from 'react-icons/md';
 import classnames from 'classnames';
 import { fraction } from 'mathjs';
-import { useApolloClient } from 'react-apollo';
+import { useMutation } from 'react-apollo';
 
 import { TIME_OPTIONS } from '../../config';
+import UserContext from '../../utils/UserContext';
+import CreateRecipeMutation from '../../graphql/CreateRecipe.graphql';
+import RecipePhotoDeleteMutation from '../../graphql/RecipePhotoDelete.graphql';
 import DiffText from '../DiffText';
 import TextButton from '../TextButton';
 import TextButtonGroup from '../TextButtonGroup';
@@ -22,10 +26,17 @@ import Textarea from '../Textarea';
 import Tooltip from '../Tooltip';
 import Select from '../Select';
 import css from './RecipeDetails.css';
-import CreateRecipeMutation from '../../graphql/CreateRecipe.graphql';
 
-const RecipeDetails = ({ recipe, className, recipeMods, saveAlteration }) => {
-  const client = useApolloClient();
+const RecipeDetails = ({
+  recipe,
+  className,
+  recipeMods,
+  saveAlteration,
+  setRecipePhoto
+}) => {
+  const [createRecipe] = useMutation(CreateRecipeMutation);
+  const [deletePhoto] = useMutation(RecipePhotoDeleteMutation);
+  const { user } = useContext(UserContext);
   const [errors, setErrors] = useState({});
   const [edits, setEdits] = useState({});
   const [editing, setEditing] = useState(!recipe ? true : false);
@@ -36,11 +47,25 @@ const RecipeDetails = ({ recipe, className, recipeMods, saveAlteration }) => {
   const timeInputRef = useRef();
   const servingInputRef = useRef();
 
+  const canDeletePhoto = Boolean(
+    recipe.photo &&
+      (recipe.author.id === user.id || user.role === 'EXECUTIVE_CHEF')
+  );
+
   useEffect(() => {
     return () => {
       document.removeEventListener('mousedown', handleClick);
     };
   }, []);
+
+  const handleDelete = () => {
+    if (!canDeletePhoto) return;
+    deletePhoto({
+      variables: { recipeId: recipe.uid }
+    }).then(() => {
+      setRecipePhoto(null);
+    });
+  };
 
   const enableEditing = async fieldName => {
     await setEditing(true);
@@ -128,21 +153,18 @@ const RecipeDetails = ({ recipe, className, recipeMods, saveAlteration }) => {
         });
       disableEditing();
     } else if (hasErrors.length === 0) {
-      client
-        .mutate({
-          mutation: CreateRecipeMutation,
-          variables: {
-            title: getRecipeValue('title'),
-            description: getRecipeValue('description'),
-            time: getRecipeValue('time'),
-            servingAmount: getRecipeValue('servingAmount'),
-            servingType: getRecipeValue('servingType')
-          }
-        })
-        .then(({ data }) => {
-          const { slug } = data.createRecipe;
-          Router.replace('/recipes/[slug]', `/recipes/${slug}`);
-        });
+      createRecipe({
+        variables: {
+          title: getRecipeValue('title'),
+          description: getRecipeValue('description'),
+          time: getRecipeValue('time'),
+          servingAmount: getRecipeValue('servingAmount'),
+          servingType: getRecipeValue('servingType')
+        }
+      }).then(({ data }) => {
+        const { slug } = data.createRecipe;
+        Router.replace('/recipes/[slug]', `/recipes/${slug}`);
+      });
     }
   };
 
@@ -331,6 +353,12 @@ const RecipeDetails = ({ recipe, className, recipeMods, saveAlteration }) => {
             <MdAddAPhoto />
             upload photo
           </TextButton>
+          {canDeletePhoto && (
+            <TextButton onClick={handleDelete}>
+              <MdDeleteForever />
+              delete photo
+            </TextButton>
+          )}
         </TextButtonGroup>
       ) : (
         <TextButtonGroup>
@@ -354,7 +382,8 @@ RecipeDetails.propTypes = {
   className: PropTypes.string,
   recipe: PropTypes.object,
   recipeMods: PropTypes.arrayOf(PropTypes.object),
-  saveAlteration: PropTypes.func
+  saveAlteration: PropTypes.func,
+  setRecipePhoto: PropTypes.func
 };
 
 export default RecipeDetails;

@@ -416,10 +416,10 @@ export default class Recipe extends Component {
               alteration => alteration.sourceId === recipe.uid
             )}
             saveAlteration={this.saveAlteration}
+            setRecipePhoto={this.setRecipePhoto}
           />
           <RecipePhoto
             className={css.recipePhoto}
-            // removePhoto={this.removePhoto}
             setRecipePhoto={this.setRecipePhoto}
             recipe={recipe}
           />

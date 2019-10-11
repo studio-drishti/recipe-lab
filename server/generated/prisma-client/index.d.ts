@@ -519,21 +519,11 @@ export interface ClientConstructor<T> {
  * Types
  */
 
-export type AlterationOrderByInput =
-  | "id_ASC"
-  | "id_DESC"
-  | "createdAt_ASC"
-  | "createdAt_DESC"
-  | "updatedAt_ASC"
-  | "updatedAt_DESC"
-  | "uid_ASC"
-  | "uid_DESC"
-  | "sourceId_ASC"
-  | "sourceId_DESC"
-  | "field_ASC"
-  | "field_DESC"
-  | "value_ASC"
-  | "value_DESC";
+export type UserRole =
+  | "EXECUTIVE_CHEF"
+  | "SOUS_CHEF"
+  | "COMMIS_CHEF"
+  | "KITCHEN_PORTER";
 
 export type RecipeOrderByInput =
   | "id_ASC"
@@ -589,7 +579,9 @@ export type UserOrderByInput =
   | "avatar_ASC"
   | "avatar_DESC"
   | "emailVerified_ASC"
-  | "emailVerified_DESC";
+  | "emailVerified_DESC"
+  | "role_ASC"
+  | "role_DESC";
 
 export type ItemOrderByInput =
   | "id_ASC"
@@ -671,6 +663,22 @@ export type IngredientAdditionOrderByInput =
 
 export type MutationType = "CREATED" | "UPDATED" | "DELETED";
 
+export type AlterationOrderByInput =
+  | "id_ASC"
+  | "id_DESC"
+  | "createdAt_ASC"
+  | "createdAt_DESC"
+  | "updatedAt_ASC"
+  | "updatedAt_DESC"
+  | "uid_ASC"
+  | "uid_DESC"
+  | "sourceId_ASC"
+  | "sourceId_DESC"
+  | "field_ASC"
+  | "field_DESC"
+  | "value_ASC"
+  | "value_DESC";
+
 export type ItemAdditionOrderByInput =
   | "id_ASC"
   | "id_DESC"
@@ -701,68 +709,10 @@ export type StepAdditionOrderByInput =
   | "notes_ASC"
   | "notes_DESC";
 
-export interface SortingScalarWhereInput {
-  id?: Maybe<ID_Input>;
-  id_not?: Maybe<ID_Input>;
-  id_in?: Maybe<ID_Input[] | ID_Input>;
-  id_not_in?: Maybe<ID_Input[] | ID_Input>;
-  id_lt?: Maybe<ID_Input>;
-  id_lte?: Maybe<ID_Input>;
-  id_gt?: Maybe<ID_Input>;
-  id_gte?: Maybe<ID_Input>;
-  id_contains?: Maybe<ID_Input>;
-  id_not_contains?: Maybe<ID_Input>;
-  id_starts_with?: Maybe<ID_Input>;
-  id_not_starts_with?: Maybe<ID_Input>;
-  id_ends_with?: Maybe<ID_Input>;
-  id_not_ends_with?: Maybe<ID_Input>;
-  createdAt?: Maybe<DateTimeInput>;
-  createdAt_not?: Maybe<DateTimeInput>;
-  createdAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
-  createdAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
-  createdAt_lt?: Maybe<DateTimeInput>;
-  createdAt_lte?: Maybe<DateTimeInput>;
-  createdAt_gt?: Maybe<DateTimeInput>;
-  createdAt_gte?: Maybe<DateTimeInput>;
-  updatedAt?: Maybe<DateTimeInput>;
-  updatedAt_not?: Maybe<DateTimeInput>;
-  updatedAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
-  updatedAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
-  updatedAt_lt?: Maybe<DateTimeInput>;
-  updatedAt_lte?: Maybe<DateTimeInput>;
-  updatedAt_gt?: Maybe<DateTimeInput>;
-  updatedAt_gte?: Maybe<DateTimeInput>;
-  uid?: Maybe<ID_Input>;
-  uid_not?: Maybe<ID_Input>;
-  uid_in?: Maybe<ID_Input[] | ID_Input>;
-  uid_not_in?: Maybe<ID_Input[] | ID_Input>;
-  uid_lt?: Maybe<ID_Input>;
-  uid_lte?: Maybe<ID_Input>;
-  uid_gt?: Maybe<ID_Input>;
-  uid_gte?: Maybe<ID_Input>;
-  uid_contains?: Maybe<ID_Input>;
-  uid_not_contains?: Maybe<ID_Input>;
-  uid_starts_with?: Maybe<ID_Input>;
-  uid_not_starts_with?: Maybe<ID_Input>;
-  uid_ends_with?: Maybe<ID_Input>;
-  uid_not_ends_with?: Maybe<ID_Input>;
-  parentId?: Maybe<ID_Input>;
-  parentId_not?: Maybe<ID_Input>;
-  parentId_in?: Maybe<ID_Input[] | ID_Input>;
-  parentId_not_in?: Maybe<ID_Input[] | ID_Input>;
-  parentId_lt?: Maybe<ID_Input>;
-  parentId_lte?: Maybe<ID_Input>;
-  parentId_gt?: Maybe<ID_Input>;
-  parentId_gte?: Maybe<ID_Input>;
-  parentId_contains?: Maybe<ID_Input>;
-  parentId_not_contains?: Maybe<ID_Input>;
-  parentId_starts_with?: Maybe<ID_Input>;
-  parentId_not_starts_with?: Maybe<ID_Input>;
-  parentId_ends_with?: Maybe<ID_Input>;
-  parentId_not_ends_with?: Maybe<ID_Input>;
-  AND?: Maybe<SortingScalarWhereInput[] | SortingScalarWhereInput>;
-  OR?: Maybe<SortingScalarWhereInput[] | SortingScalarWhereInput>;
-  NOT?: Maybe<SortingScalarWhereInput[] | SortingScalarWhereInput>;
+export interface SortingUpsertWithWhereUniqueWithoutModificationInput {
+  where: SortingWhereUniqueInput;
+  update: SortingUpdateWithoutModificationDataInput;
+  create: SortingCreateWithoutModificationInput;
 }
 
 export type AlterationWhereUniqueInput = AtLeastOne<{
@@ -1577,6 +1527,10 @@ export interface UserWhereInput {
   avatar_not_ends_with?: Maybe<String>;
   emailVerified?: Maybe<Boolean>;
   emailVerified_not?: Maybe<Boolean>;
+  role?: Maybe<UserRole>;
+  role_not?: Maybe<UserRole>;
+  role_in?: Maybe<UserRole[] | UserRole>;
+  role_not_in?: Maybe<UserRole[] | UserRole>;
   recipes_every?: Maybe<RecipeWhereInput>;
   recipes_some?: Maybe<RecipeWhereInput>;
   recipes_none?: Maybe<RecipeWhereInput>;
@@ -2019,6 +1973,7 @@ export interface UserUpdateInput {
   name?: Maybe<String>;
   avatar?: Maybe<String>;
   emailVerified?: Maybe<Boolean>;
+  role?: Maybe<UserRole>;
   recipes?: Maybe<RecipeUpdateManyWithoutAuthorInput>;
   modifications?: Maybe<ModificationUpdateManyWithoutUserInput>;
 }
@@ -2037,6 +1992,7 @@ export interface UserCreateInput {
   name: String;
   avatar?: Maybe<String>;
   emailVerified?: Maybe<Boolean>;
+  role?: Maybe<UserRole>;
   recipes?: Maybe<RecipeCreateManyWithoutAuthorInput>;
   modifications?: Maybe<ModificationCreateManyWithoutUserInput>;
 }
@@ -2299,10 +2255,16 @@ export interface ModificationUpdateOneRequiredWithoutSortingsInput {
   connect?: Maybe<ModificationWhereUniqueInput>;
 }
 
-export interface SortingUpsertWithWhereUniqueWithoutModificationInput {
-  where: SortingWhereUniqueInput;
-  update: SortingUpdateWithoutModificationDataInput;
-  create: SortingCreateWithoutModificationInput;
+export interface ModificationUpdateWithoutItemAdditionsDataInput {
+  user?: Maybe<UserUpdateOneRequiredWithoutModificationsInput>;
+  recipe?: Maybe<RecipeUpdateOneRequiredWithoutModificationsInput>;
+  sortings?: Maybe<SortingUpdateManyWithoutModificationInput>;
+  alterations?: Maybe<AlterationUpdateManyWithoutModificationInput>;
+  removals?: Maybe<ModificationUpdateremovalsInput>;
+  stepAdditions?: Maybe<StepAdditionUpdateManyWithoutModificationInput>;
+  ingredientAdditions?: Maybe<
+    IngredientAdditionUpdateManyWithoutModificationInput
+  >;
 }
 
 export interface ModificationCreateWithoutSortingsInput {
@@ -2318,16 +2280,68 @@ export interface ModificationCreateWithoutSortingsInput {
   >;
 }
 
-export interface ModificationUpdateWithoutItemAdditionsDataInput {
-  user?: Maybe<UserUpdateOneRequiredWithoutModificationsInput>;
-  recipe?: Maybe<RecipeUpdateOneRequiredWithoutModificationsInput>;
-  sortings?: Maybe<SortingUpdateManyWithoutModificationInput>;
-  alterations?: Maybe<AlterationUpdateManyWithoutModificationInput>;
-  removals?: Maybe<ModificationUpdateremovalsInput>;
-  stepAdditions?: Maybe<StepAdditionUpdateManyWithoutModificationInput>;
-  ingredientAdditions?: Maybe<
-    IngredientAdditionUpdateManyWithoutModificationInput
-  >;
+export interface SortingScalarWhereInput {
+  id?: Maybe<ID_Input>;
+  id_not?: Maybe<ID_Input>;
+  id_in?: Maybe<ID_Input[] | ID_Input>;
+  id_not_in?: Maybe<ID_Input[] | ID_Input>;
+  id_lt?: Maybe<ID_Input>;
+  id_lte?: Maybe<ID_Input>;
+  id_gt?: Maybe<ID_Input>;
+  id_gte?: Maybe<ID_Input>;
+  id_contains?: Maybe<ID_Input>;
+  id_not_contains?: Maybe<ID_Input>;
+  id_starts_with?: Maybe<ID_Input>;
+  id_not_starts_with?: Maybe<ID_Input>;
+  id_ends_with?: Maybe<ID_Input>;
+  id_not_ends_with?: Maybe<ID_Input>;
+  createdAt?: Maybe<DateTimeInput>;
+  createdAt_not?: Maybe<DateTimeInput>;
+  createdAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  createdAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  createdAt_lt?: Maybe<DateTimeInput>;
+  createdAt_lte?: Maybe<DateTimeInput>;
+  createdAt_gt?: Maybe<DateTimeInput>;
+  createdAt_gte?: Maybe<DateTimeInput>;
+  updatedAt?: Maybe<DateTimeInput>;
+  updatedAt_not?: Maybe<DateTimeInput>;
+  updatedAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  updatedAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  updatedAt_lt?: Maybe<DateTimeInput>;
+  updatedAt_lte?: Maybe<DateTimeInput>;
+  updatedAt_gt?: Maybe<DateTimeInput>;
+  updatedAt_gte?: Maybe<DateTimeInput>;
+  uid?: Maybe<ID_Input>;
+  uid_not?: Maybe<ID_Input>;
+  uid_in?: Maybe<ID_Input[] | ID_Input>;
+  uid_not_in?: Maybe<ID_Input[] | ID_Input>;
+  uid_lt?: Maybe<ID_Input>;
+  uid_lte?: Maybe<ID_Input>;
+  uid_gt?: Maybe<ID_Input>;
+  uid_gte?: Maybe<ID_Input>;
+  uid_contains?: Maybe<ID_Input>;
+  uid_not_contains?: Maybe<ID_Input>;
+  uid_starts_with?: Maybe<ID_Input>;
+  uid_not_starts_with?: Maybe<ID_Input>;
+  uid_ends_with?: Maybe<ID_Input>;
+  uid_not_ends_with?: Maybe<ID_Input>;
+  parentId?: Maybe<ID_Input>;
+  parentId_not?: Maybe<ID_Input>;
+  parentId_in?: Maybe<ID_Input[] | ID_Input>;
+  parentId_not_in?: Maybe<ID_Input[] | ID_Input>;
+  parentId_lt?: Maybe<ID_Input>;
+  parentId_lte?: Maybe<ID_Input>;
+  parentId_gt?: Maybe<ID_Input>;
+  parentId_gte?: Maybe<ID_Input>;
+  parentId_contains?: Maybe<ID_Input>;
+  parentId_not_contains?: Maybe<ID_Input>;
+  parentId_starts_with?: Maybe<ID_Input>;
+  parentId_not_starts_with?: Maybe<ID_Input>;
+  parentId_ends_with?: Maybe<ID_Input>;
+  parentId_not_ends_with?: Maybe<ID_Input>;
+  AND?: Maybe<SortingScalarWhereInput[] | SortingScalarWhereInput>;
+  OR?: Maybe<SortingScalarWhereInput[] | SortingScalarWhereInput>;
+  NOT?: Maybe<SortingScalarWhereInput[] | SortingScalarWhereInput>;
 }
 
 export interface ModificationCreateOneWithoutSortingsInput {
@@ -3176,6 +3190,7 @@ export interface UserUpdateWithoutModificationsDataInput {
   name?: Maybe<String>;
   avatar?: Maybe<String>;
   emailVerified?: Maybe<Boolean>;
+  role?: Maybe<UserRole>;
   recipes?: Maybe<RecipeUpdateManyWithoutAuthorInput>;
 }
 
@@ -3524,6 +3539,7 @@ export interface UserUpdateManyMutationInput {
   name?: Maybe<String>;
   avatar?: Maybe<String>;
   emailVerified?: Maybe<Boolean>;
+  role?: Maybe<UserRole>;
 }
 
 export interface ModificationUpdateManyWithWhereNestedInput {
@@ -3830,6 +3846,7 @@ export interface UserUpdateWithoutRecipesDataInput {
   name?: Maybe<String>;
   avatar?: Maybe<String>;
   emailVerified?: Maybe<Boolean>;
+  role?: Maybe<UserRole>;
   modifications?: Maybe<ModificationUpdateManyWithoutUserInput>;
 }
 
@@ -3841,6 +3858,7 @@ export interface UserCreateWithoutModificationsInput {
   name: String;
   avatar?: Maybe<String>;
   emailVerified?: Maybe<Boolean>;
+  role?: Maybe<UserRole>;
   recipes?: Maybe<RecipeCreateManyWithoutAuthorInput>;
 }
 
@@ -4338,6 +4356,7 @@ export interface UserCreateWithoutRecipesInput {
   name: String;
   avatar?: Maybe<String>;
   emailVerified?: Maybe<Boolean>;
+  role?: Maybe<UserRole>;
   modifications?: Maybe<ModificationCreateManyWithoutUserInput>;
 }
 
@@ -4471,6 +4490,7 @@ export interface UserPreviousValues {
   name: String;
   avatar?: String;
   emailVerified: Boolean;
+  role: UserRole;
 }
 
 export interface UserPreviousValuesPromise
@@ -4485,6 +4505,7 @@ export interface UserPreviousValuesPromise
   name: () => Promise<String>;
   avatar: () => Promise<String>;
   emailVerified: () => Promise<Boolean>;
+  role: () => Promise<UserRole>;
 }
 
 export interface UserPreviousValuesSubscription
@@ -4499,6 +4520,7 @@ export interface UserPreviousValuesSubscription
   name: () => Promise<AsyncIterator<String>>;
   avatar: () => Promise<AsyncIterator<String>>;
   emailVerified: () => Promise<AsyncIterator<Boolean>>;
+  role: () => Promise<AsyncIterator<UserRole>>;
 }
 
 export interface IngredientAdditionConnection {
@@ -5571,6 +5593,7 @@ export interface User {
   name: String;
   avatar?: String;
   emailVerified: Boolean;
+  role: UserRole;
 }
 
 export interface UserPromise extends Promise<User>, Fragmentable {
@@ -5583,6 +5606,7 @@ export interface UserPromise extends Promise<User>, Fragmentable {
   name: () => Promise<String>;
   avatar: () => Promise<String>;
   emailVerified: () => Promise<Boolean>;
+  role: () => Promise<UserRole>;
   recipes: <T = FragmentableArray<Recipe>>(args?: {
     where?: RecipeWhereInput;
     orderBy?: RecipeOrderByInput;
@@ -5615,6 +5639,7 @@ export interface UserSubscription
   name: () => Promise<AsyncIterator<String>>;
   avatar: () => Promise<AsyncIterator<String>>;
   emailVerified: () => Promise<AsyncIterator<Boolean>>;
+  role: () => Promise<AsyncIterator<UserRole>>;
   recipes: <T = Promise<AsyncIterator<RecipeSubscription>>>(args?: {
     where?: RecipeWhereInput;
     orderBy?: RecipeOrderByInput;
@@ -5647,6 +5672,7 @@ export interface UserNullablePromise
   name: () => Promise<String>;
   avatar: () => Promise<String>;
   emailVerified: () => Promise<Boolean>;
+  role: () => Promise<UserRole>;
   recipes: <T = FragmentableArray<Recipe>>(args?: {
     where?: RecipeWhereInput;
     orderBy?: RecipeOrderByInput;
@@ -6647,6 +6673,10 @@ export type String = string;
  */
 
 export const models: Model[] = [
+  {
+    name: "UserRole",
+    embedded: false
+  },
   {
     name: "User",
     embedded: false

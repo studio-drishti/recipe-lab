@@ -3,6 +3,7 @@ const cuid = require('cuid');
 
 async function main() {
   await prisma.createUser({
+    role: 'EXECUTIVE_CHEF',
     email: 'jay@recipelab.io',
     emailVerified: true,
     name: 'Jay',
@@ -255,6 +256,7 @@ async function main() {
   });
 
   await prisma.createUser({
+    role: 'EXECUTIVE_CHEF',
     email: 'emma@recipelab.io',
     emailVerified: true,
     name: 'Emma',

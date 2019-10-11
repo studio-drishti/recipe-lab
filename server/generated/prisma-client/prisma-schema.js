@@ -4029,6 +4029,7 @@ type User {
   name: String!
   avatar: String
   emailVerified: Boolean!
+  role: UserRole!
   recipes(where: RecipeWhereInput, orderBy: RecipeOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Recipe!]
   modifications(where: ModificationWhereInput, orderBy: ModificationOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Modification!]
 }
@@ -4047,6 +4048,7 @@ input UserCreateInput {
   name: String!
   avatar: String
   emailVerified: Boolean
+  role: UserRole
   recipes: RecipeCreateManyWithoutAuthorInput
   modifications: ModificationCreateManyWithoutUserInput
 }
@@ -4069,6 +4071,7 @@ input UserCreateWithoutModificationsInput {
   name: String!
   avatar: String
   emailVerified: Boolean
+  role: UserRole
   recipes: RecipeCreateManyWithoutAuthorInput
 }
 
@@ -4080,6 +4083,7 @@ input UserCreateWithoutRecipesInput {
   name: String!
   avatar: String
   emailVerified: Boolean
+  role: UserRole
   modifications: ModificationCreateManyWithoutUserInput
 }
 
@@ -4107,6 +4111,8 @@ enum UserOrderByInput {
   avatar_DESC
   emailVerified_ASC
   emailVerified_DESC
+  role_ASC
+  role_DESC
 }
 
 type UserPreviousValues {
@@ -4119,6 +4125,14 @@ type UserPreviousValues {
   name: String!
   avatar: String
   emailVerified: Boolean!
+  role: UserRole!
+}
+
+enum UserRole {
+  EXECUTIVE_CHEF
+  SOUS_CHEF
+  COMMIS_CHEF
+  KITCHEN_PORTER
 }
 
 type UserSubscriptionPayload {
@@ -4146,6 +4160,7 @@ input UserUpdateInput {
   name: String
   avatar: String
   emailVerified: Boolean
+  role: UserRole
   recipes: RecipeUpdateManyWithoutAuthorInput
   modifications: ModificationUpdateManyWithoutUserInput
 }
@@ -4157,6 +4172,7 @@ input UserUpdateManyMutationInput {
   name: String
   avatar: String
   emailVerified: Boolean
+  role: UserRole
 }
 
 input UserUpdateOneRequiredWithoutModificationsInput {
@@ -4180,6 +4196,7 @@ input UserUpdateWithoutModificationsDataInput {
   name: String
   avatar: String
   emailVerified: Boolean
+  role: UserRole
   recipes: RecipeUpdateManyWithoutAuthorInput
 }
 
@@ -4190,6 +4207,7 @@ input UserUpdateWithoutRecipesDataInput {
   name: String
   avatar: String
   emailVerified: Boolean
+  role: UserRole
   modifications: ModificationUpdateManyWithoutUserInput
 }
 
@@ -4306,6 +4324,10 @@ input UserWhereInput {
   avatar_not_ends_with: String
   emailVerified: Boolean
   emailVerified_not: Boolean
+  role: UserRole
+  role_not: UserRole
+  role_in: [UserRole!]
+  role_not_in: [UserRole!]
   recipes_every: RecipeWhereInput
   recipes_some: RecipeWhereInput
   recipes_none: RecipeWhereInput

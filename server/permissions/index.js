@@ -1,4 +1,4 @@
-const { rule, shield } = require('graphql-shield');
+const { rule, shield, or } = require('graphql-shield');
 const getUserId = require('../utils/getUserId');
 
 const rules = {
@@ -9,6 +9,11 @@ const rules = {
   isAuthenticatedUser: rule({ cache: 'contextual' })((parent, args, ctx) => {
     const userId = getUserId(ctx);
     return Boolean(userId);
+  }),
+  isExecutiveChef: rule({ cache: 'contextual' })(async (parent, args, ctx) => {
+    const userId = getUserId(ctx);
+    const user = await ctx.prisma.user({ id: userId });
+    return Boolean(user.role === 'EXECUTIVE_CHEF');
   }),
   isRecipeOwner: rule({ cache: 'contextual' })(
     async (parent, { recipeId }, ctx) => {
@@ -27,6 +32,7 @@ module.exports = shield({
   },
   Mutation: {
     avatarUpload: rules.isAuthenticatedUser,
-    recipePhotoUpload: rules.isRecipeOwner
+    recipePhotoUpload: or(rules.isRecipeOwner, rules.isExecutiveChef),
+    recipePhotoDelete: or(rules.isRecipeOwner, rules.isExecutiveChef)
   }
 });
