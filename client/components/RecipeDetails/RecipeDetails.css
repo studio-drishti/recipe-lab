@@ -1,7 +1,5 @@
 .details {
-  & a {
-    text-decoration: none;
-    color: inherit;
+  & [role='button'] {
     cursor: pointer;
   }
 
@@ -9,6 +7,10 @@
   & h2 {
     color: inherit;
   }
+}
+
+.error {
+  color: var(--color-error);
 }
 
 .titleInput {

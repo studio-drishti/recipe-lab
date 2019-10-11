@@ -13,7 +13,8 @@ export default class TextButton extends PureComponent {
   };
 
   static defaultProps = {
-    className: null
+    className: null,
+    type: 'button'
   };
 
   render() {

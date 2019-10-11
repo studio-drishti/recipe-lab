@@ -6,7 +6,8 @@ import {
   MdCheck,
   MdTimer,
   MdLocalDining,
-  MdAddAPhoto
+  MdAddAPhoto,
+  MdDoNotDisturb
 } from 'react-icons/md';
 import classnames from 'classnames';
 import { fraction } from 'mathjs';
@@ -18,6 +19,7 @@ import TextButton from '../TextButton';
 import TextButtonGroup from '../TextButtonGroup';
 import TextInput from '../TextInput';
 import Textarea from '../Textarea';
+import Tooltip from '../Tooltip';
 import Select from '../Select';
 import css from './RecipeDetails.css';
 import CreateRecipeMutation from '../../graphql/CreateRecipe.graphql';
@@ -25,7 +27,7 @@ import CreateRecipeMutation from '../../graphql/CreateRecipe.graphql';
 const RecipeDetails = ({ recipe, className, recipeMods, saveAlteration }) => {
   const client = useApolloClient();
   const [errors, setErrors] = useState({});
-  const [edits, setEdit] = useState({});
+  const [edits, setEdits] = useState({});
   const [editing, setEditing] = useState(!recipe ? true : false);
   const validationTimeouts = useRef({});
   const containerRef = useRef();
@@ -73,6 +75,7 @@ const RecipeDetails = ({ recipe, className, recipeMods, saveAlteration }) => {
   };
 
   const handleClick = e => {
+    if (!containerRef.current) return;
     if (containerRef.current.contains(e.target)) return;
     disableEditing();
   };
@@ -84,7 +87,7 @@ const RecipeDetails = ({ recipe, className, recipeMods, saveAlteration }) => {
     if (validationTimeouts.current[name])
       clearTimeout(validationTimeouts.current[name]);
 
-    setEdit({
+    setEdits({
       ...edits,
       name: value
     });
@@ -101,9 +104,14 @@ const RecipeDetails = ({ recipe, className, recipeMods, saveAlteration }) => {
     // pond.browse();
   };
 
-  const handleSubmit = async e => {
-    e.preventDefault();
+  const handleKeyPress = e => {
+    if (e.key === 'Enter') {
+      handleSubmit();
+      return;
+    }
+  };
 
+  const handleSubmit = () => {
     const hasErrors = [
       'title',
       'description',
@@ -138,13 +146,31 @@ const RecipeDetails = ({ recipe, className, recipeMods, saveAlteration }) => {
     }
   };
 
+  const cancelEditing = () => {
+    setErrors({});
+    setEdits({});
+    disableEditing();
+  };
+
   const renderWithMods = fieldName => {
+    if (edits[fieldName] !== undefined && errors[fieldName]) {
+      return (
+        <Tooltip tip={errors[fieldName]}>
+          <DiffText
+            className={css.error}
+            original={recipe[fieldName]}
+            modified={edits[fieldName]}
+          />
+        </Tooltip>
+      );
+    }
+
     const mod = recipeMods.find(mod => mod.field === fieldName);
     if (mod !== undefined) {
       return <DiffText original={recipe[fieldName]} modified={mod.value} />;
-    } else {
-      return recipe[fieldName];
     }
+
+    return recipe[fieldName];
   };
 
   const validate = (fieldName, value) => {
@@ -187,28 +213,18 @@ const RecipeDetails = ({ recipe, className, recipeMods, saveAlteration }) => {
   };
 
   return (
-    <form
-      ref={containerRef}
-      onSubmit={handleSubmit}
-      className={classnames(css.details, className)}
-    >
-      {!editing && (
+    <form ref={containerRef} className={classnames(css.details, className)}>
+      {!editing ? (
         <>
-          <h1>
-            <a onClick={() => enableEditing('title')}>
-              {renderWithMods('title')}
-            </a>
+          <h1 role="button" onClick={() => enableEditing('title')}>
+            {renderWithMods('title')}
           </h1>
           <h3>Recipe by {recipe.author.name}</h3>
-          <p>
-            <a onClick={() => enableEditing('description')}>
-              {renderWithMods('description')}
-            </a>
+          <p role="button" onClick={() => enableEditing('description')}>
+            {renderWithMods('description')}
           </p>
         </>
-      )}
-
-      {editing && (
+      ) : (
         <div>
           <TextInput
             name="title"
@@ -217,6 +233,7 @@ const RecipeDetails = ({ recipe, className, recipeMods, saveAlteration }) => {
             placeholder="Recipe title"
             value={getRecipeValue('title')}
             onChange={handleRecipeChange}
+            onKeyPress={handleKeyPress}
             error={errors.title}
           />
           <Textarea
@@ -226,29 +243,28 @@ const RecipeDetails = ({ recipe, className, recipeMods, saveAlteration }) => {
             value={getRecipeValue('description')}
             placeholder="Recipe description"
             onChange={handleRecipeChange}
+            onKeyPress={handleKeyPress}
             error={errors.description}
           />
         </div>
       )}
       <div className={css.stats}>
-        {!editing && (
+        {!editing ? (
           <>
             <a onClick={() => enableEditing('time')}>
               <i>
                 <MdTimer />
               </i>
-              {getRecipeValue('time')}
+              {renderWithMods('time')}
             </a>
             <a onClick={() => enableEditing('servingAmount')}>
               <i>
                 <MdLocalDining />
               </i>
-              {getRecipeValue('servingAmount')} {getRecipeValue('servingType')}
+              {renderWithMods('servingAmount')} {renderWithMods('servingType')}
             </a>
           </>
-        )}
-
-        {editing && (
+        ) : (
           <div className={css.statInputs}>
             <label className={css.timeInput}>
               <i>
@@ -284,6 +300,7 @@ const RecipeDetails = ({ recipe, className, recipeMods, saveAlteration }) => {
                 value={getRecipeValue('servingAmount')}
                 placeholder="Amnt"
                 onChange={handleRecipeChange}
+                onKeyPress={handleKeyPress}
                 error={errors.servingAmount}
               />
               <TextInput
@@ -293,6 +310,7 @@ const RecipeDetails = ({ recipe, className, recipeMods, saveAlteration }) => {
                 value={getRecipeValue('servingType')}
                 placeholder="Servings"
                 onChange={handleRecipeChange}
+                onKeyPress={handleKeyPress}
                 error={errors.servingType}
               />
             </span>
@@ -300,7 +318,7 @@ const RecipeDetails = ({ recipe, className, recipeMods, saveAlteration }) => {
         )}
       </div>
 
-      {!editing && (
+      {!editing ? (
         <TextButtonGroup>
           <TextButton
             className={css.editBtn}
@@ -314,13 +332,19 @@ const RecipeDetails = ({ recipe, className, recipeMods, saveAlteration }) => {
             upload photo
           </TextButton>
         </TextButtonGroup>
-      )}
-
-      {editing && (
-        <TextButton type="submit">
-          <MdCheck />
-          save changes
-        </TextButton>
+      ) : (
+        <TextButtonGroup>
+          <TextButton onClick={handleSubmit}>
+            <MdCheck />
+            save changes
+          </TextButton>
+          {recipe && (
+            <TextButton onClick={cancelEditing}>
+              <MdDoNotDisturb />
+              discard changes
+            </TextButton>
+          )}
+        </TextButtonGroup>
       )}
     </form>
   );
@@ -332,7 +356,5 @@ RecipeDetails.propTypes = {
   recipeMods: PropTypes.arrayOf(PropTypes.object),
   saveAlteration: PropTypes.func
 };
-
-RecipeDetails.displayName = 'RecipeDetails';
 
 export default RecipeDetails;
