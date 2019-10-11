@@ -1,14 +1,10 @@
-import React, { Component } from 'react';
+import React from 'react';
 import Page from '../layouts/Main';
 
-export default class AboutPage extends Component {
-  static displayName = 'AboutPage';
+const AboutPage = () => (
+  <Page>
+    <h1>About</h1>
+  </Page>
+);
 
-  render() {
-    return (
-      <Page>
-        <h1>About</h1>
-      </Page>
-    );
-  }
-}
+export default AboutPage;
