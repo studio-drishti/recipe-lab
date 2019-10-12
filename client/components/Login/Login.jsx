@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import { Mutation, withApollo } from 'react-apollo';
-import { ApolloClient } from 'apollo-boost';
+import React, { useContext, useEffect, useState } from 'react';
+import { withApollo } from 'react-apollo';
+import { useApolloClient } from 'react-apollo';
+import { useMutation } from 'react-apollo';
 import cookie from 'cookie';
 import redirect from '../../utils/redirect';
 
@@ -12,90 +12,68 @@ import FormInput from '../FormInput';
 import FormButton from '../FormButton';
 import SignInMutation from '../../graphql/SignIn.graphql';
 
-class Login extends Component {
-  static displayName = 'Login';
-  static contextType = UserContext;
-  static propTypes = {
-    client: PropTypes.instanceOf(ApolloClient)
-  };
+const Login = () => {
+  const client = useApolloClient();
+  const [signIn, { error }] = useMutation(SignInMutation);
+  const { refreshUser } = useContext(UserContext);
+  const [fields, setFields] = useState({ email: '', password: '' });
 
-  state = {
-    password: '',
-    firstName: '',
-    lastName: '',
-    email: ''
-  };
+  useEffect(() => {
+    return () => {
+      document.removeEventListener(handleSubmission, handleInputChange);
+    };
+  }, []);
 
-  handleInputChange = e => {
+  const handleInputChange = e => {
     const { value, name } = e.target;
-    this.setState({ [name]: value });
+
+    setFields({
+      ...fields,
+      [name]: value
+    });
   };
 
-  handleSubmission = e => {
+  const handleSubmission = e => {
     e.preventDefault();
+    signIn({
+      variables: fields
+    }).then(({ data }) => {
+      // Store the token in cookie
+      document.cookie = cookie.serialize('token', data.login.token, {
+        maxAge: 30 * 24 * 60 * 60 // 30 days
+      });
+      // Force a reload of all the current queries now that the user is
+      // logged in
+      client.cache
+        .reset()
+        .then(() => {
+          return refreshUser();
+        })
+        .then(() => {
+          redirect({}, '/profile');
+        });
+    });
   };
 
-  render() {
-    const { email, password } = this.state;
-    const { client } = this.props;
-    const { refreshUser } = this.context;
-    return (
-      <Mutation
-        mutation={SignInMutation}
-        onCompleted={data => {
-          // Store the token in cookie
-          document.cookie = cookie.serialize('token', data.login.token, {
-            maxAge: 30 * 24 * 60 * 60 // 30 days
-          });
-          // Force a reload of all the current queries now that the user is
-          // logged in
-          client.cache
-            .reset()
-            .then(() => {
-              return refreshUser();
-            })
-            .then(() => {
-              redirect({}, '/profile');
-            });
-        }}
-      >
-        {(login, { error }) => (
-          <form
-            className={css.form}
-            onSubmit={e => {
-              e.preventDefault();
-              e.stopPropagation();
-
-              login({
-                variables: {
-                  email,
-                  password
-                }
-              });
-
-              this.setState({ password: '' });
-            }}
-          >
-            {error && <p>No user found with that information.</p>}
-            <FormInput
-              label="Email"
-              name="email"
-              value={email}
-              onChange={this.handleInputChange}
-            />
-            <FormInput
-              label="Password"
-              type="password"
-              name="password"
-              value={password}
-              onChange={this.handleInputChange}
-            />
-            <FormButton>Login</FormButton>
-          </form>
-        )}
-      </Mutation>
-    );
-  }
-}
+  return (
+    <form className={css.form} onSubmit={handleSubmission}>
+      {error && <p>No user found with that information.</p>}
+      <FormInput
+        label="Email"
+        name="email"
+        value={fields.email}
+        onChange={handleInputChange}
+      />
+      <FormInput
+        label="Password"
+        type="password"
+        name="password"
+        value={fields.password}
+        onChange={handleInputChange}
+      />
+      <FormButton>Login</FormButton>
+    </form>
+  );
+};
 
 export default withApollo(Login);
