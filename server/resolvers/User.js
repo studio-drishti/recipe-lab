@@ -3,6 +3,6 @@ module.exports = {
     return ctx.prisma.user({ id }).posts();
   },
   avatar: parent => {
-    return '/public/avatars/' + parent.avatar;
+    return parent.avatar ? `/public/avatars/${parent.avatar}` : null;
   }
 };

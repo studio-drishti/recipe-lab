@@ -1,0 +1,5 @@
+.profileHeader {
+  display: grid;
+  grid-template-columns: auto 3fr 1fr;
+  grid-column-gap: 1rem;
+}
