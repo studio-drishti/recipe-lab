@@ -11,7 +11,7 @@ const RecipesPage = ({ recipes }) => (
       <div key={recipe.uid}>
         <h1>{recipe.title}</h1>
         <p>{recipe.description}</p>
-        <Link href={'/recipe/[slug]'} as={`/recipes/${recipe.slug}`}>
+        <Link href={'/recipes/[slug]'} as={`/recipes/${recipe.slug}`}>
           <a>Show me more!</a>
         </Link>
       </div>

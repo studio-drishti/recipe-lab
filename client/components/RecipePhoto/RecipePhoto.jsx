@@ -24,7 +24,8 @@ const RecipePhoto = ({ recipe, setRecipePhoto, className }) => {
   let pond;
 
   const canUploadPhoto = Boolean(
-    (user && user.id === recipe.author.id) || user.role === 'EXECUTIVE_CHEF'
+    recipe &&
+      ((user && user.id === recipe.author.id) || user.role === 'EXECUTIVE_CHEF')
   );
 
   const processUpload = (
@@ -69,14 +70,11 @@ const RecipePhoto = ({ recipe, setRecipePhoto, className }) => {
   };
 
   return (
-    <div className={classnames(className)}>
+    <div className={classnames(css.recipePhoto, className)}>
       {recipe && recipe.photo ? (
-        <div
-          style={{ backgroundImage: `url(${recipe.photo})` }}
-          className={css.slide}
-        />
+        <img src={recipe.photo} />
       ) : (
-        <img src="https://via.placeholder.com/600x300" />
+        <img src="https://via.placeholder.com/600x400" />
       )}
       {canUploadPhoto && (
         <FilePond

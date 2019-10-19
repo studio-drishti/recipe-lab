@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { useMutation } from 'react-apollo';
 import { FilePond, registerPlugin } from 'react-filepond';
@@ -54,16 +54,31 @@ const ProfileHeader = ({ chef }) => {
     }, 1000);
   };
 
+  const chefTitle = useCallback(() => {
+    switch (chef.role) {
+      case 'EXECUTIVE_CHEF':
+        return 'Executive Chef';
+      case 'SOUS_CHEF':
+        return 'Sous Chef';
+      case 'COMMIS_CHEF':
+        return 'Commis Chef';
+      default:
+        return 'Kitchen Porter';
+    }
+  }, [chef.role]);
+
   return (
     <header className={css.profileHeader}>
-      <div>
+      <div className={css.profilePhoto}>
         {chef.avatar ? (
           <img src={chef.avatar} />
         ) : (
           <img src="https://loremflickr.com/300/300/cook" />
         )}
+
         {isProfileOwner && (
           <FilePond
+            className={css.filepond}
             name="avatar"
             ref={ref => (pond = ref)}
             server={{ process: processUpload }}
@@ -76,12 +91,25 @@ const ProfileHeader = ({ chef }) => {
         )}
       </div>
       <div>
-        <h1>{`${chef.name}'s`} Profile</h1>
+        <h1>
+          {chefTitle()} {chef.name}
+        </h1>
+        <p>
+          Donec rhoncus neque vel nisl laoreet dictum. Curabitur porttitor arcu
+          sit amet diam pharetra tempor nec vitae lectus. Pellentesque accumsan
+          condimentum lobortis.
+        </p>
       </div>
       <div>
         <ul>
-          <li>xx recipes</li>
-          <li>xx mods</li>
+          <li>
+            {chef.recipeCount}
+            recipe{chef.recipeCount > 1 && 's'}
+          </li>
+          <li>
+            {chef.modifiedRecipeCount}
+            modified recipe{chef.modifiedRecipeCount > 1 && 's'}
+          </li>
           <li>xx followers</li>
         </ul>
       </div>

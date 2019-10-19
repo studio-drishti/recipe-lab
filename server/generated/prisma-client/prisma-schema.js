@@ -4028,6 +4028,7 @@ type User {
   password: String!
   name: String!
   avatar: String
+  bio: String
   emailVerified: Boolean!
   role: UserRole!
   recipes(where: RecipeWhereInput, orderBy: RecipeOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Recipe!]
@@ -4047,6 +4048,7 @@ input UserCreateInput {
   password: String!
   name: String!
   avatar: String
+  bio: String
   emailVerified: Boolean
   role: UserRole
   recipes: RecipeCreateManyWithoutAuthorInput
@@ -4070,6 +4072,7 @@ input UserCreateWithoutModificationsInput {
   password: String!
   name: String!
   avatar: String
+  bio: String
   emailVerified: Boolean
   role: UserRole
   recipes: RecipeCreateManyWithoutAuthorInput
@@ -4082,6 +4085,7 @@ input UserCreateWithoutRecipesInput {
   password: String!
   name: String!
   avatar: String
+  bio: String
   emailVerified: Boolean
   role: UserRole
   modifications: ModificationCreateManyWithoutUserInput
@@ -4109,6 +4113,8 @@ enum UserOrderByInput {
   name_DESC
   avatar_ASC
   avatar_DESC
+  bio_ASC
+  bio_DESC
   emailVerified_ASC
   emailVerified_DESC
   role_ASC
@@ -4124,6 +4130,7 @@ type UserPreviousValues {
   password: String!
   name: String!
   avatar: String
+  bio: String
   emailVerified: Boolean!
   role: UserRole!
 }
@@ -4159,6 +4166,7 @@ input UserUpdateInput {
   password: String
   name: String
   avatar: String
+  bio: String
   emailVerified: Boolean
   role: UserRole
   recipes: RecipeUpdateManyWithoutAuthorInput
@@ -4171,6 +4179,7 @@ input UserUpdateManyMutationInput {
   password: String
   name: String
   avatar: String
+  bio: String
   emailVerified: Boolean
   role: UserRole
 }
@@ -4195,6 +4204,7 @@ input UserUpdateWithoutModificationsDataInput {
   password: String
   name: String
   avatar: String
+  bio: String
   emailVerified: Boolean
   role: UserRole
   recipes: RecipeUpdateManyWithoutAuthorInput
@@ -4206,6 +4216,7 @@ input UserUpdateWithoutRecipesDataInput {
   password: String
   name: String
   avatar: String
+  bio: String
   emailVerified: Boolean
   role: UserRole
   modifications: ModificationUpdateManyWithoutUserInput
@@ -4322,6 +4333,20 @@ input UserWhereInput {
   avatar_not_starts_with: String
   avatar_ends_with: String
   avatar_not_ends_with: String
+  bio: String
+  bio_not: String
+  bio_in: [String!]
+  bio_not_in: [String!]
+  bio_lt: String
+  bio_lte: String
+  bio_gt: String
+  bio_gte: String
+  bio_contains: String
+  bio_not_contains: String
+  bio_starts_with: String
+  bio_not_starts_with: String
+  bio_ends_with: String
+  bio_not_ends_with: String
   emailVerified: Boolean
   emailVerified_not: Boolean
   role: UserRole

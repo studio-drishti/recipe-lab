@@ -9,7 +9,7 @@ const Navigation = () => {
   const { user } = useContext(UserContext);
   return (
     <nav className={css.nav}>
-      <Link href="/">
+      <Link href="/index" as="/">
         <a className={css.logo}>
           <img src="/static/logo.svg" />
         </a>
@@ -24,7 +24,7 @@ const Navigation = () => {
 
         {user && (
           <>
-            <Link href="/chef/[slug]" as={`chef/${user.slug}`}>
+            <Link href="/chef/[slug]" as={`/chef/${user.slug}`}>
               <a>My Profile</a>
             </Link>
             <Link href="/new-recipe">

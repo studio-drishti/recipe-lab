@@ -1,10 +1,18 @@
-.slide {
-  padding-bottom: 67%;
-  background-size: cover;
+.recipePhoto {
+  position: relative;
 
-  & .actions {
-    position: absolute;
-    bottom: 0;
-    right: 0;
+  &:hover .filepond {
+    opacity: 1;
   }
+}
+
+.filepond {
+  cursor: pointer;
+  position: absolute;
+  left: 2rem;
+  right: 2rem;
+  top: 50%;
+  transform: translateY(-50%);
+  opacity: 0;
+  transition: opacity linear 0.3s;
 }

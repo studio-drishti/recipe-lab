@@ -578,6 +578,8 @@ export type UserOrderByInput =
   | "name_DESC"
   | "avatar_ASC"
   | "avatar_DESC"
+  | "bio_ASC"
+  | "bio_DESC"
   | "emailVerified_ASC"
   | "emailVerified_DESC"
   | "role_ASC"
@@ -1525,6 +1527,20 @@ export interface UserWhereInput {
   avatar_not_starts_with?: Maybe<String>;
   avatar_ends_with?: Maybe<String>;
   avatar_not_ends_with?: Maybe<String>;
+  bio?: Maybe<String>;
+  bio_not?: Maybe<String>;
+  bio_in?: Maybe<String[] | String>;
+  bio_not_in?: Maybe<String[] | String>;
+  bio_lt?: Maybe<String>;
+  bio_lte?: Maybe<String>;
+  bio_gt?: Maybe<String>;
+  bio_gte?: Maybe<String>;
+  bio_contains?: Maybe<String>;
+  bio_not_contains?: Maybe<String>;
+  bio_starts_with?: Maybe<String>;
+  bio_not_starts_with?: Maybe<String>;
+  bio_ends_with?: Maybe<String>;
+  bio_not_ends_with?: Maybe<String>;
   emailVerified?: Maybe<Boolean>;
   emailVerified_not?: Maybe<Boolean>;
   role?: Maybe<UserRole>;
@@ -1972,6 +1988,7 @@ export interface UserUpdateInput {
   password?: Maybe<String>;
   name?: Maybe<String>;
   avatar?: Maybe<String>;
+  bio?: Maybe<String>;
   emailVerified?: Maybe<Boolean>;
   role?: Maybe<UserRole>;
   recipes?: Maybe<RecipeUpdateManyWithoutAuthorInput>;
@@ -1991,6 +2008,7 @@ export interface UserCreateInput {
   password: String;
   name: String;
   avatar?: Maybe<String>;
+  bio?: Maybe<String>;
   emailVerified?: Maybe<Boolean>;
   role?: Maybe<UserRole>;
   recipes?: Maybe<RecipeCreateManyWithoutAuthorInput>;
@@ -3189,6 +3207,7 @@ export interface UserUpdateWithoutModificationsDataInput {
   password?: Maybe<String>;
   name?: Maybe<String>;
   avatar?: Maybe<String>;
+  bio?: Maybe<String>;
   emailVerified?: Maybe<Boolean>;
   role?: Maybe<UserRole>;
   recipes?: Maybe<RecipeUpdateManyWithoutAuthorInput>;
@@ -3538,6 +3557,7 @@ export interface UserUpdateManyMutationInput {
   password?: Maybe<String>;
   name?: Maybe<String>;
   avatar?: Maybe<String>;
+  bio?: Maybe<String>;
   emailVerified?: Maybe<Boolean>;
   role?: Maybe<UserRole>;
 }
@@ -3845,6 +3865,7 @@ export interface UserUpdateWithoutRecipesDataInput {
   password?: Maybe<String>;
   name?: Maybe<String>;
   avatar?: Maybe<String>;
+  bio?: Maybe<String>;
   emailVerified?: Maybe<Boolean>;
   role?: Maybe<UserRole>;
   modifications?: Maybe<ModificationUpdateManyWithoutUserInput>;
@@ -3857,6 +3878,7 @@ export interface UserCreateWithoutModificationsInput {
   password: String;
   name: String;
   avatar?: Maybe<String>;
+  bio?: Maybe<String>;
   emailVerified?: Maybe<Boolean>;
   role?: Maybe<UserRole>;
   recipes?: Maybe<RecipeCreateManyWithoutAuthorInput>;
@@ -4355,6 +4377,7 @@ export interface UserCreateWithoutRecipesInput {
   password: String;
   name: String;
   avatar?: Maybe<String>;
+  bio?: Maybe<String>;
   emailVerified?: Maybe<Boolean>;
   role?: Maybe<UserRole>;
   modifications?: Maybe<ModificationCreateManyWithoutUserInput>;
@@ -4489,6 +4512,7 @@ export interface UserPreviousValues {
   password: String;
   name: String;
   avatar?: String;
+  bio?: String;
   emailVerified: Boolean;
   role: UserRole;
 }
@@ -4504,6 +4528,7 @@ export interface UserPreviousValuesPromise
   password: () => Promise<String>;
   name: () => Promise<String>;
   avatar: () => Promise<String>;
+  bio: () => Promise<String>;
   emailVerified: () => Promise<Boolean>;
   role: () => Promise<UserRole>;
 }
@@ -4519,6 +4544,7 @@ export interface UserPreviousValuesSubscription
   password: () => Promise<AsyncIterator<String>>;
   name: () => Promise<AsyncIterator<String>>;
   avatar: () => Promise<AsyncIterator<String>>;
+  bio: () => Promise<AsyncIterator<String>>;
   emailVerified: () => Promise<AsyncIterator<Boolean>>;
   role: () => Promise<AsyncIterator<UserRole>>;
 }
@@ -5592,6 +5618,7 @@ export interface User {
   password: String;
   name: String;
   avatar?: String;
+  bio?: String;
   emailVerified: Boolean;
   role: UserRole;
 }
@@ -5605,6 +5632,7 @@ export interface UserPromise extends Promise<User>, Fragmentable {
   password: () => Promise<String>;
   name: () => Promise<String>;
   avatar: () => Promise<String>;
+  bio: () => Promise<String>;
   emailVerified: () => Promise<Boolean>;
   role: () => Promise<UserRole>;
   recipes: <T = FragmentableArray<Recipe>>(args?: {
@@ -5638,6 +5666,7 @@ export interface UserSubscription
   password: () => Promise<AsyncIterator<String>>;
   name: () => Promise<AsyncIterator<String>>;
   avatar: () => Promise<AsyncIterator<String>>;
+  bio: () => Promise<AsyncIterator<String>>;
   emailVerified: () => Promise<AsyncIterator<Boolean>>;
   role: () => Promise<AsyncIterator<UserRole>>;
   recipes: <T = Promise<AsyncIterator<RecipeSubscription>>>(args?: {
@@ -5671,6 +5700,7 @@ export interface UserNullablePromise
   password: () => Promise<String>;
   name: () => Promise<String>;
   avatar: () => Promise<String>;
+  bio: () => Promise<String>;
   emailVerified: () => Promise<Boolean>;
   role: () => Promise<UserRole>;
   recipes: <T = FragmentableArray<Recipe>>(args?: {

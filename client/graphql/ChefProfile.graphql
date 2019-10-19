@@ -5,5 +5,7 @@ query chefProfile($slug: String!) {
     avatar
     role
     slug
+    recipeCount
+    modifiedRecipeCount
   }
 }
