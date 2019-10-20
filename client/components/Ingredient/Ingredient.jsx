@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import {
   MdClear,
@@ -17,7 +17,6 @@ import { MEASURE_UNITS } from '../../config';
 import IconButton from '../IconButton';
 import IconButtonGroup from '../IconButtonGroup';
 
-//Handle auto edting on click
 const Ingredient = ({
   index,
   ingredient,
@@ -31,27 +30,10 @@ const Ingredient = ({
   const [edits, setEdits] = useState({});
   const [editing, setEditing] = useState(false);
 
-  const ingredientRef = useRef({});
-  const quantityInputRef = useRef({});
+  const ingredientRef = useRef();
+  const quantityInputRef = useRef();
 
   const ingredientFields = ['quantity', 'unit', 'name', 'processing'];
-
-  useEffect(() => {
-    if (isIngredientEmpty()) enableEditing();
-    return () => {
-      document.removeEventListener('mousedown', handleClick);
-      if (isIngredientEmpty()) removeIngredient();
-    };
-  }, []);
-
-  const isIngredientEmpty = () => {
-    return (
-      !getIngredientValue('quantity') &&
-      !getIngredientValue('unit') &&
-      !getIngredientValue('name') &&
-      !getIngredientValue('processing')
-    );
-  };
 
   const getIngredientValue = fieldName => {
     if (edits[fieldName] !== undefined) return edits[fieldName];
@@ -119,24 +101,15 @@ const Ingredient = ({
     ingredientRef.current.focus();
   };
 
-  const enableEditing = async () => {
-    document.addEventListener('mousedown', handleClick);
-    await setEditing(true);
-    quantityInputRef.current.focus();
-  };
-
   const handleSelect = e => {
     e.stopPropagation();
-    enableEditing();
+    setEditing(true);
   };
 
   const deselect = () => {
-    document.removeEventListener('mousedown', handleClick);
     if (isIngredientEmpty()) {
       removeIngredient();
     } else {
-      setErrors({});
-      setEdits({});
       setEditing(false);
     }
   };
@@ -155,7 +128,6 @@ const Ingredient = ({
     if (e.key !== 'Enter') return;
     e.preventDefault();
     handleRemove(e);
-    ingredientRef.current.focus();
   };
 
   const handleRestore = e => {
@@ -189,6 +161,7 @@ const Ingredient = ({
         }
         break;
     }
+
     setEdits({});
     setErrors({});
 
@@ -203,6 +176,33 @@ const Ingredient = ({
     }
   };
 
+  const isIngredientEmpty = () => {
+    return (
+      !getIngredientValue('quantity') &&
+      !getIngredientValue('unit') &&
+      !getIngredientValue('name') &&
+      !getIngredientValue('processing')
+    );
+  };
+
+  const isEditing = useMemo(() => {
+    if (editing) return true;
+    return isIngredientEmpty();
+  }, [editing]);
+
+  useEffect(() => {
+    if (isEditing) {
+      document.addEventListener('mousedown', handleClick);
+      quantityInputRef.current.focus();
+    } else {
+      document.removeEventListener('mousedown', handleClick);
+    }
+    return () => {
+      document.removeEventListener('mousedown', handleClick);
+      if (isIngredientEmpty()) removeIngredient();
+    };
+  }, [isEditing]);
+
   return (
     <Draggable type="INGREDIENT" draggableId={ingredient.uid} index={index}>
       {(provided, snapshot) => (
@@ -214,7 +214,7 @@ const Ingredient = ({
           <div
             className={classnames(css.ingredient, {
               [css.dragging]: snapshot.isDragging,
-              [css.editing]: editing
+              [css.editing]: isEditing
             })}
             onKeyPress={handleKeybdSelect}
             tabIndex="0"
@@ -223,7 +223,7 @@ const Ingredient = ({
               <MdDragHandle />
             </div>
             <form onSubmit={handleSave} ref={ingredientRef}>
-              {editing && (
+              {isEditing && (
                 <fieldset>
                   <input
                     type="text"
@@ -268,7 +268,7 @@ const Ingredient = ({
                 </fieldset>
               )}
 
-              {!editing && (
+              {!isEditing && (
                 <div className={css.ingredientText} onMouseDown={handleSelect}>
                   {removed && renderRemovedIngredient()}
                   {!removed && renderIngredientWithMods()}
@@ -276,7 +276,7 @@ const Ingredient = ({
               )}
 
               <IconButtonGroup className={css.buttons}>
-                {removed && !editing && (
+                {removed && !isEditing && (
                   <IconButton
                     className={css.button}
                     aria-label="restore ingredient"
@@ -287,7 +287,7 @@ const Ingredient = ({
                   </IconButton>
                 )}
 
-                {!removed && !editing && (
+                {!removed && !isEditing && (
                   <>
                     <IconButton
                       className={css.button}
@@ -308,7 +308,7 @@ const Ingredient = ({
                   </>
                 )}
 
-                {editing && (
+                {isEditing && (
                   <IconButton
                     className={css.button}
                     type="submit"
@@ -334,6 +334,11 @@ Ingredient.propTypes = {
   removeIngredient: PropTypes.func,
   restoreIngredient: PropTypes.func,
   saveOrUpdateField: PropTypes.func
+};
+
+Ingredient.defaultProps = {
+  ingredientMods: [],
+  removed: false
 };
 
 export default Ingredient;
