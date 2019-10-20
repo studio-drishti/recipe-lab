@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, useMemo } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import {
   MdClear,
@@ -26,14 +26,16 @@ const Ingredient = ({
   restoreIngredient,
   saveOrUpdateField
 }) => {
-  const [errors, setErrors] = useState({});
-  const [edits, setEdits] = useState({});
-  const [editing, setEditing] = useState(false);
-
+  const ingredientFields = ['quantity', 'unit', 'name', 'processing'];
   const ingredientRef = useRef();
   const quantityInputRef = useRef();
-
-  const ingredientFields = ['quantity', 'unit', 'name', 'processing'];
+  const [errors, setErrors] = useState({});
+  const [edits, setEdits] = useState({});
+  const [editing, setEditing] = useState(
+    !ingredientFields.some(
+      fieldName => ingredientMods[fieldName] || ingredient[fieldName]
+    )
+  );
 
   const getIngredientValue = fieldName => {
     if (edits[fieldName] !== undefined) return edits[fieldName];
@@ -98,12 +100,18 @@ const Ingredient = ({
   const handleSave = e => {
     e.preventDefault();
     deselect();
-    ingredientRef.current.focus();
   };
 
   const handleSelect = e => {
     e.stopPropagation();
     setEditing(true);
+  };
+
+  const isIngredientEmpty = () => {
+    return !ingredientFields.some(
+      fieldName =>
+        edits[fieldName] || ingredientMods[fieldName] || ingredient[fieldName]
+    );
   };
 
   const deselect = () => {
@@ -176,22 +184,8 @@ const Ingredient = ({
     }
   };
 
-  const isIngredientEmpty = () => {
-    return (
-      !getIngredientValue('quantity') &&
-      !getIngredientValue('unit') &&
-      !getIngredientValue('name') &&
-      !getIngredientValue('processing')
-    );
-  };
-
-  const isEditing = useMemo(() => {
-    if (editing) return true;
-    return isIngredientEmpty();
-  }, [editing]);
-
   useEffect(() => {
-    if (isEditing) {
+    if (editing) {
       document.addEventListener('mousedown', handleClick);
       quantityInputRef.current.focus();
     } else {
@@ -199,9 +193,8 @@ const Ingredient = ({
     }
     return () => {
       document.removeEventListener('mousedown', handleClick);
-      if (isIngredientEmpty()) removeIngredient();
     };
-  }, [isEditing]);
+  }, [editing]);
 
   return (
     <Draggable type="INGREDIENT" draggableId={ingredient.uid} index={index}>
@@ -214,7 +207,7 @@ const Ingredient = ({
           <div
             className={classnames(css.ingredient, {
               [css.dragging]: snapshot.isDragging,
-              [css.editing]: isEditing
+              [css.editing]: editing
             })}
             onKeyPress={handleKeybdSelect}
             tabIndex="0"
@@ -223,7 +216,7 @@ const Ingredient = ({
               <MdDragHandle />
             </div>
             <form onSubmit={handleSave} ref={ingredientRef}>
-              {isEditing && (
+              {editing && (
                 <fieldset>
                   <input
                     type="text"
@@ -268,7 +261,7 @@ const Ingredient = ({
                 </fieldset>
               )}
 
-              {!isEditing && (
+              {!editing && (
                 <div className={css.ingredientText} onMouseDown={handleSelect}>
                   {removed && renderRemovedIngredient()}
                   {!removed && renderIngredientWithMods()}
@@ -276,7 +269,7 @@ const Ingredient = ({
               )}
 
               <IconButtonGroup className={css.buttons}>
-                {removed && !isEditing && (
+                {removed && !editing && (
                   <IconButton
                     className={css.button}
                     aria-label="restore ingredient"
@@ -287,7 +280,7 @@ const Ingredient = ({
                   </IconButton>
                 )}
 
-                {!removed && !isEditing && (
+                {!removed && !editing && (
                   <>
                     <IconButton
                       className={css.button}
@@ -308,7 +301,7 @@ const Ingredient = ({
                   </>
                 )}
 
-                {isEditing && (
+                {editing && (
                   <IconButton
                     className={css.button}
                     type="submit"
