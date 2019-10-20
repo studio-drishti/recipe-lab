@@ -48,7 +48,8 @@ const RecipeDetails = ({
   const servingInputRef = useRef();
 
   const canDeletePhoto = Boolean(
-    recipe.photo &&
+    recipe &&
+      recipe.photo &&
       (recipe.author.id === user.id || user.role === 'EXECUTIVE_CHEF')
   );
 

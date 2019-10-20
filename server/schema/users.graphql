@@ -4,10 +4,13 @@ type User {
   email: String!
   name: String!
   avatar: String
-  slug: String
+  slug: String!
   emailVerified: Boolean!
   role: String!
   recipes: [Recipe!]!
+  recipeCount: Int!
+  modifiedRecipeCount: Int!
+  bio: String
 }
 
 type AuthPayload {

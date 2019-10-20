@@ -14,6 +14,7 @@ type User {
   password: String!
   name: String!
   avatar: String
+  bio: String
   emailVerified: Boolean! @default(value: false)
   role: UserRole! @default(value: KITCHEN_PORTER)
   recipes: [Recipe!]! @relation(name: "RecipeAuthor", onDelete: CASCADE)
