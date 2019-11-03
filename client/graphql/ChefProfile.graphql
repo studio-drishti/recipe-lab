@@ -1,0 +1,11 @@
+query chefProfile($slug: String!) {
+  user(slug: $slug) {
+    id
+    name
+    avatar
+    role
+    slug
+    recipeCount
+    modifiedRecipeCount
+  }
+}

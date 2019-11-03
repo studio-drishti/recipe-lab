@@ -10,6 +10,7 @@ type Query {
   sessionUser: User
   recipes: [Recipe!]!
   recipe(slug: String!): Recipe
+  user(slug: String!): User
   modification(uid: ID!): Modification
 }
 
