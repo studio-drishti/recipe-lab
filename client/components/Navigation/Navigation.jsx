@@ -1,48 +1,46 @@
-import React, { Component } from 'react';
+import React, { useContext } from 'react';
+import Link from 'next/link';
 
 import UserContext from '../../utils/UserContext';
-import Link from 'next/link';
+
 import css from './Navigation.css';
 
-export default class Navigation extends Component {
-  static displayName = 'Navigation';
-  static contextType = UserContext;
-
-  render() {
-    const { user } = this.context;
-    return (
-      <nav className={css.nav}>
-        <Link href="/">
-          <a className={css.logo}>
-            <img src="/static/logo.svg" />
-          </a>
+const Navigation = () => {
+  const { user } = useContext(UserContext);
+  return (
+    <nav className={css.nav}>
+      <Link href="/index" as="/">
+        <a className={css.logo}>
+          <img src="/static/logo.svg" />
+        </a>
+      </Link>
+      <div className={css.links}>
+        <Link href="/recipes">
+          <a>Recipes</a>
         </Link>
-        <div className={css.links}>
-          <Link href="/recipes">
-            <a>Recipes</a>
-          </Link>
-          <Link href="/about">
-            <a>About</a>
-          </Link>
+        <Link href="/about">
+          <a>About</a>
+        </Link>
 
-          {user && (
-            <>
-              <Link href="/profile">
-                <a>My Profile</a>
-              </Link>
-              <Link href="/new-recipe">
-                <a>+ New Recipe</a>
-              </Link>
-            </>
-          )}
-
-          {!user && (
-            <Link href="/register">
-              <a>Login / Register</a>
+        {user && (
+          <>
+            <Link href="/chef/[slug]" as={`/chef/${user.slug}`}>
+              <a>My Profile</a>
             </Link>
-          )}
-        </div>
-      </nav>
-    );
-  }
-}
+            <Link href="/new-recipe">
+              <a>+ New Recipe</a>
+            </Link>
+          </>
+        )}
+
+        {!user && (
+          <Link href="/register">
+            <a>Login / Register</a>
+          </Link>
+        )}
+      </div>
+    </nav>
+  );
+};
+
+export default Navigation;
