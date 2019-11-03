@@ -43,8 +43,8 @@ const Login = () => {
         .then(() => {
           return refreshUser();
         })
-        .then(() => {
-          redirect({}, '/profile');
+        .then(user => {
+          redirect({}, `/chef/${user.slug}`);
         });
     });
   };
