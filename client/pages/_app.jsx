@@ -30,6 +30,7 @@ class MyApp extends App {
       'network-only'
     );
     this.setState({ user: session.user });
+    return session.user;
   };
 
   state = {

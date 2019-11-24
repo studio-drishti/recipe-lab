@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { withApollo } from 'react-apollo';
 import { useApolloClient } from 'react-apollo';
 import { useMutation } from 'react-apollo';
@@ -17,12 +17,6 @@ const Login = () => {
   const [signIn, { error }] = useMutation(SignInMutation);
   const { refreshUser } = useContext(UserContext);
   const [fields, setFields] = useState({ email: '', password: '' });
-
-  useEffect(() => {
-    return () => {
-      document.removeEventListener(handleSubmission, handleInputChange);
-    };
-  }, []);
 
   const handleInputChange = e => {
     const { value, name } = e.target;
@@ -49,8 +43,8 @@ const Login = () => {
         .then(() => {
           return refreshUser();
         })
-        .then(() => {
-          redirect({}, '/profile');
+        .then(user => {
+          redirect({}, `/chef/${user.slug}`);
         });
     });
   };
