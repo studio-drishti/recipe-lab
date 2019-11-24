@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import { useMutation } from 'react-apollo';
@@ -27,6 +27,11 @@ const RecipePhoto = ({ recipe, setRecipePhoto, className }) => {
     recipe &&
       ((user && user.id === recipe.author.id) || user.role === 'EXECUTIVE_CHEF')
   );
+
+  const randomPlaceholder = useMemo(() => {
+    const rand = Math.floor(Math.random() * 3 + 1);
+    return `/static/placeholders/recipe-${rand}.jpg`;
+  }, [recipe]);
 
   const processUpload = (
     fieldName,
@@ -74,7 +79,7 @@ const RecipePhoto = ({ recipe, setRecipePhoto, className }) => {
       {recipe && recipe.photo ? (
         <img src={recipe.photo} />
       ) : (
-        <img src="https://via.placeholder.com/600x400" />
+        <img src={randomPlaceholder} />
       )}
       {canUploadPhoto && (
         <FilePond
