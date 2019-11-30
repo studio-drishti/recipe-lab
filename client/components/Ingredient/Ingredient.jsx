@@ -122,11 +122,10 @@ const Ingredient = ({
       Object.entries(edits)
         .filter(([key]) => validate(key, getIngredientValue(key)))
         .forEach(([key, value]) => {
-          console.log('Key and Value', key, value);
-          saveOrUpdateField(ingredient, name, value);
+          saveOrUpdateField(ingredient, key, value);
           setEdits({
             ...edits,
-            [name]: undefined
+            [key]: undefined
           });
         });
       setEditing(false);
@@ -178,19 +177,6 @@ const Ingredient = ({
       validate(name, value);
       delete validationTimeouts.current[name];
     }, 1000);
-
-    // setEdits({});
-    // setErrors({});
-
-    // if (
-    //   !errors.quantity &&
-    //   !errors.unit &&
-    //   !errors.name &&
-    //   !errors.processing
-    // ) {
-    //   if (removed) restoreIngredient();
-    //   saveOrUpdateField(ingredient, name, value);
-    // }
   };
 
   const validate = (fieldName, value) => {
