@@ -29,6 +29,7 @@ const Ingredient = ({
   const ingredientFields = ['quantity', 'unit', 'name', 'processing'];
   const ingredientRef = useRef();
   const quantityInputRef = useRef();
+  const validationTimeouts = useRef({});
   const [errors, setErrors] = useState({});
   const [edits, setEdits] = useState({});
   const [editing, setEditing] = useState(
@@ -118,6 +119,15 @@ const Ingredient = ({
     if (isIngredientEmpty()) {
       removeIngredient();
     } else {
+      Object.entries(edits)
+        .filter(([key]) => validate(key, getIngredientValue(key)))
+        .forEach(([key, value]) => {
+          saveOrUpdateField(ingredient, key, value);
+          setEdits({
+            ...edits,
+            [key]: undefined
+          });
+        });
       setEditing(false);
     }
   };
@@ -153,35 +163,47 @@ const Ingredient = ({
   const handleIngredientChange = e => {
     let { name, value } = e.target;
 
-    errors[name] = null;
+    if (removed) restoreIngredient();
+
+    if (validationTimeouts.current[name])
+      clearTimeout(validationTimeouts.current[name]);
+
     setEdits({
       ...edits,
-      name: value
+      [name]: value
     });
+
+    validationTimeouts.current[name] = setTimeout(() => {
+      validate(name, value);
+      delete validationTimeouts.current[name];
+    }, 1000);
+  };
+
+  const validate = (fieldName, value) => {
+    let err = undefined;
 
     switch (name) {
       case 'quantity':
         try {
-          if (value) fraction(value);
+          if (!value) throw new Error();
+          fraction(value);
         } catch {
-          errors.quantity =
+          err =
             'Please enter quantity as whole numbers and fractions (e.g. 1 1/3)';
         }
         break;
+      case 'name':
+        if (value.length < 3 || value.length > 125)
+          err = 'Ingredient name must be between 3 and 125 characters';
+        break;
     }
 
-    setEdits({});
-    setErrors({});
+    setErrors(errors => ({
+      ...errors,
+      [fieldName]: err
+    }));
 
-    if (
-      !errors.quantity &&
-      !errors.unit &&
-      !errors.name &&
-      !errors.processing
-    ) {
-      if (removed) restoreIngredient();
-      saveOrUpdateField(ingredient, name, value);
-    }
+    return Boolean(!err);
   };
 
   useEffect(() => {
