@@ -1,6 +1,6 @@
 import React, { useState, useRef, useContext, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { useApolloClient } from 'react-apollo';
+import { useMutation } from 'react-apollo';
 
 import UserContext from '../../utils/UserContext';
 import css from './RecipeStatus.css';
@@ -12,72 +12,68 @@ const RecipeStatus = ({
   unsavedCount,
   updateModification
 }) => {
-  const client = useApolloClient();
+  const [saveModification, { loading: isSaving }] = useMutation(
+    SaveModificationMutation
+  );
   const timeoutId = useRef();
   const { user } = useContext(UserContext);
-  const [isSaving, setIsSaving] = useState(false);
   const [savedCount, setSavedCount] = useState(0);
 
   useEffect(() => {
     if (unsavedCount) {
       if (timeoutId.current !== undefined) clearTimeout(timeoutId.current);
-      timeoutId.current = setTimeout(() => saveModification(), 2000);
+      timeoutId.current = setTimeout(() => autoSaveModification(), 2000);
     }
   }, [unsavedCount]);
 
-  const saveModification = () => {
+  const autoSaveModification = () => {
     timeoutId.current = undefined;
-    setIsSaving(true);
-    client
-      .mutate({
-        mutation: SaveModificationMutation,
-        variables: {
-          recipe: recipe.uid,
-          user: user.id,
-          removals: modification.removals,
-          sortings: modification.sortings.map(sorting => ({
-            uid: sorting.uid,
-            parentId: sorting.parentId,
-            order: sorting.order
+    saveModification({
+      variables: {
+        recipe: recipe.uid,
+        user: user.id,
+        removals: modification.removals,
+        sortings: modification.sortings.map(sorting => ({
+          uid: sorting.uid,
+          parentId: sorting.parentId,
+          order: sorting.order
+        })),
+        alterations: modification.alterations.map(alteration => ({
+          uid: alteration.uid,
+          sourceId: alteration.sourceId,
+          field: alteration.field,
+          value: alteration.value
+        })),
+        items: modification.additions
+          .filter(addition => addition.kind === 'Item')
+          .map(item => ({
+            uid: item.uid,
+            parentId: item.parentId,
+            name: item.name
           })),
-          alterations: modification.alterations.map(alteration => ({
-            uid: alteration.uid,
-            sourceId: alteration.sourceId,
-            field: alteration.field,
-            value: alteration.value
+        steps: modification.additions
+          .filter(addition => addition.kind === 'Step')
+          .map(step => ({
+            uid: step.uid,
+            parentId: step.parentId,
+            directions: step.directions,
+            notes: step.notes
           })),
-          items: modification.additions
-            .filter(addition => addition.kind === 'Item')
-            .map(item => ({
-              uid: item.uid,
-              parentId: item.parentId,
-              name: item.name
-            })),
-          steps: modification.additions
-            .filter(addition => addition.kind === 'Step')
-            .map(step => ({
-              uid: step.uid,
-              parentId: step.parentId,
-              directions: step.directions,
-              notes: step.notes
-            })),
-          ingredients: modification.additions
-            .filter(addition => addition.kind === 'Ingredient')
-            .map(ingredient => ({
-              uid: ingredient.uid,
-              parentId: ingredient.parentId,
-              name: ingredient.name,
-              quantity: ingredient.quantity,
-              unit: ingredient.unit,
-              processing: ingredient.processing
-            }))
-        }
-      })
-      .then(data => {
-        updateModification(Object.assign(modification, data.saveModification));
-        setIsSaving(false);
-        setSavedCount(unsavedCount);
-      });
+        ingredients: modification.additions
+          .filter(addition => addition.kind === 'Ingredient')
+          .map(ingredient => ({
+            uid: ingredient.uid,
+            parentId: ingredient.parentId,
+            name: ingredient.name,
+            quantity: ingredient.quantity,
+            unit: ingredient.unit,
+            processing: ingredient.processing
+          }))
+      }
+    }).then(data => {
+      updateModification(Object.assign(modification, data.saveModification));
+      setSavedCount(unsavedCount);
+    });
   };
 
   return (
