@@ -16,6 +16,8 @@ import DiffText from '../DiffText';
 import { MEASURE_UNITS } from '../../config';
 import IconButton from '../IconButton';
 import IconButtonGroup from '../IconButtonGroup';
+import TextInput from '../TextInput';
+import Select from '../Select';
 
 const Ingredient = ({
   index,
@@ -64,6 +66,25 @@ const Ingredient = ({
   };
 
   const renderIngredientWithMods = () => {
+    //render function will output 3 things
+    //quantity, unit, name and processing,
+    //if there is an errror, that will be handled on the individual object
+    //if there has been a change, the original and modified value needs to be displayed for unit and quantity
+    //There will only be a diff text around name and processing.
+    //Quantity and unit will just display the original with the modification next to it
+
+    //If quantity or unit have a modification, the original and modification will both show
+    //The original will be crossed out
+
+    //If name and processing have modifications, we will use difftext to render the text
+
+    //Error...
+    //If an existing ingredient is modified and a field is moved to an error state, the user will be able to save that modification
+    //In this case, a tool tip with information about what the error is will appear
+
+    //In the case of a newly added ingredient...how to handles errors is less clear.
+    //We want to allow the user to save, but how do we indicate that the ingredient is in an error state
+
     const original = ingredientFields
       .reduce((result, fieldName) => {
         let value = ingredient[fieldName];
@@ -182,7 +203,7 @@ const Ingredient = ({
   const validate = (fieldName, value) => {
     let err = undefined;
 
-    switch (name) {
+    switch (fieldName) {
       case 'quantity':
         try {
           if (!value) throw new Error();
@@ -240,18 +261,16 @@ const Ingredient = ({
             <form onSubmit={handleSave} ref={ingredientRef}>
               {editing && (
                 <fieldset>
-                  <input
-                    type="text"
+                  <TextInput
                     name="quantity"
                     title="Quantity"
-                    ref={quantityInputRef}
+                    inputRef={quantityInputRef}
                     value={getIngredientValue('quantity')}
                     placeholder={'Qty'}
                     onChange={handleIngredientChange}
-                    className={classnames({ [css.error]: errors.quantity })}
+                    error={errors.quantity}
                   />
-                  <select
-                    type="text"
+                  <Select
                     name="unit"
                     title="Unit"
                     value={getIngredientValue('unit')}
@@ -263,17 +282,16 @@ const Ingredient = ({
                         {unit}
                       </option>
                     ))}
-                  </select>
-                  <input
-                    type="text"
+                  </Select>
+                  <TextInput
                     name="name"
                     title="Name"
                     value={getIngredientValue('name')}
                     placeholder={'Name'}
                     onChange={handleIngredientChange}
+                    error={errors.name}
                   />
-                  <input
-                    type="text"
+                  <TextInput
                     name="processing"
                     title="Process"
                     value={getIngredientValue('processing')}
