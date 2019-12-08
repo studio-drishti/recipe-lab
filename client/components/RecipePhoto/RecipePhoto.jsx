@@ -1,4 +1,4 @@
-import React, { useContext, useMemo } from 'react';
+import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import { useMutation } from 'react-apollo';
@@ -18,7 +18,12 @@ registerPlugin(
   FilePondPluginImageResize
 );
 
-const RecipePhoto = ({ recipe, setRecipePhoto, className }) => {
+const RecipePhoto = ({
+  recipe,
+  placeholderPhoto,
+  setRecipePhoto,
+  className
+}) => {
   const [uploadFile] = useMutation(RecipePhotoUploadMutation);
   const { user } = useContext(UserContext);
   let pond;
@@ -27,11 +32,6 @@ const RecipePhoto = ({ recipe, setRecipePhoto, className }) => {
     recipe &&
       ((user && user.id === recipe.author.id) || user.role === 'EXECUTIVE_CHEF')
   );
-
-  const randomPlaceholder = useMemo(() => {
-    const rand = Math.floor(Math.random() * 3 + 1);
-    return `/static/placeholders/recipe-${rand}.jpg`;
-  }, [recipe]);
 
   const processUpload = (
     fieldName,
@@ -76,11 +76,7 @@ const RecipePhoto = ({ recipe, setRecipePhoto, className }) => {
 
   return (
     <div className={classnames(css.recipePhoto, className)}>
-      {recipe && recipe.photo ? (
-        <img src={recipe.photo} />
-      ) : (
-        <img src={randomPlaceholder} />
-      )}
+      <img src={recipe && recipe.photo ? recipe.photo : placeholderPhoto} />
       {canUploadPhoto && (
         <FilePond
           name="avatar"
@@ -103,7 +99,8 @@ RecipePhoto.propTypes = {
   setRecipePhoto: PropTypes.func,
   recipe: PropTypes.object,
   className: PropTypes.string,
-  updatePhoto: PropTypes.func
+  updatePhoto: PropTypes.func,
+  placeholderPhoto: PropTypes.string
 };
 
 export default RecipePhoto;

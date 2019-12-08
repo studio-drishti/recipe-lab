@@ -1,5 +1,4 @@
-import React from 'react';
-import { Component } from 'react';
+import React, { useState, useContext } from 'react';
 import PropTypes from 'prop-types';
 import { DragDropContext } from 'react-beautiful-dnd';
 import cuid from 'cuid';
@@ -22,63 +21,44 @@ import RecipeStatus from '../RecipeStatus';
 
 import css from './Recipe.css';
 
-export default class Recipe extends Component {
-  static displayName = 'Recipe';
-  static contextType = UserContext;
-
-  static propTypes = {
-    recipe: PropTypes.shape({
-      uid: PropTypes.string,
-      title: PropTypes.string,
-      author: PropTypes.object,
-      time: PropTypes.string,
-      skill: PropTypes.string,
-      description: PropTypes.string,
-      servingAmount: PropTypes.string,
-      servingType: PropTypes.string,
-      items: PropTypes.arrayOf(PropTypes.object),
-      photo: PropTypes.string
-    }),
-    modification: PropTypes.object
-  };
-
-  state = {
+const Recipe = props => {
+  const { user } = useContext(UserContext);
+  const [state, setState] = useState({
     unsavedCount: 0,
-    localStoreId: this.props.recipe
-      ? `MOD-${this.props.recipe.uid}`
-      : 'MOD-NEW-RECIPE',
-    recipe: this.props.recipe ? this.props.recipe : null,
-    modification: this.props.modification
-      ? this.props.modification
+    localStoreId: props.recipe ? `MOD-${props.recipe.uid}` : 'MOD-NEW-RECIPE',
+    recipe: props.recipe ? props.recipe : null,
+    modification: props.modification
+      ? props.modification
       : {
           sortings: [],
           alterations: [],
           removals: [],
           additions: []
         }
-  };
+  });
 
+  // TODO: useEffect refactor
   // componentDidMount() {
-  //   let { modification } = this.state;
+  //   let { modification } = state;
   //   if (localStorage.getItem(localStoreId)) {
   //     modification = Object.assign(
   //       modification,
   //       JSON.parse(localStorage.getItem(localStoreId))
   //     );
   //   }
-  //   this.setState({ modification });
+  //   setState({ modification });
   // }
 
-  setModification = modification => {
-    const { localStoreId } = this.state;
-    let { unsavedCount } = this.state;
+  const setModification = modification => {
+    const { localStoreId } = state;
+    let { unsavedCount } = state;
     unsavedCount++;
     localStorage.setItem(localStoreId, JSON.stringify(modification));
-    this.setState({ modification, unsavedCount });
+    setState({ ...state, modification, unsavedCount });
   };
 
-  saveAlteration = (source, field, value) => {
-    const { modification } = this.state;
+  const saveAlteration = (source, field, value) => {
+    const { modification } = state;
     const alterationIndex = modification.alterations.findIndex(
       alteration =>
         alteration.field === field && alteration.sourceId === source.uid
@@ -103,11 +83,11 @@ export default class Recipe extends Component {
       });
     }
 
-    this.setModification(modification);
+    setModification(modification);
   };
 
-  updateAddition = (source, field, value) => {
-    const { modification } = this.state;
+  const updateAddition = (source, field, value) => {
+    const { modification } = state;
 
     const index = modification.additions.findIndex(
       addition => addition.uid === source.uid
@@ -117,19 +97,19 @@ export default class Recipe extends Component {
 
     modification.additions[index][field] = value;
 
-    this.setModification(modification);
+    setModification(modification);
   };
 
-  saveOrUpdateField = (source, fieldName, value) => {
+  const saveOrUpdateField = (source, fieldName, value) => {
     if ('kind' in source) {
-      this.updateAddition(source, fieldName, value);
+      updateAddition(source, fieldName, value);
     } else {
-      this.saveAlteration(source, fieldName, value);
+      saveAlteration(source, fieldName, value);
     }
   };
 
-  saveRemoval = source => {
-    const { modification } = this.state;
+  const saveRemoval = source => {
+    const { modification } = state;
 
     // source was already removed
     if (modification.removals.includes(source.uid)) return;
@@ -141,74 +121,72 @@ export default class Recipe extends Component {
       mod => mod.sourceId !== source.uid
     );
 
-    this.setModification(modification);
+    setModification(modification);
   };
 
-  deleteAdditions = (...sources) => {
-    const { modification } = this.state;
+  const deleteAdditions = (...sources) => {
+    const { modification } = state;
     sources.forEach(source => {
       const index = modification.additions.findIndex(
         addition => addition.uid === source.uid
       );
       modification.additions.splice(index, 1);
     });
-    this.setModification(modification);
+    setModification(modification);
   };
 
-  removeIngredient = ingredient => {
+  const removeIngredient = ingredient => {
     if ('kind' in ingredient) {
-      this.deleteAdditions(ingredient);
+      deleteAdditions(ingredient);
     } else {
-      this.saveRemoval(ingredient);
+      saveRemoval(ingredient);
     }
   };
 
-  removeStep = step => {
+  const removeStep = step => {
     if ('kind' in step) {
-      this.deleteAdditions(step, ...this.getUnsortedIngredients(step));
+      deleteAdditions(step, ...getUnsortedIngredients(step));
     } else {
-      this.saveRemoval(step);
+      saveRemoval(step);
     }
   };
 
-  removeItem = item => {
+  const removeItem = item => {
     if ('kind' in item) {
-      const steps = this.getUnsortedSteps(item);
+      const steps = getUnsortedSteps(item);
       const ingredients = steps.reduce((result, step) => {
-        const stepIngredients = this.getUnsortedIngredients(step);
+        const stepIngredients = getUnsortedIngredients(step);
         if (stepIngredients.length) result.push(...stepIngredients);
         return result;
       }, []);
-      this.deleteAdditions(item, ...steps, ...ingredients);
+      deleteAdditions(item, ...steps, ...ingredients);
     } else {
-      this.saveRemoval(item);
+      saveRemoval(item);
     }
   };
 
-  undoRemoval = source => {
-    const { modification } = this.state;
+  const undoRemoval = source => {
+    const { modification } = state;
     const removalIndex = modification.removals.indexOf(source.uid);
 
     if (removalIndex === -1) return;
 
     modification.removals.splice(removalIndex, 1);
 
-    this.setModification(modification);
+    setModification(modification);
   };
 
-  undoAnyRemovals = (...sources) => {
-    sources.forEach(source => this.undoRemoval(source));
+  const undoAnyRemovals = (...sources) => {
+    sources.forEach(source => undoRemoval(source));
   };
 
-  saveSorting = (parentId, unsorted, sourceI, destinationI) => {
-    const { modification } = this.state;
+  const saveSorting = (parentId, unsorted, sourceI, destinationI) => {
+    const { modification } = state;
     const sortingIndex = modification.sortings.findIndex(
       sorting => sorting.parentId === parentId
     );
     const sortingExists = sortingIndex > -1;
-    const sorted = sortingExists
-      ? this.getSorted(parentId, unsorted)
-      : unsorted;
+    const sorted = sortingExists ? getSorted(parentId, unsorted) : unsorted;
 
     const order = reorder(sorted, sourceI, destinationI).map(
       child => child.uid
@@ -232,48 +210,48 @@ export default class Recipe extends Component {
       });
     }
 
-    this.setModification(modification);
+    setModification(modification);
   };
 
-  onDragEnd = result => {
+  const onDragEnd = result => {
     // dropped outside the list or dropped in place
     if (!result.destination || result.destination.index === result.source.index)
       return;
 
-    const { recipe } = this.state;
+    const { recipe } = state;
 
     if (result.type.startsWith('ITEM')) {
-      this.saveSorting(
+      saveSorting(
         recipe.uid,
-        this.getUnsortedItems(),
+        getUnsortedItems(),
         result.source.index,
         result.destination.index
       );
     } else if (result.type.startsWith('STEP')) {
       const itemId = result.destination.droppableId;
-      const item = this.getUnsortedItems().find(item => item.uid === itemId);
-      this.saveSorting(
+      const item = getUnsortedItems().find(item => item.uid === itemId);
+      saveSorting(
         itemId,
-        this.getUnsortedSteps(item),
+        getUnsortedSteps(item),
         result.source.index,
         result.destination.index
       );
     } else if (result.type.startsWith('INGREDIENT')) {
       const stepId = result.destination.droppableId;
-      const step = this.getUnsortedItems()
-        .flatMap(item => this.getUnsortedSteps(item))
+      const step = getUnsortedItems()
+        .flatMap(item => getUnsortedSteps(item))
         .find(step => step.uid === stepId);
-      this.saveSorting(
+      saveSorting(
         stepId,
-        this.getUnsortedIngredients(step),
+        getUnsortedIngredients(step),
         result.source.index,
         result.destination.index
       );
     }
   };
 
-  createItem = () => {
-    const { recipe, modification } = this.state;
+  const createItem = () => {
+    const { recipe, modification } = state;
 
     const addition = {
       uid: cuid(),
@@ -284,11 +262,11 @@ export default class Recipe extends Component {
     };
 
     modification.additions.push(addition);
-    this.setModification(modification);
+    setModification(modification);
   };
 
-  createStep = itemId => {
-    const { modification } = this.state;
+  const createStep = itemId => {
+    const { modification } = state;
 
     const addition = {
       uid: cuid(),
@@ -299,11 +277,11 @@ export default class Recipe extends Component {
     };
 
     modification.additions.push(addition);
-    this.setModification(modification);
+    setModification(modification);
   };
 
-  createIngredient = stepId => {
-    const { modification } = this.state;
+  const createIngredient = stepId => {
+    const { modification } = state;
 
     const addition = {
       uid: cuid(),
@@ -317,12 +295,12 @@ export default class Recipe extends Component {
 
     modification.additions.push(addition);
 
-    this.setModification(modification);
-    this.setState({ activeIngredient: addition });
+    setModification(modification);
+    setState({ ...state, activeIngredient: addition });
   };
 
-  getSorted = (parentId, arr) => {
-    const { modification } = this.state;
+  const getSorted = (parentId, arr) => {
+    const { modification } = state;
     const sortMod = modification.sortings.find(
       mod => mod.parentId === parentId
     );
@@ -337,8 +315,8 @@ export default class Recipe extends Component {
     });
   };
 
-  getItems = (sorted = true) => {
-    const { recipe, modification } = this.state;
+  const getItems = (sorted = true) => {
+    const { recipe, modification } = state;
 
     if (!recipe) return [];
 
@@ -350,224 +328,231 @@ export default class Recipe extends Component {
       ? recipe.items.concat(addedItems)
       : recipe.items;
 
-    return sorted ? this.getSorted(recipe.uid, items) : items;
+    return sorted ? getSorted(recipe.uid, items) : items;
   };
 
-  getUnsortedItems = () => {
-    return this.getItems(false);
+  const getUnsortedItems = () => {
+    return getItems(false);
   };
 
-  getSteps = (item, sorted = true) => {
-    const { modification } = this.state;
+  const getSteps = (item, sorted = true) => {
+    const { modification } = state;
     const steps = modification.additions.filter(
       addition => addition.parentId === item.uid
     );
     if ('steps' in item) steps.unshift(...item.steps);
-    return sorted ? this.getSorted(item.uid, steps) : steps;
+    return sorted ? getSorted(item.uid, steps) : steps;
   };
 
-  getUnsortedSteps = item => {
-    return this.getSteps(item, false);
+  const getUnsortedSteps = item => {
+    return getSteps(item, false);
   };
 
-  getIngredients = (step, sorted = true) => {
-    const { modification } = this.state;
+  const getIngredients = (step, sorted = true) => {
+    const { modification } = state;
     const ingredients = modification.additions.filter(
       addition => addition.parentId === step.uid
     );
     if ('ingredients' in step) ingredients.unshift(...step.ingredients);
-    return sorted ? this.getSorted(step.uid, ingredients) : ingredients;
+    return sorted ? getSorted(step.uid, ingredients) : ingredients;
   };
 
-  getUnsortedIngredients = step => {
-    return this.getIngredients(step, false);
+  const getUnsortedIngredients = step => {
+    return getIngredients(step, false);
   };
 
-  getAlteration = (source, fieldName) => {
-    const { modification } = this.state;
+  const getAlteration = (source, fieldName) => {
+    const { modification } = state;
     const mod = modification.alterations.find(
       mod => mod.sourceId === source.uid && mod.field === fieldName
     );
     return mod ? mod.value : undefined;
   };
 
-  getFieldValue = (source, fieldName) => {
-    const mod = this.getAlteration(source, fieldName);
+  const getFieldValue = (source, fieldName) => {
+    const mod = getAlteration(source, fieldName);
     return mod !== undefined ? mod : source[fieldName];
   };
 
-  setRecipePhoto = photo => {
-    const { recipe } = this.state;
-    this.setState({ recipe: { ...recipe, photo } });
+  const setRecipePhoto = photo => {
+    const { recipe } = state;
+    setState({ ...state, recipe: { ...recipe, photo } });
   };
 
-  render() {
-    const { recipe, modification, unsavedCount } = this.state;
-    const { user } = this.context;
-    const recipeItems = this.getItems();
+  const { recipe, modification, unsavedCount } = state;
+  const recipeItems = getItems();
 
-    return (
-      <DragDropContext onDragEnd={this.onDragEnd}>
-        <header className={css.recipeHeader}>
-          <RecipeDetails
-            className={css.recipeDetails}
-            recipe={recipe}
-            recipeMods={modification.alterations.filter(
-              alteration => alteration.sourceId === recipe.uid
-            )}
-            saveAlteration={this.saveAlteration}
-            setRecipePhoto={this.setRecipePhoto}
-          />
-          <RecipePhoto
-            className={css.recipePhoto}
-            setRecipePhoto={this.setRecipePhoto}
-            recipe={recipe}
-          />
-        </header>
+  return (
+    <DragDropContext onDragEnd={onDragEnd}>
+      <header className={css.recipeHeader}>
+        <RecipeDetails
+          className={css.recipeDetails}
+          recipe={recipe}
+          recipeMods={modification.alterations.filter(
+            alteration => alteration.sourceId === recipe.uid
+          )}
+          saveAlteration={saveAlteration}
+          setRecipePhoto={setRecipePhoto}
+        />
+        <RecipePhoto
+          className={css.recipePhoto}
+          placeholderPhoto={props.placeholderPhoto}
+          setRecipePhoto={setRecipePhoto}
+          recipe={recipe}
+        />
+      </header>
 
-        <article className={css.recipe}>
-          <div className={css.recipeMain}>
-            {recipe && (
-              <ItemList recipeId={recipe.uid}>
-                {recipeItems.map((item, itemI) => {
-                  const itemSteps = this.getSteps(item);
-                  return (
-                    <Item
-                      key={item.uid}
-                      item={item}
-                      itemMods={modification.alterations.filter(
-                        mod => mod.sourceId === item.uid
-                      )}
-                      index={itemI}
-                      isLast={itemI === recipeItems.length - 1}
-                      removed={modification.removals.includes(item.uid)}
-                      removeItem={() => this.removeItem(item)}
-                      restoreItem={() => this.undoRemoval(item)}
-                      createStep={() => this.createStep(item.uid)}
-                      createItem={this.createItem}
-                      saveOrUpdateField={this.saveOrUpdateField}
-                    >
-                      {itemSteps.length > 0 && (
-                        <StepList itemId={item.uid}>
-                          {itemSteps.map((step, stepI) => (
-                            <Step
-                              key={step.uid}
-                              index={stepI}
-                              itemId={item.uid}
-                              step={step}
-                              stepMods={modification.alterations.filter(
-                                mod => mod.sourceId === step.uid
-                              )}
-                              removed={modification.removals.some(sourceId =>
-                                [item.uid, step.uid].includes(sourceId)
-                              )}
-                              saveOrUpdateField={this.saveOrUpdateField}
-                              removeStep={() => this.removeStep(step)}
-                              restoreStep={() =>
-                                this.undoAnyRemovals(item, step)
-                              }
-                              createIngredient={() =>
-                                this.createIngredient(step.uid)
-                              }
-                            >
-                              {({ isActive }) => (
-                                <>
-                                  {isActive && (
-                                    <IngredientList stepId={step.uid}>
-                                      {this.getIngredients(step).map(
-                                        (ingredient, i) => (
-                                          <Ingredient
-                                            key={ingredient.uid}
-                                            index={i}
-                                            ingredient={ingredient}
-                                            ingredientMods={modification.alterations.filter(
-                                              mod =>
-                                                mod.sourceId === ingredient.uid
-                                            )}
-                                            removed={modification.removals.some(
-                                              sourceId =>
-                                                [
-                                                  item.uid,
-                                                  step.uid,
-                                                  ingredient.uid
-                                                ].includes(sourceId)
-                                            )}
-                                            removeIngredient={() =>
-                                              this.removeIngredient(ingredient)
-                                            }
-                                            restoreIngredient={() =>
-                                              this.undoAnyRemovals(
-                                                item,
-                                                step,
-                                                ingredient
-                                              )
-                                            }
-                                            saveOrUpdateField={
-                                              this.saveOrUpdateField
-                                            }
-                                          />
-                                        )
-                                      )}
-                                    </IngredientList>
-                                  )}
-                                </>
-                              )}
-                            </Step>
-                          ))}
-                        </StepList>
-                      )}
-                    </Item>
-                  );
-                })}
-              </ItemList>
-            )}
+      <article className={css.recipe}>
+        <div className={css.recipeMain}>
+          {recipe && (
+            <ItemList recipeId={recipe.uid}>
+              {recipeItems.map((item, itemI) => {
+                const itemSteps = getSteps(item);
+                return (
+                  <Item
+                    key={item.uid}
+                    item={item}
+                    itemMods={modification.alterations.filter(
+                      mod => mod.sourceId === item.uid
+                    )}
+                    index={itemI}
+                    isLast={itemI === recipeItems.length - 1}
+                    removed={modification.removals.includes(item.uid)}
+                    removeItem={() => removeItem(item)}
+                    restoreItem={() => undoRemoval(item)}
+                    createStep={() => createStep(item.uid)}
+                    createItem={createItem}
+                    saveOrUpdateField={saveOrUpdateField}
+                  >
+                    {itemSteps.length > 0 && (
+                      <StepList itemId={item.uid}>
+                        {itemSteps.map((step, stepI) => (
+                          <Step
+                            key={step.uid}
+                            index={stepI}
+                            itemId={item.uid}
+                            step={step}
+                            stepMods={modification.alterations.filter(
+                              mod => mod.sourceId === step.uid
+                            )}
+                            removed={modification.removals.some(sourceId =>
+                              [item.uid, step.uid].includes(sourceId)
+                            )}
+                            saveOrUpdateField={saveOrUpdateField}
+                            removeStep={() => removeStep(step)}
+                            restoreStep={() => undoAnyRemovals(item, step)}
+                            createIngredient={() => createIngredient(step.uid)}
+                          >
+                            {({ isActive }) => (
+                              <>
+                                {isActive && (
+                                  <IngredientList stepId={step.uid}>
+                                    {getIngredients(step).map(
+                                      (ingredient, i) => (
+                                        <Ingredient
+                                          key={ingredient.uid}
+                                          index={i}
+                                          ingredient={ingredient}
+                                          ingredientMods={modification.alterations.filter(
+                                            mod =>
+                                              mod.sourceId === ingredient.uid
+                                          )}
+                                          removed={modification.removals.some(
+                                            sourceId =>
+                                              [
+                                                item.uid,
+                                                step.uid,
+                                                ingredient.uid
+                                              ].includes(sourceId)
+                                          )}
+                                          removeIngredient={() =>
+                                            removeIngredient(ingredient)
+                                          }
+                                          restoreIngredient={() =>
+                                            undoAnyRemovals(
+                                              item,
+                                              step,
+                                              ingredient
+                                            )
+                                          }
+                                          saveOrUpdateField={saveOrUpdateField}
+                                        />
+                                      )
+                                    )}
+                                  </IngredientList>
+                                )}
+                              </>
+                            )}
+                          </Step>
+                        ))}
+                      </StepList>
+                    )}
+                  </Item>
+                );
+              })}
+            </ItemList>
+          )}
 
-            {!recipe && <p>you gotta finish creating your recipe, dude!</p>}
-          </div>
-          <aside className={css.stepDetail}>
-            <div className={css.sticky}>
-              <RecipeStatus
-                recipe={recipe}
-                modification={modification}
-                unsavedCount={unsavedCount}
-                updateModification={modification =>
-                  this.setState({ modification })
-                }
-              />
-              <div className={css.ingredientTotals}>
-                {recipeItems
-                  .filter(item => !modification.removals.includes(item.uid))
-                  .map(item => (
-                    <div key={item.uid}>
-                      <h3>
-                        Ingredients for {this.getFieldValue(item, 'name')}
-                      </h3>
-                      <IngredientTotals
-                        ingredients={this.getSteps(item)
-                          .filter(
-                            step => !modification.removals.includes(step.uid)
-                          )
-                          .reduce((result, step) => {
-                            return result.concat(
-                              this.getIngredients(step).filter(
-                                ingredient =>
-                                  !modification.removals.includes(
-                                    ingredient.uid
-                                  )
-                              )
-                            );
-                          }, [])}
-                        removals={modification.removals}
-                        alterations={modification.alterations}
-                      />
-                    </div>
-                  ))}
-              </div>
+          {!recipe && <p>you gotta finish creating your recipe, dude!</p>}
+        </div>
+        <aside className={css.stepDetail}>
+          <div className={css.sticky}>
+            <RecipeStatus
+              recipe={recipe}
+              modification={modification}
+              unsavedCount={unsavedCount}
+              updateModification={modification =>
+                setState({ ...state, modification })
+              }
+            />
+            <div className={css.ingredientTotals}>
+              {recipeItems
+                .filter(item => !modification.removals.includes(item.uid))
+                .map(item => (
+                  <div key={item.uid}>
+                    <h3>Ingredients for {getFieldValue(item, 'name')}</h3>
+                    <IngredientTotals
+                      ingredients={getSteps(item)
+                        .filter(
+                          step => !modification.removals.includes(step.uid)
+                        )
+                        .reduce((result, step) => {
+                          return result.concat(
+                            getIngredients(step).filter(
+                              ingredient =>
+                                !modification.removals.includes(ingredient.uid)
+                            )
+                          );
+                        }, [])}
+                      removals={modification.removals}
+                      alterations={modification.alterations}
+                    />
+                  </div>
+                ))}
             </div>
-          </aside>
-        </article>
-        <RecipeBio author={recipe ? recipe.author : user} />
-      </DragDropContext>
-    );
-  }
-}
+          </div>
+        </aside>
+      </article>
+      <RecipeBio author={recipe ? recipe.author : user} />
+    </DragDropContext>
+  );
+};
+
+Recipe.propTypes = {
+  recipe: PropTypes.shape({
+    uid: PropTypes.string,
+    title: PropTypes.string,
+    author: PropTypes.object,
+    time: PropTypes.string,
+    skill: PropTypes.string,
+    description: PropTypes.string,
+    servingAmount: PropTypes.string,
+    servingType: PropTypes.string,
+    items: PropTypes.arrayOf(PropTypes.object),
+    photo: PropTypes.string
+  }),
+  modification: PropTypes.object,
+  placeholderPhoto: PropTypes.string
+};
+
+export default Recipe;
