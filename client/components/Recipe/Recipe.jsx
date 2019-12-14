@@ -1,11 +1,13 @@
-import React, { useState, useContext, useCallback } from 'react';
+import React, { useState, useReducer, useContext, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { DragDropContext } from 'react-beautiful-dnd';
 import cuid from 'cuid';
 
 import reorder from '../../utils/reorder';
 import areArraysEqual from '../../utils/areArraysEqual';
-import UserContext from '../../utils/UserContext';
+import UserContext from '../../context/UserContext';
+import RecipeContext from '../../context/RecipeContext';
+import recipeReducer from '../../reducers/recipe';
 
 import RecipeDetails from '../RecipeDetails';
 import RecipePhoto from '../RecipePhoto/RecipePhoto';
@@ -23,7 +25,10 @@ import css from './Recipe.css';
 
 const Recipe = props => {
   const { user } = useContext(UserContext);
-  const [recipe, setRecipe] = useState(props.recipe ? props.recipe : null);
+  const [recipe, recipeDispatch] = useReducer(
+    recipeReducer,
+    props.recipe ? props.recipe : null
+  );
   const [modification, setModification] = useState(
     props.modification
       ? props.modification
@@ -367,163 +372,162 @@ const Recipe = props => {
     return mod !== undefined ? mod : source[fieldName];
   };
 
-  const setRecipePhoto = photo => {
-    setRecipe({ ...recipe, photo });
-  };
-
   const recipeItems = getSortedItems();
 
   return (
-    <DragDropContext onDragEnd={onDragEnd}>
-      <header className={css.recipeHeader}>
-        <RecipeDetails
-          className={css.recipeDetails}
-          recipe={recipe}
-          recipeMods={modification.alterations.filter(
-            alteration => alteration.sourceId === recipe.uid
-          )}
-          saveAlteration={saveAlteration}
-          setRecipePhoto={setRecipePhoto}
-        />
-        <RecipePhoto
-          className={css.recipePhoto}
-          placeholderPhoto={props.placeholderPhoto}
-          setRecipePhoto={setRecipePhoto}
-          recipe={recipe}
-        />
-      </header>
+    <RecipeContext.Provider value={{ recipe, modification, recipeDispatch }}>
+      <DragDropContext onDragEnd={onDragEnd}>
+        <header className={css.recipeHeader}>
+          <RecipeDetails
+            className={css.recipeDetails}
+            saveAlteration={saveAlteration}
+          />
+          <RecipePhoto
+            className={css.recipePhoto}
+            placeholderPhoto={props.placeholderPhoto}
+          />
+        </header>
 
-      <article className={css.recipe}>
-        <div className={css.recipeMain}>
-          {recipe && (
-            <ItemList recipeId={recipe.uid}>
-              {recipeItems.map((item, itemI) => {
-                const itemSteps = getSortedSteps(item);
-                return (
-                  <Item
-                    key={item.uid}
-                    item={item}
-                    itemMods={modification.alterations.filter(
-                      mod => mod.sourceId === item.uid
-                    )}
-                    index={itemI}
-                    isLast={itemI === recipeItems.length - 1}
-                    removed={modification.removals.includes(item.uid)}
-                    removeItem={() => removeItem(item)}
-                    restoreItem={() => undoRemoval(item)}
-                    createStep={() => createStep(item.uid)}
-                    createItem={createItem}
-                    saveOrUpdateField={saveOrUpdateField}
-                  >
-                    {itemSteps.length > 0 && (
-                      <StepList itemId={item.uid}>
-                        {itemSteps.map((step, stepI) => (
-                          <Step
-                            key={step.uid}
-                            index={stepI}
-                            itemId={item.uid}
-                            step={step}
-                            stepMods={modification.alterations.filter(
-                              mod => mod.sourceId === step.uid
-                            )}
-                            removed={modification.removals.some(sourceId =>
-                              [item.uid, step.uid].includes(sourceId)
-                            )}
-                            saveOrUpdateField={saveOrUpdateField}
-                            removeStep={() => removeStep(step)}
-                            restoreStep={() => undoAnyRemovals(item, step)}
-                            createIngredient={() => createIngredient(step.uid)}
-                          >
-                            {({ isActive }) => (
-                              <>
-                                {isActive && (
-                                  <IngredientList stepId={step.uid}>
-                                    {getSortedIngredients(step).map(
-                                      (ingredient, i) => (
-                                        <Ingredient
-                                          key={ingredient.uid}
-                                          index={i}
-                                          ingredient={ingredient}
-                                          ingredientMods={modification.alterations.filter(
-                                            mod =>
-                                              mod.sourceId === ingredient.uid
-                                          )}
-                                          removed={modification.removals.some(
-                                            sourceId =>
-                                              [
-                                                item.uid,
-                                                step.uid,
-                                                ingredient.uid
-                                              ].includes(sourceId)
-                                          )}
-                                          removeIngredient={() =>
-                                            removeIngredient(ingredient)
-                                          }
-                                          restoreIngredient={() =>
-                                            undoAnyRemovals(
-                                              item,
-                                              step,
-                                              ingredient
-                                            )
-                                          }
-                                          saveOrUpdateField={saveOrUpdateField}
-                                        />
-                                      )
-                                    )}
-                                  </IngredientList>
-                                )}
-                              </>
-                            )}
-                          </Step>
-                        ))}
-                      </StepList>
-                    )}
-                  </Item>
-                );
-              })}
-            </ItemList>
-          )}
+        <article className={css.recipe}>
+          <div className={css.recipeMain}>
+            {recipe && (
+              <ItemList recipeId={recipe.uid}>
+                {recipeItems.map((item, itemI) => {
+                  const itemSteps = getSortedSteps(item);
+                  return (
+                    <Item
+                      key={item.uid}
+                      item={item}
+                      itemMods={modification.alterations.filter(
+                        mod => mod.sourceId === item.uid
+                      )}
+                      index={itemI}
+                      isLast={itemI === recipeItems.length - 1}
+                      removed={modification.removals.includes(item.uid)}
+                      removeItem={() => removeItem(item)}
+                      restoreItem={() => undoRemoval(item)}
+                      createStep={() => createStep(item.uid)}
+                      createItem={createItem}
+                      saveOrUpdateField={saveOrUpdateField}
+                    >
+                      {itemSteps.length > 0 && (
+                        <StepList itemId={item.uid}>
+                          {itemSteps.map((step, stepI) => (
+                            <Step
+                              key={step.uid}
+                              index={stepI}
+                              itemId={item.uid}
+                              step={step}
+                              stepMods={modification.alterations.filter(
+                                mod => mod.sourceId === step.uid
+                              )}
+                              removed={modification.removals.some(sourceId =>
+                                [item.uid, step.uid].includes(sourceId)
+                              )}
+                              saveOrUpdateField={saveOrUpdateField}
+                              removeStep={() => removeStep(step)}
+                              restoreStep={() => undoAnyRemovals(item, step)}
+                              createIngredient={() =>
+                                createIngredient(step.uid)
+                              }
+                            >
+                              {({ isActive }) => (
+                                <>
+                                  {isActive && (
+                                    <IngredientList stepId={step.uid}>
+                                      {getSortedIngredients(step).map(
+                                        (ingredient, i) => (
+                                          <Ingredient
+                                            key={ingredient.uid}
+                                            index={i}
+                                            ingredient={ingredient}
+                                            ingredientMods={modification.alterations.filter(
+                                              mod =>
+                                                mod.sourceId === ingredient.uid
+                                            )}
+                                            removed={modification.removals.some(
+                                              sourceId =>
+                                                [
+                                                  item.uid,
+                                                  step.uid,
+                                                  ingredient.uid
+                                                ].includes(sourceId)
+                                            )}
+                                            removeIngredient={() =>
+                                              removeIngredient(ingredient)
+                                            }
+                                            restoreIngredient={() =>
+                                              undoAnyRemovals(
+                                                item,
+                                                step,
+                                                ingredient
+                                              )
+                                            }
+                                            saveOrUpdateField={
+                                              saveOrUpdateField
+                                            }
+                                          />
+                                        )
+                                      )}
+                                    </IngredientList>
+                                  )}
+                                </>
+                              )}
+                            </Step>
+                          ))}
+                        </StepList>
+                      )}
+                    </Item>
+                  );
+                })}
+              </ItemList>
+            )}
 
-          {!recipe && <p>you gotta finish creating your recipe, dude!</p>}
-        </div>
-        <aside className={css.stepDetail}>
-          <div className={css.sticky}>
-            <RecipeStatus
-              recipe={recipe}
-              modification={modification}
-              unsavedCount={unsavedCount}
-              updateModification={modification => setModification(modification)}
-            />
-            <div className={css.ingredientTotals}>
-              {recipeItems
-                .filter(item => !modification.removals.includes(item.uid))
-                .map(item => (
-                  <div key={item.uid}>
-                    <h3>Ingredients for {getFieldValue(item, 'name')}</h3>
-                    <IngredientTotals
-                      ingredients={getSortedSteps(item)
-                        .filter(
-                          step => !modification.removals.includes(step.uid)
-                        )
-                        .reduce((result, step) => {
-                          return result.concat(
-                            getSortedIngredients(step).filter(
-                              ingredient =>
-                                !modification.removals.includes(ingredient.uid)
-                            )
-                          );
-                        }, [])}
-                      removals={modification.removals}
-                      alterations={modification.alterations}
-                    />
-                  </div>
-                ))}
-            </div>
+            {!recipe && <p>you gotta finish creating your recipe, dude!</p>}
           </div>
-        </aside>
-      </article>
-      <RecipeBio author={recipe ? recipe.author : user} />
-    </DragDropContext>
+          <aside className={css.stepDetail}>
+            <div className={css.sticky}>
+              <RecipeStatus
+                recipe={recipe}
+                modification={modification}
+                unsavedCount={unsavedCount}
+                updateModification={modification =>
+                  setModification(modification)
+                }
+              />
+              <div className={css.ingredientTotals}>
+                {recipeItems
+                  .filter(item => !modification.removals.includes(item.uid))
+                  .map(item => (
+                    <div key={item.uid}>
+                      <h3>Ingredients for {getFieldValue(item, 'name')}</h3>
+                      <IngredientTotals
+                        ingredients={getSortedSteps(item)
+                          .filter(
+                            step => !modification.removals.includes(step.uid)
+                          )
+                          .reduce((result, step) => {
+                            return result.concat(
+                              getSortedIngredients(step).filter(
+                                ingredient =>
+                                  !modification.removals.includes(
+                                    ingredient.uid
+                                  )
+                              )
+                            );
+                          }, [])}
+                        removals={modification.removals}
+                        alterations={modification.alterations}
+                      />
+                    </div>
+                  ))}
+              </div>
+            </div>
+          </aside>
+        </article>
+        <RecipeBio author={recipe ? recipe.author : user} />
+      </DragDropContext>
+    </RecipeContext.Provider>
   );
 };
 

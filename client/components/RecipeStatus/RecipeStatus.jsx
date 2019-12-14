@@ -1,8 +1,8 @@
-import React, { useState, useRef, useContext, useEffect } from 'react';
+import React, { useState, useRef, useContext, useEffect, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { useMutation } from 'react-apollo';
 
-import UserContext from '../../utils/UserContext';
+import UserContext from '../../context/UserContext';
 import css from './RecipeStatus.css';
 import SaveModificationMutation from '../../graphql/SaveModification.graphql';
 
@@ -12,12 +12,16 @@ const RecipeStatus = ({
   unsavedCount,
   updateModification
 }) => {
+  const { removals, sortings, alterations, additions } = modification;
   const [saveModification, { loading: isSaving }] = useMutation(
     SaveModificationMutation
   );
   const timeoutId = useRef();
   const { user } = useContext(UserContext);
   const [savedCount, setSavedCount] = useState(0);
+
+  const modificationCount =
+    removals.length + sortings.length + alterations.length + additions.length;
 
   useEffect(() => {
     if (unsavedCount) {
@@ -78,12 +82,12 @@ const RecipeStatus = ({
 
   return (
     <div className={css.recipeStatus}>
+      {modificationCount}
+      Mods..
       {!isSaving &&
         unsavedCount > savedCount &&
         `You have ${unsavedCount - savedCount} unsaved modification.`}
-
       {isSaving && 'Saving...'}
-
       {!isSaving && unsavedCount === savedCount && 'All mods have been saved.'}
     </div>
   );

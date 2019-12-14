@@ -8,7 +8,9 @@ import FilePondPluginImageResize from 'filepond-plugin-image-resize';
 import FilePondPluginImageTransform from 'filepond-plugin-image-transform';
 
 import RecipePhotoUploadMutation from '../../graphql/RecipePhotoUpload.graphql';
-import UserContext from '../../utils/UserContext';
+import UserContext from '../../context/UserContext';
+import RecipeContext from '../../context/RecipeContext';
+import { setRecipePhoto } from '../../actions/recipe';
 
 import css from './RecipePhoto.css';
 
@@ -18,14 +20,10 @@ registerPlugin(
   FilePondPluginImageResize
 );
 
-const RecipePhoto = ({
-  recipe,
-  placeholderPhoto,
-  setRecipePhoto,
-  className
-}) => {
+const RecipePhoto = ({ placeholderPhoto, className }) => {
   const [uploadFile] = useMutation(RecipePhotoUploadMutation);
   const { user } = useContext(UserContext);
+  const { recipe, recipeDispatch } = useContext(RecipeContext);
   let pond;
 
   const canUploadPhoto = Boolean(
@@ -55,7 +53,7 @@ const RecipePhoto = ({
       }
     })
       .then(res => {
-        setRecipePhoto(res.data.recipePhotoUpload.photo);
+        setRecipePhoto(res.data.recipePhotoUpload.photo, recipeDispatch);
         load(res);
       })
       .catch(err => error(err));
@@ -96,10 +94,7 @@ const RecipePhoto = ({
 };
 
 RecipePhoto.propTypes = {
-  setRecipePhoto: PropTypes.func,
-  recipe: PropTypes.object,
   className: PropTypes.string,
-  updatePhoto: PropTypes.func,
   placeholderPhoto: PropTypes.string
 };
 

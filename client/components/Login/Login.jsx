@@ -5,7 +5,7 @@ import { useMutation } from 'react-apollo';
 import cookie from 'cookie';
 import redirect from '../../utils/redirect';
 
-import UserContext from '../../utils/UserContext';
+import UserContext from '../../context/UserContext';
 
 import css from './Login.css';
 import FormInput from '../FormInput';

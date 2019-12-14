@@ -14,7 +14,7 @@ services:
     command: ../node_modules/.bin/nodemon --inspect=0.0.0.0:9229 ./bin/www.js
     ports:
       - '${WEB_PORT:-3000}:3000'
-      - '9229:9229'
+      # - '9229:9229'
       - '9230:9230'
     volumes:
       - .:/opt/node_app/app:delegated

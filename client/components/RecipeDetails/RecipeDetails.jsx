@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, useContext } from 'react';
+import React, { useState, useRef, useEffect, useContext, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import Router from 'next/router';
 import {
@@ -15,7 +15,9 @@ import { fraction } from 'mathjs';
 import { useMutation } from 'react-apollo';
 
 import { TIME_OPTIONS } from '../../config';
-import UserContext from '../../utils/UserContext';
+import UserContext from '../../context/UserContext';
+import RecipeContext from '../../context/RecipeContext';
+import { setRecipePhoto } from '../../actions/recipe';
 import CreateRecipeMutation from '../../graphql/CreateRecipe.graphql';
 import RecipePhotoDeleteMutation from '../../graphql/RecipePhotoDelete.graphql';
 import DiffText from '../DiffText';
@@ -27,16 +29,15 @@ import Tooltip from '../Tooltip';
 import Select from '../Select';
 import css from './RecipeDetails.css';
 
-const RecipeDetails = ({
-  recipe,
-  className,
-  recipeMods,
-  saveAlteration,
-  setRecipePhoto
-}) => {
+const RecipeDetails = ({ className, saveAlteration }) => {
   const [createRecipe] = useMutation(CreateRecipeMutation);
   const [deletePhoto] = useMutation(RecipePhotoDeleteMutation);
   const { user } = useContext(UserContext);
+  const {
+    modification: { alterations },
+    recipe,
+    recipeDispatch
+  } = useContext(RecipeContext);
   const [errors, setErrors] = useState({});
   const [edits, setEdits] = useState({});
   const [editing, setEditing] = useState(!recipe ? true : false);
@@ -46,6 +47,11 @@ const RecipeDetails = ({
   const descriptionInputRef = useRef();
   const timeInputRef = useRef();
   const servingInputRef = useRef();
+
+  const recipeMods = useMemo(
+    () => alterations.filter(alteration => alteration.sourceId === recipe.uid),
+    [alterations]
+  );
 
   const canDeletePhoto = Boolean(
     recipe &&
@@ -64,7 +70,7 @@ const RecipeDetails = ({
     deletePhoto({
       variables: { recipeId: recipe.uid }
     }).then(() => {
-      setRecipePhoto(null);
+      setRecipePhoto(null, recipeDispatch);
     });
   };
 
@@ -381,10 +387,7 @@ const RecipeDetails = ({
 
 RecipeDetails.propTypes = {
   className: PropTypes.string,
-  recipe: PropTypes.object,
-  recipeMods: PropTypes.arrayOf(PropTypes.object),
-  saveAlteration: PropTypes.func,
-  setRecipePhoto: PropTypes.func
+  saveAlteration: PropTypes.func
 };
 
 export default RecipeDetails;

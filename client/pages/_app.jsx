@@ -6,7 +6,7 @@ import 'normalize.css';
 import '../styles/variables.css';
 import '../styles/global.css';
 
-import UserContext from '../utils/UserContext';
+import UserContext from '../context/UserContext';
 import withApollo from '../utils/withApollo';
 import checkLoggedIn from '../utils/checkLoggedIn';
 
