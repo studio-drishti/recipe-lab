@@ -1,23 +1,24 @@
-import React, { useState, useRef, useContext, useEffect, useMemo } from 'react';
+import React, { useState, useRef, useContext, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useMutation } from 'react-apollo';
 
 import UserContext from '../../context/UserContext';
+import RecipeContext from '../../context/RecipeContext';
+import { setModification } from '../../actions/modification';
 import css from './RecipeStatus.css';
 import SaveModificationMutation from '../../graphql/SaveModification.graphql';
 
-const RecipeStatus = ({
-  recipe,
-  modification,
-  unsavedCount,
-  updateModification
-}) => {
-  const { removals, sortings, alterations, additions } = modification;
+const RecipeStatus = ({ unsavedCount }) => {
   const [saveModification, { loading: isSaving }] = useMutation(
     SaveModificationMutation
   );
   const timeoutId = useRef();
   const { user } = useContext(UserContext);
+  const {
+    modification: { removals, sortings, alterations, additions },
+    recipe,
+    modificationDispatch
+  } = useContext(RecipeContext);
   const [savedCount, setSavedCount] = useState(0);
 
   const modificationCount =
@@ -36,26 +37,26 @@ const RecipeStatus = ({
       variables: {
         recipe: recipe.uid,
         user: user.id,
-        removals: modification.removals,
-        sortings: modification.sortings.map(sorting => ({
+        removals: removals,
+        sortings: sortings.map(sorting => ({
           uid: sorting.uid,
           parentId: sorting.parentId,
           order: sorting.order
         })),
-        alterations: modification.alterations.map(alteration => ({
+        alterations: alterations.map(alteration => ({
           uid: alteration.uid,
           sourceId: alteration.sourceId,
           field: alteration.field,
           value: alteration.value
         })),
-        items: modification.additions
+        items: additions
           .filter(addition => addition.kind === 'Item')
           .map(item => ({
             uid: item.uid,
             parentId: item.parentId,
             name: item.name
           })),
-        steps: modification.additions
+        steps: additions
           .filter(addition => addition.kind === 'Step')
           .map(step => ({
             uid: step.uid,
@@ -63,7 +64,7 @@ const RecipeStatus = ({
             directions: step.directions,
             notes: step.notes
           })),
-        ingredients: modification.additions
+        ingredients: additions
           .filter(addition => addition.kind === 'Ingredient')
           .map(ingredient => ({
             uid: ingredient.uid,
@@ -75,7 +76,7 @@ const RecipeStatus = ({
           }))
       }
     }).then(data => {
-      updateModification(Object.assign(modification, data.saveModification));
+      setModification(data.saveModification, modificationDispatch);
       setSavedCount(unsavedCount);
     });
   };
@@ -94,10 +95,7 @@ const RecipeStatus = ({
 };
 
 RecipeStatus.propTypes = {
-  recipe: PropTypes.object,
-  modification: PropTypes.object,
-  unsavedCount: PropTypes.number,
-  updateModification: PropTypes.func
+  unsavedCount: PropTypes.number
 };
 
 export default RecipeStatus;

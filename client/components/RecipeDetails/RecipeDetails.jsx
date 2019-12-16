@@ -18,6 +18,7 @@ import { TIME_OPTIONS } from '../../config';
 import UserContext from '../../context/UserContext';
 import RecipeContext from '../../context/RecipeContext';
 import { setRecipePhoto } from '../../actions/recipe';
+import { setAlteration } from '../../actions/modification';
 import CreateRecipeMutation from '../../graphql/CreateRecipe.graphql';
 import RecipePhotoDeleteMutation from '../../graphql/RecipePhotoDelete.graphql';
 import DiffText from '../DiffText';
@@ -29,14 +30,15 @@ import Tooltip from '../Tooltip';
 import Select from '../Select';
 import css from './RecipeDetails.css';
 
-const RecipeDetails = ({ className, saveAlteration }) => {
+const RecipeDetails = ({ className }) => {
   const [createRecipe] = useMutation(CreateRecipeMutation);
   const [deletePhoto] = useMutation(RecipePhotoDeleteMutation);
   const { user } = useContext(UserContext);
   const {
     modification: { alterations },
     recipe,
-    recipeDispatch
+    recipeDispatch,
+    modificationDispatch
   } = useContext(RecipeContext);
   const [errors, setErrors] = useState({});
   const [edits, setEdits] = useState({});
@@ -156,7 +158,7 @@ const RecipeDetails = ({ className, saveAlteration }) => {
       Object.entries(edits)
         .filter(([key]) => !hasErrors.includes(key))
         .forEach(([key, value]) => {
-          saveAlteration(recipe, key, value);
+          setAlteration(recipe, key, value, modificationDispatch);
         });
       disableEditing();
     } else if (hasErrors.length === 0) {
@@ -386,8 +388,7 @@ const RecipeDetails = ({ className, saveAlteration }) => {
 };
 
 RecipeDetails.propTypes = {
-  className: PropTypes.string,
-  saveAlteration: PropTypes.func
+  className: PropTypes.string
 };
 
 export default RecipeDetails;
