@@ -28,10 +28,6 @@ const Ingredient = ({ index, ingredient, itemId, stepId }) => {
     modification: { removals, alterations },
     modificationDispatch
   } = useContext(RecipeContext);
-  const ingredientMods = useMemo(
-    () => alterations.filter(mod => mod.sourceId === ingredient.uid),
-    [alterations]
-  );
   const isRemoved = useMemo(
     () =>
       removals.some(sourceId =>
@@ -46,7 +42,11 @@ const Ingredient = ({ index, ingredient, itemId, stepId }) => {
   const [edits, setEdits] = useState({});
   const [editing, setEditing] = useState(
     !ingredientFields.some(
-      fieldName => ingredientMods[fieldName] || ingredient[fieldName]
+      fieldName =>
+        ingredient[fieldName] ||
+        alterations.some(
+          mod => mod.sourceId === ingredient.uid && mod.field === fieldName
+        )
     )
   );
 
@@ -56,7 +56,7 @@ const Ingredient = ({ index, ingredient, itemId, stepId }) => {
   const getIngredientValue = fieldName => {
     if (edits[fieldName] !== undefined) return edits[fieldName];
 
-    const mod = ingredientMods.find(
+    const mod = alterations.find(
       mod => mod.sourceId === ingredient.uid && mod.field === fieldName
     );
 
@@ -90,7 +90,11 @@ const Ingredient = ({ index, ingredient, itemId, stepId }) => {
       }, [])
       .join(' ');
 
-    if (ingredientMods.length === 0) return <span>{original}</span>;
+    if (
+      alterations.filter(alteration => alteration.sourceId === ingredient.uid)
+        .length === 0
+    )
+      return <span>{original}</span>;
 
     const modified = ingredientFields
       .reduce((result, fieldName) => {
@@ -126,7 +130,7 @@ const Ingredient = ({ index, ingredient, itemId, stepId }) => {
   const isIngredientEmpty = () => {
     return !ingredientFields.some(
       fieldName =>
-        edits[fieldName] || ingredientMods[fieldName] || ingredient[fieldName]
+        edits[fieldName] || alterations[fieldName] || ingredient[fieldName]
     );
   };
 
@@ -138,10 +142,8 @@ const Ingredient = ({ index, ingredient, itemId, stepId }) => {
         .filter(([key]) => validate(key, getIngredientValue(key)))
         .forEach(([key, value]) => {
           setAlteration(ingredient, key, value, modificationDispatch);
-          setEdits({
-            ...edits,
-            [key]: undefined
-          });
+          delete edits[key];
+          setEdits(edits);
         });
       setEditing(false);
     }
@@ -359,7 +361,6 @@ const Ingredient = ({ index, ingredient, itemId, stepId }) => {
 Ingredient.propTypes = {
   index: PropTypes.number,
   ingredient: PropTypes.object.isRequired,
-  ingredientMods: PropTypes.arrayOf(PropTypes.object),
   itemId: PropTypes.string,
   stepId: PropTypes.string
 };

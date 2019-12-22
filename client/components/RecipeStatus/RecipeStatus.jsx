@@ -1,35 +1,33 @@
 import React, { useState, useRef, useContext, useEffect } from 'react';
-import PropTypes from 'prop-types';
 import { useMutation } from 'react-apollo';
-
 import UserContext from '../../context/UserContext';
 import RecipeContext from '../../context/RecipeContext';
 import { setModification } from '../../actions/modification';
 import css from './RecipeStatus.css';
 import SaveModificationMutation from '../../graphql/SaveModification.graphql';
 
-const RecipeStatus = ({ unsavedCount }) => {
+const RecipeStatus = () => {
   const [saveModification, { loading: isSaving }] = useMutation(
     SaveModificationMutation
   );
   const timeoutId = useRef();
   const { user } = useContext(UserContext);
   const {
-    modification: { removals, sortings, alterations, additions },
+    modification: { removals, sortings, alterations, additions, sessionCount },
     recipe,
     modificationDispatch
   } = useContext(RecipeContext);
   const [savedCount, setSavedCount] = useState(0);
 
-  const modificationCount =
-    removals.length + sortings.length + alterations.length + additions.length;
+  // const modificationCount =
+  //   removals.length + sortings.length + alterations.length + additions.length;
 
   useEffect(() => {
-    if (unsavedCount) {
+    if (sessionCount) {
       if (timeoutId.current !== undefined) clearTimeout(timeoutId.current);
       timeoutId.current = setTimeout(() => autoSaveModification(), 2000);
     }
-  }, [unsavedCount]);
+  }, [sessionCount]);
 
   const autoSaveModification = () => {
     timeoutId.current = undefined;
@@ -77,25 +75,19 @@ const RecipeStatus = ({ unsavedCount }) => {
       }
     }).then(data => {
       setModification(data.saveModification, modificationDispatch);
-      setSavedCount(unsavedCount);
+      setSavedCount(sessionCount);
     });
   };
 
   return (
     <div className={css.recipeStatus}>
-      {modificationCount}
-      Mods..
       {!isSaving &&
-        unsavedCount > savedCount &&
-        `You have ${unsavedCount - savedCount} unsaved modification.`}
+        sessionCount > savedCount &&
+        `You have ${sessionCount - savedCount} unsaved modification.`}
       {isSaving && 'Saving...'}
-      {!isSaving && unsavedCount === savedCount && 'All mods have been saved.'}
+      {!isSaving && sessionCount === savedCount && 'All mods have been saved.'}
     </div>
   );
-};
-
-RecipeStatus.propTypes = {
-  unsavedCount: PropTypes.number
 };
 
 export default RecipeStatus;

@@ -1,11 +1,11 @@
-import React, { useState, useReducer, useContext, useCallback } from 'react';
+import React, { useReducer, useContext, useCallback, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { DragDropContext } from 'react-beautiful-dnd';
 import UserContext from '../../context/UserContext';
 import RecipeContext from '../../context/RecipeContext';
 import recipeReducer from '../../reducers/recipe';
 import modificationReducer from '../../reducers/modification';
-import { setSorting } from '../../actions/modification';
+import { setSorting, setModification } from '../../actions/modification';
 import { getSorted } from '../../utils/recipe';
 import RecipeDetails from '../RecipeDetails';
 import RecipePhoto from '../RecipePhoto/RecipePhoto';
@@ -30,37 +30,30 @@ const Recipe = props => {
   const [modification, modificationDispatch] = useReducer(
     modificationReducer,
     props.modification
-      ? props.modification
+      ? { ...props.modification, sessionCount: 0 }
       : {
           sortings: [],
           alterations: [],
           removals: [],
-          additions: []
+          additions: [],
+          sessionCount: 0
         }
   );
-  const [unsavedCount, setUnsavedCount] = useState(0);
   const localStoreId = props.recipe
     ? `MOD-${props.recipe.uid}`
     : 'MOD-NEW-RECIPE';
 
-  // TODO: useEffect refactor
-  // componentDidMount() {
-  //   let { modification } = state;
-  //   if (localStorage.getItem(localStoreId)) {
-  //     modification = Object.assign(
-  //       modification,
-  //       JSON.parse(localStorage.getItem(localStoreId))
-  //     );
-  //   }
-  //   setState({ modification });
-  // }
-
-  // TODO: handle unsaved count some other way!?!?!???
-  // const saveModification = modification => {
-  //   localStorage.setItem(localStoreId, JSON.stringify(modification));
-  //   setModification(modification);
-  //   setUnsavedCount(unsavedCount + 1);
-  // };
+  useEffect(() => {
+    if (localStorage.getItem(localStoreId)) {
+      setModification(
+        Object.assign(
+          modification,
+          JSON.parse(localStorage.getItem(localStoreId))
+        ),
+        modificationDispatch
+      );
+    }
+  }, []);
 
   const onDragEnd = result => {
     // dropped outside the list or dropped in place
@@ -242,11 +235,7 @@ const Recipe = props => {
           </div>
           <aside className={css.stepDetail}>
             <div className={css.sticky}>
-              <RecipeStatus
-                recipe={recipe}
-                modification={modification}
-                unsavedCount={unsavedCount}
-              />
+              <RecipeStatus />
               <div className={css.ingredientTotals}>
                 {recipeItems
                   .filter(item => !modification.removals.includes(item.uid))

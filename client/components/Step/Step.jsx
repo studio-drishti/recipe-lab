@@ -23,10 +23,6 @@ const Step = ({ index, itemId, step, children }) => {
     modification: { alterations, removals },
     modificationDispatch
   } = useContext(RecipeContext);
-  const stepMods = useMemo(
-    () => alterations.filter(mod => mod.sourceId === step.uid),
-    [alterations]
-  );
   const isRemoved = useMemo(
     () => removals.some(sourceId => [itemId, step.uid].includes(sourceId)),
     [removals]
@@ -35,7 +31,10 @@ const Step = ({ index, itemId, step, children }) => {
   const [editing, setEditing] = useState(
     !stepFields.some(
       fieldName =>
-        step[fieldName] || stepMods.some(mod => mod.field === fieldName)
+        step[fieldName] ||
+        alterations.some(
+          mod => mod.sourceId === step.uid && mod.field === fieldName
+        )
     )
   );
 
@@ -46,7 +45,7 @@ const Step = ({ index, itemId, step, children }) => {
     undoRemoval([itemId, step.uid], modificationDispatch);
 
   const getStepValue = fieldName => {
-    const mod = stepMods.find(
+    const mod = alterations.find(
       mod => mod.sourceId === step.uid && mod.field === fieldName
     );
     return mod !== undefined ? mod.value : step[fieldName];

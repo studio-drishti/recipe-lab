@@ -20,7 +20,7 @@ export default (state, action) => {
        * If alteration does not exist and source value
        * is the same as the incoming value, bail.
        */
-      if (!alterationExists && source[field] === value) return;
+      if (!alterationExists && source[field] === value) return state;
 
       /**
        * 1. If alteration exists and source value is
@@ -41,7 +41,11 @@ export default (state, action) => {
           value
         });
       }
-      return { ...state, alterations };
+      return {
+        ...state,
+        alterations,
+        sessionCount: state.sessionCount + 1
+      };
     }
     case 'SET_ADDITION': {
       const { source, field, value } = action.payload;
@@ -50,11 +54,15 @@ export default (state, action) => {
         addition => addition.uid === source.uid
       );
 
-      if (index === -1) return;
+      if (index === -1) return state;
 
       additions[index][field] = value;
 
-      return { ...state, additions };
+      return {
+        ...state,
+        additions,
+        sessionCount: state.sessionCount + 1
+      };
     }
     case 'REMOVE_ITEM': {
       const item = action.payload;
@@ -77,7 +85,8 @@ export default (state, action) => {
         ...state,
         additions: additions.filter(
           addition => !toRemove.includes(addition.uid)
-        )
+        ),
+        sessionCount: state.sessionCount + 1
       };
     }
     case 'REMOVE_STEP': {
@@ -96,7 +105,8 @@ export default (state, action) => {
         ...state,
         additions: additions.filter(
           addition => !toRemove.includes(addition.uid)
-        )
+        ),
+        sessionCount: state.sessionCount + 1
       };
     }
     case 'REMOVE_INGREDIENT': {
@@ -110,7 +120,8 @@ export default (state, action) => {
         ...state,
         additions: additions.filter(
           addition => !addition.uid === ingredient.uid
-        )
+        ),
+        sessionCount: state.sessionCount + 1
       };
     }
     case 'ADD_REMOVAL': {
@@ -120,7 +131,7 @@ export default (state, action) => {
       /**
        * Source already removed, so bail.
        */
-      if (removals.includes(source.uid)) return;
+      if (removals.includes(source.uid)) return state;
 
       /**
        * add the new removal ID and
@@ -129,7 +140,8 @@ export default (state, action) => {
       return {
         ...state,
         removals: [...state.removals, source.uid],
-        alterations: alterations.filter(mod => mod.sourceId !== source.uid)
+        alterations: alterations.filter(mod => mod.sourceId !== source.uid),
+        sessionCount: state.sessionCount + 1
       };
     }
     case 'UNDO_REMOVAL': {
@@ -139,7 +151,8 @@ export default (state, action) => {
       const { removals } = state;
       return {
         ...state,
-        removals: removals.filter(uid => !sources.includes(uid))
+        removals: removals.filter(uid => !sources.includes(uid)),
+        sessionCount: state.sessionCount + 1
       };
     }
     case 'CREATE_ITEM': {
@@ -151,7 +164,11 @@ export default (state, action) => {
         name: '',
         processing: ''
       };
-      return { ...state, additions: [...state.additions, addition] };
+      return {
+        ...state,
+        additions: [...state.additions, addition],
+        sessionCount: state.sessionCount + 1
+      };
     }
     case 'CREATE_STEP': {
       const { itemId } = action.payload;
@@ -162,7 +179,11 @@ export default (state, action) => {
         directions: '',
         notes: ''
       };
-      return { ...state, additions: [...state.additions, addition] };
+      return {
+        ...state,
+        additions: [...state.additions, addition],
+        sessionCount: state.sessionCount + 1
+      };
     }
     case 'CREATE_INGREDIENT': {
       const { stepId } = action.payload;
@@ -175,7 +196,11 @@ export default (state, action) => {
         name: '',
         processing: ''
       };
-      return { ...state, additions: [...state.additions, addition] };
+      return {
+        ...state,
+        additions: [...state.additions, addition],
+        sessionCount: state.sessionCount + 1
+      };
     }
     case 'SET_SORTING': {
       const { sourceI, destinationI, parentId, unsorted } = action.payload;
@@ -207,7 +232,11 @@ export default (state, action) => {
         });
       }
 
-      return { ...state, sortings };
+      return {
+        ...state,
+        sortings,
+        sessionCount: state.sessionCount + 1
+      };
     }
     default:
       throw new Error();

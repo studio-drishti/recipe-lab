@@ -31,25 +31,22 @@ const Item = ({ children, item, index, isLast }) => {
     modification: { alterations, removals },
     modificationDispatch
   } = useContext(RecipeContext);
-  const itemMods = useMemo(
-    () => alterations.filter(mod => mod.sourceId === item.uid),
-    [alterations]
-  );
   const isRemoved = useMemo(() => removals.includes(item.uid), [removals]);
-
   const [hovering, setHovering] = useState(false);
   const [editing, setEditing] = useState(
     !itemFields.some(
       fieldName =>
-        item[fieldName] || itemMods.some(mod => mod.field === fieldName)
+        item[fieldName] ||
+        alterations.some(
+          mod => mod.sourceId === item.uid && mod.field === fieldName
+        )
     )
   );
-
   const itemRef = useRef();
   const inputRef = useRef();
 
   const getItemValue = fieldName => {
-    const mod = itemMods.find(
+    const mod = alterations.find(
       mod => mod.sourceId === item.uid && mod.field === fieldName
     );
     return mod !== undefined ? mod.value : item[fieldName];
@@ -167,7 +164,7 @@ const Item = ({ children, item, index, isLast }) => {
                 <MdDragHandle />
               </div>
               <div className={css.itemHeader}>
-                <form className={css.itemName}>
+                <form className={css.itemName} onSubmit={handleSubmit}>
                   {editing && (
                     <input
                       type="text"

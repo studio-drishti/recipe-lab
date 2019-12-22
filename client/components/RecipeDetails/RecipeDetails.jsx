@@ -50,11 +50,6 @@ const RecipeDetails = ({ className }) => {
   const timeInputRef = useRef();
   const servingInputRef = useRef();
 
-  const recipeMods = useMemo(
-    () => alterations.filter(alteration => alteration.sourceId === recipe.uid),
-    [alterations]
-  );
-
   const canDeletePhoto = Boolean(
     recipe &&
       recipe.photo &&
@@ -104,7 +99,7 @@ const RecipeDetails = ({ className }) => {
     if (edits[fieldName] !== undefined) return edits[fieldName];
 
     if (!recipe) return '';
-    const mod = recipeMods.find(mod => mod.field === fieldName);
+    const mod = alterations.find(mod => mod.field === fieldName);
     return mod !== undefined ? mod.value : recipe[fieldName];
   };
 
@@ -116,14 +111,13 @@ const RecipeDetails = ({ className }) => {
 
   const handleRecipeChange = e => {
     const { name, value } = e.target;
-    edits[name] = value;
 
     if (validationTimeouts.current[name])
       clearTimeout(validationTimeouts.current[name]);
 
     setEdits({
       ...edits,
-      name: value
+      [name]: value
     });
 
     validationTimeouts.current[name] = setTimeout(() => {
@@ -159,6 +153,8 @@ const RecipeDetails = ({ className }) => {
         .filter(([key]) => !hasErrors.includes(key))
         .forEach(([key, value]) => {
           setAlteration(recipe, key, value, modificationDispatch);
+          delete edits[key];
+          setEdits(edits);
         });
       disableEditing();
     } else if (hasErrors.length === 0) {
@@ -196,7 +192,7 @@ const RecipeDetails = ({ className }) => {
       );
     }
 
-    const mod = recipeMods.find(mod => mod.field === fieldName);
+    const mod = alterations.find(mod => mod.field === fieldName);
     if (mod !== undefined) {
       return <DiffText original={recipe[fieldName]} modified={mod.value} />;
     }
