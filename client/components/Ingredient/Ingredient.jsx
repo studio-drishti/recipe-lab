@@ -130,7 +130,11 @@ const Ingredient = ({ index, ingredient, itemId, stepId }) => {
   const isIngredientEmpty = () => {
     return !ingredientFields.some(
       fieldName =>
-        edits[fieldName] || alterations[fieldName] || ingredient[fieldName]
+        edits[fieldName] ||
+        ingredient[fieldName] ||
+        alterations.some(
+          mod => mod.sourceId === ingredient.uid && mod.field === fieldName
+        )
     );
   };
 

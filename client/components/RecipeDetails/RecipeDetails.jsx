@@ -99,7 +99,9 @@ const RecipeDetails = ({ className }) => {
     if (edits[fieldName] !== undefined) return edits[fieldName];
 
     if (!recipe) return '';
-    const mod = alterations.find(mod => mod.field === fieldName);
+    const mod = alterations.find(
+      mod => mod.sourceId === recipe.uid && mod.field === fieldName
+    );
     return mod !== undefined ? mod.value : recipe[fieldName];
   };
 
@@ -192,7 +194,9 @@ const RecipeDetails = ({ className }) => {
       );
     }
 
-    const mod = alterations.find(mod => mod.field === fieldName);
+    const mod = alterations.find(
+      mod => mod.sourceId === recipe.uid && mod.field === fieldName
+    );
     if (mod !== undefined) {
       return <DiffText original={recipe[fieldName]} modified={mod.value} />;
     }
