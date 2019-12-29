@@ -177,7 +177,7 @@ const Item = ({ children, item, index, isLast }) => {
                   )}
 
                   {!editing && (
-                    <h3 onMouseDown={handleSelect}>{renderNameWithMods()}</h3>
+                    <h2 onMouseDown={handleSelect}>{renderNameWithMods()}</h2>
                   )}
                 </form>
                 <div className={css.itemActions}>

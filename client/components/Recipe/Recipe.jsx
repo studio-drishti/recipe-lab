@@ -202,25 +202,19 @@ const Recipe = props => {
                               itemId={item.uid}
                               step={step}
                             >
-                              {({ isActive }) => (
-                                <>
-                                  {isActive && (
-                                    <IngredientList stepId={step.uid}>
-                                      {getSortedIngredients(step).map(
-                                        (ingredient, i) => (
-                                          <Ingredient
-                                            key={ingredient.uid}
-                                            index={i}
-                                            ingredient={ingredient}
-                                            itemId={item.uid}
-                                            stepId={step.uid}
-                                          />
-                                        )
-                                      )}
-                                    </IngredientList>
-                                  )}
-                                </>
-                              )}
+                              <IngredientList stepId={step.uid}>
+                                {getSortedIngredients(step).map(
+                                  (ingredient, i) => (
+                                    <Ingredient
+                                      key={ingredient.uid}
+                                      index={i}
+                                      ingredient={ingredient}
+                                      itemId={item.uid}
+                                      stepId={step.uid}
+                                    />
+                                  )
+                                )}
+                              </IngredientList>
                             </Step>
                           ))}
                         </StepList>

@@ -160,7 +160,7 @@ const Step = ({ index, itemId, step, children }) => {
             })}
           >
             <div className={css.stepNum} {...provided.dragHandleProps}>
-              <span>{index + 1}.</span>
+              Step {index + 1}
             </div>
 
             <div className={css.stepContents}>
@@ -182,41 +182,40 @@ const Step = ({ index, itemId, step, children }) => {
                 )}
               </form>
 
-              {children && children({ editing, isActive })}
+              <div>{children}</div>
+            </div>
+            <div className={css.stepActions}>
+              <TextButtonGroup>
+                {editing && (
+                  <TextButton onClick={handleSave}>
+                    <MdCheck /> save directions
+                  </TextButton>
+                )}
 
-              <div className={css.stepActions}>
-                <TextButtonGroup>
-                  {editing && (
-                    <TextButton onClick={handleSave}>
-                      <MdCheck /> save directions
-                    </TextButton>
-                  )}
+                {!editing && !isRemoved && (
+                  <TextButton title="edit directions" onClick={enableEditing}>
+                    <MdEdit /> edit directions
+                  </TextButton>
+                )}
 
-                  {!editing && !isRemoved && (
-                    <TextButton title="edit directions" onClick={enableEditing}>
-                      <MdEdit /> edit directions
-                    </TextButton>
-                  )}
+                {!isRemoved && (
+                  <TextButton onClick={handleCreateIngredient}>
+                    <MdAdd /> add ingredient
+                  </TextButton>
+                )}
 
-                  {!isRemoved && (
-                    <TextButton onClick={handleCreateIngredient}>
-                      <MdAdd /> add ingredient
-                    </TextButton>
-                  )}
+                {!isRemoved && (
+                  <TextButton onClick={handleRemove}>
+                    <MdClear /> remove step
+                  </TextButton>
+                )}
 
-                  {!isRemoved && (
-                    <TextButton onClick={handleRemove}>
-                      <MdClear /> remove step
-                    </TextButton>
-                  )}
-
-                  {isRemoved && !editing && (
-                    <TextButton onClick={handleRestore}>
-                      <MdRefresh /> restore step
-                    </TextButton>
-                  )}
-                </TextButtonGroup>
-              </div>
+                {isRemoved && !editing && (
+                  <TextButton onClick={handleRestore}>
+                    <MdRefresh /> restore step
+                  </TextButton>
+                )}
+              </TextButtonGroup>
             </div>
           </div>
         </li>

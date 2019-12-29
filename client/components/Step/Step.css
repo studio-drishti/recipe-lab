@@ -2,10 +2,13 @@
   margin-bottom: 0.25rem;
 }
 
-.step {
+.stepContents {
   display: grid;
-  grid-template-columns: 1fr 11fr;
-  transition: background linear 0.2s;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 1rem;
+}
+
+.step {
   padding: 0.5rem;
   border-radius: var(--border-radius-sm);
   background: var(--color-white);
@@ -38,7 +41,7 @@
     opacity: 0;
   }
 
-  & .stepNum {
+  /* & .stepNum {
     font-weight: 100;
     cursor: grab;
 
@@ -53,6 +56,11 @@
       transform: rotate(45deg) translateY(-0.05em);
       vertical-align: middle;
     }
+  } */
+  & .stepNum {
+    border-bottom: 1px solid black;
+    font-weight: bold;
+    font-size: larger;
   }
 }
 
