@@ -2,7 +2,9 @@ import React, { useState, useRef, useEffect, useContext, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { Draggable } from 'react-beautiful-dnd';
 import {
-  MdDragHandle,
+  MdKeyboardArrowDown,
+  MdKeyboardArrowUp,
+  MdDoNotDisturb,
   MdEdit,
   MdClear,
   MdCheck,
@@ -18,8 +20,11 @@ import {
   createItem,
   createStep
 } from '../../actions/modification';
+import TextInput from '../TextInput';
 import TextButton from '../TextButton';
 import TextButtonGroup from '../TextButtonGroup';
+import IconButton from '../IconButton';
+import IconButtonGroup from '../IconButtonGroup';
 import DiffText from '../DiffText';
 
 import css from './Item.css';
@@ -33,6 +38,8 @@ const Item = ({ children, item, index, isLast }) => {
   } = useContext(RecipeContext);
   const isRemoved = useMemo(() => removals.includes(item.uid), [removals]);
   const [hovering, setHovering] = useState(false);
+  const [edits, setEdits] = useState({});
+  const [errors, setErrors] = useState({});
   const [editing, setEditing] = useState(
     !itemFields.some(
       fieldName =>
@@ -42,10 +49,12 @@ const Item = ({ children, item, index, isLast }) => {
         )
     )
   );
+  const validationTimeouts = useRef({});
   const itemRef = useRef();
   const inputRef = useRef();
 
   const getItemValue = fieldName => {
+    if (edits[fieldName] !== undefined) return edits[fieldName];
     const mod = alterations.find(
       mod => mod.sourceId === item.uid && mod.field === fieldName
     );
@@ -57,10 +66,28 @@ const Item = ({ children, item, index, isLast }) => {
     setEditing(true);
   };
 
+  const isItemEmpty = () => {
+    return !itemFields.some(
+      fieldName =>
+        edits[fieldName] ||
+        item[fieldName] ||
+        alterations.some(
+          mod => mod.sourceId === item.uid && mod.field === fieldName
+        )
+    );
+  };
+
   const disableEditing = () => {
-    if (!getItemValue('name')) {
+    if (isItemEmpty()) {
       removeItem(item, modificationDispatch);
     } else {
+      Object.entries(edits)
+        .filter(([key]) => validate(key, getItemValue(key)))
+        .forEach(([key, value]) => {
+          setAlteration(item, key, value, modificationDispatch);
+          delete edits[key];
+          setEdits(edits);
+        });
       setEditing(false);
     }
   };
@@ -96,7 +123,12 @@ const Item = ({ children, item, index, isLast }) => {
   const handleSave = e => {
     e.preventDefault();
     disableEditing();
-    if (!getItemValue('name')) removeItem(item, modificationDispatch);
+  };
+
+  const discardChanges = e => {
+    e.preventDefault();
+    setEdits({});
+    disableEditing();
   };
 
   const handleCreateStep = () => {
@@ -108,12 +140,12 @@ const Item = ({ children, item, index, isLast }) => {
   };
 
   const renderNameWithMods = () => {
-    const prefix = 'Directions for ';
-    const original = prefix + item.name;
+    const suffix = ' Directions';
+    const original = item.name + suffix;
 
     if (isRemoved) return <del>{original}</del>;
 
-    const modified = prefix + getItemValue('name');
+    const modified = getItemValue('name') + suffix;
     if (original !== modified) {
       return <DiffText original={original} modified={modified} />;
     }
@@ -121,10 +153,40 @@ const Item = ({ children, item, index, isLast }) => {
     return original;
   };
 
+  const validate = (fieldName, value) => {
+    let err = undefined;
+
+    switch (fieldName) {
+      case 'name':
+        if (value.length < 3 || value.length > 125)
+          err = 'Item name must be between 3 and 125 characters';
+        break;
+    }
+
+    setErrors(errors => ({
+      ...errors,
+      [fieldName]: err
+    }));
+
+    return Boolean(!err);
+  };
+
   const handleItemChange = e => {
     const { name, value } = e.target;
     if (isRemoved) undoRemoval(item, modificationDispatch);
-    setAlteration(item, name, value, modificationDispatch);
+
+    if (validationTimeouts.current[name])
+      clearTimeout(validationTimeouts.current[name]);
+
+    setEdits({
+      ...edits,
+      [name]: value
+    });
+
+    validationTimeouts.current[name] = setTimeout(() => {
+      validate(name, value);
+      delete validationTimeouts.current[name];
+    }, 1000);
   };
 
   useEffect(() => {
@@ -157,54 +219,80 @@ const Item = ({ children, item, index, isLast }) => {
             <div
               onMouseOver={mouseEnter}
               onMouseLeave={mouseLeave}
-              className={css.itemHeaderWrap}
-              ref={itemRef}
+              className={css.itemHeader}
+              {...provided.dragHandleProps}
             >
-              <div className={css.dragHandle} {...provided.dragHandleProps}>
-                <MdDragHandle />
-              </div>
-              <div className={css.itemHeader}>
-                <form className={css.itemName} onSubmit={handleSubmit}>
-                  {editing && (
-                    <input
-                      type="text"
-                      name="name"
-                      value={getItemValue('name')}
-                      ref={inputRef}
-                      placeholder="Item name"
-                      onChange={handleItemChange}
-                    />
-                  )}
+              <form
+                className={css.itemName}
+                onSubmit={handleSubmit}
+                ref={itemRef}
+              >
+                {editing && (
+                  <TextInput
+                    name="name"
+                    value={getItemValue('name')}
+                    inputRef={inputRef}
+                    placeholder="Item name"
+                    onChange={handleItemChange}
+                    error={errors.name}
+                  />
+                )}
 
-                  {!editing && (
-                    <h2 onMouseDown={handleSelect}>{renderNameWithMods()}</h2>
-                  )}
-                </form>
-                <div className={css.itemActions}>
-                  {editing && (
-                    <button title="Save modifications" onClick={handleSave}>
-                      <MdCheck />
-                    </button>
-                  )}
+                {!editing && (
+                  <h2 onMouseDown={handleSelect}>{renderNameWithMods()}</h2>
+                )}
 
-                  {!editing && isRemoved && (
-                    <button title="Restore item" onClick={handleRestore}>
-                      <MdRefresh />
-                    </button>
+                <IconButtonGroup
+                  className={classnames(css.itemActions, {
+                    [css.dragging]: snapshot.isDragging
+                  })}
+                >
+                  {editing && (
+                    <>
+                      <IconButton title="save changes" onClick={handleSave}>
+                        <MdCheck />
+                      </IconButton>
+                      <IconButton
+                        title="discard changes"
+                        onClick={discardChanges}
+                      >
+                        <MdDoNotDisturb />
+                      </IconButton>
+                    </>
                   )}
 
                   {!editing && !isRemoved && (
                     <>
-                      <button title="Edit item name" onClick={handleSelect}>
+                      <IconButton title="edit item" onClick={handleSelect}>
                         <MdEdit />
-                      </button>
-                      <button title="Remove item" onClick={handleRemove}>
+                      </IconButton>
+                      {/* <IconButton title="remove item" onClick={handleRemove}>
                         <MdClear />
-                      </button>
+                      </IconButton> */}
                     </>
                   )}
-                </div>
-              </div>
+
+                  {!editing && isRemoved && (
+                    <IconButton title="restore item" onClick={handleRestore}>
+                      <MdRefresh />
+                    </IconButton>
+                  )}
+
+                  {!editing && (
+                    <>
+                      <IconButton>
+                        <MdKeyboardArrowDown />
+                      </IconButton>
+                      <IconButton>
+                        <MdKeyboardArrowUp />
+                      </IconButton>
+                    </>
+                  )}
+                </IconButtonGroup>
+              </form>
+              {/* <div>
+                <h2>Ingredients</h2>
+              </div> */}
             </div>
             {children}
           </div>
@@ -213,13 +301,27 @@ const Item = ({ children, item, index, isLast }) => {
               [css.dragging]: snapshot.isDragging
             })}
           >
-            <TextButton onClick={handleCreateStep} disabled={editing}>
-              <MdAdd /> add step
-            </TextButton>
+            {!isRemoved && (
+              <TextButton onClick={handleCreateStep} disabled={editing}>
+                <MdAdd /> add step
+              </TextButton>
+            )}
 
             {isLast && (
               <TextButton onClick={handleCreateItem} disabled={editing}>
                 <MdAdd /> add item
+              </TextButton>
+            )}
+
+            {!editing && !isRemoved && (
+              <TextButton onClick={handleRemove}>
+                <MdClear /> remove {getItemValue('name').toLowerCase()}
+              </TextButton>
+            )}
+
+            {!editing && isRemoved && (
+              <TextButton onClick={handleRestore}>
+                <MdRefresh /> restore {getItemValue('name').toLowerCase()}
               </TextButton>
             )}
           </TextButtonGroup>
@@ -233,7 +335,6 @@ Item.propTypes = {
   children: PropTypes.node,
   index: PropTypes.number,
   item: PropTypes.object,
-  handleItemChange: PropTypes.func,
   isLast: PropTypes.bool
 };
 

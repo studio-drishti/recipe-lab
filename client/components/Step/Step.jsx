@@ -228,7 +228,7 @@ Step.propTypes = {
   index: PropTypes.number,
   itemId: PropTypes.string,
   step: PropTypes.object,
-  children: PropTypes.func
+  children: PropTypes.node
 };
 
 export default Step;

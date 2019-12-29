@@ -32,47 +32,29 @@
 }
 
 .itemName {
-  & h3 {
-    cursor: pointer;
-    margin: 0;
-  }
-
   & input {
-    width: 100%;
     padding: 0.25rem;
     line-height: 1.2em;
   }
 }
 
-.dragHandle {
-  font-size: 1.5rem;
-  color: var(--color-medium-gray);
-  transition: all linear 0.2s;
-}
-
-.itemHeaderWrap {
-  display: grid;
-  grid-template-columns: 1fr 11fr;
+.itemHeader {
   padding: 0.5rem;
 
-  & h3 {
-    margin: 0;
-  }
-}
+  & form {
+    display: flex;
 
-.itemHeader {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  grid-column-gap: 0.5rem;
-
-  & button {
-    border: 1px solid var(--color-medium-gray);
-    padding: 0.25rem;
-    background: white;
-
-    & + button {
-      border-left: 0;
+    & > :last-child {
+      margin-left: auto;
     }
+
+    & h2 {
+      cursor: pointer;
+    }
+  }
+
+  & h2 {
+    margin: 0;
   }
 }
 

@@ -146,8 +146,8 @@ export default (state, action) => {
     }
     case 'UNDO_REMOVAL': {
       const sources = Array.isArray(action.payload)
-        ? action.payload
-        : [action.payload];
+        ? action.payload.map(source => source.uid)
+        : [action.payload.uid];
       const { removals } = state;
       return {
         ...state,
