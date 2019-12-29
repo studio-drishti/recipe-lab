@@ -1,14 +1,13 @@
 import React, { useContext, useState, useEffect, useRef, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { Draggable } from 'react-beautiful-dnd';
-import { MdEdit, MdClear, MdCheck, MdRefresh, MdAdd } from 'react-icons/md';
+import { MdEdit, MdClear, MdCheck, MdRefresh } from 'react-icons/md';
 import classnames from 'classnames';
 import Textarea from 'react-textarea-autosize';
 import RecipeContext from '../../context/RecipeContext';
 import {
   removeStep,
   undoRemoval,
-  createIngredient,
   setAlteration
 } from '../../actions/modification';
 import DiffText from '../DiffText';
@@ -109,11 +108,6 @@ const Step = ({ index, itemId, step, children }) => {
     restoreStep();
   };
 
-  const handleCreateIngredient = e => {
-    e.stopPropagation();
-    createIngredient(step.uid, modificationDispatch);
-  };
-
   const renderDirectionsWithMods = () => {
     const original = step.directions;
     if (isRemoved) return <del>{original}</del>;
@@ -195,12 +189,6 @@ const Step = ({ index, itemId, step, children }) => {
                 {!editing && !isRemoved && (
                   <TextButton title="edit directions" onClick={enableEditing}>
                     <MdEdit /> edit directions
-                  </TextButton>
-                )}
-
-                {!isRemoved && (
-                  <TextButton onClick={handleCreateIngredient}>
-                    <MdAdd /> add ingredient
                   </TextButton>
                 )}
 
