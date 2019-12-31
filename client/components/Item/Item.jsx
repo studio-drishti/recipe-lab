@@ -29,7 +29,7 @@ import IconButtonGroup from '../IconButtonGroup';
 import DiffText from '../DiffText';
 import css from './Item.css';
 
-const Item = ({ children, item, index, isLast }) => {
+const Item = ({ children, item, index, isLast, moveDraggable }) => {
   const itemFields = ['name'];
 
   const {
@@ -253,10 +253,16 @@ const Item = ({ children, item, index, isLast }) => {
 
                   {!editing && (
                     <>
-                      <IconButton>
+                      <IconButton
+                        disabled={snapshot.isDragging || isLast}
+                        onClick={() => moveDraggable(item.uid, 'down')}
+                      >
                         <MdKeyboardArrowDown />
                       </IconButton>
-                      <IconButton>
+                      <IconButton
+                        disabled={snapshot.isDragging || index === 0}
+                        onClick={() => moveDraggable(item.uid, 'up')}
+                      >
                         <MdKeyboardArrowUp />
                       </IconButton>
                     </>
@@ -305,7 +311,8 @@ Item.propTypes = {
   children: PropTypes.node,
   index: PropTypes.number,
   item: PropTypes.object,
-  isLast: PropTypes.bool
+  isLast: PropTypes.bool,
+  moveDraggable: PropTypes.func
 };
 
 Item.defaultProps = {
