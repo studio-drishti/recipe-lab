@@ -6,6 +6,7 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-gap: 1rem;
+  align-items: flex-start;
 }
 
 .step {
@@ -17,7 +18,7 @@
   border: 1px solid transparent;
   transition: all linear 0.2s;
 
-  &:hover,
+  &.hover,
   &.editing,
   &.dragging,
   &.active {
@@ -28,12 +29,6 @@
   &:not(.active).dragging {
     & .stepShortcuts {
       opacity: 1;
-    }
-  }
-
-  &.active {
-    & .stepActions {
-      display: block;
     }
   }
 
@@ -69,10 +64,15 @@
     cursor: pointer;
     margin: 0;
   }
+  &:hover .stepActions {
+    opacity: 1;
+    transition: opacity ease-in 0.3s;
+  }
 }
 
 .stepActions {
-  display: none;
+  opacity: 0;
+  transition: opacity ease-out 0.3s;
 }
 
 .stepShortcuts {

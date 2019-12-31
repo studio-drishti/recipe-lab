@@ -26,6 +26,7 @@ const Step = ({ index, itemId, step, children }) => {
     () => removals.some(sourceId => [itemId, step.uid].includes(sourceId)),
     [removals]
   );
+  const [hovering, setHovering] = useState(false);
   const [isActive, setActive] = useState(false);
   const [editing, setEditing] = useState(
     !stepFields.some(
@@ -82,6 +83,14 @@ const Step = ({ index, itemId, step, children }) => {
     } else if (e.target !== inputRef.current) {
       disableEditing();
     }
+  };
+
+  const mouseEnter = () => {
+    setHovering(true);
+  };
+
+  const mouseLeave = () => {
+    setHovering(false);
   };
 
   const handleSelect = e => {
@@ -148,12 +157,18 @@ const Step = ({ index, itemId, step, children }) => {
           <div
             ref={stepRef}
             className={classnames(css.step, {
+              [css.hover]: hovering,
               [css.active]: isActive,
               [css.editing]: editing,
               [css.dragging]: snapshot.isDragging
             })}
           >
-            <div className={css.stepNum} {...provided.dragHandleProps}>
+            <div
+              onMouseOver={mouseEnter}
+              onMouseLeave={mouseLeave}
+              className={css.stepNum}
+              {...provided.dragHandleProps}
+            >
               Step {index + 1}
             </div>
 
@@ -174,36 +189,39 @@ const Step = ({ index, itemId, step, children }) => {
                     {renderDirectionsWithMods()}
                   </p>
                 )}
+                <div className={css.stepActions}>
+                  <TextButtonGroup className={css.buttons}>
+                    {editing && (
+                      <TextButton onClick={handleSave}>
+                        <MdCheck /> save directions
+                      </TextButton>
+                    )}
+
+                    {!editing && !isRemoved && (
+                      <TextButton
+                        title="edit directions"
+                        onClick={enableEditing}
+                      >
+                        <MdEdit /> edit directions
+                      </TextButton>
+                    )}
+
+                    {!isRemoved && (
+                      <TextButton onClick={handleRemove}>
+                        <MdClear /> remove step
+                      </TextButton>
+                    )}
+
+                    {isRemoved && !editing && (
+                      <TextButton onClick={handleRestore}>
+                        <MdRefresh /> restore step
+                      </TextButton>
+                    )}
+                  </TextButtonGroup>
+                </div>
               </form>
 
               <div>{children}</div>
-            </div>
-            <div className={css.stepActions}>
-              <TextButtonGroup>
-                {editing && (
-                  <TextButton onClick={handleSave}>
-                    <MdCheck /> save directions
-                  </TextButton>
-                )}
-
-                {!editing && !isRemoved && (
-                  <TextButton title="edit directions" onClick={enableEditing}>
-                    <MdEdit /> edit directions
-                  </TextButton>
-                )}
-
-                {!isRemoved && (
-                  <TextButton onClick={handleRemove}>
-                    <MdClear /> remove step
-                  </TextButton>
-                )}
-
-                {isRemoved && !editing && (
-                  <TextButton onClick={handleRestore}>
-                    <MdRefresh /> restore step
-                  </TextButton>
-                )}
-              </TextButtonGroup>
             </div>
           </div>
         </li>
