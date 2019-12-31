@@ -31,7 +31,7 @@
   }
 }
 
-.itemName {
+.nameInput {
   & input {
     padding: 0.25rem;
     line-height: 1.2em;
@@ -42,11 +42,10 @@
   padding: 0.5rem;
 
   & form {
-    display: flex;
-
-    & > :last-child {
-      margin-left: auto;
-    }
+    display: grid;
+    grid-template-columns: max-content max-content;
+    justify-content: space-between;
+    grid-column-gap: 0.5rem;
 
     & h2 {
       cursor: pointer;
@@ -56,6 +55,11 @@
   & h2 {
     margin: 0;
   }
+}
+
+.editing .itemHeader form {
+  grid-template-columns: auto max-content;
+  justify-content: initial;
 }
 
 .itemActions {

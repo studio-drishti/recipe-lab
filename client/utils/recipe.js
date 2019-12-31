@@ -10,3 +10,21 @@ export const getSorted = (unsorted, sortings, parentId) => {
     return indexA > indexB;
   });
 };
+
+/**
+ * Check if a recipe object (item, step, ingredient) does not have anything entered
+ * in any of its fields; in the source itself, alterations array, or optional edits object
+ * @param {Array} fields array of field names to check
+ * @param {Object} source the source object (item/step/ingredient)
+ * @param {Array} alterations array of recipe alterations
+ * @param {Object} edits optional edits object
+ */
+export const areAllFieldsEmpty = (fields, source, alterations, edits) =>
+  !fields.some(
+    fieldName =>
+      (edits !== undefined && edits[fieldName]) ||
+      source[fieldName] ||
+      alterations.some(
+        mod => mod.sourceId === source.uid && mod.field === fieldName
+      )
+  );
