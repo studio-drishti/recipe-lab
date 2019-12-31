@@ -1,4 +1,10 @@
-import React, { useReducer, useContext, useCallback, useEffect } from 'react';
+import React, {
+  useReducer,
+  useContext,
+  useCallback,
+  useEffect,
+  useRef
+} from 'react';
 import PropTypes from 'prop-types';
 import { DragDropContext } from 'react-beautiful-dnd';
 import UserContext from '../../context/UserContext';
@@ -22,6 +28,7 @@ import RecipeStatus from '../RecipeStatus';
 import css from './Recipe.css';
 
 const Recipe = props => {
+  const sensorAPIRef = useRef();
   const { user } = useContext(UserContext);
   const [recipe, recipeDispatch] = useReducer(
     recipeReducer,
@@ -91,6 +98,31 @@ const Recipe = props => {
         modificationDispatch
       );
     }
+  };
+
+  const moveDraggable = (draggableId, direction) => {
+    const api = sensorAPIRef.current;
+
+    if (!api) return null;
+
+    const preDrag = api.tryGetLock(draggableId);
+
+    if (!preDrag) return;
+
+    const drag = preDrag.snapLift();
+
+    switch (direction) {
+      case 'up':
+        drag.moveUp();
+        break;
+      case 'down':
+        drag.moveDown();
+        break;
+      default:
+        throw new Error('Invalid drag direction');
+    }
+
+    setTimeout(() => drag.drop(), 300);
   };
 
   const getItems = (sorted = true) => {
@@ -171,7 +203,14 @@ const Recipe = props => {
     <RecipeContext.Provider
       value={{ recipe, modification, recipeDispatch, modificationDispatch }}
     >
-      <DragDropContext onDragEnd={onDragEnd}>
+      <DragDropContext
+        onDragEnd={onDragEnd}
+        sensors={[
+          api => {
+            sensorAPIRef.current = api;
+          }
+        ]}
+      >
         <header className={css.recipeHeader}>
           <RecipeDetails className={css.recipeDetails} />
           <RecipePhoto
@@ -192,6 +231,7 @@ const Recipe = props => {
                       item={item}
                       index={itemI}
                       isLast={itemI === recipeItems.length - 1}
+                      moveDraggable={moveDraggable}
                     >
                       {itemSteps.length > 0 && (
                         <StepList itemId={item.uid}>

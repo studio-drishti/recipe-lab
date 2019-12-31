@@ -14,7 +14,8 @@
     transition: all linear 0.2s;
   }
 
-  &.hover:not(.dragging) .itemActions,
+  &.hover .itemActions,
+  &.dragging .itemActions,
   &.editing .itemActions {
     opacity: 1;
   }
@@ -31,7 +32,7 @@
   }
 }
 
-.itemName {
+.nameInput {
   & input {
     padding: 0.25rem;
     line-height: 1.2em;
@@ -42,11 +43,10 @@
   padding: 0.5rem;
 
   & form {
-    display: flex;
-
-    & > :last-child {
-      margin-left: auto;
-    }
+    display: grid;
+    grid-template-columns: max-content max-content;
+    justify-content: space-between;
+    grid-column-gap: 0.5rem;
 
     & h2 {
       cursor: pointer;
@@ -58,12 +58,7 @@
   }
 }
 
-.itemActions {
-  transition: all linear 0.2s;
-
-  &.dragging,
-  &.editing {
-    opacity: 0;
-    pointer-events: none;
-  }
+.editing .itemHeader form {
+  grid-template-columns: auto max-content;
+  justify-content: initial;
 }

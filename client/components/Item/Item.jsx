@@ -20,38 +20,36 @@ import {
   createItem,
   createStep
 } from '../../actions/modification';
+import { areAllFieldsEmpty } from '../../utils/recipe';
 import TextInput from '../TextInput';
 import TextButton from '../TextButton';
 import TextButtonGroup from '../TextButtonGroup';
 import IconButton from '../IconButton';
 import IconButtonGroup from '../IconButtonGroup';
 import DiffText from '../DiffText';
-
 import css from './Item.css';
 
-const Item = ({ children, item, index, isLast }) => {
+const Item = ({ children, item, index, isLast, moveDraggable }) => {
   const itemFields = ['name'];
+
   const {
     recipe: { uid: recipeId },
     modification: { alterations, removals },
     modificationDispatch
   } = useContext(RecipeContext);
+
   const isRemoved = useMemo(() => removals.includes(item.uid), [removals]);
+
+  const validationTimeouts = useRef({});
+  const itemRef = useRef();
+  const inputRef = useRef();
+
   const [hovering, setHovering] = useState(false);
   const [edits, setEdits] = useState({});
   const [errors, setErrors] = useState({});
   const [editing, setEditing] = useState(
-    !itemFields.some(
-      fieldName =>
-        item[fieldName] ||
-        alterations.some(
-          mod => mod.sourceId === item.uid && mod.field === fieldName
-        )
-    )
+    areAllFieldsEmpty(itemFields, item, alterations)
   );
-  const validationTimeouts = useRef({});
-  const itemRef = useRef();
-  const inputRef = useRef();
 
   const getItemValue = fieldName => {
     if (edits[fieldName] !== undefined) return edits[fieldName];
@@ -66,40 +64,26 @@ const Item = ({ children, item, index, isLast }) => {
     setEditing(true);
   };
 
-  const isItemEmpty = () => {
-    return !itemFields.some(
-      fieldName =>
-        edits[fieldName] ||
-        item[fieldName] ||
-        alterations.some(
-          mod => mod.sourceId === item.uid && mod.field === fieldName
-        )
-    );
-  };
-
-  const disableEditing = () => {
-    if (isItemEmpty()) {
-      removeItem(item, modificationDispatch);
-    } else {
-      Object.entries(edits)
-        .filter(([key]) => validate(key, getItemValue(key)))
-        .forEach(([key, value]) => {
-          setAlteration(item, key, value, modificationDispatch);
-          delete edits[key];
-          setEdits(edits);
-        });
-      setEditing(false);
-    }
+  const saveEdits = () => {
+    Object.entries(edits)
+      .filter(([key]) => validate(key, getItemValue(key)))
+      .forEach(([key, value]) => {
+        setAlteration(item, key, value, modificationDispatch);
+        delete edits[key];
+        setEdits(edits);
+      });
   };
 
   const handleSubmit = e => {
     e.preventDefault();
-    disableEditing();
+    saveEdits();
+    setEditing(false);
   };
 
   const handleClick = e => {
     if (itemRef.current.contains(e.target)) return;
-    disableEditing();
+    saveEdits();
+    setEditing(false);
   };
 
   const mouseEnter = () => {
@@ -120,15 +104,10 @@ const Item = ({ children, item, index, isLast }) => {
     undoRemoval(item, modificationDispatch);
   };
 
-  const handleSave = e => {
-    e.preventDefault();
-    disableEditing();
-  };
-
   const discardChanges = e => {
     e.preventDefault();
     setEdits({});
-    disableEditing();
+    setEditing(false);
   };
 
   const handleCreateStep = () => {
@@ -195,6 +174,8 @@ const Item = ({ children, item, index, isLast }) => {
       inputRef.current.focus();
     } else {
       document.removeEventListener('mousedown', handleClick);
+      if (areAllFieldsEmpty(itemFields, item, alterations, edits))
+        removeItem(item, modificationDispatch);
     }
     return () => {
       document.removeEventListener('mousedown', handleClick);
@@ -222,14 +203,11 @@ const Item = ({ children, item, index, isLast }) => {
               className={css.itemHeader}
               {...provided.dragHandleProps}
             >
-              <form
-                className={css.itemName}
-                onSubmit={handleSubmit}
-                ref={itemRef}
-              >
+              <form onSubmit={handleSubmit} ref={itemRef}>
                 {editing && (
                   <TextInput
                     name="name"
+                    className={css.nameInput}
                     value={getItemValue('name')}
                     inputRef={inputRef}
                     placeholder="Item name"
@@ -249,7 +227,7 @@ const Item = ({ children, item, index, isLast }) => {
                 >
                   {editing && (
                     <>
-                      <IconButton title="save changes" onClick={handleSave}>
+                      <IconButton title="save changes" type="submit">
                         <MdCheck />
                       </IconButton>
                       <IconButton
@@ -262,14 +240,9 @@ const Item = ({ children, item, index, isLast }) => {
                   )}
 
                   {!editing && !isRemoved && (
-                    <>
-                      <IconButton title="edit item" onClick={handleSelect}>
-                        <MdEdit />
-                      </IconButton>
-                      {/* <IconButton title="remove item" onClick={handleRemove}>
-                        <MdClear />
-                      </IconButton> */}
-                    </>
+                    <IconButton title="edit item" onClick={handleSelect}>
+                      <MdEdit />
+                    </IconButton>
                   )}
 
                   {!editing && isRemoved && (
@@ -280,19 +253,22 @@ const Item = ({ children, item, index, isLast }) => {
 
                   {!editing && (
                     <>
-                      <IconButton>
+                      <IconButton
+                        disabled={snapshot.isDragging || isLast}
+                        onClick={() => moveDraggable(item.uid, 'down')}
+                      >
                         <MdKeyboardArrowDown />
                       </IconButton>
-                      <IconButton>
+                      <IconButton
+                        disabled={snapshot.isDragging || index === 0}
+                        onClick={() => moveDraggable(item.uid, 'up')}
+                      >
                         <MdKeyboardArrowUp />
                       </IconButton>
                     </>
                   )}
                 </IconButtonGroup>
               </form>
-              {/* <div>
-                <h2>Ingredients</h2>
-              </div> */}
             </div>
             {children}
           </div>
@@ -335,7 +311,8 @@ Item.propTypes = {
   children: PropTypes.node,
   index: PropTypes.number,
   item: PropTypes.object,
-  isLast: PropTypes.bool
+  isLast: PropTypes.bool,
+  moveDraggable: PropTypes.func
 };
 
 Item.defaultProps = {
