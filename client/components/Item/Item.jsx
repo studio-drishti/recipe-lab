@@ -119,12 +119,12 @@ const Item = ({ children, item, index, isLast, moveDraggable }) => {
   };
 
   const renderNameWithMods = () => {
-    const suffix = ' Directions';
-    const original = item.name + suffix;
+    const prefix = 'Directions for ';
+    const original = prefix + item.name;
 
     if (isRemoved) return <del>{original}</del>;
 
-    const modified = getItemValue('name') + suffix;
+    const modified = prefix + getItemValue('name');
     if (original !== modified) {
       return <DiffText original={original} modified={modified} />;
     }

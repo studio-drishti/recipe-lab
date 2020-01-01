@@ -206,7 +206,6 @@ const Recipe = props => {
           />
           <RecipeDetails className={css.recipeDetails} />
         </header>
-
         <div className={css.ingredientTotals}>
           {recipeItems
             .filter(item => !modification.removals.includes(item.uid))
