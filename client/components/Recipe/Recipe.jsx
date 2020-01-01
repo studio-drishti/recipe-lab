@@ -12,7 +12,7 @@ import RecipeContext from '../../context/RecipeContext';
 import recipeReducer from '../../reducers/recipe';
 import modificationReducer from '../../reducers/modification';
 import { setSorting, setModification } from '../../actions/modification';
-import { getSorted } from '../../utils/recipe';
+import { getSorted, getFieldValue } from '../../utils/recipe';
 import RecipeDetails from '../RecipeDetails';
 import RecipePhoto from '../RecipePhoto/RecipePhoto';
 import RecipeBio from '../RecipeBio';
@@ -185,18 +185,6 @@ const Recipe = props => {
     modification.sortings
   ]);
 
-  const getAlteration = (source, fieldName) => {
-    const mod = modification.alterations.find(
-      mod => mod.sourceId === source.uid && mod.field === fieldName
-    );
-    return mod ? mod.value : undefined;
-  };
-
-  const getFieldValue = (source, fieldName) => {
-    const mod = getAlteration(source, fieldName);
-    return mod !== undefined ? mod : source[fieldName];
-  };
-
   const recipeItems = getSortedItems();
 
   return (
@@ -212,12 +200,37 @@ const Recipe = props => {
         ]}
       >
         <header className={css.recipeHeader}>
-          <RecipeDetails className={css.recipeDetails} />
           <RecipePhoto
             className={css.recipePhoto}
             placeholderPhoto={props.placeholderPhoto}
           />
+          <RecipeDetails className={css.recipeDetails} />
         </header>
+
+        <div className={css.ingredientTotals}>
+          {recipeItems
+            .filter(item => !modification.removals.includes(item.uid))
+            .map(item => (
+              <div key={item.uid}>
+                <h3>
+                  Ingredients for{' '}
+                  {getFieldValue('name', item, modification.alterations)}
+                </h3>
+                <IngredientTotals
+                  ingredients={getSortedSteps(item)
+                    .filter(step => !modification.removals.includes(step.uid))
+                    .reduce((result, step) => {
+                      return result.concat(
+                        getSortedIngredients(step).filter(
+                          ingredient =>
+                            !modification.removals.includes(ingredient.uid)
+                        )
+                      );
+                    }, [])}
+                />
+              </div>
+            ))}
+        </div>
 
         <article className={css.recipe}>
           <div className={css.recipeMain}>
@@ -267,40 +280,9 @@ const Recipe = props => {
 
             {!recipe && <p>you gotta finish creating your recipe, dude!</p>}
           </div>
-          <aside className={css.stepDetail}>
-            <div className={css.sticky}>
-              <RecipeStatus />
-              <div className={css.ingredientTotals}>
-                {recipeItems
-                  .filter(item => !modification.removals.includes(item.uid))
-                  .map(item => (
-                    <div key={item.uid}>
-                      <h3>Ingredients for {getFieldValue(item, 'name')}</h3>
-                      <IngredientTotals
-                        ingredients={getSortedSteps(item)
-                          .filter(
-                            step => !modification.removals.includes(step.uid)
-                          )
-                          .reduce((result, step) => {
-                            return result.concat(
-                              getSortedIngredients(step).filter(
-                                ingredient =>
-                                  !modification.removals.includes(
-                                    ingredient.uid
-                                  )
-                              )
-                            );
-                          }, [])}
-                        removals={modification.removals}
-                        alterations={modification.alterations}
-                      />
-                    </div>
-                  ))}
-              </div>
-            </div>
-          </aside>
         </article>
         <RecipeBio author={recipe ? recipe.author : user} />
+        <RecipeStatus />
       </DragDropContext>
     </RecipeContext.Provider>
   );

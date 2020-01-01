@@ -17,6 +17,10 @@
   .recipeHeader {
     grid-template-columns: 1fr 1fr;
   }
+
+  .recipePhoto {
+    order: 1;
+  }
 }
 
 .stepDetail {

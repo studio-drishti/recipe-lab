@@ -28,3 +28,16 @@ export const areAllFieldsEmpty = (fields, source, alterations, edits) =>
         mod => mod.sourceId === source.uid && mod.field === fieldName
       )
   );
+
+/**
+ * Get the actual value of the field, preferring alterations over source material.
+ * @param {String} fieldName name of field to get
+ * @param {Object} source source object (recipe/item/step/ingredient)
+ * @param {Array} alterations array or recipe alterations
+ */
+export const getFieldValue = (fieldName, source, alterations) => {
+  const mod = alterations.find(
+    mod => mod.sourceId === source.uid && mod.field === fieldName
+  );
+  return mod ? mod.value : source[fieldName];
+};
