@@ -101,7 +101,7 @@ const Item = ({ children, item, index, isLast, moveDraggable }) => {
 
   const handleRestore = e => {
     e.stopPropagation();
-    undoRemoval(item, modificationDispatch);
+    undoRemoval(item.uid, modificationDispatch);
   };
 
   const discardChanges = e => {
@@ -152,7 +152,7 @@ const Item = ({ children, item, index, isLast, moveDraggable }) => {
 
   const handleItemChange = e => {
     const { name, value } = e.target;
-    if (isRemoved) undoRemoval(item, modificationDispatch);
+    if (isRemoved) undoRemoval(item.uid, modificationDispatch);
 
     if (validationTimeouts.current[name])
       clearTimeout(validationTimeouts.current[name]);
