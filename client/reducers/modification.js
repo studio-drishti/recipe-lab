@@ -119,7 +119,7 @@ export default (state, action) => {
       return {
         ...state,
         additions: additions.filter(
-          addition => !addition.uid === ingredient.uid
+          addition => addition.uid !== ingredient.uid
         ),
         sessionCount: state.sessionCount + 1
       };
