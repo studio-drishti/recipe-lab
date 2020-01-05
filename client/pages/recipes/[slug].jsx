@@ -5,15 +5,20 @@ import Page from '../../layouts/Main';
 import Recipe from '../../components/Recipe';
 import RecipeWithModificationQuery from '../../graphql/RecipeWithModification.graphql';
 
-const IndexPage = ({ modification, recipe }) => (
+const IndexPage = ({ modification, recipe, placeholderPhoto }) => (
   <Page>
-    <Recipe recipe={recipe} modification={modification} />
+    <Recipe
+      recipe={recipe}
+      modification={modification}
+      placeholderPhoto={placeholderPhoto}
+    />
   </Page>
 );
 
 IndexPage.propTypes = {
   modification: PropTypes.object,
-  recipe: PropTypes.object
+  recipe: PropTypes.object,
+  placeholderPhoto: PropTypes.string
 };
 
 IndexPage.getInitialProps = async ({ query, apolloClient }) => {
@@ -27,7 +32,10 @@ IndexPage.getInitialProps = async ({ query, apolloClient }) => {
   const { modification, ...recipe } = data.recipe;
   return {
     modification,
-    recipe
+    recipe,
+    placeholderPhoto: `/static/placeholders/recipe-${Math.floor(
+      Math.random() * 3 + 1
+    )}.jpg`
   };
 };
 

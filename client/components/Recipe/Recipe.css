@@ -1,8 +1,5 @@
 .recipe {
   margin-bottom: 2rem;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-column-gap: 2rem;
 }
 
 .recipeHeader {
@@ -16,6 +13,10 @@
 @media (--medium-viewport) {
   .recipeHeader {
     grid-template-columns: 1fr 1fr;
+  }
+
+  .recipePhoto {
+    order: 1;
   }
 }
 
@@ -46,10 +47,10 @@
 }
 
 .ingredientTotals {
-  padding: calc(1rem + 1px);
+  margin-bottom: 2rem;
+  padding: 2rem;
   background: var(--color-light-gray);
   border-radius: var(--border-radius-sm);
-  margin-bottom: 1rem;
 
   & > div:first-child > *:first-child {
     margin-top: 0;

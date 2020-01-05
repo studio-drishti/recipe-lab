@@ -2,10 +2,14 @@
   margin-bottom: 0.25rem;
 }
 
-.step {
+.stepContents {
   display: grid;
-  grid-template-columns: 1fr 11fr;
-  transition: background linear 0.2s;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 2rem;
+  align-items: flex-start;
+}
+
+.step {
   padding: 0.5rem;
   border-radius: var(--border-radius-sm);
   background: var(--color-white);
@@ -14,23 +18,18 @@
   border: 1px solid transparent;
   transition: all linear 0.2s;
 
-  &:hover,
+  &.hover,
   &.editing,
-  &.dragging,
-  &.active {
+  &.dragging {
     border: 1px solid var(--color-medium-gray);
   }
 
-  &:not(.active):hover,
-  &:not(.active).dragging {
+  &.editing {
     & .stepShortcuts {
       opacity: 1;
     }
-  }
-
-  &.active {
     & .stepActions {
-      display: block;
+      opacity: 1;
     }
   }
 
@@ -39,20 +38,10 @@
   }
 
   & .stepNum {
-    font-weight: 100;
-    cursor: grab;
-
-    & span::after {
-      content: '';
-      display: inline-block;
-      border-width: 1px 1px 0 0;
-      border-style: solid;
-      border-color: black;
-      height: 0.75em;
-      width: 0.75em;
-      transform: rotate(45deg) translateY(-0.05em);
-      vertical-align: middle;
-    }
+    border-bottom: 1px dashed var(--color-black);
+    padding-bottom: 0.5rem;
+    margin-bottom: 1rem;
+    text-transform: uppercase;
   }
 }
 
@@ -61,10 +50,15 @@
     cursor: pointer;
     margin: 0;
   }
+  &:hover .stepActions {
+    opacity: 1;
+    transition: opacity ease-in 0.3s;
+  }
 }
 
-.stepActions {
-  display: none;
+:not(.editing) .stepActions {
+  opacity: 0;
+  transition: opacity ease-out 0.3s;
 }
 
 .stepShortcuts {
