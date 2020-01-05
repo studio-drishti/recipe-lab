@@ -20,14 +20,15 @@
 
   &.hover,
   &.editing,
-  &.dragging,
-  &.active {
+  &.dragging {
     border: 1px solid var(--color-medium-gray);
   }
 
-  &:not(.active):hover,
-  &:not(.active).dragging {
+  &.editing {
     & .stepShortcuts {
+      opacity: 1;
+    }
+    & .stepActions {
       opacity: 1;
     }
   }
@@ -36,22 +37,6 @@
     opacity: 0;
   }
 
-  /* & .stepNum {
-    font-weight: 100;
-    cursor: grab;
-
-    & span::after {
-      content: '';
-      display: inline-block;
-      border-width: 1px 1px 0 0;
-      border-style: solid;
-      border-color: black;
-      height: 0.75em;
-      width: 0.75em;
-      transform: rotate(45deg) translateY(-0.05em);
-      vertical-align: middle;
-    }
-  } */
   & .stepNum {
     border-bottom: 1px dashed var(--color-black);
     padding-bottom: 0.5rem;
@@ -71,7 +56,7 @@
   }
 }
 
-.stepActions {
+:not(.editing) .stepActions {
   opacity: 0;
   transition: opacity ease-out 0.3s;
 }

@@ -27,7 +27,6 @@ const Step = ({ index, itemId, step, children }) => {
     [removals]
   );
   const [hovering, setHovering] = useState(false);
-  const [isActive, setActive] = useState(false);
   const [editing, setEditing] = useState(
     !stepFields.some(
       fieldName =>
@@ -51,38 +50,10 @@ const Step = ({ index, itemId, step, children }) => {
     return mod !== undefined ? mod.value : step[fieldName];
   };
 
-  const activateStep = () => {
-    setActive(true);
-  };
-
-  const deactivateStep = () => {
-    if (!getStepValue('directions')) {
-      removeStep(step, modificationDispatch);
-    } else {
-      setEditing(false);
-      setActive(false);
-    }
-  };
-
-  const enableEditing = () => {
-    setActive(true);
-    setEditing(true);
-  };
-
-  const disableEditing = () => {
-    if (!getStepValue('directions')) {
-      removeStep(step, modificationDispatch);
-    } else {
-      setEditing(true);
-    }
-  };
-
   const handleClick = e => {
-    if (!stepRef.current.contains(e.target)) {
-      deactivateStep();
-    } else if (e.target !== inputRef.current) {
-      disableEditing();
-    }
+    if (!stepRef.current) return;
+    if (stepRef.current.contains(e.target)) return;
+    setEditing(false);
   };
 
   const mouseEnter = () => {
@@ -93,18 +64,9 @@ const Step = ({ index, itemId, step, children }) => {
     setHovering(false);
   };
 
-  const handleSelect = e => {
-    e.preventDefault();
-    if (isActive && !editing) {
-      enableEditing();
-    } else if (!isActive) {
-      activateStep();
-    }
-  };
-
   const handleSave = e => {
     e.stopPropagation();
-    disableEditing();
+    setEditing(false);
   };
 
   const handleRemove = e => {
@@ -140,6 +102,7 @@ const Step = ({ index, itemId, step, children }) => {
       document.addEventListener('mousedown', handleClick);
     } else {
       document.removeEventListener('mousedown', handleClick);
+      if (!getStepValue('directions')) removeStep(step, modificationDispatch);
     }
     return () => {
       document.removeEventListener('mousedown', handleClick);
@@ -155,10 +118,8 @@ const Step = ({ index, itemId, step, children }) => {
           {...provided.draggableProps}
         >
           <div
-            ref={stepRef}
             className={classnames(css.step, {
               [css.hover]: hovering,
-              [css.active]: isActive,
               [css.editing]: editing,
               [css.dragging]: snapshot.isDragging
             })}
@@ -173,7 +134,7 @@ const Step = ({ index, itemId, step, children }) => {
             </div>
 
             <div className={css.stepContents}>
-              <form className={css.directions}>
+              <form className={css.directions} ref={stepRef}>
                 {editing && (
                   <Textarea
                     inputRef={inputRef}
@@ -185,10 +146,14 @@ const Step = ({ index, itemId, step, children }) => {
                 )}
 
                 {!editing && (
-                  <p className={css.stepDirections} onMouseDown={handleSelect}>
+                  <p
+                    className={css.stepDirections}
+                    onMouseDown={() => setEditing(true)}
+                  >
                     {renderDirectionsWithMods()}
                   </p>
                 )}
+
                 <div className={css.stepActions}>
                   <TextButtonGroup className={css.buttons}>
                     {editing && (
@@ -200,13 +165,13 @@ const Step = ({ index, itemId, step, children }) => {
                     {!editing && !isRemoved && (
                       <TextButton
                         title="edit directions"
-                        onClick={enableEditing}
+                        onClick={() => setEditing(true)}
                       >
                         <MdEdit /> edit directions
                       </TextButton>
                     )}
 
-                    {!isRemoved && (
+                    {!isRemoved && !editing && (
                       <TextButton onClick={handleRemove}>
                         <MdClear /> remove step
                       </TextButton>
