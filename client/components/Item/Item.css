@@ -62,3 +62,7 @@
   grid-template-columns: auto max-content;
   justify-content: initial;
 }
+
+.error {
+  color: var(--color-error);
+}

@@ -27,6 +27,7 @@ import TextButtonGroup from '../TextButtonGroup';
 import IconButton from '../IconButton';
 import IconButtonGroup from '../IconButtonGroup';
 import DiffText from '../DiffText';
+import Tooltip from '../Tooltip';
 import css from './Item.css';
 
 const Item = ({ children, item, index, isLast, moveDraggable }) => {
@@ -121,10 +122,22 @@ const Item = ({ children, item, index, isLast, moveDraggable }) => {
   const renderNameWithMods = () => {
     const prefix = 'Directions for ';
     const original = prefix + item.name;
+    const modified = prefix + getItemValue('name');
 
     if (isRemoved) return <del>{original}</del>;
 
-    const modified = prefix + getItemValue('name');
+    if (edits.name !== undefined && errors.name) {
+      return (
+        <Tooltip tip={errors.name}>
+          <DiffText
+            className={css.error}
+            original={original}
+            modified={modified}
+          />
+        </Tooltip>
+      );
+    }
+
     if (original !== modified) {
       return <DiffText original={original} modified={modified} />;
     }
