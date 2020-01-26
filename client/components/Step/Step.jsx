@@ -3,17 +3,20 @@ import PropTypes from 'prop-types';
 import { Draggable } from 'react-beautiful-dnd';
 import { MdEdit, MdClear, MdCheck, MdRefresh } from 'react-icons/md';
 import classnames from 'classnames';
-import Textarea from 'react-textarea-autosize';
+import Textarea from '../Textarea';
 import RecipeContext from '../../context/RecipeContext';
 import {
   removeStep,
   undoRemoval,
   setAlteration
 } from '../../actions/modification';
-import DiffText from '../DiffText';
+import {
+  areAllFieldsEmpty,
+  getFieldValue,
+  renderFieldWithMods
+} from '../../utils/recipe';
 import TextButton from '../TextButton';
 import TextButtonGroup from '../TextButtonGroup';
-
 import css from './Step.css';
 
 const Step = ({ index, itemId, step, children }) => {
@@ -27,28 +30,21 @@ const Step = ({ index, itemId, step, children }) => {
     [removals]
   );
   const [hovering, setHovering] = useState(false);
+  const [edits, setEdits] = useState({});
+  const [errors, setErrors] = useState({});
   const [editing, setEditing] = useState(
-    !stepFields.some(
-      fieldName =>
-        step[fieldName] ||
-        alterations.some(
-          mod => mod.sourceId === step.uid && mod.field === fieldName
-        )
-    )
+    areAllFieldsEmpty(stepFields, step, alterations)
   );
 
   const stepRef = useRef();
   const inputRef = useRef();
+  const validationTimeouts = useRef({});
 
   const restoreStep = () =>
     undoRemoval([itemId, step.uid], modificationDispatch);
 
-  const getStepValue = fieldName => {
-    const mod = alterations.find(
-      mod => mod.sourceId === step.uid && mod.field === fieldName
-    );
-    return mod !== undefined ? mod.value : step[fieldName];
-  };
+  const getStepValue = fieldName =>
+    getFieldValue(fieldName, step, alterations, edits);
 
   const handleClick = e => {
     if (!stepRef.current) return;
@@ -64,8 +60,19 @@ const Step = ({ index, itemId, step, children }) => {
     setHovering(false);
   };
 
+  const saveEdits = () => {
+    Object.entries(edits)
+      .filter(([key]) => validate(key, getStepValue(key)))
+      .forEach(([key, value]) => {
+        setAlteration(step, key, value, modificationDispatch);
+        delete edits[key];
+        setEdits(edits);
+      });
+  };
+
   const handleSave = e => {
-    e.stopPropagation();
+    e.preventDefault();
+    saveEdits();
     setEditing(false);
   };
 
@@ -79,20 +86,47 @@ const Step = ({ index, itemId, step, children }) => {
     restoreStep();
   };
 
-  const renderDirectionsWithMods = () => {
-    const original = step.directions;
-    if (isRemoved) return <del>{original}</del>;
-    const modified = getStepValue('directions');
-    if (original !== modified) {
-      return <DiffText original={original} modified={modified} />;
+  const validate = (fieldName, value) => {
+    let err = undefined;
+
+    switch (fieldName) {
+      case 'directions':
+        if (value.length < 3 || value.length > 500)
+          err = 'Directions must be between 3 and 500 characters';
+        break;
     }
-    return original;
+
+    setErrors(errors => ({
+      ...errors,
+      [fieldName]: err
+    }));
+
+    return Boolean(!err);
   };
 
   const handleStepChange = e => {
     const { name, value } = e.target;
-    if (isRemoved) restoreStep();
-    setAlteration(step, name, value, modificationDispatch);
+    if (isRemoved) undoRemoval([itemId, step.uid], modificationDispatch);
+
+    if (validationTimeouts.current[name])
+      clearTimeout(validationTimeouts.current[name]);
+
+    setEdits({
+      ...edits,
+      [name]: value
+    });
+
+    validationTimeouts.current[name] = setTimeout(() => {
+      validate(name, value);
+      delete validationTimeouts.current[name];
+    }, 1000);
+  };
+
+  const handleKeyPress = e => {
+    if (e.key === 'Enter') {
+      handleSave(e);
+      return;
+    }
   };
 
   useEffect(() => {
@@ -102,7 +136,8 @@ const Step = ({ index, itemId, step, children }) => {
       document.addEventListener('mousedown', handleClick);
     } else {
       document.removeEventListener('mousedown', handleClick);
-      if (!getStepValue('directions')) removeStep(step, modificationDispatch);
+      if (areAllFieldsEmpty(stepFields, step, alterations))
+        removeStep(step, modificationDispatch);
     }
     return () => {
       document.removeEventListener('mousedown', handleClick);
@@ -142,15 +177,26 @@ const Step = ({ index, itemId, step, children }) => {
                     value={getStepValue('directions')}
                     placeholder="Directions"
                     onChange={handleStepChange}
+                    error={errors.directions}
+                    onKeyDown={handleKeyPress}
                   />
                 )}
 
                 {!editing && (
                   <p
-                    className={css.stepDirections}
+                    className={classnames(css.stepDirections, {
+                      [css.error]: errors.directions
+                    })}
                     onMouseDown={() => setEditing(true)}
                   >
-                    {renderDirectionsWithMods()}
+                    {renderFieldWithMods(
+                      'directions',
+                      step,
+                      alterations,
+                      isRemoved,
+                      edits,
+                      errors
+                    )}
                   </p>
                 )}
 

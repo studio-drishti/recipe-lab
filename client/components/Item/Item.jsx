@@ -20,7 +20,7 @@ import {
   createItem,
   createStep
 } from '../../actions/modification';
-import { areAllFieldsEmpty } from '../../utils/recipe';
+import { areAllFieldsEmpty, getFieldValue } from '../../utils/recipe';
 import TextInput from '../TextInput';
 import TextButton from '../TextButton';
 import TextButtonGroup from '../TextButtonGroup';
@@ -52,13 +52,8 @@ const Item = ({ children, item, index, isLast, moveDraggable }) => {
     areAllFieldsEmpty(itemFields, item, alterations)
   );
 
-  const getItemValue = fieldName => {
-    if (edits[fieldName] !== undefined) return edits[fieldName];
-    const mod = alterations.find(
-      mod => mod.sourceId === item.uid && mod.field === fieldName
-    );
-    return mod !== undefined ? mod.value : item[fieldName];
-  };
+  const getItemValue = fieldName =>
+    getFieldValue(fieldName, item, alterations, edits);
 
   const handleSelect = e => {
     e.preventDefault();
