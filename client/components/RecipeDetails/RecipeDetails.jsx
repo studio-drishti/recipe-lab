@@ -53,6 +53,7 @@ const RecipeDetails = ({ className }) => {
   const canDeletePhoto = Boolean(
     recipe &&
       recipe.photo &&
+      user &&
       (recipe.author.id === user.id || user.role === 'EXECUTIVE_CHEF')
   );
 

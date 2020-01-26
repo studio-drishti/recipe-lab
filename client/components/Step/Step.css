@@ -2,13 +2,6 @@
   margin-bottom: 0.25rem;
 }
 
-.stepContents {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-gap: 2rem;
-  align-items: flex-start;
-}
-
 .step {
   padding: 0.5rem;
   border-radius: var(--border-radius-sm);
@@ -75,5 +68,18 @@
     &:last-child {
       border-right: 0;
     }
+  }
+}
+
+.error {
+  color: var(--color-error);
+}
+
+@media (--medium-viewport) {
+  .stepContents {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 2rem;
+    align-items: flex-start;
   }
 }

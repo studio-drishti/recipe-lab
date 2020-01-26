@@ -20,13 +20,14 @@ import {
   createItem,
   createStep
 } from '../../actions/modification';
-import { areAllFieldsEmpty } from '../../utils/recipe';
+import { areAllFieldsEmpty, getFieldValue } from '../../utils/recipe';
 import TextInput from '../TextInput';
 import TextButton from '../TextButton';
 import TextButtonGroup from '../TextButtonGroup';
 import IconButton from '../IconButton';
 import IconButtonGroup from '../IconButtonGroup';
 import DiffText from '../DiffText';
+import Tooltip from '../Tooltip';
 import css from './Item.css';
 
 const Item = ({ children, item, index, isLast, moveDraggable }) => {
@@ -51,13 +52,8 @@ const Item = ({ children, item, index, isLast, moveDraggable }) => {
     areAllFieldsEmpty(itemFields, item, alterations)
   );
 
-  const getItemValue = fieldName => {
-    if (edits[fieldName] !== undefined) return edits[fieldName];
-    const mod = alterations.find(
-      mod => mod.sourceId === item.uid && mod.field === fieldName
-    );
-    return mod !== undefined ? mod.value : item[fieldName];
-  };
+  const getItemValue = fieldName =>
+    getFieldValue(fieldName, item, alterations, edits);
 
   const handleSelect = e => {
     e.preventDefault();
@@ -121,10 +117,22 @@ const Item = ({ children, item, index, isLast, moveDraggable }) => {
   const renderNameWithMods = () => {
     const prefix = 'Directions for ';
     const original = prefix + item.name;
+    const modified = prefix + getItemValue('name');
 
     if (isRemoved) return <del>{original}</del>;
 
-    const modified = prefix + getItemValue('name');
+    if (edits.name !== undefined && errors.name) {
+      return (
+        <Tooltip tip={errors.name}>
+          <DiffText
+            className={css.error}
+            original={original}
+            modified={modified}
+          />
+        </Tooltip>
+      );
+    }
+
     if (original !== modified) {
       return <DiffText original={original} modified={modified} />;
     }
