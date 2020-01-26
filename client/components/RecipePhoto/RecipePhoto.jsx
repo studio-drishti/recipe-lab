@@ -28,7 +28,8 @@ const RecipePhoto = ({ placeholderPhoto, className }) => {
 
   const canUploadPhoto = Boolean(
     recipe &&
-      ((user && user.id === recipe.author.id) || user.role === 'EXECUTIVE_CHEF')
+      user &&
+      (user.id === recipe.author.id || user.role === 'EXECUTIVE_CHEF')
   );
 
   const processUpload = (
