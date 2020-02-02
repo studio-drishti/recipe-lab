@@ -1,8 +1,10 @@
-import React, { PureComponent } from 'react';
+import React, { useState, useRef, useEffect, useContext, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { Draggable } from 'react-beautiful-dnd';
 import {
-  MdDragHandle,
+  MdKeyboardArrowDown,
+  MdKeyboardArrowUp,
+  MdDoNotDisturb,
   MdEdit,
   MdClear,
   MdCheck,
@@ -10,126 +12,127 @@ import {
   MdAdd
 } from 'react-icons/md';
 import classnames from 'classnames';
-
+import RecipeContext from '../../context/RecipeContext';
+import {
+  setAlteration,
+  removeItem,
+  undoRemoval,
+  createItem,
+  createStep
+} from '../../actions/modification';
+import { areAllFieldsEmpty, getFieldValue } from '../../utils/recipe';
+import TextInput from '../TextInput';
 import TextButton from '../TextButton';
 import TextButtonGroup from '../TextButtonGroup';
+import IconButton from '../IconButton';
+import IconButtonGroup from '../IconButtonGroup';
 import DiffText from '../DiffText';
-
+import Tooltip from '../Tooltip';
 import css from './Item.css';
 
-export default class Item extends PureComponent {
-  static displayName = 'Item';
+const Item = ({ children, item, index, isLast, moveDraggable }) => {
+  const itemFields = ['name'];
 
-  static propTypes = {
-    children: PropTypes.node,
-    index: PropTypes.number,
-    item: PropTypes.object,
-    itemMods: PropTypes.arrayOf(PropTypes.object),
-    handleItemChange: PropTypes.func,
-    removed: PropTypes.bool,
-    isLast: PropTypes.bool,
-    removeItem: PropTypes.func,
-    restoreItem: PropTypes.func,
-    createItem: PropTypes.func,
-    createStep: PropTypes.func,
-    saveOrUpdateField: PropTypes.func
-  };
+  const {
+    recipe: { uid: recipeId },
+    modification: { alterations, removals },
+    modificationDispatch
+  } = useContext(RecipeContext);
 
-  static defaultProps = {
-    isLast: false
-  };
+  const isRemoved = useMemo(() => removals.includes(item.uid), [removals]);
 
-  state = {
-    hovering: false,
-    editing: false,
-    removed: false
-  };
+  const validationTimeouts = useRef({});
+  const itemRef = useRef();
+  const inputRef = useRef();
 
-  itemRef = React.createRef();
-  inputRef = React.createRef();
+  const [hovering, setHovering] = useState(false);
+  const [edits, setEdits] = useState({});
+  const [errors, setErrors] = useState({});
+  const [editing, setEditing] = useState(
+    areAllFieldsEmpty(itemFields, item, alterations)
+  );
 
-  componentDidMount() {
-    if (this.getItemValue('name') === '') this.enableEditing();
-  }
+  const getItemValue = fieldName =>
+    getFieldValue(fieldName, item, alterations, edits);
 
-  componentWillUnmount() {
-    document.removeEventListener('mousedown', this.handleClick);
-  }
-
-  enableEditing = async () => {
-    await this.setState({ editing: true });
-    this.inputRef.current.focus();
-    document.addEventListener('mousedown', this.handleClick);
-  };
-
-  handleSelect = e => {
+  const handleSelect = e => {
     e.preventDefault();
-    this.enableEditing();
+    setEditing(true);
   };
 
-  disableEditing = () => {
-    document.removeEventListener('mousedown', this.handleClick);
-    if (!this.getItemValue('name')) {
-      this.props.removeItem();
-    } else {
-      this.setState({ editing: false });
-    }
+  const saveEdits = () => {
+    Object.entries(edits)
+      .filter(([key]) => validate(key, getItemValue(key)))
+      .forEach(([key, value]) => {
+        setAlteration(item, key, value, modificationDispatch);
+        delete edits[key];
+        setEdits(edits);
+      });
   };
 
-  handleSubmit = e => {
+  const handleSubmit = e => {
     e.preventDefault();
-    this.disableEditing();
+    saveEdits();
+    setEditing(false);
   };
 
-  handleClick = e => {
-    if (this.itemRef.current.contains(e.target)) return;
-    this.disableEditing();
+  const handleClick = e => {
+    if (itemRef.current.contains(e.target)) return;
+    saveEdits();
+    setEditing(false);
   };
 
-  mouseEnter = () => {
-    this.setState({ hovering: true });
+  const mouseEnter = () => {
+    setHovering(true);
   };
 
-  mouseLeave = () => {
-    this.setState({ hovering: false });
+  const mouseLeave = () => {
+    setHovering(false);
   };
 
-  handleRemove = e => {
+  const handleRemove = e => {
     e.stopPropagation();
-    this.props.removeItem();
+    removeItem(item, modificationDispatch);
   };
 
-  handleRestore = e => {
+  const handleRestore = e => {
     e.stopPropagation();
-    this.props.restoreItem();
+    undoRemoval(item.uid, modificationDispatch);
   };
 
-  handleSave = e => {
+  const discardChanges = e => {
     e.preventDefault();
-    this.disableEditing();
-    if (!this.getItemValue('name')) this.props.removeItem();
+    setEdits({});
+    setEditing(false);
   };
 
-  handleCreateStep = () => {
-    const { editing } = this.state;
-    const { createStep } = this.props;
-    if (!editing) createStep();
+  const handleCreateStep = () => {
+    if (!editing) createStep(item.uid, modificationDispatch);
   };
 
-  handleCreateItem = () => {
-    const { editing } = this.state;
-    const { createItem } = this.props;
-    if (!editing) createItem();
+  const handleCreateItem = () => {
+    if (!editing) createItem(recipeId, modificationDispatch);
   };
 
-  renderNameWithMods = () => {
-    const { item, removed } = this.props;
+  const renderNameWithMods = () => {
     const prefix = 'Directions for ';
     const original = prefix + item.name;
+    const modified = prefix + getItemValue('name');
 
-    if (removed) return <del>{original}</del>;
+    if (isRemoved) return <del>{original}</del>;
 
-    const modified = prefix + this.getItemValue('name');
+    if (edits.name !== undefined && errors.name) {
+      return (
+        <Tooltip tip={errors.name}>
+          <DiffText
+            className={css.error}
+            original={original}
+            modified={modified}
+          />
+        </Tooltip>
+      );
+    }
+
     if (original !== modified) {
       return <DiffText original={original} modified={modified} />;
     }
@@ -137,120 +140,191 @@ export default class Item extends PureComponent {
     return original;
   };
 
-  getItemValue = fieldName => {
-    const { item, itemMods } = this.props;
+  const validate = (fieldName, value) => {
+    let err = undefined;
 
-    const mod = itemMods.find(
-      mod => mod.sourceId === item.uid && mod.field === fieldName
-    );
-    return mod !== undefined ? mod.value : item[fieldName];
+    switch (fieldName) {
+      case 'name':
+        if (value.length < 3 || value.length > 125)
+          err = 'Item name must be between 3 and 125 characters';
+        break;
+    }
+
+    setErrors(errors => ({
+      ...errors,
+      [fieldName]: err
+    }));
+
+    return Boolean(!err);
   };
 
-  handleItemChange = e => {
+  const handleItemChange = e => {
     const { name, value } = e.target;
-    const { removed, restoreItem, saveOrUpdateField, item } = this.props;
-    if (removed) restoreItem();
-    saveOrUpdateField(item, name, value);
+    if (isRemoved) undoRemoval(item.uid, modificationDispatch);
+
+    if (validationTimeouts.current[name])
+      clearTimeout(validationTimeouts.current[name]);
+
+    setEdits({
+      ...edits,
+      [name]: value
+    });
+
+    validationTimeouts.current[name] = setTimeout(() => {
+      validate(name, value);
+      delete validationTimeouts.current[name];
+    }, 1000);
   };
 
-  render() {
-    const { children, item, index, removed, isLast } = this.props;
-    const { hovering, editing } = this.state;
-    return (
-      <Draggable type="ITEM" draggableId={item.uid} index={index}>
-        {(provided, snapshot) => (
+  useEffect(() => {
+    if (editing) {
+      document.addEventListener('mousedown', handleClick);
+      inputRef.current.focus();
+    } else {
+      document.removeEventListener('mousedown', handleClick);
+      if (areAllFieldsEmpty(itemFields, item, alterations, edits))
+        removeItem(item, modificationDispatch);
+    }
+    return () => {
+      document.removeEventListener('mousedown', handleClick);
+    };
+  }, [editing]);
+
+  return (
+    <Draggable type="ITEM" draggableId={item.uid} index={index}>
+      {(provided, snapshot) => (
+        <div
+          className={css.itemWrap}
+          ref={provided.innerRef}
+          {...provided.draggableProps}
+        >
           <div
-            className={css.itemWrap}
-            ref={provided.innerRef}
-            {...provided.draggableProps}
+            className={classnames(css.item, {
+              [css.hover]: hovering,
+              [css.editing]: editing,
+              [css.dragging]: snapshot.isDragging
+            })}
           >
             <div
-              className={classnames(css.item, {
-                [css.hover]: hovering,
-                [css.editing]: editing,
-                [css.dragging]: snapshot.isDragging
-              })}
+              onMouseOver={mouseEnter}
+              onMouseLeave={mouseLeave}
+              className={css.itemHeader}
+              {...provided.dragHandleProps}
             >
-              <div
-                onMouseOver={this.mouseEnter}
-                onMouseLeave={this.mouseLeave}
-                className={css.itemHeaderWrap}
-                ref={this.itemRef}
-              >
-                <div className={css.dragHandle} {...provided.dragHandleProps}>
-                  <MdDragHandle />
-                </div>
-                <div className={css.itemHeader}>
-                  <form className={css.itemName}>
-                    {editing && (
-                      <input
-                        type="text"
-                        name="name"
-                        value={this.getItemValue('name')}
-                        ref={this.inputRef}
-                        placeholder="Item name"
-                        onChange={this.handleItemChange}
-                      />
-                    )}
+              <form onSubmit={handleSubmit} ref={itemRef}>
+                {editing && (
+                  <TextInput
+                    name="name"
+                    className={css.nameInput}
+                    value={getItemValue('name')}
+                    inputRef={inputRef}
+                    placeholder="Item name"
+                    onChange={handleItemChange}
+                    error={errors.name}
+                  />
+                )}
 
-                    {!editing && (
-                      <h3 onMouseDown={this.handleSelect}>
-                        {this.renderNameWithMods()}
-                      </h3>
-                    )}
-                  </form>
-                  <div className={css.itemActions}>
-                    {editing && (
-                      <button
-                        title="Save modifications"
-                        onClick={this.handleSave}
-                      >
+                {!editing && (
+                  <h2 onMouseDown={handleSelect}>{renderNameWithMods()}</h2>
+                )}
+
+                <IconButtonGroup
+                  className={classnames(css.itemActions, {
+                    [css.dragging]: snapshot.isDragging
+                  })}
+                >
+                  {editing && (
+                    <>
+                      <IconButton title="save changes" type="submit">
                         <MdCheck />
-                      </button>
-                    )}
+                      </IconButton>
+                      <IconButton
+                        title="discard changes"
+                        onClick={discardChanges}
+                      >
+                        <MdDoNotDisturb />
+                      </IconButton>
+                    </>
+                  )}
 
-                    {!editing && removed && (
-                      <button title="Restore item" onClick={this.handleRestore}>
-                        <MdRefresh />
-                      </button>
-                    )}
+                  {!editing && !isRemoved && (
+                    <IconButton title="edit item" onClick={handleSelect}>
+                      <MdEdit />
+                    </IconButton>
+                  )}
 
-                    {!editing && !removed && (
-                      <>
-                        <button
-                          title="Edit item name"
-                          onClick={this.handleSelect}
-                        >
-                          <MdEdit />
-                        </button>
-                        <button title="Remove item" onClick={this.handleRemove}>
-                          <MdClear />
-                        </button>
-                      </>
-                    )}
-                  </div>
-                </div>
-              </div>
-              {children}
+                  {!editing && isRemoved && (
+                    <IconButton title="restore item" onClick={handleRestore}>
+                      <MdRefresh />
+                    </IconButton>
+                  )}
+
+                  {!editing && (
+                    <>
+                      <IconButton
+                        disabled={snapshot.isDragging || isLast}
+                        onClick={() => moveDraggable(item.uid, 'down')}
+                      >
+                        <MdKeyboardArrowDown />
+                      </IconButton>
+                      <IconButton
+                        disabled={snapshot.isDragging || index === 0}
+                        onClick={() => moveDraggable(item.uid, 'up')}
+                      >
+                        <MdKeyboardArrowUp />
+                      </IconButton>
+                    </>
+                  )}
+                </IconButtonGroup>
+              </form>
             </div>
-            <TextButtonGroup
-              className={classnames(css.itemActions, {
-                [css.dragging]: snapshot.isDragging
-              })}
-            >
-              <TextButton onClick={this.handleCreateStep} disabled={editing}>
+            {children}
+          </div>
+          <TextButtonGroup
+            className={classnames(css.itemActions, {
+              [css.dragging]: snapshot.isDragging
+            })}
+          >
+            {!isRemoved && (
+              <TextButton onClick={handleCreateStep} disabled={editing}>
                 <MdAdd /> add step
               </TextButton>
+            )}
 
-              {isLast && (
-                <TextButton onClick={this.handleCreateItem} disabled={editing}>
-                  <MdAdd /> add item
-                </TextButton>
-              )}
-            </TextButtonGroup>
-          </div>
-        )}
-      </Draggable>
-    );
-  }
-}
+            {isLast && (
+              <TextButton onClick={handleCreateItem} disabled={editing}>
+                <MdAdd /> add item
+              </TextButton>
+            )}
+
+            {!editing && !isRemoved && (
+              <TextButton onClick={handleRemove}>
+                <MdClear /> remove {getItemValue('name').toLowerCase()}
+              </TextButton>
+            )}
+
+            {!editing && isRemoved && (
+              <TextButton onClick={handleRestore}>
+                <MdRefresh /> restore {getItemValue('name').toLowerCase()}
+              </TextButton>
+            )}
+          </TextButtonGroup>
+        </div>
+      )}
+    </Draggable>
+  );
+};
+
+Item.propTypes = {
+  children: PropTypes.node,
+  index: PropTypes.number,
+  item: PropTypes.object,
+  isLast: PropTypes.bool,
+  moveDraggable: PropTypes.func
+};
+
+Item.defaultProps = {
+  isLast: false
+};
+
+export default Item;

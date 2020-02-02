@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import Link from 'next/link';
 
-import UserContext from '../../utils/UserContext';
+import UserContext from '../../context/UserContext';
 
 import css from './Navigation.css';
 

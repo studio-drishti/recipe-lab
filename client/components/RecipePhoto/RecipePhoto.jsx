@@ -1,4 +1,4 @@
-import React, { useContext, useMemo } from 'react';
+import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import { useMutation } from 'react-apollo';
@@ -8,7 +8,9 @@ import FilePondPluginImageResize from 'filepond-plugin-image-resize';
 import FilePondPluginImageTransform from 'filepond-plugin-image-transform';
 
 import RecipePhotoUploadMutation from '../../graphql/RecipePhotoUpload.graphql';
-import UserContext from '../../utils/UserContext';
+import UserContext from '../../context/UserContext';
+import RecipeContext from '../../context/RecipeContext';
+import { setRecipePhoto } from '../../actions/recipe';
 
 import css from './RecipePhoto.css';
 
@@ -18,20 +20,17 @@ registerPlugin(
   FilePondPluginImageResize
 );
 
-const RecipePhoto = ({ recipe, setRecipePhoto, className }) => {
+const RecipePhoto = ({ placeholderPhoto, className }) => {
   const [uploadFile] = useMutation(RecipePhotoUploadMutation);
   const { user } = useContext(UserContext);
+  const { recipe, recipeDispatch } = useContext(RecipeContext);
   let pond;
 
   const canUploadPhoto = Boolean(
     recipe &&
-      ((user && user.id === recipe.author.id) || user.role === 'EXECUTIVE_CHEF')
+      user &&
+      (user.id === recipe.author.id || user.role === 'EXECUTIVE_CHEF')
   );
-
-  const randomPlaceholder = useMemo(() => {
-    const rand = Math.floor(Math.random() * 3 + 1);
-    return `/static/placeholders/recipe-${rand}.jpg`;
-  }, [recipe]);
 
   const processUpload = (
     fieldName,
@@ -55,7 +54,7 @@ const RecipePhoto = ({ recipe, setRecipePhoto, className }) => {
       }
     })
       .then(res => {
-        setRecipePhoto(res.data.recipePhotoUpload.photo);
+        setRecipePhoto(res.data.recipePhotoUpload.photo, recipeDispatch);
         load(res);
       })
       .catch(err => error(err));
@@ -76,11 +75,7 @@ const RecipePhoto = ({ recipe, setRecipePhoto, className }) => {
 
   return (
     <div className={classnames(css.recipePhoto, className)}>
-      {recipe && recipe.photo ? (
-        <img src={recipe.photo} />
-      ) : (
-        <img src={randomPlaceholder} />
-      )}
+      <img src={recipe && recipe.photo ? recipe.photo : placeholderPhoto} />
       {canUploadPhoto && (
         <FilePond
           name="avatar"
@@ -100,10 +95,8 @@ const RecipePhoto = ({ recipe, setRecipePhoto, className }) => {
 };
 
 RecipePhoto.propTypes = {
-  setRecipePhoto: PropTypes.func,
-  recipe: PropTypes.object,
   className: PropTypes.string,
-  updatePhoto: PropTypes.func
+  placeholderPhoto: PropTypes.string
 };
 
 export default RecipePhoto;

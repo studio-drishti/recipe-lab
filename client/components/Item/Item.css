@@ -14,7 +14,8 @@
     transition: all linear 0.2s;
   }
 
-  &.hover:not(.dragging) .itemActions,
+  &.hover .itemActions,
+  &.dragging .itemActions,
   &.editing .itemActions {
     opacity: 1;
   }
@@ -31,57 +32,37 @@
   }
 }
 
-.itemName {
-  & h3 {
-    cursor: pointer;
-    margin: 0;
-  }
-
+.nameInput {
   & input {
-    width: 100%;
     padding: 0.25rem;
     line-height: 1.2em;
   }
 }
 
-.dragHandle {
-  font-size: 1.5rem;
-  color: var(--color-medium-gray);
-  transition: all linear 0.2s;
-}
-
-.itemHeaderWrap {
-  display: grid;
-  grid-template-columns: 1fr 11fr;
+.itemHeader {
   padding: 0.5rem;
 
-  & h3 {
+  & form {
+    display: grid;
+    grid-template-columns: max-content max-content;
+    justify-content: space-between;
+    grid-column-gap: 0.5rem;
+
+    & h2 {
+      cursor: pointer;
+    }
+  }
+
+  & h2 {
     margin: 0;
   }
 }
 
-.itemHeader {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  grid-column-gap: 0.5rem;
-
-  & button {
-    border: 1px solid var(--color-medium-gray);
-    padding: 0.25rem;
-    background: white;
-
-    & + button {
-      border-left: 0;
-    }
-  }
+.editing .itemHeader form {
+  grid-template-columns: auto max-content;
+  justify-content: initial;
 }
 
-.itemActions {
-  transition: all linear 0.2s;
-
-  &.dragging,
-  &.editing {
-    opacity: 0;
-    pointer-events: none;
-  }
+.error {
+  color: var(--color-error);
 }

@@ -1,4 +1,10 @@
 .recipeStatus {
   border: 1px solid var(--color-medium-gray);
   padding: 1rem;
+  position: fixed;
+  bottom: 0;
+  background: var(--color-white);
+  max-width: calc(100% - 2rem);
+  width: calc(var(--layout-width) - 2rem);
+  box-shadow: 0px -1px 5px rgba(0, 0, 0, 0.05);
 }

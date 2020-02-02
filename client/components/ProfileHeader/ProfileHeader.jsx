@@ -6,7 +6,7 @@ import FilePondPluginImageCrop from 'filepond-plugin-image-crop';
 import FilePondPluginImageResize from 'filepond-plugin-image-resize';
 import FilePondPluginImageTransform from 'filepond-plugin-image-transform';
 
-import UserContext from '../../utils/UserContext';
+import UserContext from '../../context/UserContext';
 import AvatarUploadMutation from '../../graphql/AvatarUpload.graphql';
 
 import css from './ProfileHeader.css';

@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useContext, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import {
   MdClear,
@@ -10,25 +10,33 @@ import {
 import classnames from 'classnames';
 import { fraction } from 'mathjs';
 import { Draggable } from 'react-beautiful-dnd';
-
-import css from './Ingredient.css';
+import RecipeContext from '../../context/RecipeContext';
+import {
+  undoRemoval,
+  setAlteration,
+  removeIngredient
+} from '../../actions/modification';
 import DiffText from '../DiffText';
 import { MEASURE_UNITS } from '../../config';
 import IconButton from '../IconButton';
 import IconButtonGroup from '../IconButtonGroup';
 import TextInput from '../TextInput';
 import Select from '../Select';
+import css from './Ingredient.css';
 
-const Ingredient = ({
-  index,
-  ingredient,
-  ingredientMods,
-  removed,
-  removeIngredient,
-  restoreIngredient,
-  saveOrUpdateField
-}) => {
+const Ingredient = ({ index, ingredient, itemId, stepId }) => {
   const ingredientFields = ['quantity', 'unit', 'name', 'processing'];
+  const {
+    modification: { removals, alterations },
+    modificationDispatch
+  } = useContext(RecipeContext);
+  const isRemoved = useMemo(
+    () =>
+      removals.some(sourceId =>
+        [itemId, stepId, ingredient.uid].includes(sourceId)
+      ),
+    [removals]
+  );
   const ingredientRef = useRef();
   const quantityInputRef = useRef();
   const validationTimeouts = useRef({});
@@ -36,14 +44,21 @@ const Ingredient = ({
   const [edits, setEdits] = useState({});
   const [editing, setEditing] = useState(
     !ingredientFields.some(
-      fieldName => ingredientMods[fieldName] || ingredient[fieldName]
+      fieldName =>
+        ingredient[fieldName] ||
+        alterations.some(
+          mod => mod.sourceId === ingredient.uid && mod.field === fieldName
+        )
     )
   );
+
+  const restoreIngredient = () =>
+    undoRemoval([itemId, stepId, ingredient.uid], modificationDispatch);
 
   const getIngredientValue = fieldName => {
     if (edits[fieldName] !== undefined) return edits[fieldName];
 
-    const mod = ingredientMods.find(
+    const mod = alterations.find(
       mod => mod.sourceId === ingredient.uid && mod.field === fieldName
     );
 
@@ -96,7 +111,11 @@ const Ingredient = ({
       }, [])
       .join(' ');
 
-    if (ingredientMods.length === 0) return <span>{original}</span>;
+    if (
+      alterations.filter(alteration => alteration.sourceId === ingredient.uid)
+        .length === 0
+    )
+      return <span>{original}</span>;
 
     const modified = ingredientFields
       .reduce((result, fieldName) => {
@@ -132,22 +151,24 @@ const Ingredient = ({
   const isIngredientEmpty = () => {
     return !ingredientFields.some(
       fieldName =>
-        edits[fieldName] || ingredientMods[fieldName] || ingredient[fieldName]
+        edits[fieldName] ||
+        ingredient[fieldName] ||
+        alterations.some(
+          mod => mod.sourceId === ingredient.uid && mod.field === fieldName
+        )
     );
   };
 
   const deselect = () => {
     if (isIngredientEmpty()) {
-      removeIngredient();
+      removeIngredient(ingredient, modificationDispatch);
     } else {
       Object.entries(edits)
         .filter(([key]) => validate(key, getIngredientValue(key)))
         .forEach(([key, value]) => {
-          saveOrUpdateField(ingredient, key, value);
-          setEdits({
-            ...edits,
-            [key]: undefined
-          });
+          setAlteration(ingredient, key, value, modificationDispatch);
+          delete edits[key];
+          setEdits(edits);
         });
       setEditing(false);
     }
@@ -160,7 +181,7 @@ const Ingredient = ({
 
   const handleRemove = e => {
     e.stopPropagation();
-    removeIngredient();
+    removeIngredient(ingredient, modificationDispatch);
   };
 
   const handleKeybdRemove = e => {
@@ -184,7 +205,7 @@ const Ingredient = ({
   const handleIngredientChange = e => {
     let { name, value } = e.target;
 
-    if (removed) restoreIngredient();
+    if (isRemoved) restoreIngredient();
 
     if (validationTimeouts.current[name])
       clearTimeout(validationTimeouts.current[name]);
@@ -303,13 +324,13 @@ const Ingredient = ({
 
               {!editing && (
                 <div className={css.ingredientText} onMouseDown={handleSelect}>
-                  {removed && renderRemovedIngredient()}
-                  {!removed && renderIngredientWithMods()}
+                  {isRemoved && renderRemovedIngredient()}
+                  {!isRemoved && renderIngredientWithMods()}
                 </div>
               )}
 
               <IconButtonGroup className={css.buttons}>
-                {removed && !editing && (
+                {isRemoved && !editing && (
                   <IconButton
                     className={css.button}
                     aria-label="restore ingredient"
@@ -320,7 +341,7 @@ const Ingredient = ({
                   </IconButton>
                 )}
 
-                {!removed && !editing && (
+                {!isRemoved && !editing && (
                   <>
                     <IconButton
                       className={css.button}
@@ -362,16 +383,8 @@ const Ingredient = ({
 Ingredient.propTypes = {
   index: PropTypes.number,
   ingredient: PropTypes.object.isRequired,
-  ingredientMods: PropTypes.arrayOf(PropTypes.object),
-  removed: PropTypes.bool,
-  removeIngredient: PropTypes.func,
-  restoreIngredient: PropTypes.func,
-  saveOrUpdateField: PropTypes.func
-};
-
-Ingredient.defaultProps = {
-  ingredientMods: [],
-  removed: false
+  itemId: PropTypes.string,
+  stepId: PropTypes.string
 };
 
 export default Ingredient;

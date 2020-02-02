@@ -1,39 +1,26 @@
-import React, { Component } from 'react';
+import React, { useContext, useMemo } from 'react';
 import PropTypes from 'prop-types';
-
+import RecipeContext from '../../context/RecipeContext';
 import addFractions from '../../utils/addFractions';
 
 import css from './IngredientTotals.css';
 import { MEASURE_UNITS } from '../../config';
 
-export default class IngredientTotals extends Component {
-  static displayName = 'IngredientTotals';
+const IngredientTotals = ({ ingredients }) => {
+  const {
+    modification: { alterations, sessionCount }
+  } = useContext(RecipeContext);
 
-  static propTypes = {
-    ingredients: PropTypes.arrayOf(PropTypes.object),
-    alterations: PropTypes.arrayOf(PropTypes.object)
-  };
-
-  static defaultProps = {
-    alterations: []
-  };
-
-  getIngredientWithMods = ingredient => {
-    const { alterations } = this.props;
-    const newIngredient = { ...ingredient };
-    alterations
-      .filter(mod => mod.sourceId === ingredient.uid)
-      .forEach(mod => {
-        newIngredient[mod.field] = mod.value;
-      });
-    return newIngredient;
-  };
-
-  getIngredientTotals = () => {
-    const { ingredients } = this.props;
+  const ingredientTotals = useMemo(() => {
     const totals = {};
-    ingredients.forEach(unModifiedIngredient => {
-      const ingredient = this.getIngredientWithMods(unModifiedIngredient);
+    ingredients.forEach(originalIngredient => {
+      // Create a copy of the ingredient and apply any alterations.
+      const ingredient = { ...originalIngredient };
+      alterations
+        .filter(mod => mod.sourceId === originalIngredient.uid)
+        .forEach(mod => {
+          ingredient[mod.field] = mod.value;
+        });
 
       if (
         ingredient.name === '' ||
@@ -77,9 +64,9 @@ export default class IngredientTotals extends Component {
             MEASURE_UNITS.indexOf(a.unit) > MEASURE_UNITS.indexOf(b.unit)
         )
     }));
-  };
+  }, [sessionCount]);
 
-  formatIngredientTotal = ingredient => {
+  const formatIngredientTotal = ingredient => {
     let text = ingredient.quantities
       .map(qty => {
         return qty.unit !== 'undefined'
@@ -92,13 +79,17 @@ export default class IngredientTotals extends Component {
     return text;
   };
 
-  render() {
-    return (
-      <ul className={css.ingredients}>
-        {this.getIngredientTotals().map((ingredient, i) => (
-          <li key={i}>{this.formatIngredientTotal(ingredient)}</li>
-        ))}
-      </ul>
-    );
-  }
-}
+  return (
+    <ul className={css.ingredients}>
+      {ingredientTotals.map((ingredient, i) => (
+        <li key={i}>{formatIngredientTotal(ingredient)}</li>
+      ))}
+    </ul>
+  );
+};
+
+IngredientTotals.propTypes = {
+  ingredients: PropTypes.arrayOf(PropTypes.object)
+};
+
+export default IngredientTotals;

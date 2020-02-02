@@ -1,103 +1,93 @@
 import React, { useState, useRef, useContext, useEffect } from 'react';
-import PropTypes from 'prop-types';
-import { useApolloClient } from 'react-apollo';
-
-import UserContext from '../../utils/UserContext';
+import { useMutation } from 'react-apollo';
+import UserContext from '../../context/UserContext';
+import RecipeContext from '../../context/RecipeContext';
+import { setModification } from '../../actions/modification';
 import css from './RecipeStatus.css';
 import SaveModificationMutation from '../../graphql/SaveModification.graphql';
 
-const RecipeStatus = ({
-  recipe,
-  modification,
-  unsavedCount,
-  updateModification
-}) => {
-  const client = useApolloClient();
+const RecipeStatus = () => {
+  const [saveModification, { loading: isSaving }] = useMutation(
+    SaveModificationMutation
+  );
   const timeoutId = useRef();
   const { user } = useContext(UserContext);
-  const [isSaving, setIsSaving] = useState(false);
+  const {
+    modification: { removals, sortings, alterations, additions, sessionCount },
+    recipe,
+    modificationDispatch
+  } = useContext(RecipeContext);
   const [savedCount, setSavedCount] = useState(0);
 
-  useEffect(() => {
-    if (unsavedCount) {
-      if (timeoutId.current !== undefined) clearTimeout(timeoutId.current);
-      timeoutId.current = setTimeout(() => saveModification(), 2000);
-    }
-  }, [unsavedCount]);
+  // const modificationCount =
+  //   removals.length + sortings.length + alterations.length + additions.length;
 
-  const saveModification = () => {
+  useEffect(() => {
+    if (sessionCount) {
+      if (timeoutId.current !== undefined) clearTimeout(timeoutId.current);
+      timeoutId.current = setTimeout(() => autoSaveModification(), 2000);
+    }
+  }, [sessionCount]);
+
+  const autoSaveModification = () => {
     timeoutId.current = undefined;
-    setIsSaving(true);
-    client
-      .mutate({
-        mutation: SaveModificationMutation,
-        variables: {
-          recipe: recipe.uid,
-          user: user.id,
-          removals: modification.removals,
-          sortings: modification.sortings.map(sorting => ({
-            uid: sorting.uid,
-            parentId: sorting.parentId,
-            order: sorting.order
+    saveModification({
+      variables: {
+        recipe: recipe.uid,
+        user: user.id,
+        removals: removals,
+        sortings: sortings.map(sorting => ({
+          uid: sorting.uid,
+          parentId: sorting.parentId,
+          order: sorting.order
+        })),
+        alterations: alterations.map(alteration => ({
+          uid: alteration.uid,
+          sourceId: alteration.sourceId,
+          field: alteration.field,
+          value: alteration.value
+        })),
+        items: additions
+          .filter(addition => addition.kind === 'Item')
+          .map(item => ({
+            uid: item.uid,
+            parentId: item.parentId,
+            name: item.name
           })),
-          alterations: modification.alterations.map(alteration => ({
-            uid: alteration.uid,
-            sourceId: alteration.sourceId,
-            field: alteration.field,
-            value: alteration.value
+        steps: additions
+          .filter(addition => addition.kind === 'Step')
+          .map(step => ({
+            uid: step.uid,
+            parentId: step.parentId,
+            directions: step.directions,
+            notes: step.notes
           })),
-          items: modification.additions
-            .filter(addition => addition.kind === 'Item')
-            .map(item => ({
-              uid: item.uid,
-              parentId: item.parentId,
-              name: item.name
-            })),
-          steps: modification.additions
-            .filter(addition => addition.kind === 'Step')
-            .map(step => ({
-              uid: step.uid,
-              parentId: step.parentId,
-              directions: step.directions,
-              notes: step.notes
-            })),
-          ingredients: modification.additions
-            .filter(addition => addition.kind === 'Ingredient')
-            .map(ingredient => ({
-              uid: ingredient.uid,
-              parentId: ingredient.parentId,
-              name: ingredient.name,
-              quantity: ingredient.quantity,
-              unit: ingredient.unit,
-              processing: ingredient.processing
-            }))
-        }
-      })
-      .then(data => {
-        updateModification(Object.assign(modification, data.saveModification));
-        setIsSaving(false);
-        setSavedCount(unsavedCount);
-      });
+        ingredients: additions
+          .filter(addition => addition.kind === 'Ingredient')
+          .map(ingredient => ({
+            uid: ingredient.uid,
+            parentId: ingredient.parentId,
+            name: ingredient.name,
+            quantity: ingredient.quantity,
+            unit: ingredient.unit,
+            processing: ingredient.processing
+          }))
+      }
+    }).then(data => {
+      setModification(data.saveModification, modificationDispatch);
+      setSavedCount(sessionCount);
+    });
   };
 
   return (
     <div className={css.recipeStatus}>
       {!isSaving &&
-        unsavedCount > savedCount &&
-        `You have ${unsavedCount - savedCount} unsaved modification.`}
-
+        sessionCount > savedCount &&
+        `You have ${sessionCount - savedCount} unsaved modification.`}
       {isSaving && 'Saving...'}
-
-      {!isSaving && unsavedCount === savedCount && 'All mods have been saved.'}
+      {!isSaving && sessionCount === savedCount && 'All mods have been saved.'}
     </div>
   );
-};
-
-RecipeStatus.propTypes = {
-  recipe: PropTypes.object,
-  modification: PropTypes.object,
-  unsavedCount: PropTypes.number,
-  updateModification: PropTypes.func
 };
 
 export default RecipeStatus;
