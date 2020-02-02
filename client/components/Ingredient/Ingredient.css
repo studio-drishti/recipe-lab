@@ -79,4 +79,12 @@
 
 .ingredientText {
   cursor: pointer;
+
+  & * + * {
+    margin-left: 0.25em;
+  }
+}
+
+.error [role='button'] {
+  color: red;
 }

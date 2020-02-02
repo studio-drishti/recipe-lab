@@ -1,4 +1,11 @@
-import React, { useState, useRef, useEffect, useContext, useMemo } from 'react';
+import React, {
+  useState,
+  useRef,
+  useEffect,
+  useContext,
+  useMemo,
+  useCallback
+} from 'react';
 import PropTypes from 'prop-types';
 import {
   MdClear,
@@ -16,6 +23,8 @@ import {
   setAlteration,
   removeIngredient
 } from '../../actions/modification';
+import { areAllFieldsEmpty, getFieldValue } from '../../utils/recipe';
+import Tooltip from '../Tooltip';
 import DiffText from '../DiffText';
 import { MEASURE_UNITS } from '../../config';
 import IconButton from '../IconButton';
@@ -43,29 +52,16 @@ const Ingredient = ({ index, ingredient, itemId, stepId }) => {
   const [errors, setErrors] = useState({});
   const [edits, setEdits] = useState({});
   const [editing, setEditing] = useState(
-    !ingredientFields.some(
-      fieldName =>
-        ingredient[fieldName] ||
-        alterations.some(
-          mod => mod.sourceId === ingredient.uid && mod.field === fieldName
-        )
-    )
+    areAllFieldsEmpty(ingredientFields, ingredient, alterations)
   );
 
   const restoreIngredient = () =>
     undoRemoval([itemId, stepId, ingredient.uid], modificationDispatch);
 
-  const getIngredientValue = fieldName => {
-    if (edits[fieldName] !== undefined) return edits[fieldName];
+  const getIngredientValue = fieldName =>
+    getFieldValue(fieldName, ingredient, alterations, edits);
 
-    const mod = alterations.find(
-      mod => mod.sourceId === ingredient.uid && mod.field === fieldName
-    );
-
-    return mod !== undefined ? mod.value : ingredient[fieldName];
-  };
-
-  const renderRemovedIngredient = () => {
+  const renderRemovedIngredient = useCallback(() => {
     const removedIngredient = [];
 
     ingredientFields.forEach(fieldName => {
@@ -78,69 +74,107 @@ const Ingredient = ({ index, ingredient, itemId, stepId }) => {
     });
 
     return <del>{removedIngredient.join(' ')}</del>;
-  };
+  }, [isRemoved]);
 
-  const renderIngredientWithMods = () => {
-    //render function will output 3 things
-    //quantity, unit, name and processing,
-    //if there is an errror, that will be handled on the individual object
-    //if there has been a change, the original and modified value needs to be displayed for unit and quantity
-    //There will only be a diff text around name and processing.
-    //Quantity and unit will just display the original with the modification next to it
+  const renderIngredientWithMods = useCallback(() => {
+    const originalQty = ingredient.quantity;
+    const modifiedQty =
+      !ingredient.quantity && !getIngredientValue('quantity')
+        ? '??'
+        : getIngredientValue('quantity');
+    const originalUnit = ingredient.unit;
+    const modifiedUnit = getIngredientValue('unit');
+    let qtyAndUnit;
+    if (originalQty !== modifiedQty && originalUnit !== modifiedUnit) {
+      qtyAndUnit = (
+        <>
+          <del>
+            {originalQty}
+            {originalQty ? ' ' : ''}
+            {originalUnit}
+          </del>
+          <ins>
+            {modifiedQty}
+            {modifiedQty ? ' ' : ''}
+            {modifiedUnit}
+          </ins>
+        </>
+      );
+    } else if (originalQty !== modifiedQty || originalUnit !== modifiedUnit) {
+      qtyAndUnit = (
+        <>
+          {originalQty !== modifiedQty ? (
+            <>
+              {originalQty && <del>{originalQty}</del>}
+              {modifiedQty && <ins>{modifiedQty}</ins>}
+            </>
+          ) : (
+            <span>{originalQty}</span>
+          )}
 
-    //If quantity or unit have a modification, the original and modification will both show
-    //The original will be crossed out
+          {originalUnit !== modifiedUnit ? (
+            <>
+              {originalQty && <del>{originalUnit}</del>}
+              {modifiedQty && <ins>{modifiedUnit}</ins>}
+            </>
+          ) : (
+            <span>{originalUnit}</span>
+          )}
+        </>
+      );
+    } else {
+      qtyAndUnit = (
+        <span>
+          {originalQty}
+          {originalUnit ? ' ' : ''}
+          {originalUnit}
+        </span>
+      );
+    }
 
-    //If name and processing have modifications, we will use difftext to render the text
+    const original =
+      ingredient.name +
+      (ingredient.processing ? ', ' : '') +
+      ingredient.processing;
+    const modified =
+      (!ingredient.name && !getIngredientValue('name')
+        ? '???'
+        : getIngredientValue('name')) +
+      (getIngredientValue('processing') ? ', ' : '') +
+      getIngredientValue('processing');
 
-    //Error...
-    //If an existing ingredient is modified and a field is moved to an error state, the user will be able to save that modification
-    //In this case, a tool tip with information about what the error is will appear
+    return (
+      <>
+        {edits['quantity'] !== undefined && errors['quantity'] ? (
+          <Tooltip className={css.error} tip={errors['quantity']}>
+            {qtyAndUnit}
+          </Tooltip>
+        ) : (
+          qtyAndUnit
+        )}
 
-    //In the case of a newly added ingredient...how to handles errors is less clear.
-    //We want to allow the user to save, but how do we indicate that the ingredient is in an error state
-
-    const original = ingredientFields
-      .reduce((result, fieldName) => {
-        let value = ingredient[fieldName];
-        if (value) {
-          value += fieldName === 'name' && ingredient['processing'] ? ',' : '';
-          result.push(value);
-        }
-        return result;
-      }, [])
-      .join(' ');
-
-    if (
-      alterations.filter(alteration => alteration.sourceId === ingredient.uid)
-        .length === 0
-    )
-      return <span>{original}</span>;
-
-    const modified = ingredientFields
-      .reduce((result, fieldName) => {
-        let value = getIngredientValue(fieldName);
-        if (value) {
-          value +=
-            fieldName === 'name' && getIngredientValue('processing') ? ',' : '';
-          result.push(value);
-        }
-        return result;
-      }, [])
-      .join(' ');
-
-    return <DiffText original={original} modified={modified} />;
-  };
+        {edits['name'] !== undefined && errors['name'] ? (
+          <Tooltip className={css.error} tip={errors['name']}>
+            <DiffText original={original} modified={modified} />
+          </Tooltip>
+        ) : (
+          <DiffText original={original} modified={modified} />
+        )}
+      </>
+    );
+  }, [editing, isRemoved]);
 
   const handleClick = e => {
     if (!ingredientRef.current) return;
     if (ingredientRef.current.contains(e.target)) return;
-    deselect();
+    saveEdits();
+    setEditing(false);
   };
 
   const handleSave = e => {
     e.preventDefault();
-    deselect();
+    saveEdits();
+    setEditing(false);
   };
 
   const handleSelect = e => {
@@ -148,30 +182,14 @@ const Ingredient = ({ index, ingredient, itemId, stepId }) => {
     setEditing(true);
   };
 
-  const isIngredientEmpty = () => {
-    return !ingredientFields.some(
-      fieldName =>
-        edits[fieldName] ||
-        ingredient[fieldName] ||
-        alterations.some(
-          mod => mod.sourceId === ingredient.uid && mod.field === fieldName
-        )
-    );
-  };
-
-  const deselect = () => {
-    if (isIngredientEmpty()) {
-      removeIngredient(ingredient, modificationDispatch);
-    } else {
-      Object.entries(edits)
-        .filter(([key]) => validate(key, getIngredientValue(key)))
-        .forEach(([key, value]) => {
-          setAlteration(ingredient, key, value, modificationDispatch);
-          delete edits[key];
-          setEdits(edits);
-        });
-      setEditing(false);
-    }
+  const saveEdits = () => {
+    Object.entries(edits)
+      .filter(([key, value]) => validate(key, value))
+      .forEach(([key, value]) => {
+        setAlteration(ingredient, key, value, modificationDispatch);
+        delete edits[key];
+        setEdits(edits);
+      });
   };
 
   const handleKeybdSelect = e => {
@@ -254,6 +272,8 @@ const Ingredient = ({ index, ingredient, itemId, stepId }) => {
       quantityInputRef.current.focus();
     } else {
       document.removeEventListener('mousedown', handleClick);
+      if (areAllFieldsEmpty(ingredientFields, ingredient, alterations, edits))
+        removeIngredient(ingredient, modificationDispatch);
     }
     return () => {
       document.removeEventListener('mousedown', handleClick);
@@ -324,8 +344,9 @@ const Ingredient = ({ index, ingredient, itemId, stepId }) => {
 
               {!editing && (
                 <div className={css.ingredientText} onMouseDown={handleSelect}>
-                  {isRemoved && renderRemovedIngredient()}
-                  {!isRemoved && renderIngredientWithMods()}
+                  {isRemoved
+                    ? renderRemovedIngredient()
+                    : renderIngredientWithMods()}
                 </div>
               )}
 
