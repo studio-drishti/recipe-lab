@@ -62,7 +62,7 @@ const Step = ({ index, itemId, step, children }) => {
 
   const saveEdits = () => {
     Object.entries(edits)
-      .filter(([key]) => validate(key, getStepValue(key)))
+      .filter(([key, value]) => validate(key, value))
       .forEach(([key, value]) => {
         setAlteration(step, key, value, modificationDispatch);
         delete edits[key];

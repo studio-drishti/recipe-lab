@@ -62,7 +62,7 @@ const Item = ({ children, item, index, isLast, moveDraggable }) => {
 
   const saveEdits = () => {
     Object.entries(edits)
-      .filter(([key]) => validate(key, getItemValue(key)))
+      .filter(([key, value]) => validate(key, value))
       .forEach(([key, value]) => {
         setAlteration(item, key, value, modificationDispatch);
         delete edits[key];

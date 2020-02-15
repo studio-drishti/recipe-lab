@@ -7,7 +7,6 @@
   border-radius: var(--border-radius-sm);
   background: var(--color-white);
   position: relative;
-  overflow: hidden;
   border: 1px solid transparent;
   transition: all linear 0.2s;
 
