@@ -6,10 +6,10 @@ import FilePondPluginImageCrop from 'filepond-plugin-image-crop';
 import FilePondPluginImageResize from 'filepond-plugin-image-resize';
 import FilePondPluginImageTransform from 'filepond-plugin-image-transform';
 
-import UserContext from '../../context/UserContext';
-import AvatarUploadMutation from '../../graphql/AvatarUpload.graphql';
+import UserContext from '../../../context/UserContext';
+import AvatarUploadMutation from '../../../graphql/AvatarUpload.graphql';
 
-import css from './ProfileHeader.css';
+import css from './Header.css';
 
 registerPlugin(
   FilePondPluginImageTransform,
@@ -91,9 +91,8 @@ const ProfileHeader = ({ chef }) => {
         )}
       </div>
       <div>
-        <h1>
-          {chefTitle()} {chef.name}
-        </h1>
+        <h1>{chef.name}</h1>
+        <h3>{chefTitle()}</h3>
         <p>
           Donec rhoncus neque vel nisl laoreet dictum. Curabitur porttitor arcu
           sit amet diam pharetra tempor nec vitae lectus. Pellentesque accumsan
@@ -110,7 +109,6 @@ const ProfileHeader = ({ chef }) => {
             {chef.modifiedRecipeCount}
             modified recipe{chef.modifiedRecipeCount > 1 && 's'}
           </li>
-          <li>xx followers</li>
         </ul>
       </div>
     </header>
