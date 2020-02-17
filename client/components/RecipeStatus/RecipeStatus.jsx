@@ -24,6 +24,9 @@ const RecipeStatus = () => {
 
   const printMessage = () => {
     // if user not logged in. tell them to.
+    if (!user) {
+      return <>{'Please log in to save your changes'}</>;
+    }
 
     if (isSaving) return 'Saving...';
 
@@ -36,6 +39,21 @@ const RecipeStatus = () => {
     }
 
     return 'All good!';
+  };
+
+  //We'll need entirely different buttons for these two functions so we'll need to add these as variables.
+  //Each case will render a different button
+  const determineUserContext = () => {
+    if (!user) {
+      return 'Login';
+    }
+
+    //If the user is the owner, allow them to publish the recipe
+    else if (user.id === recipe.author.id) {
+      return 'Publish'; //Use this logic to return a value like...canUserPublish?
+    }
+
+    //What do do if the user is logged in, but not the recipe owner? - Open question to consider
   };
 
   useEffect(() => {
@@ -95,6 +113,7 @@ const RecipeStatus = () => {
     });
   };
 
+  //TODO - Use react spring to animate this status in
   return (
     <div className={css.recipeStatus}>
       <div>
@@ -103,7 +122,7 @@ const RecipeStatus = () => {
         {printMessage()}
       </div>
       <div>
-        <button>Do the thing</button>
+        <button>{determineUserContext()}</button>
       </div>
     </div>
   );
