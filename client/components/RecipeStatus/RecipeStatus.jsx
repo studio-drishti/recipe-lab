@@ -19,13 +19,29 @@ const RecipeStatus = () => {
   } = useContext(RecipeContext);
   const [savedCount, setSavedCount] = useState(0);
 
-  // const modificationCount =
-  //   removals.length + sortings.length + alterations.length + additions.length;
+  const modificationCount =
+    removals.length + sortings.length + alterations.length + additions.length;
+
+  const printMessage = () => {
+    // if user not logged in. tell them to.
+
+    if (isSaving) return 'Saving...';
+
+    if (sessionCount !== savedCount) {
+      return (
+        <>
+          {'Auto save in XXs'} <a href="#">Save Now</a>
+        </>
+      );
+    }
+
+    return 'All good!';
+  };
 
   useEffect(() => {
     if (sessionCount) {
       if (timeoutId.current !== undefined) clearTimeout(timeoutId.current);
-      timeoutId.current = setTimeout(() => autoSaveModification(), 2000);
+      timeoutId.current = setTimeout(() => autoSaveModification(), 30000);
     }
   }, [sessionCount]);
 
@@ -81,11 +97,14 @@ const RecipeStatus = () => {
 
   return (
     <div className={css.recipeStatus}>
-      {!isSaving &&
-        sessionCount > savedCount &&
-        `You have ${sessionCount - savedCount} unsaved modification.`}
-      {isSaving && 'Saving...'}
-      {!isSaving && sessionCount === savedCount && 'All mods have been saved.'}
+      <div>
+        Mods: {modificationCount}
+        {' | '}
+        {printMessage()}
+      </div>
+      <div>
+        <button>Do the thing</button>
+      </div>
     </div>
   );
 };
