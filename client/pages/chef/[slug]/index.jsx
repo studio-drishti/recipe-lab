@@ -1,18 +1,39 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
+import { useLazyQuery } from '@apollo/react-hooks';
 import Page from '../../../layouts/Main';
 import ProfileHeader from '../../../components/Profile/Header';
 import ProfileTabs from '../../../components/Profile/Tabs';
 import ChefProfileQuery from '../../../graphql/ChefProfile.graphql';
+import ChefContext from '../../../context/ChefContext';
 import css from '../chef.css';
 
-const ProfilePage = ({ chef, tab }) => {
+const ProfilePage = props => {
+  const [chef, setChef] = useState(props.chef);
+  const [getChef] = useLazyQuery(ChefProfileQuery, {
+    fetchPolicy: 'network-only',
+    refetch: true,
+    onCompleted: data => {
+      console.log('doing it right');
+      console.log(data.user.avatar);
+      setChef(data.user);
+    }
+  });
+
+  const refreshChef = () => {
+    getChef({
+      variables: { slug: chef.slug }
+    });
+  };
+
   return (
     <Page>
-      <div className={css.profilePage}>
-        <ProfileHeader chef={chef} />
-        <ProfileTabs chef={chef} tab={tab} />
-      </div>
+      <ChefContext.Provider value={{ chef, refreshChef, tab: props.tab }}>
+        <div className={css.profilePage}>
+          <ProfileHeader />
+          <ProfileTabs chef={chef} tab={props.tab} />
+        </div>
+      </ChefContext.Provider>
     </Page>
   );
 };

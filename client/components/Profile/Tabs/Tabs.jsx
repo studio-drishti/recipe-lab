@@ -1,11 +1,13 @@
-import React, { useCallback } from 'react';
-import PropTypes from 'prop-types';
+import React, { useCallback, useContext } from 'react';
 import Link from 'next/link';
 import classnames from 'classnames';
+import ChefContext from '../../../context/ChefContext';
 import Dashboard from '../Dashboard';
+import Account from '../Account';
 import css from './Tabs.css';
 
-const ProfileTabs = ({ chef, tab }) => {
+const ProfileTabs = () => {
+  const { chef, tab } = useContext(ChefContext);
   const tabs = {
     dashboard: 'Dashboard',
     recipes: 'Recipes',
@@ -16,6 +18,8 @@ const ProfileTabs = ({ chef, tab }) => {
     switch (tab) {
       case 'dashboard':
         return <Dashboard />;
+      case 'account':
+        return <Account />;
       default:
         null;
     }
@@ -45,11 +49,6 @@ const ProfileTabs = ({ chef, tab }) => {
       <div className={css.tabContent}>{printTab()}</div>
     </div>
   );
-};
-
-ProfileTabs.propTypes = {
-  chef: PropTypes.object,
-  tab: PropTypes.string
 };
 
 export default ProfileTabs;

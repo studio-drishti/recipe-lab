@@ -7,7 +7,7 @@ import '../styles/variables.css';
 import '../styles/global.css';
 
 import UserContext from '../context/UserContext';
-import withApollo from '../utils/withApollo';
+import withApollo from '../utils/withApollo.jsx';
 import checkLoggedIn from '../utils/checkLoggedIn';
 
 class MyApp extends App {
