@@ -101,11 +101,10 @@ const RecipeStatus = () => {
 
     //If the user is the owner, allow them to publish the recipe
     if (user.id === recipe.author.id) {
-      //what is the difference between publish and save?
       //publish doesn't exist yet, we have to write logic for that.
       return <button>Publish</button>;
     }
-    return <button>????</button>; //Default behavior TBD
+    return <button>Not owner ???</button>; //Default behavior TBD
     //What do do if the user is logged in, but not the recipe owner? - Open question to consider
     //Can they just save modifications to their account without publishing? Still share link?
   };
@@ -120,66 +119,22 @@ const RecipeStatus = () => {
   const autoSaveModification = () => {
     timeoutId.current = undefined;
     saveModifications();
-    // saveModification({
-    //   variables: {
-    //     recipe: recipe.uid,
-    //     user: user.id,
-    //     removals: removals,
-    //     sortings: sortings.map(sorting => ({
-    //       uid: sorting.uid,
-    //       parentId: sorting.parentId,
-    //       order: sorting.order
-    //     })),
-    //     alterations: alterations.map(alteration => ({
-    //       uid: alteration.uid,
-    //       sourceId: alteration.sourceId,
-    //       field: alteration.field,
-    //       value: alteration.value
-    //     })),
-    //     items: additions
-    //       .filter(addition => addition.kind === 'Item')
-    //       .map(item => ({
-    //         uid: item.uid,
-    //         parentId: item.parentId,
-    //         name: item.name
-    //       })),
-    //     steps: additions
-    //       .filter(addition => addition.kind === 'Step')
-    //       .map(step => ({
-    //         uid: step.uid,
-    //         parentId: step.parentId,
-    //         directions: step.directions,
-    //         notes: step.notes
-    //       })),
-    //     ingredients: additions
-    //       .filter(addition => addition.kind === 'Ingredient')
-    //       .map(ingredient => ({
-    //         uid: ingredient.uid,
-    //         parentId: ingredient.parentId,
-    //         name: ingredient.name,
-    //         quantity: ingredient.quantity,
-    //         unit: ingredient.unit,
-    //         processing: ingredient.processing
-    //       }))
-    //   }
-    // }).then(data => {
-    //   setModification(data.saveModification, modificationDispatch);
-    //   setSavedCount(sessionCount);
-    // });
   };
 
   //TODO - Use react spring to animate this status in
-  //Emma todo - Move conditional logic to the template, and out of print button method.
-  //Look at other templates for examples on how to write conditional logic into templates
   return (
-    <div className={css.recipeStatus}>
-      <div>
-        Mods: {modificationCount}
-        {' | '}
-        {printMessage()}
-      </div>
-      <div>{printButton()}</div>
-    </div>
+    <>
+      {modificationCount > 0 && (
+        <div className={css.recipeStatus}>
+          <div>
+            Mods: {modificationCount}
+            {' | '}
+            {printMessage()}
+          </div>
+          <div>{printButton()}</div>
+        </div>
+      )}
+    </>
   );
 };
 
