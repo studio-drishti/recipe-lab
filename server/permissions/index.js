@@ -23,7 +23,11 @@ const rules = {
         author: { id: userId }
       });
     }
-  )
+  ),
+  isAccountOwner: rule({ cache: 'contextual' })(async (parent, args, ctx) => {
+    const userId = getUserId(ctx);
+    return Boolean(userId && userId === args.userId);
+  })
 };
 
 module.exports = shield({
@@ -33,6 +37,7 @@ module.exports = shield({
   Mutation: {
     avatarUpload: rules.isAuthenticatedUser,
     recipePhotoUpload: or(rules.isRecipeOwner, rules.isExecutiveChef),
-    recipePhotoDelete: or(rules.isRecipeOwner, rules.isExecutiveChef)
+    recipePhotoDelete: or(rules.isRecipeOwner, rules.isExecutiveChef),
+    updateUser: or(rules.isAccountOwner, rules.isExecutiveChef)
   }
 });

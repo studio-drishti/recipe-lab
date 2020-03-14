@@ -5,6 +5,7 @@ import FilePondPluginImageCrop from 'filepond-plugin-image-crop';
 import FilePondPluginImageResize from 'filepond-plugin-image-resize';
 import FilePondPluginImageTransform from 'filepond-plugin-image-transform';
 import AvatarUploadMutation from '../../../graphql/AvatarUpload.graphql';
+import UpdateUserMutation from '../../../graphql/UpdateUserMutation.graphql';
 import FormInput from '../../FormInput';
 import FormButton from '../../FormButton';
 import UserContext from '../../../context/UserContext';
@@ -24,6 +25,7 @@ const Account = () => {
   const [edits, setEdits] = useState({});
   const [acceptedConsequences, setAcceptedConsequences] = useState(false);
   const [uploadFile] = useMutation(AvatarUploadMutation);
+  const [updateUser, { loading: isSaving }] = useMutation(UpdateUserMutation);
   const validationTimeouts = useRef({});
   const pond = useRef();
   const isProfileOwner = user.id === chef.id;
@@ -31,6 +33,7 @@ const Account = () => {
 
   const getChefValue = fieldName => {
     if (edits[fieldName] !== undefined) return edits[fieldName];
+    if (['password', 'passwordMatch'].includes(fieldName)) return '';
     return chef[fieldName];
   };
 
@@ -116,6 +119,35 @@ const Account = () => {
     }, 1000);
   };
 
+  const saveChef = e => {
+    e.preventDefault();
+    const editEntries = Object.entries(edits);
+    if (editEntries.length === 0) return;
+
+    const haveErrors = editEntries.filter(
+      ([key, value]) => !validate(key, value)
+    );
+
+    if (haveErrors.length === 0) {
+      const variables = {
+        userId: chef.id,
+        name: getChefValue('name'),
+        bio: getChefValue('bio'),
+        email: getChefValue('email'),
+        slug: getChefValue('slug')
+      };
+
+      if (edits.password) {
+        variables.password = edits.password;
+      }
+
+      updateUser({ variables }).then(({ data }) => {
+        refreshChef(data.updateUser);
+        setEdits({});
+      });
+    }
+  };
+
   useEffect(() => {
     if (!edits.slug) return;
     if (validationTimeouts.current.slug) {
@@ -126,7 +158,7 @@ const Account = () => {
   }, [acceptedConsequences]);
 
   return (
-    <form>
+    <form onSubmit={saveChef}>
       <h2>Chef Details</h2>
       <p className={css.filepondLabel}>Profile Photo:</p>
       <FilePond
@@ -186,8 +218,28 @@ const Account = () => {
           </p>
         </>
       )}
+      <FormInput
+        name="email"
+        label="Email"
+        onChange={handleFormChange}
+        value={getChefValue('email')}
+      />
+      <FormInput
+        name="password"
+        label="Password"
+        onChange={handleFormChange}
+        value={getChefValue('password')}
+      />
+      <FormInput
+        name="passwordMatch"
+        label="Match Password"
+        onChange={handleFormChange}
+        value={getChefValue('passwordMatch')}
+      />
 
-      <FormButton>Save</FormButton>
+      {isSaving && <p>Saving, please wait...</p>}
+
+      <FormButton disabled={isSaving}>Save</FormButton>
 
       <h2>Account Deletion</h2>
       <p>

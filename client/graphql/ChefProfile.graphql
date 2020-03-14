@@ -1,12 +1,6 @@
+#import './ChefDetailsFragment.graphql'
 query chefProfile($slug: String!) {
   user(slug: $slug) {
-    id
-    name
-    avatar
-    role
-    slug
-    bio
-    recipeCount
-    modifiedRecipeCount
+    ...ChefDetails
   }
 }

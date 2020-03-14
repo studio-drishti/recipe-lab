@@ -1,0 +1,20 @@
+#import './ChefDetailsFragment.graphql'
+mutation UpdateUser(
+  $userId: ID!
+  $name: String!
+  $bio: String!
+  $email: String!
+  $password: String
+  $slug: String!
+) {
+  updateUser(
+    userId: $userId
+    name: $name
+    bio: $bio
+    email: $email
+    password: $password
+    slug: $slug
+  ) {
+    ...ChefDetails
+  }
+}

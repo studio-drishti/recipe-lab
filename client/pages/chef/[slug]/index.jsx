@@ -14,16 +14,18 @@ const ProfilePage = props => {
     fetchPolicy: 'network-only',
     refetch: true,
     onCompleted: data => {
-      console.log('doing it right');
-      console.log(data.user.avatar);
       setChef(data.user);
     }
   });
 
-  const refreshChef = () => {
-    getChef({
-      variables: { slug: chef.slug }
-    });
+  const refreshChef = data => {
+    if (data) {
+      setChef(data);
+    } else {
+      getChef({
+        variables: { slug: chef.slug }
+      });
+    }
   };
 
   return (

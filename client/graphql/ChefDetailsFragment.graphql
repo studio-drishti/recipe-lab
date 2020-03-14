@@ -1,0 +1,11 @@
+fragment ChefDetails on User {
+  id
+  name
+  email
+  avatar
+  role
+  slug
+  bio
+  recipeCount
+  modifiedRecipeCount
+}
