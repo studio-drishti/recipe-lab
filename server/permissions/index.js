@@ -35,7 +35,7 @@ module.exports = shield({
     sessionUser: rules.isAuthenticatedUser
   },
   Mutation: {
-    avatarUpload: rules.isAuthenticatedUser,
+    avatarUpload: or(rules.isAccountOwner, rules.isExecutiveChef),
     avatarDelete: or(rules.isAccountOwner, rules.isExecutiveChef),
     recipePhotoUpload: or(rules.isRecipeOwner, rules.isExecutiveChef),
     recipePhotoDelete: or(rules.isRecipeOwner, rules.isExecutiveChef),

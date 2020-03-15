@@ -1,10 +1,8 @@
 const fs = require('fs');
 const path = require('path');
 const { storeFS } = require('../../utils/fileUploads');
-const getUserId = require('../../utils/getUserId');
 
-module.exports = async (parent, { file }, ctx) => {
-  const userId = getUserId(ctx);
+module.exports = async (parent, { file, userId }, ctx) => {
   const { createReadStream, filename: originalFilename, mimetype } = await file;
 
   if (!['image/jpeg', 'image/jpg'].includes(mimetype))
