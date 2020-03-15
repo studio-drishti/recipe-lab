@@ -1,20 +1,21 @@
 import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
+import { useUID } from 'react-uid';
 import TextInput from '../TextInput';
 import Textarea from '../Textarea';
 import Select from '../Select';
 import css from './FormInput.css';
 import cuid from 'cuid';
 
-const FormInput = ({ className, name, label, id, type, required, ...rest }) => {
+const FormInput = ({ className, name, label, type, required, ...rest }) => {
+  const id = useUID();
   const Input = useMemo(() => {
     switch (type) {
       case 'textarea':
         return Textarea;
       case 'select':
         return Select;
-      case 'text':
       default:
         return TextInput;
     }
@@ -35,14 +36,12 @@ FormInput.propTypes = {
   className: PropTypes.string,
   label: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
-  id: PropTypes.string,
-  type: PropTypes.oneOf(['textarea', 'select', 'text']),
+  type: PropTypes.oneOf(['textarea', 'select', 'text', 'password']),
   required: PropTypes.bool
 };
 
 FormInput.defaultProps = {
   className: null,
-  id: cuid(),
   type: 'text',
   required: false
 };
