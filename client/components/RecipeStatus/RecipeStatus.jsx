@@ -18,14 +18,14 @@ const RecipeStatus = () => {
     modificationDispatch
   } = useContext(RecipeContext);
   const [savedCount, setSavedCount] = useState(0);
-
+  const [countDown, setCountDown] = useState(null);
   const modificationCount =
     removals.length + sortings.length + alterations.length + additions.length;
 
   const printMessage = () => {
     // if user not logged in. tell them to.
     if (!user) {
-      return <>{'Please log in to save your changes'}</>;
+      return 'Please log in to save your changes';
     }
 
     if (isSaving) return 'Saving...';
@@ -33,7 +33,7 @@ const RecipeStatus = () => {
     if (sessionCount !== savedCount) {
       return (
         <>
-          {'Auto save in XXs'}{' '}
+          {`Saving in ${countDown} seconds | `}
           <a href="#" onClick={saveModifications}>
             Save Now
           </a>
@@ -110,16 +110,21 @@ const RecipeStatus = () => {
   };
 
   useEffect(() => {
+    if (countDown === null) return;
+    if (timeoutId.current) clearTimeout(timeoutId.current);
+    if (countDown > 0) {
+      timeoutId.current = setTimeout(() => setCountDown(countDown - 1), 1000);
+    } else {
+      timeoutId.current = null;
+      saveModifications();
+    }
+  }, [countDown]);
+
+  useEffect(() => {
     if (sessionCount) {
-      if (timeoutId.current !== undefined) clearTimeout(timeoutId.current);
-      timeoutId.current = setTimeout(() => autoSaveModification(), 30000);
+      setCountDown(6);
     }
   }, [sessionCount]);
-
-  const autoSaveModification = () => {
-    timeoutId.current = undefined;
-    saveModifications();
-  };
 
   //TODO - Use react spring to animate this status in
   return (
