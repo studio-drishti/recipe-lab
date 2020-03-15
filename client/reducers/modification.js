@@ -216,7 +216,10 @@ export default (state, action) => {
 
       if (
         sortingExists &&
-        areArraysEqual(order, unsorted.map(child => child.uid))
+        areArraysEqual(
+          order,
+          unsorted.map(child => child.uid)
+        )
       ) {
         // Remove existing sorting if the new value is the same as the source
         sortings.splice(sortingIndex, 1);

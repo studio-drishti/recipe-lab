@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { useLazyQuery } from '@apollo/react-hooks';
+import { useLazyQuery } from 'react-apollo';
 import Page from '../../../layouts/Main';
 import ProfileHeader from '../../../components/Profile/Header';
 import ProfileTabs from '../../../components/Profile/Tabs';

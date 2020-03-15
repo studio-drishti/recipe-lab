@@ -6,7 +6,6 @@ import TextInput from '../TextInput';
 import Textarea from '../Textarea';
 import Select from '../Select';
 import css from './FormInput.css';
-import cuid from 'cuid';
 
 const FormInput = ({ className, name, label, type, required, ...rest }) => {
   const id = useUID();

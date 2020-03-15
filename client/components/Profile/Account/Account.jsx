@@ -10,7 +10,7 @@ import AvatarDeleteMutation from '../../../graphql/AvatarDeleteMutation.graphql'
 import UpdateUserMutation from '../../../graphql/UpdateUserMutation.graphql';
 import FormInput from '../../FormInput';
 import FormButton from '../../FormButton';
-import UserContext from '../../../context/UserContext';
+// import UserContext from '../../../context/UserContext';
 import ChefContext from '../../../context/ChefContext';
 import css from './Account.module.css';
 
@@ -22,7 +22,7 @@ registerPlugin(
 
 const Account = () => {
   const { chef, refreshChef } = useContext(ChefContext);
-  const { user } = useContext(UserContext);
+  // const { user } = useContext(UserContext);
   const [errors, setErrors] = useState({});
   const [edits, setEdits] = useState({});
   const [acceptedConsequences, setAcceptedConsequences] = useState(false);
@@ -34,8 +34,8 @@ const Account = () => {
   ] = useMutation(UpdateUserMutation);
   const validationTimeouts = useRef({});
   const pond = useRef();
-  const isProfileOwner = user.id === chef.id;
-  const isAdmin = user.role === 'EXECUTIVE_CHEF';
+  // const isProfileOwner = user.id === chef.id;
+  // const isAdmin = user.role === 'EXECUTIVE_CHEF';
 
   const getChefValue = fieldName => {
     if (edits[fieldName] !== undefined) return edits[fieldName];
