@@ -5,3 +5,11 @@
 .filepondLabel {
   margin: 0 0 0.5rem;
 }
+
+@media (--medium-viewport) {
+  .twoFields {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-column-gap: 1rem;
+  }
+}

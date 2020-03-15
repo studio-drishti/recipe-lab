@@ -31,11 +31,7 @@ const ProfileHeader = () => {
       <div>
         <h1>{chef.name}</h1>
         <h3>{chefTitle}</h3>
-        <p>
-          Donec rhoncus neque vel nisl laoreet dictum. Curabitur porttitor arcu
-          sit amet diam pharetra tempor nec vitae lectus. Pellentesque accumsan
-          condimentum lobortis.
-        </p>
+        {chef.bio && <p>{chef.bio}</p>}
       </div>
       <div>
         <ul>

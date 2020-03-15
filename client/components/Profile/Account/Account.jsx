@@ -1,5 +1,6 @@
 import React, { useContext, useState, useRef, useEffect } from 'react';
 import { useMutation } from 'react-apollo';
+import isEmail from 'validator/lib/isEmail';
 import { FilePond, registerPlugin } from 'react-filepond';
 import FilePondPluginImageCrop from 'filepond-plugin-image-crop';
 import FilePondPluginImageResize from 'filepond-plugin-image-resize';
@@ -25,7 +26,10 @@ const Account = () => {
   const [edits, setEdits] = useState({});
   const [acceptedConsequences, setAcceptedConsequences] = useState(false);
   const [uploadFile] = useMutation(AvatarUploadMutation);
-  const [updateUser, { loading: isSaving }] = useMutation(UpdateUserMutation);
+  const [
+    updateUser,
+    { loading: isSaving, error: hasError, called: wasSubmitted }
+  ] = useMutation(UpdateUserMutation);
   const validationTimeouts = useRef({});
   const pond = useRef();
   const isProfileOwner = user.id === chef.id;
@@ -45,12 +49,31 @@ const Account = () => {
         if (value.length < 1 || value.length > 125)
           err = 'Your display name must be between 1 and 125 characters';
         break;
+      case 'bio':
+        if (value && value.length > 300)
+          err = 'Your bio must be less than 300 characters';
+        break;
       case 'slug':
         if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(value)) {
           err =
             'Your username must only contain lowercase letters, numbers and/or single dashes';
         } else if (value !== chef.slug && !acceptedConsequences) {
           err = 'You must accept the consequences of changing your username.';
+        }
+        break;
+      case 'email':
+        if (!isEmail(value)) err = 'Please enter a valid email address';
+        break;
+      case 'password':
+        if (value && (value.length < 8 || value.length > 125)) {
+          err = 'Password must be between 8 and 125 characters';
+        }
+        break;
+      case 'passwordMatch':
+        if (edits.password && !value) {
+          err = 'Please verify your password';
+        } else if (edits.password && value !== edits.password) {
+          err = 'Passwords do not match';
         }
         break;
     }
@@ -124,6 +147,9 @@ const Account = () => {
     const editEntries = Object.entries(edits);
     if (editEntries.length === 0) return;
 
+    if (edits.password && typeof edits.passwordMatch === 'undefined')
+      editEntries.push(['passwordMatch', '']);
+
     const haveErrors = editEntries.filter(
       ([key, value]) => !validate(key, value)
     );
@@ -173,6 +199,7 @@ const Account = () => {
         onprocessfiles={handleUploadComplete}
       />
       <FormInput
+        required
         name="name"
         label="Display Name"
         onChange={handleFormChange}
@@ -185,8 +212,10 @@ const Account = () => {
         label="Bio"
         onChange={handleFormChange}
         value={getChefValue('bio')}
+        error={errors.bio}
       />
       <FormInput
+        required
         name="slug"
         label="User Name"
         onChange={handleFormChange}
@@ -219,25 +248,37 @@ const Account = () => {
         </>
       )}
       <FormInput
+        required
         name="email"
         label="Email"
         onChange={handleFormChange}
         value={getChefValue('email')}
+        error={errors.email}
       />
-      <FormInput
-        name="password"
-        label="Password"
-        onChange={handleFormChange}
-        value={getChefValue('password')}
-      />
-      <FormInput
-        name="passwordMatch"
-        label="Match Password"
-        onChange={handleFormChange}
-        value={getChefValue('passwordMatch')}
-      />
+      <div className={css.twoFields}>
+        <FormInput
+          type="password"
+          name="password"
+          label="Password"
+          onChange={handleFormChange}
+          value={getChefValue('password')}
+          error={errors.password}
+        />
+        <FormInput
+          type="password"
+          name="passwordMatch"
+          label="Match Password"
+          onChange={handleFormChange}
+          value={getChefValue('passwordMatch')}
+          error={errors.passwordMatch}
+        />
+      </div>
 
       {isSaving && <p>Saving, please wait...</p>}
+
+      {hasError && <p>Oh no! Something went wrong.</p>}
+
+      {!isSaving && !hasError && wasSubmitted && <p>Save successful!</p>}
 
       <FormButton disabled={isSaving}>Save</FormButton>
 

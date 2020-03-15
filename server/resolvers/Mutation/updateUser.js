@@ -1,4 +1,5 @@
 const { hash } = require('bcrypt');
+const normalizeEmail = require('validator/lib/normalizeEmail');
 
 module.exports = async (
   parent,
@@ -7,7 +8,7 @@ module.exports = async (
 ) => {
   const data = {
     name,
-    email,
+    email: normalizeEmail(email),
     bio,
     slug
   };

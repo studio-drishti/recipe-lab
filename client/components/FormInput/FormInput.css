@@ -11,3 +11,8 @@
     width: 100%;
   }
 }
+
+.required {
+  margin-left: 0.25em;
+  color: var(--color-error);
+}

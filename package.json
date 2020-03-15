@@ -63,7 +63,8 @@
     "react-filepond": "7.0.1",
     "react-icons": "3.8.0",
     "react-textarea-autosize": "7.1.2",
-    "speakingurl": "14.0.1"
+    "speakingurl": "14.0.1",
+    "validator": "12.2.0"
   },
   "devDependencies": {
     "@babel/core": "7.7.7",

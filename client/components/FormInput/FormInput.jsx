@@ -7,7 +7,7 @@ import Select from '../Select';
 import css from './FormInput.css';
 import cuid from 'cuid';
 
-const FormInput = ({ className, name, label, id, type, ...rest }) => {
+const FormInput = ({ className, name, label, id, type, required, ...rest }) => {
   const Input = useMemo(() => {
     switch (type) {
       case 'textarea':
@@ -22,7 +22,10 @@ const FormInput = ({ className, name, label, id, type, ...rest }) => {
 
   return (
     <div className={classnames(css.formInput, className)}>
-      <label htmlFor={id}>{label}</label>
+      <label htmlFor={id}>
+        {label}
+        {required && <sup className={css.required}>*</sup>}
+      </label>
       <Input id={id} name={name} type={type} {...rest} />
     </div>
   );
@@ -33,13 +36,15 @@ FormInput.propTypes = {
   label: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
   id: PropTypes.string,
-  type: PropTypes.oneOf(['textarea', 'select', 'text'])
+  type: PropTypes.oneOf(['textarea', 'select', 'text']),
+  required: PropTypes.bool
 };
 
 FormInput.defaultProps = {
   className: null,
   id: cuid(),
-  type: 'text'
+  type: 'text',
+  required: false
 };
 
 export default FormInput;
