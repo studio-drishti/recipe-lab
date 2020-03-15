@@ -5,7 +5,8 @@ import { FilePond, registerPlugin } from 'react-filepond';
 import FilePondPluginImageCrop from 'filepond-plugin-image-crop';
 import FilePondPluginImageResize from 'filepond-plugin-image-resize';
 import FilePondPluginImageTransform from 'filepond-plugin-image-transform';
-import AvatarUploadMutation from '../../../graphql/AvatarUpload.graphql';
+import AvatarUploadMutation from '../../../graphql/AvatarUploadMutation.graphql';
+import AvatarDeleteMutation from '../../../graphql/AvatarDeleteMutation.graphql';
 import UpdateUserMutation from '../../../graphql/UpdateUserMutation.graphql';
 import FormInput from '../../FormInput';
 import FormButton from '../../FormButton';
@@ -25,7 +26,8 @@ const Account = () => {
   const [errors, setErrors] = useState({});
   const [edits, setEdits] = useState({});
   const [acceptedConsequences, setAcceptedConsequences] = useState(false);
-  const [uploadFile] = useMutation(AvatarUploadMutation);
+  const [uploadAvatar] = useMutation(AvatarUploadMutation);
+  const [deleteAvatar] = useMutation(AvatarDeleteMutation);
   const [
     updateUser,
     { loading: isSaving, error: hasError, called: wasSubmitted }
@@ -123,8 +125,11 @@ const Account = () => {
     abort
   ) => {
     const controller = new AbortController();
-    uploadFile({ variables: { file } })
-      .then(data => load(data))
+    uploadAvatar({ variables: { file, userId: chef.id } })
+      .then(({ data }) => {
+        load();
+        refreshChef(data.avatarUpload);
+      })
       .catch(err => error(err));
 
     return {
@@ -135,8 +140,14 @@ const Account = () => {
     };
   };
 
+  const handleAvatarDelete = e => {
+    e.preventDefault();
+    deleteAvatar({ variables: { userId: chef.id } }).then(({ data }) =>
+      refreshChef(data.deleteAvatar)
+    );
+  };
+
   const handleUploadComplete = () => {
-    refreshChef();
     setTimeout(() => {
       if (pond.current) pond.current.removeFiles();
     }, 1000);
@@ -198,6 +209,13 @@ const Account = () => {
         imageResizeTargetWidth="300"
         onprocessfiles={handleUploadComplete}
       />
+      {chef.avatar && (
+        <p>
+          <a href="#" onClick={handleAvatarDelete}>
+            Remove Avatar
+          </a>
+        </p>
+      )}
       <FormInput
         required
         name="name"

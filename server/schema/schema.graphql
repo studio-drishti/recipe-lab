@@ -17,7 +17,8 @@ type Query {
 type Mutation {
   signup(email: String!, password: String!, name: String): AuthPayload!
   login(email: String!, password: String!): AuthPayload!
-  avatarUpload(file: Upload!): File!
+  avatarUpload(userId: ID!, file: Upload!): User!
+  avatarDelete(userId: ID!): User!
   updateUser(
     userId: ID!
     name: String!

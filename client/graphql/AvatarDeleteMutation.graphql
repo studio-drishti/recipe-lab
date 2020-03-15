@@ -1,0 +1,6 @@
+#import './ChefDetailsFragment.graphql'
+mutation AvatarDelete($userId: ID!) {
+  avatarDelete(userId: $userId) {
+    ...ChefDetails
+  }
+}
