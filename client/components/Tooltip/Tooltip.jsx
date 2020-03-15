@@ -1,11 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
-import cuid from 'cuid';
+import { useUID } from 'react-uid';
 import css from './Tooltip.css';
 
 const Tooltip = ({ children, className, tip }) => {
-  const uid = cuid();
+  const uid = useUID();
   return (
     <span className={classnames(css.tooltip, className)}>
       <span

@@ -1,0 +1,6 @@
+#import './ChefDetailsFragment.graphql'
+mutation AvatarUpload($file: Upload!, $userId: ID!) {
+  avatarUpload(file: $file, userId: $userId) {
+    ...ChefDetails
+  }
+}

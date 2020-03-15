@@ -4512,7 +4512,7 @@ export interface UserPreviousValues {
   password: String;
   name: String;
   avatar?: String;
-  bio?: String;
+  bio: String;
   emailVerified: Boolean;
   role: UserRole;
 }
@@ -5618,7 +5618,7 @@ export interface User {
   password: String;
   name: String;
   avatar?: String;
-  bio?: String;
+  bio: String;
   emailVerified: Boolean;
   role: UserRole;
 }

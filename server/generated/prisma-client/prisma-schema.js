@@ -4028,7 +4028,7 @@ type User {
   password: String!
   name: String!
   avatar: String
-  bio: String
+  bio: String!
   emailVerified: Boolean!
   role: UserRole!
   recipes(where: RecipeWhereInput, orderBy: RecipeOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Recipe!]
@@ -4130,7 +4130,7 @@ type UserPreviousValues {
   password: String!
   name: String!
   avatar: String
-  bio: String
+  bio: String!
   emailVerified: Boolean!
   role: UserRole!
 }

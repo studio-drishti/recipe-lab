@@ -10,7 +10,7 @@ type User {
   recipes: [Recipe!]!
   recipeCount: Int!
   modifiedRecipeCount: Int!
-  bio: String
+  bio: String!
 }
 
 type AuthPayload {

@@ -1,27 +1,8 @@
-.profileHeader {
-}
-
 .profilePhoto {
-  position: relative;
   overflow: hidden;
   border-radius: 0.5rem;
 
   & img {
     display: block;
   }
-
-  &:hover .filepond {
-    opacity: 1;
-  }
-}
-
-.filepond {
-  cursor: pointer;
-  position: absolute;
-  left: 2rem;
-  right: 2rem;
-  top: 50%;
-  transform: translateY(-50%);
-  opacity: 0;
-  transition: opacity linear 0.3s;
 }
