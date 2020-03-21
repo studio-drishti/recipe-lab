@@ -44,7 +44,8 @@ const RecipeStatus = () => {
     return 'All good!';
   };
 
-  const saveModifications = () => {
+  const saveModifications = e => {
+    if (e) e.preventDefault();
     saveModification({
       variables: {
         recipe: recipe.uid,
@@ -110,6 +111,7 @@ const RecipeStatus = () => {
   };
 
   useEffect(() => {
+    if (!user) return;
     if (countDown === null) return;
     if (timeoutId.current) clearTimeout(timeoutId.current);
     if (countDown > 0) {
