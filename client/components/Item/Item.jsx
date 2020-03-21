@@ -28,7 +28,7 @@ import IconButton from '../IconButton';
 import IconButtonGroup from '../IconButtonGroup';
 import DiffText from '../DiffText';
 import Tooltip from '../Tooltip';
-import css from './Item.css';
+import css from './Item.module.css';
 
 const Item = ({ children, item, index, isLast, moveDraggable }) => {
   const itemFields = ['name'];

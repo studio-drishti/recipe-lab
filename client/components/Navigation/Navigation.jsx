@@ -3,7 +3,7 @@ import Link from 'next/link';
 
 import UserContext from '../../context/UserContext';
 
-import css from './Navigation.css';
+import css from './Navigation.module.css';
 
 const Navigation = () => {
   const { user } = useContext(UserContext);

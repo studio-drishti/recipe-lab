@@ -3,7 +3,7 @@ import { useMutation } from 'react-apollo';
 import UserContext from '../../context/UserContext';
 import RecipeContext from '../../context/RecipeContext';
 import { setModification } from '../../actions/modification';
-import css from './RecipeStatus.css';
+import css from './RecipeStatus.module.css';
 import SaveModificationMutation from '../../graphql/SaveModification.graphql';
 
 const RecipeStatus = () => {

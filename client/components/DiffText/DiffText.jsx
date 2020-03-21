@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import DiffMatchPatch from 'diff-match-patch';
 
-import css from './DiffText.css';
+import css from './DiffText.module.css';
 
 export default class DiffText extends PureComponent {
   static displayName = 'DiffText';

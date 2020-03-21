@@ -7,7 +7,7 @@ import { MdAdd } from 'react-icons/md';
 import TextButton from '../TextButton';
 import { createIngredient } from '../../actions/modification';
 
-import css from './IngredientList.css';
+import css from './IngredientList.module.css';
 import RecipeContext from '../../context/RecipeContext';
 
 const IngredientList = ({ stepId, children }) => {

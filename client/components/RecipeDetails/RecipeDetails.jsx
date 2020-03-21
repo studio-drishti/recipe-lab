@@ -28,7 +28,7 @@ import TextInput from '../TextInput';
 import Textarea from '../Textarea';
 import Tooltip from '../Tooltip';
 import Select from '../Select';
-import css from './RecipeDetails.css';
+import css from './RecipeDetails.module.css';
 
 const RecipeDetails = ({ className }) => {
   const [createRecipe] = useMutation(CreateRecipeMutation);

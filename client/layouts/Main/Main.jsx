@@ -1,10 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-
 import Navigation from '../../components/Navigation';
 import Footer from '../../components/Footer';
-
-import css from './Main.css';
+import css from './Main.module.css';
 
 export default class Layout extends Component {
   static displayName = 'MainLayout';

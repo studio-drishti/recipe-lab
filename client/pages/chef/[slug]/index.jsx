@@ -6,7 +6,7 @@ import ProfileHeader from '../../../components/Profile/Header';
 import ProfileTabs from '../../../components/Profile/Tabs';
 import ChefProfileQuery from '../../../graphql/ChefProfile.graphql';
 import ChefContext from '../../../context/ChefContext';
-import css from '../chef.css';
+import css from '../chef.module.css';
 
 const ProfilePage = props => {
   const [chef, setChef] = useState(props.chef);

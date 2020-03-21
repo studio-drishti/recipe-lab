@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import RecipeContext from '../../context/RecipeContext';
 import addFractions from '../../utils/addFractions';
 
-import css from './IngredientTotals.css';
+import css from './IngredientTotals.module.css';
 import { MEASURE_UNITS } from '../../config';
 
 const IngredientTotals = ({ ingredients }) => {

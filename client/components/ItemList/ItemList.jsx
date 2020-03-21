@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Droppable } from 'react-beautiful-dnd';
 import classnames from 'classnames';
 
-import css from './ItemList.css';
+import css from './ItemList.module.css';
 
 export default class ItemList extends Component {
   static displayName = 'ItemList';

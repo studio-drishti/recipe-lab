@@ -31,7 +31,7 @@ import IconButton from '../IconButton';
 import IconButtonGroup from '../IconButtonGroup';
 import TextInput from '../TextInput';
 import Select from '../Select';
-import css from './Ingredient.css';
+import css from './Ingredient.module.css';
 
 const Ingredient = ({ index, ingredient, itemId, stepId }) => {
   const ingredientFields = ['quantity', 'unit', 'name', 'processing'];

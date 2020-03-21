@@ -17,7 +17,7 @@ import {
 } from '../../utils/recipe';
 import TextButton from '../TextButton';
 import TextButtonGroup from '../TextButtonGroup';
-import css from './Step.css';
+import css from './Step.module.css';
 
 const Step = ({ index, itemId, step, children }) => {
   const stepFields = ['directions'];

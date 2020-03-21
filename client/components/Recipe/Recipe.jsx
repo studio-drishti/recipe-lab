@@ -24,8 +24,7 @@ import IngredientList from '../IngredientList';
 import Ingredient from '../Ingredient';
 import IngredientTotals from '../IngredientTotals';
 import RecipeStatus from '../RecipeStatus';
-
-import css from './Recipe.css';
+import css from './Recipe.module.css';
 
 const Recipe = props => {
   const sensorAPIRef = useRef();

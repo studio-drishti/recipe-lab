@@ -1,7 +1,7 @@
 import React, { useContext, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import ChefContext from '../../../context/ChefContext';
-import css from './Header.css';
+import css from './Header.module.css';
 
 const ProfileHeader = () => {
   const { chef } = useContext(ChefContext);

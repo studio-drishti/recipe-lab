@@ -4,7 +4,7 @@ import classnames from 'classnames';
 import ChefContext from '../../../context/ChefContext';
 import Dashboard from '../Dashboard';
 import Account from '../Account';
-import css from './Tabs.css';
+import css from './Tabs.module.css';
 
 const ProfileTabs = () => {
   const { chef, tab } = useContext(ChefContext);

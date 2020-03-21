@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 
-import css from './RecipeBio.css';
+import css from './RecipeBio.module.css';
 
 export default class Navigation extends PureComponent {
   static displayName = 'RecipeHeader';

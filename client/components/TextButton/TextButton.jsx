@@ -1,8 +1,7 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
-
-import css from './TextButton.css';
+import css from './TextButton.module.css';
 
 export default class TextButton extends PureComponent {
   static displayName = 'TextButton';

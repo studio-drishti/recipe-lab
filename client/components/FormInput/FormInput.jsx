@@ -5,7 +5,7 @@ import { useUID } from 'react-uid';
 import TextInput from '../TextInput';
 import Textarea from '../Textarea';
 import Select from '../Select';
-import css from './FormInput.css';
+import css from './FormInput.module.css';
 
 const FormInput = ({ className, name, label, type, required, ...rest }) => {
   const id = useUID();
