@@ -4,8 +4,7 @@ import classnames from 'classnames';
 import { MdWarning } from 'react-icons/md';
 import TextareaAutosize from 'react-textarea-autosize';
 import Tooltip from '../Tooltip';
-
-import css from './Textarea.css';
+import css from './Textarea.module.css';
 
 const Textarea = ({ error, className, ...props }) => (
   <div

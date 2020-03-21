@@ -3,8 +3,7 @@ import { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Droppable } from 'react-beautiful-dnd';
 import classnames from 'classnames';
-
-import css from './StepList.css';
+import css from './StepList.module.css';
 
 export default class StepList extends Component {
   static displayName = 'StepList';

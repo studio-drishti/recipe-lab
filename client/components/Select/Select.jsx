@@ -2,10 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import { MdWarning } from 'react-icons/md';
-
 import Tooltip from '../Tooltip';
-
-import css from './Select.css';
+import css from './Select.module.css';
 
 const Select = ({ error, className, inputRef, children, ...props }) => (
   <div

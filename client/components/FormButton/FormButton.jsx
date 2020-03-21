@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
-import css from './FormButton.css';
+import css from './FormButton.module.css';
 
 const FormButton = ({ children, className, ...props }) => (
   <button className={classnames(css.formButton, className)} {...props}>

@@ -1,9 +1,8 @@
 import React from 'react';
-
-import css from './register.css';
 import Page from '../../layouts/Main';
 import Register from '../../components/Register';
 import Login from '../../components/Login';
+import css from './register.module.css';
 
 const RegisterPage = () => (
   <Page>

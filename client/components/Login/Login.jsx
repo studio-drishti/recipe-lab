@@ -7,7 +7,7 @@ import redirect from '../../utils/redirect';
 
 import UserContext from '../../context/UserContext';
 
-import css from './Login.css';
+import css from './Login.module.css';
 import FormInput from '../FormInput';
 import FormButton from '../FormButton';
 import SignInMutation from '../../graphql/SignIn.graphql';

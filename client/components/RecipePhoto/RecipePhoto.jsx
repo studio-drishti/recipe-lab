@@ -12,7 +12,7 @@ import UserContext from '../../context/UserContext';
 import RecipeContext from '../../context/RecipeContext';
 import { setRecipePhoto } from '../../actions/recipe';
 
-import css from './RecipePhoto.css';
+import css from './RecipePhoto.module.css';
 
 registerPlugin(
   FilePondPluginImageTransform,

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import css from './Register.css';
+import css from './Register.module.css';
 import FormInput from '../FormInput';
 import FormButton from '../FormButton';
 
