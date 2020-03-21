@@ -18,19 +18,25 @@ const RecipeStatus = () => {
     modificationDispatch
   } = useContext(RecipeContext);
   const [savedCount, setSavedCount] = useState(0);
-
+  const [countDown, setCountDown] = useState(null);
   const modificationCount =
     removals.length + sortings.length + alterations.length + additions.length;
 
   const printMessage = () => {
     // if user not logged in. tell them to.
+    if (!user) {
+      return 'Please log in to save your changes';
+    }
 
     if (isSaving) return 'Saving...';
 
     if (sessionCount !== savedCount) {
       return (
         <>
-          {'Auto save in XXs'} <a href="#">Save Now</a>
+          {`Saving in ${countDown} seconds | `}
+          <a href="#" onClick={saveModifications}>
+            Save Now
+          </a>
         </>
       );
     }
@@ -38,15 +44,8 @@ const RecipeStatus = () => {
     return 'All good!';
   };
 
-  useEffect(() => {
-    if (sessionCount) {
-      if (timeoutId.current !== undefined) clearTimeout(timeoutId.current);
-      timeoutId.current = setTimeout(() => autoSaveModification(), 30000);
-    }
-  }, [sessionCount]);
-
-  const autoSaveModification = () => {
-    timeoutId.current = undefined;
+  const saveModifications = e => {
+    if (e) e.preventDefault();
     saveModification({
       variables: {
         recipe: recipe.uid,
@@ -95,17 +94,53 @@ const RecipeStatus = () => {
     });
   };
 
+  //Each case will render a different button
+  const printButton = () => {
+    if (!user) {
+      return <a href="/register">Login</a>;
+    }
+
+    //If the user is the owner, allow them to publish the recipe
+    if (user.id === recipe.author.id) {
+      //publish doesn't exist yet, we have to write logic for that.
+      return <button>Publish</button>;
+    }
+    return <button>Share</button>;
+    // TODO: If user logged in, but not recipe owner, save change to account and allow for sharing. Only allow for forking recipe if more than x amount of modifications have been made
+  };
+
+  useEffect(() => {
+    if (countDown === null || !user) return;
+    if (timeoutId.current) clearTimeout(timeoutId.current);
+    if (countDown > 0) {
+      timeoutId.current = setTimeout(() => setCountDown(countDown - 1), 1000);
+    } else {
+      timeoutId.current = null;
+      saveModifications();
+    }
+  }, [countDown]);
+
+  useEffect(() => {
+    if (!user) return;
+    if (sessionCount) {
+      setCountDown(6);
+    }
+  }, [sessionCount]);
+
+  //TODO - Use react spring to animate this status in
   return (
-    <div className={css.recipeStatus}>
-      <div>
-        Mods: {modificationCount}
-        {' | '}
-        {printMessage()}
-      </div>
-      <div>
-        <button>Do the thing</button>
-      </div>
-    </div>
+    <>
+      {modificationCount > 0 && (
+        <div className={css.recipeStatus}>
+          <div>
+            Mods: {modificationCount}
+            {' | '}
+            {printMessage()}
+          </div>
+          <div>{printButton()}</div>
+        </div>
+      )}
+    </>
   );
 };
 
