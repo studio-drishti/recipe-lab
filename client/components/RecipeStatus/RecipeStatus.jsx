@@ -105,14 +105,12 @@ const RecipeStatus = () => {
       //publish doesn't exist yet, we have to write logic for that.
       return <button>Publish</button>;
     }
-    return <button>Not owner ???</button>; //Default behavior TBD
-    //What do do if the user is logged in, but not the recipe owner? - Open question to consider
-    //Can they just save modifications to their account without publishing? Still share link?
+    return <button>Share</button>;
+    // TODO: If user logged in, but not recipe owner, save change to account and allow for sharing. Only allow for forking recipe if more than x amount of modifications have been made
   };
 
   useEffect(() => {
-    if (!user) return;
-    if (countDown === null) return;
+    if (countDown === null || !user) return;
     if (timeoutId.current) clearTimeout(timeoutId.current);
     if (countDown > 0) {
       timeoutId.current = setTimeout(() => setCountDown(countDown - 1), 1000);
@@ -123,6 +121,7 @@ const RecipeStatus = () => {
   }, [countDown]);
 
   useEffect(() => {
+    if (!user) return;
     if (sessionCount) {
       setCountDown(6);
     }
