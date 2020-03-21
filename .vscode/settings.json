@@ -2,6 +2,10 @@
   "css.validate": false,
   "editor.formatOnSave": true,
   "javascript.format.enable": false,
-  "editor.formatOnPaste": true,
-  "html.format.enable": false
+  "html.format.enable": false,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.codeActionsOnSave": {
+    "source.fixAll.stylelint": true,
+    "source.fixAll.eslint": true
+  }
 }

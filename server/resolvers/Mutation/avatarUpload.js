@@ -1,16 +1,9 @@
 const fs = require('fs');
 const path = require('path');
 const { storeFS } = require('../../utils/fileUploads');
-const getUserId = require('../../utils/getUserId');
 
-module.exports = async (parent, { file }, ctx) => {
-  const userId = getUserId(ctx);
-  const {
-    createReadStream,
-    filename: originalFilename,
-    mimetype,
-    encoding
-  } = await file;
+module.exports = async (parent, { file, userId }, ctx) => {
+  const { createReadStream, filename: originalFilename, mimetype } = await file;
 
   if (!['image/jpeg', 'image/jpg'].includes(mimetype))
     throw new Error('Invalid file type');
@@ -27,12 +20,10 @@ module.exports = async (parent, { file }, ctx) => {
   const stream = createReadStream();
   const { filename } = await storeFS(stream, dest, originalFilename);
 
-  await ctx.prisma.updateUser({
+  return await ctx.prisma.updateUser({
     where: { id: userId },
     data: {
       avatar: filename
     }
   });
-
-  return { filename, mimetype, encoding };
 };

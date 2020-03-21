@@ -17,9 +17,16 @@ type Query {
 type Mutation {
   signup(email: String!, password: String!, name: String): AuthPayload!
   login(email: String!, password: String!): AuthPayload!
-  avatarUpload(file: Upload!): File!
-  recipePhotoUpload(file: Upload!, recipeId: ID!): Recipe!
-  recipePhotoDelete(recipeId: ID!): Boolean!
+  avatarUpload(userId: ID!, file: Upload!): User!
+  avatarDelete(userId: ID!): User!
+  updateUser(
+    userId: ID!
+    name: String!
+    bio: String!
+    slug: String!
+    password: String
+    email: String!
+  ): User!
   createRecipe(
     title: String!
     time: String!
@@ -37,4 +44,6 @@ type Mutation {
     steps: [StepAdditionInput!]!
     ingredients: [IngredientAdditionInput!]!
   ): Modification!
+  recipePhotoUpload(file: Upload!, recipeId: ID!): Recipe!
+  recipePhotoDelete(recipeId: ID!): Boolean!
 }

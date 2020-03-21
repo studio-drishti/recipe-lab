@@ -14,7 +14,7 @@ import modificationReducer from '../../reducers/modification';
 import { setSorting, setModification } from '../../actions/modification';
 import { getSorted, getFieldValue } from '../../utils/recipe';
 import RecipeDetails from '../RecipeDetails';
-import RecipePhoto from '../RecipePhoto/RecipePhoto';
+import RecipePhoto from '../RecipePhoto';
 import RecipeBio from '../RecipeBio';
 import StepList from '../StepList';
 import Step from '../Step';
@@ -189,7 +189,13 @@ const Recipe = props => {
 
   return (
     <RecipeContext.Provider
-      value={{ recipe, modification, recipeDispatch, modificationDispatch }}
+      value={{
+        localStoreId,
+        recipe,
+        modification,
+        recipeDispatch,
+        modificationDispatch
+      }}
     >
       <DragDropContext
         onDragEnd={onDragEnd}

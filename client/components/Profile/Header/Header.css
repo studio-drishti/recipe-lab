@@ -1,0 +1,8 @@
+.profilePhoto {
+  overflow: hidden;
+  border-radius: 0.5rem;
+
+  & img {
+    display: block;
+  }
+}

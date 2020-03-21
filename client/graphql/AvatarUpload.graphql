@@ -1,5 +1,0 @@
-mutation AvatarUpload($file: Upload!) {
-  avatarUpload(file: $file) {
-    filename
-  }
-}

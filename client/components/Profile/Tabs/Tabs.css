@@ -1,9 +1,13 @@
-.profileTabs {
+.container {
+  display: grid;
+  grid-template-rows: min-content auto;
+}
+
+.tabList {
   display: flex;
   list-style: none;
   padding: 0;
-  margin: 2rem 0;
-  justify-content: center;
+  margin: 0;
   border-bottom: 1px solid var(--color-medium-gray);
 
   & > li {
@@ -11,9 +15,15 @@
     border: 1px solid var(--color-medium-gray);
     margin-bottom: -1px;
     position: relative;
-
+    border-radius: 0.5rem 0.5rem 0 0;
     &.active {
       border-bottom: 1px solid var(--color-white);
     }
   }
+}
+
+.tabContent {
+  padding: 1rem;
+  border: 1px solid var(--color-medium-gray);
+  border-top: 0;
 }
