@@ -10,7 +10,10 @@
   border: 1px solid transparent;
   transition: all linear 0.2s;
 
-  &.hover,
+  &.hover .stepActions {
+    opacity: 1;
+    transition: opacity ease-in 0.3s;
+  }
   &.editing,
   &.dragging {
     border: 1px solid var(--color-medium-gray);
@@ -42,10 +45,6 @@
     cursor: pointer;
     margin: 0;
   }
-  &:hover .stepActions {
-    opacity: 1;
-    transition: opacity ease-in 0.3s;
-  }
 }
 
 :not(.editing) .stepActions {
@@ -68,6 +67,10 @@
       border-right: 0;
     }
   }
+}
+
+.stepActions {
+  float: right;
 }
 
 .error {

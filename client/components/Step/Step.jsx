@@ -1,7 +1,14 @@
 import React, { useContext, useState, useEffect, useRef, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { Draggable } from 'react-beautiful-dnd';
-import { MdEdit, MdClear, MdCheck, MdRefresh } from 'react-icons/md';
+import {
+  MdEdit,
+  MdClear,
+  MdCheck,
+  MdRefresh,
+  MdKeyboardArrowDown,
+  MdKeyboardArrowUp
+} from 'react-icons/md';
 import classnames from 'classnames';
 import Textarea from '../Textarea';
 import RecipeContext from '../../context/RecipeContext';
@@ -17,9 +24,11 @@ import {
 } from '../../utils/recipe';
 import TextButton from '../TextButton';
 import TextButtonGroup from '../TextButtonGroup';
+import IconButton from '../IconButton';
+import IconButtonGroup from '../IconButtonGroup';
 import css from './Step.module.css';
 
-const Step = ({ index, itemId, step, children }) => {
+const Step = ({ index, itemId, step, children, isLast, moveDraggable }) => {
   const stepFields = ['directions'];
   const {
     modification: { alterations, removals },
@@ -166,6 +175,52 @@ const Step = ({ index, itemId, step, children }) => {
               {...provided.dragHandleProps}
             >
               Step {index + 1}
+              <TextButtonGroup className={(css.buttons, css.stepActions)}>
+                {editing && (
+                  <TextButton onClick={handleSave}>
+                    <MdCheck /> save directions
+                  </TextButton>
+                )}
+
+                {!editing && !isRemoved && (
+                  <TextButton
+                    title="edit directions"
+                    onClick={() => setEditing(true)}
+                  >
+                    <MdEdit /> edit directions
+                  </TextButton>
+                )}
+
+                {!isRemoved && !editing && (
+                  <TextButton onClick={handleRemove}>
+                    <MdClear /> remove step
+                  </TextButton>
+                )}
+
+                {isRemoved && !editing && (
+                  <TextButton onClick={handleRestore}>
+                    <MdRefresh /> restore step
+                  </TextButton>
+                )}
+              </TextButtonGroup>
+              <IconButtonGroup className={classnames(css.stepActions)}>
+                {!editing && (
+                  <>
+                    <IconButton
+                      disabled={snapshot.isDragging || isLast}
+                      onClick={() => moveDraggable(step.uid, 'down')}
+                    >
+                      <MdKeyboardArrowDown />
+                    </IconButton>
+                    <IconButton
+                      disabled={snapshot.isDragging || index === 0}
+                      onClick={() => moveDraggable(step.uid, 'up')}
+                    >
+                      <MdKeyboardArrowUp />
+                    </IconButton>
+                  </>
+                )}
+              </IconButtonGroup>
             </div>
 
             <div className={css.stepContents}>
@@ -199,37 +254,6 @@ const Step = ({ index, itemId, step, children }) => {
                     )}
                   </p>
                 )}
-
-                <div className={css.stepActions}>
-                  <TextButtonGroup className={css.buttons}>
-                    {editing && (
-                      <TextButton onClick={handleSave}>
-                        <MdCheck /> save directions
-                      </TextButton>
-                    )}
-
-                    {!editing && !isRemoved && (
-                      <TextButton
-                        title="edit directions"
-                        onClick={() => setEditing(true)}
-                      >
-                        <MdEdit /> edit directions
-                      </TextButton>
-                    )}
-
-                    {!isRemoved && !editing && (
-                      <TextButton onClick={handleRemove}>
-                        <MdClear /> remove step
-                      </TextButton>
-                    )}
-
-                    {isRemoved && !editing && (
-                      <TextButton onClick={handleRestore}>
-                        <MdRefresh /> restore step
-                      </TextButton>
-                    )}
-                  </TextButtonGroup>
-                </div>
               </form>
 
               <div>{children}</div>
@@ -245,7 +269,9 @@ Step.propTypes = {
   index: PropTypes.number,
   itemId: PropTypes.string,
   step: PropTypes.object,
-  children: PropTypes.node
+  children: PropTypes.node,
+  isLast: PropTypes.bool,
+  moveDraggable: PropTypes.func
 };
 
 export default Step;
