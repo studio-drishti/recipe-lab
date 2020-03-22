@@ -1,4 +1,10 @@
-import React, { useState, useRef, useContext, useEffect } from 'react';
+import React, {
+  useState,
+  useRef,
+  useContext,
+  useEffect,
+  useCallback
+} from 'react';
 import { useMutation } from 'react-apollo';
 import UserContext from '../../context/UserContext';
 import RecipeContext from '../../context/RecipeContext';
@@ -15,6 +21,7 @@ const RecipeStatus = () => {
   const {
     modification: { removals, sortings, alterations, additions, sessionCount },
     recipe,
+    localStoreId,
     modificationDispatch
   } = useContext(RecipeContext);
   const [savedCount, setSavedCount] = useState(0);
@@ -22,30 +29,16 @@ const RecipeStatus = () => {
   const modificationCount =
     removals.length + sortings.length + alterations.length + additions.length;
 
-  const printMessage = () => {
-    // if user not logged in. tell them to.
-    if (!user) {
-      return 'Please log in to save your changes';
+  const handleModificationSave = e => {
+    if (e) e.preventDefault();
+    if (user) {
+      uploadModifications();
+    } else {
+      stashModifications();
     }
-
-    if (isSaving) return 'Saving...';
-
-    if (sessionCount !== savedCount) {
-      return (
-        <>
-          {`Saving in ${countDown} seconds | `}
-          <a href="#" onClick={saveModifications}>
-            Save Now
-          </a>
-        </>
-      );
-    }
-
-    return 'All good!';
   };
 
-  const saveModifications = e => {
-    if (e) e.preventDefault();
+  const uploadModifications = () => {
     saveModification({
       variables: {
         recipe: recipe.uid,
@@ -94,34 +87,77 @@ const RecipeStatus = () => {
     });
   };
 
-  //Each case will render a different button
-  const printButton = () => {
-    if (!user) {
-      return <a href="/register">Login</a>;
-    }
-
-    //If the user is the owner, allow them to publish the recipe
-    if (user.id === recipe.author.id) {
-      //publish doesn't exist yet, we have to write logic for that.
-      return <button>Publish</button>;
-    }
-    return <button>Share</button>;
-    // TODO: If user logged in, but not recipe owner, save change to account and allow for sharing. Only allow for forking recipe if more than x amount of modifications have been made
+  const stashModifications = () => {
+    localStorage.setItem(
+      localStoreId,
+      JSON.stringify({
+        sortings,
+        alterations,
+        removals,
+        additions
+      })
+    );
+    setSavedCount(sessionCount);
   };
 
+  const printMessage = useCallback(() => {
+    // apollo save function is running
+    if (isSaving) return 'Saving...';
+
+    // Countdown to save when sessionCount increases
+    if (sessionCount !== savedCount) {
+      return (
+        <>
+          {`Saving in ${countDown} seconds `}
+          <small>
+            [
+            <a href="#" onClick={handleModificationSave}>
+              Save Now
+            </a>
+            ]
+          </small>
+        </>
+      );
+    }
+
+    // User not logged in thus tell them to do so.
+    if (!user) {
+      return 'Your edits are stashed in the browser. Please login to save permanently.';
+    }
+
+    // User is logged in and all mods are saved.
+    return 'All good!';
+  }, [user, isSaving, sessionCount, savedCount, countDown]);
+
+  const printButton = useCallback(() => {
+    // User is not logged in thus prompt for login
+    if (!user) {
+      return <button>Login</button>;
+    }
+
+    // User is the owner thus allow them to publish the recipe
+    if (user.id === recipe.author.id) {
+      return <button>Publish</button>;
+    }
+
+    // User is logged in but is not the recipe owner thus encourage sharing
+    return <button>Share</button>;
+
+    // TODO: Alow for "forking" a recipe if more than xx amount of modifications have been made
+  }, [user]);
+
   useEffect(() => {
-    if (countDown === null || !user) return;
+    if (countDown === null) return;
     if (timeoutId.current) clearTimeout(timeoutId.current);
     if (countDown > 0) {
       timeoutId.current = setTimeout(() => setCountDown(countDown - 1), 1000);
     } else {
       timeoutId.current = null;
-      saveModifications();
+      handleModificationSave();
     }
   }, [countDown]);
 
   useEffect(() => {
-    if (!user) return;
     if (sessionCount) {
       setCountDown(6);
     }
@@ -133,7 +169,8 @@ const RecipeStatus = () => {
       {modificationCount > 0 && (
         <div className={css.recipeStatus}>
           <div>
-            Mods: {modificationCount}
+            {'Edits: '}
+            {modificationCount}
             {' | '}
             {printMessage()}
           </div>

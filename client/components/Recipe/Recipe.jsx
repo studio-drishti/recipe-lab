@@ -2,7 +2,7 @@ import React, {
   useReducer,
   useContext,
   useCallback,
-  useEffect,
+  useLayoutEffect,
   useRef
 } from 'react';
 import PropTypes from 'prop-types';
@@ -49,7 +49,7 @@ const Recipe = props => {
     ? `MOD-${props.recipe.uid}`
     : 'MOD-NEW-RECIPE';
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (localStorage.getItem(localStoreId)) {
       setModification(
         Object.assign(
