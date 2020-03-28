@@ -6,11 +6,12 @@ import React, {
   useCallback
 } from 'react';
 import { useMutation } from 'react-apollo';
+import Link from 'next/link';
 import UserContext from '../../context/UserContext';
 import RecipeContext from '../../context/RecipeContext';
 import { setModification } from '../../actions/modification';
-import css from './RecipeStatus.module.css';
 import SaveModificationMutation from '../../graphql/SaveModification.graphql';
+import css from './RecipeStatus.module.css';
 
 const RecipeStatus = () => {
   const [saveModification, { loading: isSaving }] = useMutation(
@@ -132,16 +133,20 @@ const RecipeStatus = () => {
   const printButton = useCallback(() => {
     // User is not logged in thus prompt for login
     if (!user) {
-      return <button>Login</button>;
+      return (
+        <Link className={css.button} href="/login">
+          login
+        </Link>
+      );
     }
 
     // User is the owner thus allow them to publish the recipe
     if (user.id === recipe.author.id) {
-      return <button>Publish</button>;
+      return <button className={css.button}>publish</button>;
     }
 
     // User is logged in but is not the recipe owner thus encourage sharing
-    return <button>Share</button>;
+    return <button className={css.button}>share</button>;
 
     // TODO: Alow for "forking" a recipe if more than xx amount of modifications have been made
   }, [user]);
