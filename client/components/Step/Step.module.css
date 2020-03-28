@@ -71,7 +71,12 @@
 
 .stepActions {
   float: right;
+  padding-right: 0.5rem;
 }
+
+/* .removeActions {
+  float: right;
+} */
 
 .error {
   color: var(--color-error);

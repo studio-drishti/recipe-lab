@@ -7,7 +7,8 @@ import {
   MdCheck,
   MdRefresh,
   MdKeyboardArrowDown,
-  MdKeyboardArrowUp
+  MdKeyboardArrowUp,
+  MdDoNotDisturb
 } from 'react-icons/md';
 import classnames from 'classnames';
 import Textarea from '../Textarea';
@@ -58,6 +59,12 @@ const Step = ({ index, itemId, step, children, isLast, moveDraggable }) => {
   const handleClick = e => {
     if (!stepRef.current) return;
     if (stepRef.current.contains(e.target)) return;
+    setEditing(false);
+  };
+
+  const discardChanges = e => {
+    e.preventDefault();
+    setEdits({});
     setEditing(false);
   };
 
@@ -175,34 +182,6 @@ const Step = ({ index, itemId, step, children, isLast, moveDraggable }) => {
               {...provided.dragHandleProps}
             >
               Step {index + 1}
-              <TextButtonGroup className={(css.buttons, css.stepActions)}>
-                {editing && (
-                  <TextButton onClick={handleSave}>
-                    <MdCheck /> save directions
-                  </TextButton>
-                )}
-
-                {!editing && !isRemoved && (
-                  <TextButton
-                    title="edit directions"
-                    onClick={() => setEditing(true)}
-                  >
-                    <MdEdit /> edit directions
-                  </TextButton>
-                )}
-
-                {!isRemoved && !editing && (
-                  <TextButton onClick={handleRemove}>
-                    <MdClear /> remove step
-                  </TextButton>
-                )}
-
-                {isRemoved && !editing && (
-                  <TextButton onClick={handleRestore}>
-                    <MdRefresh /> restore step
-                  </TextButton>
-                )}
-              </TextButtonGroup>
               <IconButtonGroup className={classnames(css.stepActions)}>
                 {!editing && (
                   <>
@@ -217,6 +196,28 @@ const Step = ({ index, itemId, step, children, isLast, moveDraggable }) => {
                       onClick={() => moveDraggable(step.uid, 'up')}
                     >
                       <MdKeyboardArrowUp />
+                    </IconButton>
+                    {!editing && !isRemoved && (
+                      <IconButton onClick={() => setEditing(true)}>
+                        <MdEdit />
+                      </IconButton>
+                    )}
+                  </>
+                )}
+                {editing && (
+                  <>
+                    <IconButton
+                      title="save changes"
+                      type="submit"
+                      onClick={handleSave}
+                    >
+                      <MdCheck />
+                    </IconButton>
+                    <IconButton
+                      title="discard changes"
+                      onClick={discardChanges}
+                    >
+                      <MdDoNotDisturb />
                     </IconButton>
                   </>
                 )}
@@ -258,6 +259,19 @@ const Step = ({ index, itemId, step, children, isLast, moveDraggable }) => {
 
               <div>{children}</div>
             </div>
+            <TextButtonGroup className={(css.buttons, css.removeActions)}>
+              {!isRemoved && (
+                <TextButton onClick={handleRemove}>
+                  <MdClear /> remove step
+                </TextButton>
+              )}
+
+              {isRemoved && !editing && (
+                <TextButton onClick={handleRestore}>
+                  <MdRefresh /> restore step
+                </TextButton>
+              )}
+            </TextButtonGroup>
           </div>
         </li>
       )}

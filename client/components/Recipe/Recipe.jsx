@@ -258,6 +258,8 @@ const Recipe = props => {
                               index={stepI}
                               itemId={item.uid}
                               step={step}
+                              isLast={stepI === itemSteps.length - 1}
+                              moveDraggable={moveDraggable}
                             >
                               <IngredientList stepId={step.uid}>
                                 {getSortedIngredients(step).map(
