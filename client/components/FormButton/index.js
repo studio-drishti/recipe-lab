@@ -1,2 +1,1 @@
-import Component from './FormButton.jsx';
-export default Component;
+export { default } from './FormButton.jsx';

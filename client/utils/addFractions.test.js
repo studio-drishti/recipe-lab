@@ -1,4 +1,4 @@
-import addFractions from 'recipe-lab/client/utils/addFractions';
+import addFractions from './addFractions';
 
 describe('are arrays equal', () => {
   test('2 whole numbers results in a whole number', () => {

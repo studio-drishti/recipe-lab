@@ -1,2 +1,1 @@
-import Component from './Dashboard.jsx';
-export default Component;
+export { default } from './Dashboard.jsx';

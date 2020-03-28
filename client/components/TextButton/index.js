@@ -1,2 +1,1 @@
-import Component from './TextButton.jsx';
-export default Component;
+export { default } from './TextButton.jsx';

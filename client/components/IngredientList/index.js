@@ -1,2 +1,1 @@
-import Component from './IngredientList.jsx';
-export default Component;
+export { default } from './IngredientList.jsx';

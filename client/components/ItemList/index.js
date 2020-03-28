@@ -1,2 +1,1 @@
-import Component from './ItemList.jsx';
-export default Component;
+export { default } from './ItemList.jsx';

@@ -1,2 +1,1 @@
-import Component from './RecipeStatus.jsx';
-export default Component;
+export { default } from './RecipeStatus.jsx';

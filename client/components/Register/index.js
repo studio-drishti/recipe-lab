@@ -1,2 +1,1 @@
-import Component from './Register.jsx';
-export default Component;
+export { default } from './Register.jsx';

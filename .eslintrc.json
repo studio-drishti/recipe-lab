@@ -34,7 +34,7 @@
   },
   "overrides": [
     {
-      "files": ["__tests__/**/*.js", "jest.setup.js"],
+      "files": ["*.test.js", "jest.setup.js"],
       "env": {
         "jest": true
       },
@@ -43,8 +43,7 @@
       },
       "rules": {
         "node/no-unsupported-features/es-syntax": "off",
-        "node/no-unpublished-import": "off",
-        "node/no-missing-import": "off"
+        "node/no-unpublished-import": "off"
       }
     },
     {

@@ -1,2 +1,1 @@
-import Component from './Recipe.jsx';
-export default Component;
+export { default } from './Recipe.jsx';
