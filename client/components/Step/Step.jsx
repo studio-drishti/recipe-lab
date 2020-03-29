@@ -185,6 +185,11 @@ const Step = ({ index, itemId, step, children, isLast, moveDraggable }) => {
               <IconButtonGroup className={classnames(css.stepActions)}>
                 {!editing && (
                   <>
+                    {!editing && !isRemoved && (
+                      <IconButton onClick={() => setEditing(true)}>
+                        <MdEdit />
+                      </IconButton>
+                    )}
                     <IconButton
                       disabled={snapshot.isDragging || isLast}
                       onClick={() => moveDraggable(step.uid, 'down')}
@@ -197,11 +202,6 @@ const Step = ({ index, itemId, step, children, isLast, moveDraggable }) => {
                     >
                       <MdKeyboardArrowUp />
                     </IconButton>
-                    {!editing && !isRemoved && (
-                      <IconButton onClick={() => setEditing(true)}>
-                        <MdEdit />
-                      </IconButton>
-                    )}
                   </>
                 )}
                 {editing && (
@@ -255,23 +255,23 @@ const Step = ({ index, itemId, step, children, isLast, moveDraggable }) => {
                     )}
                   </p>
                 )}
+                <TextButtonGroup className={(css.buttons, css.removeActions)}>
+                  {!isRemoved && (
+                    <TextButton onClick={handleRemove}>
+                      <MdClear /> remove step
+                    </TextButton>
+                  )}
+
+                  {isRemoved && !editing && (
+                    <TextButton onClick={handleRestore}>
+                      <MdRefresh /> restore step
+                    </TextButton>
+                  )}
+                </TextButtonGroup>
               </form>
 
               <div>{children}</div>
             </div>
-            <TextButtonGroup className={(css.buttons, css.removeActions)}>
-              {!isRemoved && (
-                <TextButton onClick={handleRemove}>
-                  <MdClear /> remove step
-                </TextButton>
-              )}
-
-              {isRemoved && !editing && (
-                <TextButton onClick={handleRestore}>
-                  <MdRefresh /> restore step
-                </TextButton>
-              )}
-            </TextButtonGroup>
           </div>
         </li>
       )}

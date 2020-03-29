@@ -14,6 +14,13 @@
     opacity: 1;
     transition: opacity ease-in 0.3s;
   }
+
+  &.hover .removeActions {
+    opacity: 1;
+    transition: opacity ease-in 0.3s;
+  }
+
+  &.hover,
   &.editing,
   &.dragging {
     border: 1px solid var(--color-medium-gray);
@@ -40,6 +47,13 @@
   }
 }
 
+.stepContents {
+  &:hover .removeActions {
+    opacity: 1;
+    transition: opacity ease-in 0.3s;
+  }
+}
+
 .directions {
   & p {
     cursor: pointer;
@@ -48,6 +62,11 @@
 }
 
 :not(.editing) .stepActions {
+  opacity: 0;
+  transition: opacity ease-out 0.3s;
+}
+
+:not(.editing) .removeActions {
   opacity: 0;
   transition: opacity ease-out 0.3s;
 }
@@ -73,10 +92,6 @@
   float: right;
   padding-right: 0.5rem;
 }
-
-/* .removeActions {
-  float: right;
-} */
 
 .error {
   color: var(--color-error);
