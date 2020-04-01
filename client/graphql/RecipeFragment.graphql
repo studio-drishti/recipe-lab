@@ -1,0 +1,31 @@
+fragment RecipeFragment on Recipe {
+  uid
+  slug
+  title
+  description
+  servingAmount
+  servingType
+  time
+  photo
+  items {
+    uid
+    name
+    steps {
+      uid
+      directions
+      notes
+      ingredients {
+        uid
+        name
+        quantity
+        unit
+        processing
+      }
+    }
+  }
+  author {
+    id
+    name
+    avatar
+  }
+}

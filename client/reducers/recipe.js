@@ -4,6 +4,9 @@ export default (state, action) => {
       const { photo } = action.payload;
       return { ...state, photo };
     }
+    case 'SET_RECIPE': {
+      return { ...state, ...action.payload };
+    }
     default:
       throw new Error();
   }

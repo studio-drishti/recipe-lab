@@ -10,12 +10,17 @@ import Link from 'next/link';
 import UserContext from '../../context/UserContext';
 import RecipeContext from '../../context/RecipeContext';
 import { setModification } from '../../actions/modification';
+import { setRecipe } from '../../actions/recipe';
 import SaveModificationMutation from '../../graphql/SaveModification.graphql';
+import PublishRecipeMutation from '../../graphql/PublishRecipeMutation.graphql';
 import css from './RecipeStatus.module.css';
 
 const RecipeStatus = () => {
   const [saveModification, { loading: isSaving }] = useMutation(
     SaveModificationMutation
+  );
+  const [publishRecipe, { loading: isPublishing }] = useMutation(
+    PublishRecipeMutation
   );
   const timeoutId = useRef();
   const { user } = useContext(UserContext);
@@ -23,6 +28,7 @@ const RecipeStatus = () => {
     modification: { removals, sortings, alterations, additions, sessionCount },
     recipe,
     localStoreId,
+    recipeDispatch,
     modificationDispatch
   } = useContext(RecipeContext);
   const [savedCount, setSavedCount] = useState(0);
@@ -101,24 +107,29 @@ const RecipeStatus = () => {
     setSavedCount(sessionCount);
   };
 
+  const handleRecipePublish = () => {
+    publishRecipe({ variables: { recipeId: recipe.uid } }).then(({ data }) => {
+      setRecipe(data.publishRecipe, recipeDispatch);
+      setModification(
+        {
+          sortings: [],
+          alterations: [],
+          removals: [],
+          additions: [],
+          sessionCount: 0
+        },
+        modificationDispatch
+      );
+    });
+  };
+
   const printMessage = useCallback(() => {
     // apollo save function is running
     if (isSaving) return 'Saving...';
 
     // Countdown to save when sessionCount increases
     if (sessionCount !== savedCount) {
-      return (
-        <>
-          {`Saving in ${countDown} seconds `}
-          <small>
-            [
-            <a href="#" onClick={handleModificationSave}>
-              Save Now
-            </a>
-            ]
-          </small>
-        </>
-      );
+      return `Saving in ${countDown} seconds `;
     }
 
     // User not logged in thus tell them to do so.
@@ -140,16 +151,33 @@ const RecipeStatus = () => {
       );
     }
 
+    // override save countdown
+    if (sessionCount !== savedCount) {
+      return (
+        <button onClick={handleModificationSave} className={css.button}>
+          save Now
+        </button>
+      );
+    }
+
     // User is the owner thus allow them to publish the recipe
     if (user.id === recipe.author.id) {
-      return <button className={css.button}>publish</button>;
+      return (
+        <button
+          onClick={handleRecipePublish}
+          className={css.button}
+          disabled={isPublishing}
+        >
+          publish
+        </button>
+      );
     }
 
     // User is logged in but is not the recipe owner thus encourage sharing
     return <button className={css.button}>share</button>;
 
     // TODO: Alow for "forking" a recipe if more than xx amount of modifications have been made
-  }, [user]);
+  }, [user, isSaving, sessionCount, savedCount]);
 
   useEffect(() => {
     if (countDown === null) return;

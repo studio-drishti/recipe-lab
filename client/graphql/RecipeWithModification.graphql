@@ -1,37 +1,10 @@
 #import './ModificationFragment.graphql'
+#import './RecipeFragment.graphql'
 query recipe($slug: String!, $user: ID) {
   recipe(slug: $slug) {
-    uid
-    slug
-    title
-    description
-    servingAmount
-    servingType
-    time
-    photo
-    items {
-      uid
-      name
-      steps {
-        uid
-        directions
-        notes
-        ingredients {
-          uid
-          name
-          quantity
-          unit
-          processing
-        }
-      }
-    }
-    author {
-      id
-      name
-      avatar
-    }
+    ...RecipeFragment
     modification(user: $user) {
-      ...ModificationInfo
+      ...ModificationFragment
     }
   }
 }

@@ -20,6 +20,6 @@ mutation SaveModification(
     steps: $steps
     ingredients: $ingredients
   ) {
-    ...ModificationInfo
+    ...ModificationFragment
   }
 }

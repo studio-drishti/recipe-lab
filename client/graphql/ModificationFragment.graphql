@@ -1,4 +1,4 @@
-fragment ModificationInfo on Modification {
+fragment ModificationFragment on Modification {
   removals
   sortings {
     uid
