@@ -8,7 +8,8 @@ import {
   MdRefresh,
   MdKeyboardArrowDown,
   MdKeyboardArrowUp,
-  MdDoNotDisturb
+  MdDoNotDisturb,
+  MdAdd
 } from 'react-icons/md';
 import classnames from 'classnames';
 import Textarea from '../Textarea';
@@ -16,7 +17,8 @@ import RecipeContext from '../../context/RecipeContext';
 import {
   removeStep,
   undoRemoval,
-  setAlteration
+  setAlteration,
+  createStep
 } from '../../actions/modification';
 import {
   areAllFieldsEmpty,
@@ -60,6 +62,10 @@ const Step = ({ index, itemId, step, children, isLast, moveDraggable }) => {
     if (!stepRef.current) return;
     if (stepRef.current.contains(e.target)) return;
     setEditing(false);
+  };
+
+  const handleCreateStep = () => {
+    if (!editing) createStep(itemId, modificationDispatch);
   };
 
   const discardChanges = e => {
@@ -234,7 +240,9 @@ const Step = ({ index, itemId, step, children, isLast, moveDraggable }) => {
                     )}
                   </p>
                 )}
-                <TextButtonGroup className={(css.buttons, css.removeActions)}>
+                <TextButtonGroup
+                  className={(css.buttons, css.textButtonActions)}
+                >
                   {!editing && !isRemoved && (
                     <>
                       <TextButton onClick={handleRemove}>
@@ -273,6 +281,15 @@ const Step = ({ index, itemId, step, children, isLast, moveDraggable }) => {
               </form>
 
               <div>{children}</div>
+              {!editing && (
+                <TextButtonGroup
+                  className={(css.buttons, css.textButtonActions)}
+                >
+                  <TextButton onClick={handleCreateStep} disabled={editing}>
+                    <MdAdd /> add step
+                  </TextButton>
+                </TextButtonGroup>
+              )}
             </div>
           </div>
         </li>

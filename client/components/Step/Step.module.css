@@ -15,7 +15,7 @@
     transition: opacity ease-in 0.3s;
   }
 
-  &.hover .removeActions {
+  &.hover .textButtonActions {
     opacity: 1;
     transition: opacity ease-in 0.3s;
   }
@@ -48,7 +48,7 @@
 }
 
 .stepContents {
-  &:hover .removeActions {
+  &:hover .textButtonActions {
     opacity: 1;
     transition: opacity ease-in 0.3s;
   }
@@ -66,7 +66,7 @@
   transition: opacity ease-out 0.3s;
 }
 
-:not(.editing) .removeActions {
+:not(.editing) .textButtonActions {
   opacity: 0;
   transition: opacity ease-out 0.3s;
 }

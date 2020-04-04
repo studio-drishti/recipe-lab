@@ -17,8 +17,7 @@ import {
   setAlteration,
   removeItem,
   undoRemoval,
-  createItem,
-  createStep
+  createItem
 } from '../../actions/modification';
 import { areAllFieldsEmpty, getFieldValue } from '../../utils/recipe';
 import TextInput from '../TextInput';
@@ -104,10 +103,6 @@ const Item = ({ children, item, index, isLast, moveDraggable }) => {
     e.preventDefault();
     setEdits({});
     setEditing(false);
-  };
-
-  const handleCreateStep = () => {
-    if (!editing) createStep(item.uid, modificationDispatch);
   };
 
   const handleCreateItem = () => {
@@ -285,12 +280,6 @@ const Item = ({ children, item, index, isLast, moveDraggable }) => {
               [css.dragging]: snapshot.isDragging
             })}
           >
-            {!isRemoved && (
-              <TextButton onClick={handleCreateStep} disabled={editing}>
-                <MdAdd /> add step
-              </TextButton>
-            )}
-
             {isLast && (
               <TextButton onClick={handleCreateItem} disabled={editing}>
                 <MdAdd /> add item
