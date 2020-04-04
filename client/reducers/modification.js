@@ -156,7 +156,9 @@ export default (state, action) => {
       };
     }
     case 'CREATE_ITEM': {
-      const { recipeId } = action.payload;
+      const { recipeId, items, index } = action.payload;
+      const { sortings } = state;
+
       const addition = {
         uid: cuid(),
         kind: 'Item',
@@ -164,8 +166,24 @@ export default (state, action) => {
         name: '',
         processing: ''
       };
+
+      const order = getSorted(items, sortings, recipeId).map(item => item.uid);
+      order.splice(index + 1, 0, addition.uid);
+      const sortingIndex = sortings.findIndex(
+        sorting => sorting.parentId === recipeId
+      );
+      if (sortingIndex > -1) {
+        sortings[sortingIndex].order = order;
+      } else {
+        sortings.push({
+          uid: cuid(),
+          parentId: recipeId,
+          order
+        });
+      }
       return {
         ...state,
+        sortings,
         additions: [...state.additions, addition],
         sessionCount: state.sessionCount + 1
       };

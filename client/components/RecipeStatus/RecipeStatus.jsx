@@ -33,8 +33,10 @@ const RecipeStatus = () => {
   } = useContext(RecipeContext);
   const [savedCount, setSavedCount] = useState(0);
   const [countDown, setCountDown] = useState(null);
-  const modificationCount =
-    removals.length + sortings.length + alterations.length + additions.length;
+
+  const editsCount = removals.length + sortings.length + alterations.length;
+
+  const additionsCount = additions.length;
 
   const handleModificationSave = e => {
     if (e) e.preventDefault();
@@ -199,12 +201,11 @@ const RecipeStatus = () => {
   //TODO - Use react spring to animate this status in
   return (
     <>
-      {modificationCount > 0 && (
+      {(editsCount > 0 || additionsCount > 0) && (
         <div className={css.recipeStatus}>
           <div>
-            {'Edits: '}
-            {modificationCount}
-            {' | '}
+            {editsCount > 0 && `Edits: ${editsCount} | `}
+            {additionsCount > 0 && `Additions: ${additionsCount} | `}
             {printMessage()}
           </div>
           <div>{printButton()}</div>
