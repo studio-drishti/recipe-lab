@@ -13,7 +13,6 @@ fragment RecipeFragment on Recipe {
     steps {
       uid
       directions
-      notes
       ingredients {
         uid
         name

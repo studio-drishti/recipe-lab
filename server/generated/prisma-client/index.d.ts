@@ -611,9 +611,7 @@ export type StepOrderByInput =
   | "index_ASC"
   | "index_DESC"
   | "directions_ASC"
-  | "directions_DESC"
-  | "notes_ASC"
-  | "notes_DESC";
+  | "directions_DESC";
 
 export type IngredientOrderByInput =
   | "id_ASC"
@@ -707,9 +705,7 @@ export type StepAdditionOrderByInput =
   | "parentId_ASC"
   | "parentId_DESC"
   | "directions_ASC"
-  | "directions_DESC"
-  | "notes_ASC"
-  | "notes_DESC";
+  | "directions_DESC";
 
 export interface SortingUpsertWithWhereUniqueWithoutModificationInput {
   where: SortingWhereUniqueInput;
@@ -887,20 +883,6 @@ export interface StepAdditionWhereInput {
   directions_not_starts_with?: Maybe<String>;
   directions_ends_with?: Maybe<String>;
   directions_not_ends_with?: Maybe<String>;
-  notes?: Maybe<String>;
-  notes_not?: Maybe<String>;
-  notes_in?: Maybe<String[] | String>;
-  notes_not_in?: Maybe<String[] | String>;
-  notes_lt?: Maybe<String>;
-  notes_lte?: Maybe<String>;
-  notes_gt?: Maybe<String>;
-  notes_gte?: Maybe<String>;
-  notes_contains?: Maybe<String>;
-  notes_not_contains?: Maybe<String>;
-  notes_starts_with?: Maybe<String>;
-  notes_not_starts_with?: Maybe<String>;
-  notes_ends_with?: Maybe<String>;
-  notes_not_ends_with?: Maybe<String>;
   modification?: Maybe<ModificationWhereInput>;
   AND?: Maybe<StepAdditionWhereInput[] | StepAdditionWhereInput>;
   OR?: Maybe<StepAdditionWhereInput[] | StepAdditionWhereInput>;
@@ -1062,20 +1044,6 @@ export interface StepWhereInput {
   directions_not_starts_with?: Maybe<String>;
   directions_ends_with?: Maybe<String>;
   directions_not_ends_with?: Maybe<String>;
-  notes?: Maybe<String>;
-  notes_not?: Maybe<String>;
-  notes_in?: Maybe<String[] | String>;
-  notes_not_in?: Maybe<String[] | String>;
-  notes_lt?: Maybe<String>;
-  notes_lte?: Maybe<String>;
-  notes_gt?: Maybe<String>;
-  notes_gte?: Maybe<String>;
-  notes_contains?: Maybe<String>;
-  notes_not_contains?: Maybe<String>;
-  notes_starts_with?: Maybe<String>;
-  notes_not_starts_with?: Maybe<String>;
-  notes_ends_with?: Maybe<String>;
-  notes_not_ends_with?: Maybe<String>;
   item?: Maybe<ItemWhereInput>;
   ingredients_every?: Maybe<IngredientWhereInput>;
   ingredients_some?: Maybe<IngredientWhereInput>;
@@ -1917,20 +1885,6 @@ export interface StepScalarWhereInput {
   directions_not_starts_with?: Maybe<String>;
   directions_ends_with?: Maybe<String>;
   directions_not_ends_with?: Maybe<String>;
-  notes?: Maybe<String>;
-  notes_not?: Maybe<String>;
-  notes_in?: Maybe<String[] | String>;
-  notes_not_in?: Maybe<String[] | String>;
-  notes_lt?: Maybe<String>;
-  notes_lte?: Maybe<String>;
-  notes_gt?: Maybe<String>;
-  notes_gte?: Maybe<String>;
-  notes_contains?: Maybe<String>;
-  notes_not_contains?: Maybe<String>;
-  notes_starts_with?: Maybe<String>;
-  notes_not_starts_with?: Maybe<String>;
-  notes_ends_with?: Maybe<String>;
-  notes_not_ends_with?: Maybe<String>;
   AND?: Maybe<StepScalarWhereInput[] | StepScalarWhereInput>;
   OR?: Maybe<StepScalarWhereInput[] | StepScalarWhereInput>;
   NOT?: Maybe<StepScalarWhereInput[] | StepScalarWhereInput>;
@@ -1979,7 +1933,6 @@ export interface StepUpdateManyDataInput {
   uid?: Maybe<ID_Input>;
   index?: Maybe<Int>;
   directions?: Maybe<String>;
-  notes?: Maybe<String>;
 }
 
 export interface UserUpdateInput {
@@ -2119,7 +2072,6 @@ export interface StepAdditionUpdateInput {
   uid?: Maybe<ID_Input>;
   parentId?: Maybe<ID_Input>;
   directions?: Maybe<String>;
-  notes?: Maybe<String>;
   modification?: Maybe<ModificationUpdateOneRequiredWithoutStepAdditionsInput>;
 }
 
@@ -2176,7 +2128,6 @@ export interface StepAdditionCreateInput {
   uid: ID_Input;
   parentId: ID_Input;
   directions: String;
-  notes: String;
   modification: ModificationCreateOneWithoutStepAdditionsInput;
 }
 
@@ -2196,7 +2147,6 @@ export interface StepUpdateManyMutationInput {
   uid?: Maybe<ID_Input>;
   index?: Maybe<Int>;
   directions?: Maybe<String>;
-  notes?: Maybe<String>;
 }
 
 export interface SortingUpdateManyWithoutModificationInput {
@@ -2228,7 +2178,6 @@ export interface StepCreateInput {
   uid: ID_Input;
   index: Int;
   directions?: Maybe<String>;
-  notes?: Maybe<String>;
   item: ItemCreateOneWithoutStepsInput;
   ingredients?: Maybe<IngredientCreateManyWithoutStepInput>;
 }
@@ -3054,7 +3003,6 @@ export interface StepAdditionUpdateWithoutModificationDataInput {
   uid?: Maybe<ID_Input>;
   parentId?: Maybe<ID_Input>;
   directions?: Maybe<String>;
-  notes?: Maybe<String>;
 }
 
 export interface UserCreateOneWithoutRecipesInput {
@@ -3150,20 +3098,6 @@ export interface StepAdditionScalarWhereInput {
   directions_not_starts_with?: Maybe<String>;
   directions_ends_with?: Maybe<String>;
   directions_not_ends_with?: Maybe<String>;
-  notes?: Maybe<String>;
-  notes_not?: Maybe<String>;
-  notes_in?: Maybe<String[] | String>;
-  notes_not_in?: Maybe<String[] | String>;
-  notes_lt?: Maybe<String>;
-  notes_lte?: Maybe<String>;
-  notes_gt?: Maybe<String>;
-  notes_gte?: Maybe<String>;
-  notes_contains?: Maybe<String>;
-  notes_not_contains?: Maybe<String>;
-  notes_starts_with?: Maybe<String>;
-  notes_not_starts_with?: Maybe<String>;
-  notes_ends_with?: Maybe<String>;
-  notes_not_ends_with?: Maybe<String>;
   AND?: Maybe<StepAdditionScalarWhereInput[] | StepAdditionScalarWhereInput>;
   OR?: Maybe<StepAdditionScalarWhereInput[] | StepAdditionScalarWhereInput>;
   NOT?: Maybe<StepAdditionScalarWhereInput[] | StepAdditionScalarWhereInput>;
@@ -3198,7 +3132,6 @@ export interface StepAdditionUpdateManyDataInput {
   uid?: Maybe<ID_Input>;
   parentId?: Maybe<ID_Input>;
   directions?: Maybe<String>;
-  notes?: Maybe<String>;
 }
 
 export interface UserUpdateWithoutModificationsDataInput {
@@ -3571,7 +3504,6 @@ export interface StepAdditionUpdateManyMutationInput {
   uid?: Maybe<ID_Input>;
   parentId?: Maybe<ID_Input>;
   directions?: Maybe<String>;
-  notes?: Maybe<String>;
 }
 
 export interface ModificationUpdateManyDataInput {
@@ -3748,7 +3680,6 @@ export interface StepUpdateInput {
   uid?: Maybe<ID_Input>;
   index?: Maybe<Int>;
   directions?: Maybe<String>;
-  notes?: Maybe<String>;
   item?: Maybe<ItemUpdateOneRequiredWithoutStepsInput>;
   ingredients?: Maybe<IngredientUpdateManyWithoutStepInput>;
 }
@@ -3975,7 +3906,6 @@ export interface StepAdditionCreateWithoutModificationInput {
   uid: ID_Input;
   parentId: ID_Input;
   directions: String;
-  notes: String;
 }
 
 export interface RecipeUpsertWithoutModificationsInput {
@@ -4122,7 +4052,6 @@ export interface StepCreateWithoutIngredientsInput {
   uid: ID_Input;
   index: Int;
   directions?: Maybe<String>;
-  notes?: Maybe<String>;
   item: ItemCreateOneWithoutStepsInput;
 }
 
@@ -4220,7 +4149,6 @@ export interface StepCreateWithoutItemInput {
   uid: ID_Input;
   index: Int;
   directions?: Maybe<String>;
-  notes?: Maybe<String>;
   ingredients?: Maybe<IngredientCreateManyWithoutStepInput>;
 }
 
@@ -4228,7 +4156,6 @@ export interface StepUpdateWithoutIngredientsDataInput {
   uid?: Maybe<ID_Input>;
   index?: Maybe<Int>;
   directions?: Maybe<String>;
-  notes?: Maybe<String>;
   item?: Maybe<ItemUpdateOneRequiredWithoutStepsInput>;
 }
 
@@ -4392,7 +4319,6 @@ export interface StepUpdateWithoutItemDataInput {
   uid?: Maybe<ID_Input>;
   index?: Maybe<Int>;
   directions?: Maybe<String>;
-  notes?: Maybe<String>;
   ingredients?: Maybe<IngredientUpdateManyWithoutStepInput>;
 }
 
@@ -5517,7 +5443,6 @@ export interface Step {
   uid: ID_Output;
   index: Int;
   directions: String;
-  notes: String;
 }
 
 export interface StepPromise extends Promise<Step>, Fragmentable {
@@ -5527,7 +5452,6 @@ export interface StepPromise extends Promise<Step>, Fragmentable {
   uid: () => Promise<ID_Output>;
   index: () => Promise<Int>;
   directions: () => Promise<String>;
-  notes: () => Promise<String>;
   item: <T = ItemPromise>() => T;
   ingredients: <T = FragmentableArray<Ingredient>>(args?: {
     where?: IngredientWhereInput;
@@ -5549,7 +5473,6 @@ export interface StepSubscription
   uid: () => Promise<AsyncIterator<ID_Output>>;
   index: () => Promise<AsyncIterator<Int>>;
   directions: () => Promise<AsyncIterator<String>>;
-  notes: () => Promise<AsyncIterator<String>>;
   item: <T = ItemSubscription>() => T;
   ingredients: <T = Promise<AsyncIterator<IngredientSubscription>>>(args?: {
     where?: IngredientWhereInput;
@@ -5571,7 +5494,6 @@ export interface StepNullablePromise
   uid: () => Promise<ID_Output>;
   index: () => Promise<Int>;
   directions: () => Promise<String>;
-  notes: () => Promise<String>;
   item: <T = ItemPromise>() => T;
   ingredients: <T = FragmentableArray<Ingredient>>(args?: {
     where?: IngredientWhereInput;
@@ -5761,7 +5683,6 @@ export interface StepAdditionPreviousValues {
   uid: ID_Output;
   parentId: ID_Output;
   directions: String;
-  notes: String;
 }
 
 export interface StepAdditionPreviousValuesPromise
@@ -5773,7 +5694,6 @@ export interface StepAdditionPreviousValuesPromise
   uid: () => Promise<ID_Output>;
   parentId: () => Promise<ID_Output>;
   directions: () => Promise<String>;
-  notes: () => Promise<String>;
 }
 
 export interface StepAdditionPreviousValuesSubscription
@@ -5785,7 +5705,6 @@ export interface StepAdditionPreviousValuesSubscription
   uid: () => Promise<AsyncIterator<ID_Output>>;
   parentId: () => Promise<AsyncIterator<ID_Output>>;
   directions: () => Promise<AsyncIterator<String>>;
-  notes: () => Promise<AsyncIterator<String>>;
 }
 
 export interface IngredientAddition {
@@ -6202,7 +6121,6 @@ export interface StepAddition {
   uid: ID_Output;
   parentId: ID_Output;
   directions: String;
-  notes: String;
 }
 
 export interface StepAdditionPromise
@@ -6214,7 +6132,6 @@ export interface StepAdditionPromise
   uid: () => Promise<ID_Output>;
   parentId: () => Promise<ID_Output>;
   directions: () => Promise<String>;
-  notes: () => Promise<String>;
   modification: <T = ModificationPromise>() => T;
 }
 
@@ -6227,7 +6144,6 @@ export interface StepAdditionSubscription
   uid: () => Promise<AsyncIterator<ID_Output>>;
   parentId: () => Promise<AsyncIterator<ID_Output>>;
   directions: () => Promise<AsyncIterator<String>>;
-  notes: () => Promise<AsyncIterator<String>>;
   modification: <T = ModificationSubscription>() => T;
 }
 
@@ -6240,7 +6156,6 @@ export interface StepAdditionNullablePromise
   uid: () => Promise<ID_Output>;
   parentId: () => Promise<ID_Output>;
   directions: () => Promise<String>;
-  notes: () => Promise<String>;
   modification: <T = ModificationPromise>() => T;
 }
 
@@ -6332,7 +6247,6 @@ export interface StepPreviousValues {
   uid: ID_Output;
   index: Int;
   directions: String;
-  notes: String;
 }
 
 export interface StepPreviousValuesPromise
@@ -6344,7 +6258,6 @@ export interface StepPreviousValuesPromise
   uid: () => Promise<ID_Output>;
   index: () => Promise<Int>;
   directions: () => Promise<String>;
-  notes: () => Promise<String>;
 }
 
 export interface StepPreviousValuesSubscription
@@ -6356,7 +6269,6 @@ export interface StepPreviousValuesSubscription
   uid: () => Promise<AsyncIterator<ID_Output>>;
   index: () => Promise<AsyncIterator<Int>>;
   directions: () => Promise<AsyncIterator<String>>;
-  notes: () => Promise<AsyncIterator<String>>;
 }
 
 export interface StepSubscriptionPayload {

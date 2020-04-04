@@ -34,7 +34,6 @@ type Step {
   uid: ID! @unique
   index: Int!
   directions: String! @default(value: "")
-  notes: String! @default(value: "")
   item: Item! @relation(name: "RecipeSteps")
   ingredients: [Ingredient!]!
     @relation(name: "RecipeIngredients", onDelete: CASCADE)

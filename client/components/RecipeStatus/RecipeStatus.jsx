@@ -76,8 +76,7 @@ const RecipeStatus = () => {
           .map(step => ({
             uid: step.uid,
             parentId: step.parentId,
-            directions: step.directions,
-            notes: step.notes
+            directions: step.directions
           })),
         ingredients: additions
           .filter(addition => addition.kind === 'Ingredient')

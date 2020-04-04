@@ -194,8 +194,7 @@ export default (state, action) => {
         uid: cuid(),
         kind: 'Step',
         parentId: itemId,
-        directions: '',
-        notes: ''
+        directions: ''
       };
       return {
         ...state,

@@ -20,7 +20,6 @@ fragment ModificationFragment on Modification {
     }
     ... on StepAddition {
       directions
-      notes
     }
     ... on IngredientAddition {
       name

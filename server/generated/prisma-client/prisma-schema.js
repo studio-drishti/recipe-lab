@@ -3310,7 +3310,6 @@ type Step {
   uid: ID!
   index: Int!
   directions: String!
-  notes: String!
   item: Item!
   ingredients(where: IngredientWhereInput, orderBy: IngredientOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Ingredient!]
 }
@@ -3322,7 +3321,6 @@ type StepAddition {
   uid: ID!
   parentId: ID!
   directions: String!
-  notes: String!
   modification: Modification!
 }
 
@@ -3337,7 +3335,6 @@ input StepAdditionCreateInput {
   uid: ID!
   parentId: ID!
   directions: String!
-  notes: String!
   modification: ModificationCreateOneWithoutStepAdditionsInput!
 }
 
@@ -3351,7 +3348,6 @@ input StepAdditionCreateWithoutModificationInput {
   uid: ID!
   parentId: ID!
   directions: String!
-  notes: String!
 }
 
 type StepAdditionEdge {
@@ -3372,8 +3368,6 @@ enum StepAdditionOrderByInput {
   parentId_DESC
   directions_ASC
   directions_DESC
-  notes_ASC
-  notes_DESC
 }
 
 type StepAdditionPreviousValues {
@@ -3383,7 +3377,6 @@ type StepAdditionPreviousValues {
   uid: ID!
   parentId: ID!
   directions: String!
-  notes: String!
 }
 
 input StepAdditionScalarWhereInput {
@@ -3459,20 +3452,6 @@ input StepAdditionScalarWhereInput {
   directions_not_starts_with: String
   directions_ends_with: String
   directions_not_ends_with: String
-  notes: String
-  notes_not: String
-  notes_in: [String!]
-  notes_not_in: [String!]
-  notes_lt: String
-  notes_lte: String
-  notes_gt: String
-  notes_gte: String
-  notes_contains: String
-  notes_not_contains: String
-  notes_starts_with: String
-  notes_not_starts_with: String
-  notes_ends_with: String
-  notes_not_ends_with: String
   AND: [StepAdditionScalarWhereInput!]
   OR: [StepAdditionScalarWhereInput!]
   NOT: [StepAdditionScalarWhereInput!]
@@ -3500,7 +3479,6 @@ input StepAdditionUpdateInput {
   uid: ID
   parentId: ID
   directions: String
-  notes: String
   modification: ModificationUpdateOneRequiredWithoutStepAdditionsInput
 }
 
@@ -3508,14 +3486,12 @@ input StepAdditionUpdateManyDataInput {
   uid: ID
   parentId: ID
   directions: String
-  notes: String
 }
 
 input StepAdditionUpdateManyMutationInput {
   uid: ID
   parentId: ID
   directions: String
-  notes: String
 }
 
 input StepAdditionUpdateManyWithoutModificationInput {
@@ -3539,7 +3515,6 @@ input StepAdditionUpdateWithoutModificationDataInput {
   uid: ID
   parentId: ID
   directions: String
-  notes: String
 }
 
 input StepAdditionUpdateWithWhereUniqueWithoutModificationInput {
@@ -3626,20 +3601,6 @@ input StepAdditionWhereInput {
   directions_not_starts_with: String
   directions_ends_with: String
   directions_not_ends_with: String
-  notes: String
-  notes_not: String
-  notes_in: [String!]
-  notes_not_in: [String!]
-  notes_lt: String
-  notes_lte: String
-  notes_gt: String
-  notes_gte: String
-  notes_contains: String
-  notes_not_contains: String
-  notes_starts_with: String
-  notes_not_starts_with: String
-  notes_ends_with: String
-  notes_not_ends_with: String
   modification: ModificationWhereInput
   AND: [StepAdditionWhereInput!]
   OR: [StepAdditionWhereInput!]
@@ -3662,7 +3623,6 @@ input StepCreateInput {
   uid: ID!
   index: Int!
   directions: String
-  notes: String
   item: ItemCreateOneWithoutStepsInput!
   ingredients: IngredientCreateManyWithoutStepInput
 }
@@ -3682,7 +3642,6 @@ input StepCreateWithoutIngredientsInput {
   uid: ID!
   index: Int!
   directions: String
-  notes: String
   item: ItemCreateOneWithoutStepsInput!
 }
 
@@ -3691,7 +3650,6 @@ input StepCreateWithoutItemInput {
   uid: ID!
   index: Int!
   directions: String
-  notes: String
   ingredients: IngredientCreateManyWithoutStepInput
 }
 
@@ -3713,8 +3671,6 @@ enum StepOrderByInput {
   index_DESC
   directions_ASC
   directions_DESC
-  notes_ASC
-  notes_DESC
 }
 
 type StepPreviousValues {
@@ -3724,7 +3680,6 @@ type StepPreviousValues {
   uid: ID!
   index: Int!
   directions: String!
-  notes: String!
 }
 
 input StepScalarWhereInput {
@@ -3794,20 +3749,6 @@ input StepScalarWhereInput {
   directions_not_starts_with: String
   directions_ends_with: String
   directions_not_ends_with: String
-  notes: String
-  notes_not: String
-  notes_in: [String!]
-  notes_not_in: [String!]
-  notes_lt: String
-  notes_lte: String
-  notes_gt: String
-  notes_gte: String
-  notes_contains: String
-  notes_not_contains: String
-  notes_starts_with: String
-  notes_not_starts_with: String
-  notes_ends_with: String
-  notes_not_ends_with: String
   AND: [StepScalarWhereInput!]
   OR: [StepScalarWhereInput!]
   NOT: [StepScalarWhereInput!]
@@ -3835,7 +3776,6 @@ input StepUpdateInput {
   uid: ID
   index: Int
   directions: String
-  notes: String
   item: ItemUpdateOneRequiredWithoutStepsInput
   ingredients: IngredientUpdateManyWithoutStepInput
 }
@@ -3844,14 +3784,12 @@ input StepUpdateManyDataInput {
   uid: ID
   index: Int
   directions: String
-  notes: String
 }
 
 input StepUpdateManyMutationInput {
   uid: ID
   index: Int
   directions: String
-  notes: String
 }
 
 input StepUpdateManyWithoutItemInput {
@@ -3882,7 +3820,6 @@ input StepUpdateWithoutIngredientsDataInput {
   uid: ID
   index: Int
   directions: String
-  notes: String
   item: ItemUpdateOneRequiredWithoutStepsInput
 }
 
@@ -3890,7 +3827,6 @@ input StepUpdateWithoutItemDataInput {
   uid: ID
   index: Int
   directions: String
-  notes: String
   ingredients: IngredientUpdateManyWithoutStepInput
 }
 
@@ -3977,20 +3913,6 @@ input StepWhereInput {
   directions_not_starts_with: String
   directions_ends_with: String
   directions_not_ends_with: String
-  notes: String
-  notes_not: String
-  notes_in: [String!]
-  notes_not_in: [String!]
-  notes_lt: String
-  notes_lte: String
-  notes_gt: String
-  notes_gte: String
-  notes_contains: String
-  notes_not_contains: String
-  notes_starts_with: String
-  notes_not_starts_with: String
-  notes_ends_with: String
-  notes_not_ends_with: String
   item: ItemWhereInput
   ingredients_every: IngredientWhereInput
   ingredients_some: IngredientWhereInput
