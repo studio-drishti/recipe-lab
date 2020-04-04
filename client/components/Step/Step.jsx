@@ -64,6 +64,7 @@ const Step = ({ index, itemId, step, children, isLast, moveDraggable }) => {
 
   const discardChanges = e => {
     e.preventDefault();
+    e.stopPropagation();
     setEdits({});
     setEditing(false);
   };
@@ -185,11 +186,6 @@ const Step = ({ index, itemId, step, children, isLast, moveDraggable }) => {
               <IconButtonGroup className={classnames(css.stepActions)}>
                 {!editing && (
                   <>
-                    {!editing && !isRemoved && (
-                      <IconButton onClick={() => setEditing(true)}>
-                        <MdEdit />
-                      </IconButton>
-                    )}
                     <IconButton
                       disabled={snapshot.isDragging || isLast}
                       onClick={() => moveDraggable(step.uid, 'down')}
@@ -201,23 +197,6 @@ const Step = ({ index, itemId, step, children, isLast, moveDraggable }) => {
                       onClick={() => moveDraggable(step.uid, 'up')}
                     >
                       <MdKeyboardArrowUp />
-                    </IconButton>
-                  </>
-                )}
-                {editing && (
-                  <>
-                    <IconButton
-                      title="save changes"
-                      type="submit"
-                      onClick={handleSave}
-                    >
-                      <MdCheck />
-                    </IconButton>
-                    <IconButton
-                      title="discard changes"
-                      onClick={discardChanges}
-                    >
-                      <MdDoNotDisturb />
                     </IconButton>
                   </>
                 )}
@@ -256,16 +235,39 @@ const Step = ({ index, itemId, step, children, isLast, moveDraggable }) => {
                   </p>
                 )}
                 <TextButtonGroup className={(css.buttons, css.removeActions)}>
-                  {!isRemoved && (
-                    <TextButton onClick={handleRemove}>
-                      <MdClear /> remove step
-                    </TextButton>
+                  {!editing && !isRemoved && (
+                    <>
+                      <TextButton onClick={handleRemove}>
+                        <MdClear /> remove step
+                      </TextButton>
+                      <TextButton onClick={() => setEditing(true)}>
+                        <MdEdit /> edit step
+                      </TextButton>
+                    </>
                   )}
 
                   {isRemoved && !editing && (
                     <TextButton onClick={handleRestore}>
                       <MdRefresh /> restore step
                     </TextButton>
+                  )}
+
+                  {editing && (
+                    <>
+                      <TextButton
+                        title="save changes"
+                        type="submit"
+                        onClick={handleSave}
+                      >
+                        <MdCheck /> save
+                      </TextButton>
+                      <TextButton
+                        title="discard changes"
+                        onClick={discardChanges}
+                      >
+                        <MdDoNotDisturb /> discard
+                      </TextButton>
+                    </>
                   )}
                 </TextButtonGroup>
               </form>
