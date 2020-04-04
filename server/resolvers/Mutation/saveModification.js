@@ -85,14 +85,12 @@ module.exports = async (parent, args, ctx) => {
           upsert: steps.map(step => ({
             where: { uid: step.uid },
             update: {
-              directions: step.directions,
-              notes: step.notes
+              directions: step.directions
             },
             create: {
               uid: step.uid,
               parentId: step.parentId,
-              directions: step.directions,
-              notes: step.notes
+              directions: step.directions
             }
           }))
         },
@@ -159,8 +157,7 @@ module.exports = async (parent, args, ctx) => {
         create: steps.map(step => ({
           uid: step.uid,
           parentId: step.parentId,
-          directions: step.directions,
-          notes: step.notes
+          directions: step.directions
         }))
       },
       ingredientAdditions: {

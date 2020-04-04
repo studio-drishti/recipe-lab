@@ -1,4 +1,4 @@
-fragment ModificationInfo on Modification {
+fragment ModificationFragment on Modification {
   removals
   sortings {
     uid
@@ -20,7 +20,6 @@ fragment ModificationInfo on Modification {
     }
     ... on StepAddition {
       directions
-      notes
     }
     ... on IngredientAddition {
       name

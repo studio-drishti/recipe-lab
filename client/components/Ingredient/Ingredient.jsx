@@ -162,7 +162,7 @@ const Ingredient = ({ index, ingredient, itemId, stepId }) => {
         )}
       </>
     );
-  }, [editing, isRemoved]);
+  }, [editing, isRemoved, ingredient]);
 
   const handleClick = e => {
     if (!ingredientRef.current) return;

@@ -1,2 +1,1 @@
-import Component from './Select.jsx';
-export default Component;
+export { default } from './Select.jsx';

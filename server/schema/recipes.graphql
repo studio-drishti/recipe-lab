@@ -23,7 +23,6 @@ type Item {
 type Step {
   uid: ID!
   directions: String!
-  notes: String!
   ingredients: [Ingredient!]!
 }
 

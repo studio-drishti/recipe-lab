@@ -63,14 +63,12 @@ type StepAddition implements Addition {
   parentId: ID!
   kind: String!
   directions: String!
-  notes: String!
 }
 
 input StepAdditionInput {
   uid: ID
   parentId: ID!
   directions: String!
-  notes: String!
 }
 
 type IngredientAddition implements Addition {

@@ -1,2 +1,1 @@
-import Component from './Textarea.jsx';
-export default Component;
+export { default } from './Textarea.jsx';

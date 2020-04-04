@@ -1,2 +1,1 @@
-import Component from './DiffText.jsx';
-export default Component;
+export { default } from './DiffText.jsx';

@@ -1,2 +1,1 @@
-import Component from './Account.jsx';
-export default Component;
+export { default } from './Account.jsx';
