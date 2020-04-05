@@ -189,13 +189,29 @@ export default (state, action) => {
       };
     }
     case 'CREATE_STEP': {
-      const { itemId } = action.payload;
+      const { itemId, steps, index } = action.payload;
+      const { sortings } = state;
       const addition = {
         uid: cuid(),
         kind: 'Step',
         parentId: itemId,
         directions: ''
       };
+
+      const order = getSorted(steps, sortings, itemId).map(item => item.uid);
+      order.splice(index + 1, 0, addition.uid);
+      const sortingIndex = sortings.findIndex(
+        sorting => sorting.parentId === itemId
+      );
+      if (sortingIndex > -1) {
+        sortings[sortingIndex].order = order;
+      } else {
+        sortings.push({
+          uid: cuid(),
+          parentId: itemId,
+          order
+        });
+      }
       return {
         ...state,
         additions: [...state.additions, addition],

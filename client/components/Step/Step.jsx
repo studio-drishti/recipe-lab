@@ -31,10 +31,10 @@ import IconButton from '../IconButton';
 import IconButtonGroup from '../IconButtonGroup';
 import css from './Step.module.css';
 
-const Step = ({ index, itemId, step, children, isLast, moveDraggable }) => {
+const Step = ({ index, step, itemId, children, isLast, moveDraggable }) => {
   const stepFields = ['directions'];
   const {
-    modification: { alterations, removals },
+    modification: { alterations, removals, additions },
     modificationDispatch
   } = useContext(RecipeContext);
   const isRemoved = useMemo(
@@ -65,7 +65,13 @@ const Step = ({ index, itemId, step, children, isLast, moveDraggable }) => {
   };
 
   const handleCreateStep = () => {
-    if (!editing) createStep(itemId, modificationDispatch);
+    if (!editing) {
+      const unsortedSteps = [
+        ...steps,
+        ...additions.filter(step => step.parentId === itemId)
+      ];
+      createStep(itemId, unsortedSteps, index, modificationDispatch);
+    }
   };
 
   const discardChanges = e => {

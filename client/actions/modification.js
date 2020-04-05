@@ -40,10 +40,10 @@ export const createItem = (recipeId, items, index, dispatch) =>
     payload: { recipeId, items, index }
   });
 
-export const createStep = (itemId, dispatch) =>
+export const createStep = (itemId, index, dispatch) =>
   dispatch({
     type: 'CREATE_STEP',
-    payload: { itemId }
+    payload: { itemId, index }
   });
 
 export const createIngredient = (stepId, dispatch) =>

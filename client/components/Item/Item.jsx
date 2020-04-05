@@ -312,7 +312,8 @@ Item.propTypes = {
   index: PropTypes.number,
   item: PropTypes.object,
   isLast: PropTypes.bool,
-  moveDraggable: PropTypes.func
+  moveDraggable: PropTypes.func,
+  steps: PropTypes.arrayOf(PropTypes.object)
 };
 
 Item.defaultProps = {
