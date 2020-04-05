@@ -209,7 +209,7 @@ const Account = () => {
         imageResizeTargetWidth="300"
         onprocessfiles={handleUploadComplete}
       />
-      {chef.avatar && (
+      {!chef.avatar.startsWith('/static/placeholder') && (
         <p>
           <a href="#" onClick={handleAvatarDelete}>
             Remove Avatar

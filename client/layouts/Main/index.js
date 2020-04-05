@@ -1,2 +1,1 @@
-import Component from './Main.jsx';
-export default Component;
+export { default } from './Main.jsx';

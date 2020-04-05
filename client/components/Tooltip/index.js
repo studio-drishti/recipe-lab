@@ -1,2 +1,1 @@
-import Component from './Tooltip.jsx';
-export default Component;
+export { default } from './Tooltip.jsx';

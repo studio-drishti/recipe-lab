@@ -1,0 +1,6 @@
+#import './RecipeFragment.graphql'
+mutation PublishRecipe($recipeId: ID!) {
+  publishRecipe(recipeId: $recipeId) {
+    ...RecipeFragment
+  }
+}

@@ -1,2 +1,1 @@
-import Component from './Step.jsx';
-export default Component;
+export { default } from './Step.jsx';

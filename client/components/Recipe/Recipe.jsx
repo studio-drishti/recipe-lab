@@ -50,7 +50,7 @@ const Recipe = props => {
     : 'MOD-NEW-RECIPE';
 
   useEffect(() => {
-    if (localStorage.getItem(localStoreId)) {
+    if (localStorage && localStorage.getItem(localStoreId)) {
       setModification(
         Object.assign(
           modification,

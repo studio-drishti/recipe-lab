@@ -11,20 +11,16 @@ module.exports = async (parent, { recipeId }, ctx) => {
     }
   `);
 
+  if (!recipe.photo) throw new Error('No photo to delete');
+
   const dest = path.resolve(__dirname, `../../public/${recipe.author.slug}`);
   fs.mkdirSync(dest, { recursive: true });
-
-  if (recipe.photo) {
-    const oldPhoto = path.join(dest, recipe.photo);
-    if (fs.existsSync(oldPhoto)) fs.unlinkSync(oldPhoto);
-    await ctx.prisma.updateRecipe({
-      where: { uid: recipeId },
-      data: {
-        photo: null
-      }
-    });
-    return true;
-  }
-
-  return false;
+  const oldPhoto = path.join(dest, recipe.photo);
+  if (fs.existsSync(oldPhoto)) fs.unlinkSync(oldPhoto);
+  return await ctx.prisma.updateRecipe({
+    where: { uid: recipeId },
+    data: {
+      photo: null
+    }
+  });
 };

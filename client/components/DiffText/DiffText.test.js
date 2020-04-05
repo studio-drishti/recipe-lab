@@ -1,7 +1,7 @@
 import { shallow } from 'enzyme';
 import React from 'react';
 
-import DiffText from 'recipe-lab/client/components/DiffText';
+import DiffText from './DiffText.jsx';
 
 const setup = propOverrides => {
   const props = Object.assign(

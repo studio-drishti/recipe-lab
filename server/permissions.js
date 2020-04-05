@@ -1,5 +1,5 @@
 const { rule, shield, or } = require('graphql-shield');
-const getUserId = require('../utils/getUserId');
+const getUserId = require('./utils/getUserId');
 
 const rules = {
   /**
@@ -30,15 +30,22 @@ const rules = {
   })
 };
 
-module.exports = shield({
-  Query: {
-    sessionUser: rules.isAuthenticatedUser
+module.exports = shield(
+  {
+    Query: {
+      sessionUser: rules.isAuthenticatedUser
+    },
+    Mutation: {
+      avatarUpload: or(rules.isAccountOwner, rules.isExecutiveChef),
+      avatarDelete: or(rules.isAccountOwner, rules.isExecutiveChef),
+      recipePhotoUpload: or(rules.isRecipeOwner, rules.isExecutiveChef),
+      recipePhotoDelete: or(rules.isRecipeOwner, rules.isExecutiveChef),
+      updateUser: or(rules.isAccountOwner, rules.isExecutiveChef),
+      publishRecipe: rules.isRecipeOwner
+    }
   },
-  Mutation: {
-    avatarUpload: or(rules.isAccountOwner, rules.isExecutiveChef),
-    avatarDelete: or(rules.isAccountOwner, rules.isExecutiveChef),
-    recipePhotoUpload: or(rules.isRecipeOwner, rules.isExecutiveChef),
-    recipePhotoDelete: or(rules.isRecipeOwner, rules.isExecutiveChef),
-    updateUser: or(rules.isAccountOwner, rules.isExecutiveChef)
+  {
+    fallbackError: false,
+    allowExternalErros: true
   }
-});
+);

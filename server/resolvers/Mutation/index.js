@@ -7,6 +7,7 @@ const recipePhotoDelete = require('./recipePhotoDelete');
 const saveModification = require('./saveModification');
 const createRecipe = require('./createRecipe');
 const updateUser = require('./updateUser');
+const publishRecipe = require('./publishRecipe');
 
 module.exports = {
   signup,
@@ -17,5 +18,6 @@ module.exports = {
   recipePhotoDelete,
   saveModification,
   createRecipe,
-  updateUser
+  updateUser,
+  publishRecipe
 };

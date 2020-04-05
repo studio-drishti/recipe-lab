@@ -34,10 +34,10 @@ export const undoRemoval = (source, dispatch) =>
     payload: source
   });
 
-export const createItem = (recipeId, dispatch) =>
+export const createItem = (recipeId, items, index, dispatch) =>
   dispatch({
     type: 'CREATE_ITEM',
-    payload: { recipeId }
+    payload: { recipeId, items, index }
   });
 
 export const createStep = (itemId, dispatch) =>

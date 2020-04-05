@@ -1,3 +1,5 @@
 mutation RecipePhotoDelete($recipeId: ID!) {
-  recipePhotoDelete(recipeId: $recipeId)
+  recipePhotoDelete(recipeId: $recipeId) {
+    photo
+  }
 }

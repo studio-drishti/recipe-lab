@@ -1,2 +1,1 @@
-import Component from './Ingredient.jsx';
-export default Component;
+export { default } from './Ingredient.jsx';

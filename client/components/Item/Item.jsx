@@ -33,8 +33,8 @@ const Item = ({ children, item, index, isLast, moveDraggable }) => {
   const itemFields = ['name'];
 
   const {
-    recipe: { uid: recipeId },
-    modification: { alterations, removals },
+    recipe: { uid: recipeId, items },
+    modification: { alterations, removals, additions },
     modificationDispatch
   } = useContext(RecipeContext);
 
@@ -106,7 +106,12 @@ const Item = ({ children, item, index, isLast, moveDraggable }) => {
   };
 
   const handleCreateItem = () => {
-    if (!editing) createItem(recipeId, modificationDispatch);
+    if (editing) return;
+    const unsortedItems = [
+      ...items,
+      ...additions.filter(item => item.parentId === recipeId)
+    ];
+    createItem(recipeId, unsortedItems, index, modificationDispatch);
   };
 
   const renderNameWithMods = () => {
@@ -280,11 +285,9 @@ const Item = ({ children, item, index, isLast, moveDraggable }) => {
               [css.dragging]: snapshot.isDragging
             })}
           >
-            {isLast && (
-              <TextButton onClick={handleCreateItem} disabled={editing}>
-                <MdAdd /> add item
-              </TextButton>
-            )}
+            <TextButton onClick={handleCreateItem} disabled={editing}>
+              <MdAdd /> add item
+            </TextButton>
 
             {!editing && !isRemoved && (
               <TextButton onClick={handleRemove}>

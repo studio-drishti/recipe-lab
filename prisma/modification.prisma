@@ -53,7 +53,6 @@ type StepAddition {
   uid: ID! @unique
   parentId: ID!
   directions: String!
-  notes: String!
   modification: Modification! @relation(name: "StepAdditions")
 }
 

@@ -1,2 +1,1 @@
-import Component from './IconButton.jsx';
-export default Component;
+export { default } from './IconButton.jsx';
