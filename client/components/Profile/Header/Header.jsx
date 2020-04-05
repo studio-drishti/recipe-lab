@@ -22,11 +22,7 @@ const ProfileHeader = () => {
   return (
     <header>
       <div className={css.profilePhoto}>
-        {chef.avatar ? (
-          <img src={chef.avatar} />
-        ) : (
-          <img src="https://loremflickr.com/300/300/cook" />
-        )}
+        <img src={chef.avatar} />
       </div>
       <div>
         <h1>{chef.name}</h1>

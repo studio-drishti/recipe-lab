@@ -16,8 +16,10 @@ module.exports = {
         }
       }
     `);
-    if (!recipe.photo) return null;
-    return `/public/${recipe.author.slug}/${recipe.photo}`;
+
+    return recipe.photo
+      ? `/public/${recipe.author.slug}/${recipe.photo}`
+      : `/static/placeholders/recipe-${Math.floor(Math.random() * 3 + 1)}.jpg`;
   },
   modification: ({ uid }, { user }, ctx) => {
     if (!user) {

@@ -26,5 +26,6 @@ fragment RecipeFragment on Recipe {
     id
     name
     avatar
+    bio
   }
 }

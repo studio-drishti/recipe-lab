@@ -52,7 +52,7 @@ const RecipeDetails = ({ className }) => {
 
   const canDeletePhoto = Boolean(
     recipe &&
-      recipe.photo &&
+      !recipe.photo.startsWith('/static/placeholder') &&
       user &&
       (recipe.author.id === user.id || user.role === 'EXECUTIVE_CHEF')
   );
@@ -67,8 +67,8 @@ const RecipeDetails = ({ className }) => {
     if (!canDeletePhoto) return;
     deletePhoto({
       variables: { recipeId: recipe.uid }
-    }).then(() => {
-      setRecipePhoto(null, recipeDispatch);
+    }).then(({ data }) => {
+      setRecipePhoto(data.recipePhotoDelete.photo, recipeDispatch);
     });
   };
 

@@ -32,10 +32,7 @@ IndexPage.getInitialProps = async ({ query, apolloClient }) => {
   const { modification, ...recipe } = data.recipe;
   return {
     modification,
-    recipe,
-    placeholderPhoto: `/static/placeholders/recipe-${Math.floor(
-      Math.random() * 3 + 1
-    )}.jpg`
+    recipe
   };
 };
 

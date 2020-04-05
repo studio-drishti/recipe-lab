@@ -46,5 +46,5 @@ type Mutation {
   ): Modification!
   publishRecipe(recipeId: ID!): Recipe!
   recipePhotoUpload(file: Upload!, recipeId: ID!): Recipe!
-  recipePhotoDelete(recipeId: ID!): Boolean!
+  recipePhotoDelete(recipeId: ID!): Recipe!
 }
