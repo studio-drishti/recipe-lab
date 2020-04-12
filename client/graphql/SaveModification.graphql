@@ -1,8 +1,8 @@
 #import './ModificationFragment.graphql'
 
 mutation SaveModification(
-  $recipe: ID!
-  $user: ID!
+  $recipeId: ID!
+  $userId: ID!
   $removals: [ID!]!
   $sortings: [SortingInput!]!
   $alterations: [AlterationInput!]!
@@ -11,8 +11,8 @@ mutation SaveModification(
   $ingredients: [IngredientAdditionInput!]!
 ) {
   saveModification(
-    recipe: $recipe
-    user: $user
+    recipeId: $recipeId
+    userId: $userId
     removals: $removals
     sortings: $sortings
     alterations: $alterations
