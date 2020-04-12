@@ -9,7 +9,7 @@ import {
   MdClear,
   MdCheck,
   MdRefresh,
-  MdAdd
+  MdAdd,
 } from 'react-icons/md';
 import classnames from 'classnames';
 import RecipeContext from '../../context/RecipeContext';
@@ -17,7 +17,7 @@ import {
   setAlteration,
   removeItem,
   undoRemoval,
-  createItem
+  createItem,
 } from '../../actions/modification';
 import { areAllFieldsEmpty, getFieldValue } from '../../utils/recipe';
 import TextInput from '../TextInput';
@@ -35,7 +35,7 @@ const Item = ({ children, item, index, isLast, moveDraggable }) => {
   const {
     recipe: { uid: recipeId, items },
     modification: { alterations, removals, additions },
-    modificationDispatch
+    modificationDispatch,
   } = useContext(RecipeContext);
 
   const isRemoved = useMemo(() => removals.includes(item.uid), [removals]);
@@ -51,10 +51,10 @@ const Item = ({ children, item, index, isLast, moveDraggable }) => {
     areAllFieldsEmpty(itemFields, item, alterations)
   );
 
-  const getItemValue = fieldName =>
+  const getItemValue = (fieldName) =>
     getFieldValue(fieldName, item, alterations, edits);
 
-  const handleSelect = e => {
+  const handleSelect = (e) => {
     e.preventDefault();
     setEditing(true);
   };
@@ -69,13 +69,13 @@ const Item = ({ children, item, index, isLast, moveDraggable }) => {
       });
   };
 
-  const handleSubmit = e => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     saveEdits();
     setEditing(false);
   };
 
-  const handleClick = e => {
+  const handleClick = (e) => {
     if (itemRef.current.contains(e.target)) return;
     saveEdits();
     setEditing(false);
@@ -89,17 +89,17 @@ const Item = ({ children, item, index, isLast, moveDraggable }) => {
     setHovering(false);
   };
 
-  const handleRemove = e => {
+  const handleRemove = (e) => {
     e.stopPropagation();
     removeItem(item, modificationDispatch);
   };
 
-  const handleRestore = e => {
+  const handleRestore = (e) => {
     e.stopPropagation();
     undoRemoval(item.uid, modificationDispatch);
   };
 
-  const discardChanges = e => {
+  const discardChanges = (e) => {
     e.preventDefault();
     setEdits({});
     setEditing(false);
@@ -109,7 +109,7 @@ const Item = ({ children, item, index, isLast, moveDraggable }) => {
     if (editing) return;
     const unsortedItems = [
       ...items,
-      ...additions.filter(item => item.parentId === recipeId)
+      ...additions.filter((item) => item.parentId === recipeId),
     ];
     createItem(recipeId, unsortedItems, index, modificationDispatch);
   };
@@ -150,15 +150,15 @@ const Item = ({ children, item, index, isLast, moveDraggable }) => {
         break;
     }
 
-    setErrors(errors => ({
+    setErrors((errors) => ({
       ...errors,
-      [fieldName]: err
+      [fieldName]: err,
     }));
 
     return Boolean(!err);
   };
 
-  const handleItemChange = e => {
+  const handleItemChange = (e) => {
     const { name, value } = e.target;
     if (isRemoved) undoRemoval(item.uid, modificationDispatch);
 
@@ -167,7 +167,7 @@ const Item = ({ children, item, index, isLast, moveDraggable }) => {
 
     setEdits({
       ...edits,
-      [name]: value
+      [name]: value,
     });
 
     validationTimeouts.current[name] = setTimeout(() => {
@@ -202,7 +202,7 @@ const Item = ({ children, item, index, isLast, moveDraggable }) => {
             className={classnames(css.item, {
               [css.hover]: hovering,
               [css.editing]: editing,
-              [css.dragging]: snapshot.isDragging
+              [css.dragging]: snapshot.isDragging,
             })}
           >
             <div
@@ -230,7 +230,7 @@ const Item = ({ children, item, index, isLast, moveDraggable }) => {
 
                 <IconButtonGroup
                   className={classnames(css.itemActions, {
-                    [css.dragging]: snapshot.isDragging
+                    [css.dragging]: snapshot.isDragging,
                   })}
                 >
                   {editing && (
@@ -282,7 +282,7 @@ const Item = ({ children, item, index, isLast, moveDraggable }) => {
           </div>
           <TextButtonGroup
             className={classnames(css.itemActions, {
-              [css.dragging]: snapshot.isDragging
+              [css.dragging]: snapshot.isDragging,
             })}
           >
             <TextButton onClick={handleCreateItem} disabled={editing}>
@@ -313,11 +313,11 @@ Item.propTypes = {
   item: PropTypes.object,
   isLast: PropTypes.bool,
   moveDraggable: PropTypes.func,
-  steps: PropTypes.arrayOf(PropTypes.object)
+  steps: PropTypes.arrayOf(PropTypes.object),
 };
 
 Item.defaultProps = {
-  isLast: false
+  isLast: false,
 };
 
 export default Item;

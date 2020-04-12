@@ -1,55 +1,55 @@
 export const setModification = (modification, dispatch) =>
   dispatch({
     type: 'SET_MODIFICATION',
-    payload: modification
+    payload: modification,
   });
 
 export const setAlteration = (source, field, value, dispatch) =>
   dispatch({
     type: 'kind' in source ? 'SET_ADDITION' : 'SET_ALTERATION',
-    payload: { source, field, value }
+    payload: { source, field, value },
   });
 
 export const removeItem = (item, dispatch) =>
   dispatch({
     type: 'kind' in item ? 'REMOVE_ITEM' : 'ADD_REMOVAL',
-    payload: item
+    payload: item,
   });
 
 export const removeStep = (step, dispatch) =>
   dispatch({
     type: 'kind' in step ? 'REMOVE_STEP' : 'ADD_REMOVAL',
-    payload: step
+    payload: step,
   });
 
 export const removeIngredient = (ingredient, dispatch) =>
   dispatch({
     type: 'kind' in ingredient ? 'REMOVE_INGREDIENT' : 'ADD_REMOVAL',
-    payload: ingredient
+    payload: ingredient,
   });
 
 export const undoRemoval = (source, dispatch) =>
   dispatch({
     type: 'UNDO_REMOVAL',
-    payload: source
+    payload: source,
   });
 
 export const createItem = (recipeId, items, index, dispatch) =>
   dispatch({
     type: 'CREATE_ITEM',
-    payload: { recipeId, items, index }
+    payload: { recipeId, items, index },
   });
 
-export const createStep = (itemId, index, dispatch) =>
+export const createStep = (itemId, steps, index, dispatch) =>
   dispatch({
     type: 'CREATE_STEP',
-    payload: { itemId, index }
+    payload: { itemId, steps, index },
   });
 
 export const createIngredient = (stepId, dispatch) =>
   dispatch({
     type: 'CREATE_INGREDIENT',
-    payload: { stepId }
+    payload: { stepId },
   });
 
 export const setSorting = (
@@ -65,6 +65,6 @@ export const setSorting = (
       sourceI,
       destinationI,
       parentId,
-      unsorted
-    }
+      unsorted,
+    },
   });
