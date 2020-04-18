@@ -76,3 +76,21 @@ export const renderFieldWithMods = (
 
   return original;
 };
+
+export const getLocalStorageModifications = () =>
+  Object.entries(localStorage)
+    .filter(([key]) => key.startsWith('MOD'))
+    .map(([key, value]) => {
+      const { sortings, alterations, removals, additions } = JSON.parse(value);
+      return {
+        recipeId: key.replace('MOD-', ''),
+        sortings,
+        alterations,
+        removals,
+        items: additions.filter(addition => addition.kind === 'Item'),
+        steps: additions.filter(addition => addition.kind === 'Step'),
+        ingredients: additions.filter(
+          addition => addition.kind === 'Ingredient'
+        )
+      };
+    });

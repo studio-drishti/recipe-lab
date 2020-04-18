@@ -13,6 +13,16 @@ type Modification {
   ingredientAdditions: [IngredientAddition!]!
 }
 
+input ModificationInput {
+  recipeId: ID!
+  removals: [ID!]!
+  sortings: [SortingInput!]!
+  alterations: [AlterationInput!]!
+  items: [ItemAdditionInput!]!
+  steps: [StepAdditionInput!]!
+  ingredients: [IngredientAdditionInput!]!
+}
+
 type Sorting {
   uid: ID!
   parentId: ID!

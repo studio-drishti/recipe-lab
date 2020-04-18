@@ -16,4 +16,6 @@ type User {
 type AuthPayload {
   token: String!
   user: User!
+  recipeModsCreated: [ID!]
+  recipeModsInConflict: [ID!]
 }
