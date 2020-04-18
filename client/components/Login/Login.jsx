@@ -1,20 +1,16 @@
 import React, { useContext, useState } from 'react';
-import { withApollo } from 'react-apollo';
-import { useApolloClient } from 'react-apollo';
 import { useMutation } from 'react-apollo';
 import cookie from 'cookie';
 import redirect from '../../utils/redirect';
-
 import UserContext from '../../context/UserContext';
-
-import css from './Login.module.css';
+import SignInMutation from '../../graphql/SignInMutation.graphql';
+import { getLocalStorageModifications } from '../../utils/recipe';
 import FormInput from '../FormInput';
 import FormButton from '../FormButton';
-import SignInMutation from '../../graphql/SignIn.graphql';
+import css from './Login.module.css';
 
 const Login = () => {
-  const client = useApolloClient();
-  const [signIn, { error }] = useMutation(SignInMutation);
+  const [signIn, { error, client }] = useMutation(SignInMutation);
   const { refreshUser } = useContext(UserContext);
   const [fields, setFields] = useState({ email: '', password: '' });
 
@@ -30,25 +26,8 @@ const Login = () => {
   const handleSubmission = e => {
     e.preventDefault();
     const variables = { ...fields };
-    const mods = Object.entries(localStorage)
-      .filter(([key]) => key.startsWith('MOD'))
-      .map(([key, value]) => {
-        const { sortings, alterations, removals, additions } = JSON.parse(
-          value
-        );
-        return {
-          recipeId: key.replace('MOD-', ''),
-          sortings,
-          alterations,
-          removals,
-          items: additions.filter(addition => addition.kind === 'Item'),
-          steps: additions.filter(addition => addition.kind === 'Step'),
-          ingredients: additions.filter(
-            addition => addition.kind === 'Ingredient'
-          )
-        };
-      });
 
+    const mods = getLocalStorageModifications();
     if (mods.length) variables.modifications = mods;
 
     signIn({ variables }).then(
@@ -82,7 +61,6 @@ const Login = () => {
 
   return (
     <form className={css.form} onSubmit={handleSubmission}>
-      {error && <p>No user found with that information.</p>}
       <FormInput
         label="Email"
         name="email"
@@ -96,9 +74,10 @@ const Login = () => {
         value={fields.password}
         onChange={handleInputChange}
       />
+      {error && <p>No user found with that information.</p>}
       <FormButton>Login</FormButton>
     </form>
   );
 };
 
-export default withApollo(Login);
+export default Login;

@@ -15,7 +15,12 @@ type Query {
 }
 
 type Mutation {
-  signup(email: String!, password: String!, name: String): AuthPayload!
+  signup(
+    email: String!
+    password: String!
+    name: String
+    modifications: [ModificationInput!]
+  ): AuthPayload!
   login(
     email: String!
     password: String!
