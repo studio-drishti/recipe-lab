@@ -11,9 +11,9 @@ export default class ItemList extends Component {
   static propTypes = {
     children: PropTypes.oneOfType([
       PropTypes.arrayOf(PropTypes.node),
-      PropTypes.node
+      PropTypes.node,
     ]),
-    recipeId: PropTypes.string
+    recipeId: PropTypes.string,
   };
 
   render() {
@@ -23,7 +23,7 @@ export default class ItemList extends Component {
         {(provided, snapshot) => (
           <div
             className={classnames(css.items, {
-              [css.draggingOver]: snapshot.isDraggingOver
+              [css.draggingOver]: snapshot.isDraggingOver,
             })}
             ref={provided.innerRef}
             {...provided.droppableProps}

@@ -18,7 +18,7 @@ const Register = () => {
   const [edits, setEdits] = useState({
     password: '',
     name: '',
-    email: ''
+    email: '',
   });
 
   const validate = (fieldName, value) => {
@@ -39,15 +39,15 @@ const Register = () => {
         break;
     }
 
-    setErrors(errors => ({
+    setErrors((errors) => ({
       ...errors,
-      [fieldName]: err
+      [fieldName]: err,
     }));
 
     return Boolean(!err);
   };
 
-  const handleInputChange = e => {
+  const handleInputChange = (e) => {
     const { name, value } = e.target;
 
     if (validationTimeouts.current[name])
@@ -55,7 +55,7 @@ const Register = () => {
 
     setEdits({
       ...edits,
-      [name]: value
+      [name]: value,
     });
 
     validationTimeouts.current[name] = setTimeout(() => {
@@ -64,7 +64,7 @@ const Register = () => {
     }, 1000);
   };
 
-  const handleSubmission = e => {
+  const handleSubmission = (e) => {
     e.preventDefault();
 
     const haveErrors = Object.entries(edits).filter(
@@ -81,16 +81,16 @@ const Register = () => {
     signUp({ variables }).then(
       ({
         data: {
-          signup: { token, recipeModsCreated }
-        }
+          signup: { token, recipeModsCreated },
+        },
       }) => {
         // Store the token in cookie
         document.cookie = cookie.serialize('token', token, {
-          maxAge: 30 * 24 * 60 * 60 // 30 days
+          maxAge: 30 * 24 * 60 * 60, // 30 days
         });
 
         // Remove any mods from localstorage that were created on the server
-        recipeModsCreated.forEach(recipeId => {
+        recipeModsCreated.forEach((recipeId) => {
           localStorage.removeItem(`MOD-${recipeId}`);
         });
 
@@ -100,7 +100,7 @@ const Register = () => {
           .then(() => {
             return refreshUser();
           })
-          .then(user => {
+          .then((user) => {
             redirect({}, `/chef/${user.slug}`);
           });
       }

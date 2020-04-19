@@ -8,7 +8,7 @@ import {
   MdLocalDining,
   MdAddAPhoto,
   MdDoNotDisturb,
-  MdDeleteForever
+  MdDeleteForever,
 } from 'react-icons/md';
 import classnames from 'classnames';
 import { fraction } from 'mathjs';
@@ -38,7 +38,7 @@ const RecipeDetails = ({ className }) => {
     modification: { alterations },
     recipe,
     recipeDispatch,
-    modificationDispatch
+    modificationDispatch,
   } = useContext(RecipeContext);
   const [errors, setErrors] = useState({});
   const [edits, setEdits] = useState({});
@@ -66,13 +66,13 @@ const RecipeDetails = ({ className }) => {
   const handleDelete = () => {
     if (!canDeletePhoto) return;
     deletePhoto({
-      variables: { recipeId: recipe.uid }
+      variables: { recipeId: recipe.uid },
     }).then(({ data }) => {
       setRecipePhoto(data.recipePhotoDelete.photo, recipeDispatch);
     });
   };
 
-  const enableEditing = async fieldName => {
+  const enableEditing = async (fieldName) => {
     await setEditing(true);
     document.addEventListener('mousedown', handleClick);
     switch (fieldName) {
@@ -96,23 +96,23 @@ const RecipeDetails = ({ className }) => {
     document.removeEventListener('mousedown', handleClick);
   };
 
-  const getRecipeValue = fieldName => {
+  const getRecipeValue = (fieldName) => {
     if (edits[fieldName] !== undefined) return edits[fieldName];
 
     if (!recipe) return '';
     const mod = alterations.find(
-      mod => mod.sourceId === recipe.uid && mod.field === fieldName
+      (mod) => mod.sourceId === recipe.uid && mod.field === fieldName
     );
     return mod !== undefined ? mod.value : recipe[fieldName];
   };
 
-  const handleClick = e => {
+  const handleClick = (e) => {
     if (!containerRef.current) return;
     if (containerRef.current.contains(e.target)) return;
     disableEditing();
   };
 
-  const handleRecipeChange = e => {
+  const handleRecipeChange = (e) => {
     const { name, value } = e.target;
 
     if (validationTimeouts.current[name])
@@ -120,7 +120,7 @@ const RecipeDetails = ({ className }) => {
 
     setEdits({
       ...edits,
-      [name]: value
+      [name]: value,
     });
 
     validationTimeouts.current[name] = setTimeout(() => {
@@ -135,7 +135,7 @@ const RecipeDetails = ({ className }) => {
     // pond.browse();
   };
 
-  const handleKeyPress = e => {
+  const handleKeyPress = (e) => {
     if (e.key === 'Enter') {
       handleSubmit();
       return;
@@ -148,8 +148,8 @@ const RecipeDetails = ({ className }) => {
       'description',
       'servingAmount',
       'servingType',
-      'time'
-    ].filter(fieldName => validate(fieldName, getRecipeValue(fieldName)));
+      'time',
+    ].filter((fieldName) => validate(fieldName, getRecipeValue(fieldName)));
 
     if (recipe) {
       Object.entries(edits)
@@ -167,8 +167,8 @@ const RecipeDetails = ({ className }) => {
           description: getRecipeValue('description'),
           time: getRecipeValue('time'),
           servingAmount: getRecipeValue('servingAmount'),
-          servingType: getRecipeValue('servingType')
-        }
+          servingType: getRecipeValue('servingType'),
+        },
       }).then(({ data }) => {
         const { slug } = data.createRecipe;
         Router.replace('/recipes/[slug]', `/recipes/${slug}`);
@@ -182,7 +182,7 @@ const RecipeDetails = ({ className }) => {
     disableEditing();
   };
 
-  const renderWithMods = fieldName => {
+  const renderWithMods = (fieldName) => {
     if (edits[fieldName] !== undefined && errors[fieldName]) {
       return (
         <Tooltip tip={errors[fieldName]}>
@@ -196,7 +196,7 @@ const RecipeDetails = ({ className }) => {
     }
 
     const mod = alterations.find(
-      mod => mod.sourceId === recipe.uid && mod.field === fieldName
+      (mod) => mod.sourceId === recipe.uid && mod.field === fieldName
     );
     if (mod !== undefined) {
       return <DiffText original={recipe[fieldName]} modified={mod.value} />;
@@ -236,9 +236,9 @@ const RecipeDetails = ({ className }) => {
         break;
     }
 
-    setErrors(errors => ({
+    setErrors((errors) => ({
       ...errors,
-      [fieldName]: err
+      [fieldName]: err,
     }));
 
     return Boolean(err);
@@ -310,7 +310,7 @@ const RecipeDetails = ({ className }) => {
                 error={errors.time}
               >
                 <option value="">-- commitment --</option>
-                {TIME_OPTIONS.map(time => (
+                {TIME_OPTIONS.map((time) => (
                   <option key={time} value={time}>
                     {time}
                   </option>
@@ -389,7 +389,7 @@ const RecipeDetails = ({ className }) => {
 };
 
 RecipeDetails.propTypes = {
-  className: PropTypes.string
+  className: PropTypes.string,
 };
 
 export default RecipeDetails;

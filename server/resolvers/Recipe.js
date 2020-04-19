@@ -32,8 +32,8 @@ module.exports = {
 
     return ctx.prisma
       .modifications({
-        where: { recipe: { uid }, user: { id: user } }
+        where: { recipe: { uid }, user: { id: user } },
       })
-      .then(mods => mods.shift());
-  }
+      .then((mods) => mods.shift());
+  },
 };

@@ -20,7 +20,7 @@ class MyApp extends App {
 
     return {
       pageProps,
-      session: await checkLoggedIn(ctx.apolloClient)
+      session: await checkLoggedIn(ctx.apolloClient),
     };
   }
 
@@ -35,7 +35,7 @@ class MyApp extends App {
 
   state = {
     user: this.props.session.user,
-    refreshUser: this.refreshUser
+    refreshUser: this.refreshUser,
   };
 
   render() {

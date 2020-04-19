@@ -9,10 +9,10 @@ module.exports = {
     return [
       ...(await ctx.prisma.modification({ id }).itemAdditions()),
       ...(await ctx.prisma.modification({ id }).stepAdditions()),
-      ...(await ctx.prisma.modification({ id }).ingredientAdditions())
+      ...(await ctx.prisma.modification({ id }).ingredientAdditions()),
     ];
   },
   user: ({ id }, args, ctx) => {
     return ctx.prisma.modification({ id }).user();
-  }
+  },
 };

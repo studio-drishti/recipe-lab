@@ -45,25 +45,25 @@ const RecipePhoto = ({ placeholderPhoto, className }) => {
     uploadFile({
       variables: {
         file,
-        recipeId: recipe.uid
+        recipeId: recipe.uid,
       },
       context: {
         fetchOptions: {
-          signal: controller.signal
-        }
-      }
+          signal: controller.signal,
+        },
+      },
     })
-      .then(res => {
+      .then((res) => {
         setRecipePhoto(res.data.recipePhotoUpload.photo, recipeDispatch);
         load(res);
       })
-      .catch(err => error(err));
+      .catch((err) => error(err));
 
     return {
       abort: () => {
         controller.abort();
         abort();
-      }
+      },
     };
   };
 
@@ -79,7 +79,7 @@ const RecipePhoto = ({ placeholderPhoto, className }) => {
       {canUploadPhoto && (
         <FilePond
           name="avatar"
-          ref={ref => (pond = ref)}
+          ref={(ref) => (pond = ref)}
           className={css.filepond}
           server={{ process: processUpload }}
           allowRevert={false}
@@ -96,7 +96,7 @@ const RecipePhoto = ({ placeholderPhoto, className }) => {
 
 RecipePhoto.propTypes = {
   className: PropTypes.string,
-  placeholderPhoto: PropTypes.string
+  placeholderPhoto: PropTypes.string,
 };
 
 export default RecipePhoto;

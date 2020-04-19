@@ -8,17 +8,17 @@ import { MEASURE_UNITS } from '../../config';
 
 const IngredientTotals = ({ ingredients }) => {
   const {
-    modification: { alterations, sessionCount }
+    modification: { alterations, sessionCount },
   } = useContext(RecipeContext);
 
   const ingredientTotals = useMemo(() => {
     const totals = {};
-    ingredients.forEach(originalIngredient => {
+    ingredients.forEach((originalIngredient) => {
       // Create a copy of the ingredient and apply any alterations.
       const ingredient = { ...originalIngredient };
       alterations
-        .filter(mod => mod.sourceId === originalIngredient.uid)
-        .forEach(mod => {
+        .filter((mod) => mod.sourceId === originalIngredient.uid)
+        .forEach((mod) => {
           ingredient[mod.field] = mod.value;
         });
 
@@ -45,8 +45,8 @@ const IngredientTotals = ({ ingredients }) => {
       } else {
         totals[ingredient.name] = {
           quantities: {
-            [ingredient.unit]: ingredient.quantity
-          }
+            [ingredient.unit]: ingredient.quantity,
+          },
         };
       }
     });
@@ -57,18 +57,18 @@ const IngredientTotals = ({ ingredients }) => {
       quantities: Object.entries(val.quantities)
         .map(([key, val]) => ({
           unit: key,
-          quantity: val
+          quantity: val,
         }))
         .sort(
           (a, b) =>
             MEASURE_UNITS.indexOf(a.unit) > MEASURE_UNITS.indexOf(b.unit)
-        )
+        ),
     }));
   }, [sessionCount]);
 
-  const formatIngredientTotal = ingredient => {
+  const formatIngredientTotal = (ingredient) => {
     let text = ingredient.quantities
-      .map(qty => {
+      .map((qty) => {
         return qty.unit !== 'undefined'
           ? `${qty.quantity} ${qty.unit}`
           : qty.quantity;
@@ -89,7 +89,7 @@ const IngredientTotals = ({ ingredients }) => {
 };
 
 IngredientTotals.propTypes = {
-  ingredients: PropTypes.arrayOf(PropTypes.object)
+  ingredients: PropTypes.arrayOf(PropTypes.object),
 };
 
 export default IngredientTotals;

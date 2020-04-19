@@ -1,3 +1,3 @@
 module.exports = {
-  kind: () => 'Ingredient'
+  kind: () => 'Ingredient',
 };

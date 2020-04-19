@@ -11,7 +11,7 @@ const ProfileTabs = () => {
   const tabs = {
     dashboard: 'Dashboard',
     recipes: 'Recipes',
-    account: 'Account'
+    account: 'Account',
   };
 
   const printTab = useCallback(() => {

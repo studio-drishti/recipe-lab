@@ -9,13 +9,13 @@ const PORT = process.env.PORT || 8080;
 // because containers don't have that issue :)
 
 server
-  .then(gqlYoga => {
+  .then((gqlYoga) => {
     return gqlYoga.start(
       {
         port: PORT,
         endpoint: '/graphql',
         playground: '/playground',
-        subscriptions: '/subscriptions'
+        subscriptions: '/subscriptions',
       },
       ({ port }) => {
         if (process.env.NODE_ENV === 'development') {
@@ -26,7 +26,7 @@ server
       }
     );
   })
-  .then(server => {
+  .then((server) => {
     //
     // need this in docker container to properly exit since node doesn't handle SIGINT/SIGTERM
     // this also won't work on using npm start since:
@@ -58,11 +58,11 @@ server
     let sockets = {},
       nextSocketId = 0;
 
-    server.on('connection', function(socket) {
+    server.on('connection', function (socket) {
       const socketId = nextSocketId++;
       sockets[socketId] = socket;
 
-      socket.once('close', function() {
+      socket.once('close', function () {
         delete sockets[socketId];
       });
     });

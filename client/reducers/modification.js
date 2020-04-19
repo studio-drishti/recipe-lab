@@ -11,7 +11,7 @@ export default (state, action) => {
       const { source, field, value } = action.payload;
       const { alterations } = state;
       const alterationIndex = alterations.findIndex(
-        alteration =>
+        (alteration) =>
           alteration.field === field && alteration.sourceId === source.uid
       );
       const alterationExists = alterationIndex > -1;
@@ -38,20 +38,20 @@ export default (state, action) => {
           uid: cuid(),
           sourceId: source.uid,
           field,
-          value
+          value,
         });
       }
       return {
         ...state,
         alterations,
-        sessionCount: state.sessionCount + 1
+        sessionCount: state.sessionCount + 1,
       };
     }
     case 'SET_ADDITION': {
       const { source, field, value } = action.payload;
       const { additions } = state;
       const index = additions.findIndex(
-        addition => addition.uid === source.uid
+        (addition) => addition.uid === source.uid
       );
 
       if (index === -1) return state;
@@ -61,7 +61,7 @@ export default (state, action) => {
       return {
         ...state,
         additions,
-        sessionCount: state.sessionCount + 1
+        sessionCount: state.sessionCount + 1,
       };
     }
     case 'REMOVE_ITEM': {
@@ -73,20 +73,20 @@ export default (state, action) => {
        * so delete item, steps, and ingredient additions.
        */
       const steps = additions.filter(
-        addition => addition.parentId === item.uid
+        (addition) => addition.parentId === item.uid
       );
-      const ingredients = steps.flatMap(step =>
-        additions.filter(addition => addition.parentId === step.uid)
+      const ingredients = steps.flatMap((step) =>
+        additions.filter((addition) => addition.parentId === step.uid)
       );
       const toRemove = [item, ...steps, ...ingredients].map(
-        addition => addition.uid
+        (addition) => addition.uid
       );
       return {
         ...state,
         additions: additions.filter(
-          addition => !toRemove.includes(addition.uid)
+          (addition) => !toRemove.includes(addition.uid)
         ),
-        sessionCount: state.sessionCount + 1
+        sessionCount: state.sessionCount + 1,
       };
     }
     case 'REMOVE_STEP': {
@@ -98,15 +98,15 @@ export default (state, action) => {
        * so delete all steps and ingredient additions.
        */
       const ingredients = additions.filter(
-        addition => addition.parentId === step.uid
+        (addition) => addition.parentId === step.uid
       );
-      const toRemove = [step, ...ingredients].map(addition => addition.uid);
+      const toRemove = [step, ...ingredients].map((addition) => addition.uid);
       return {
         ...state,
         additions: additions.filter(
-          addition => !toRemove.includes(addition.uid)
+          (addition) => !toRemove.includes(addition.uid)
         ),
-        sessionCount: state.sessionCount + 1
+        sessionCount: state.sessionCount + 1,
       };
     }
     case 'REMOVE_INGREDIENT': {
@@ -119,9 +119,9 @@ export default (state, action) => {
       return {
         ...state,
         additions: additions.filter(
-          addition => addition.uid !== ingredient.uid
+          (addition) => addition.uid !== ingredient.uid
         ),
-        sessionCount: state.sessionCount + 1
+        sessionCount: state.sessionCount + 1,
       };
     }
     case 'ADD_REMOVAL': {
@@ -140,8 +140,8 @@ export default (state, action) => {
       return {
         ...state,
         removals: [...state.removals, source.uid],
-        alterations: alterations.filter(mod => mod.sourceId !== source.uid),
-        sessionCount: state.sessionCount + 1
+        alterations: alterations.filter((mod) => mod.sourceId !== source.uid),
+        sessionCount: state.sessionCount + 1,
       };
     }
     case 'UNDO_REMOVAL': {
@@ -151,8 +151,8 @@ export default (state, action) => {
       const { removals } = state;
       return {
         ...state,
-        removals: removals.filter(uid => !sources.includes(uid)),
-        sessionCount: state.sessionCount + 1
+        removals: removals.filter((uid) => !sources.includes(uid)),
+        sessionCount: state.sessionCount + 1,
       };
     }
     case 'CREATE_ITEM': {
@@ -164,13 +164,15 @@ export default (state, action) => {
         kind: 'Item',
         parentId: recipeId,
         name: '',
-        processing: ''
+        processing: '',
       };
 
-      const order = getSorted(items, sortings, recipeId).map(item => item.uid);
+      const order = getSorted(items, sortings, recipeId).map(
+        (item) => item.uid
+      );
       order.splice(index + 1, 0, addition.uid);
       const sortingIndex = sortings.findIndex(
-        sorting => sorting.parentId === recipeId
+        (sorting) => sorting.parentId === recipeId
       );
       if (sortingIndex > -1) {
         sortings[sortingIndex].order = order;
@@ -178,14 +180,14 @@ export default (state, action) => {
         sortings.push({
           uid: cuid(),
           parentId: recipeId,
-          order
+          order,
         });
       }
       return {
         ...state,
         sortings,
         additions: [...state.additions, addition],
-        sessionCount: state.sessionCount + 1
+        sessionCount: state.sessionCount + 1,
       };
     }
     case 'CREATE_STEP': {
@@ -195,13 +197,13 @@ export default (state, action) => {
         uid: cuid(),
         kind: 'Step',
         parentId: itemId,
-        directions: ''
+        directions: '',
       };
 
-      const order = getSorted(steps, sortings, itemId).map(item => item.uid);
+      const order = getSorted(steps, sortings, itemId).map((item) => item.uid);
       order.splice(index + 1, 0, addition.uid);
       const sortingIndex = sortings.findIndex(
-        sorting => sorting.parentId === itemId
+        (sorting) => sorting.parentId === itemId
       );
       if (sortingIndex > -1) {
         sortings[sortingIndex].order = order;
@@ -209,13 +211,13 @@ export default (state, action) => {
         sortings.push({
           uid: cuid(),
           parentId: itemId,
-          order
+          order,
         });
       }
       return {
         ...state,
         additions: [...state.additions, addition],
-        sessionCount: state.sessionCount + 1
+        sessionCount: state.sessionCount + 1,
       };
     }
     case 'CREATE_INGREDIENT': {
@@ -227,31 +229,31 @@ export default (state, action) => {
         quantity: '',
         unit: '',
         name: '',
-        processing: ''
+        processing: '',
       };
       return {
         ...state,
         additions: [...state.additions, addition],
-        sessionCount: state.sessionCount + 1
+        sessionCount: state.sessionCount + 1,
       };
     }
     case 'SET_SORTING': {
       const { sourceI, destinationI, parentId, unsorted } = action.payload;
       const { sortings } = state;
       const sortingIndex = sortings.findIndex(
-        sorting => sorting.parentId === parentId
+        (sorting) => sorting.parentId === parentId
       );
       const sortingExists = sortingIndex > -1;
       const sorted = getSorted(unsorted, sortings, parentId);
       const order = reorder(sorted, sourceI, destinationI).map(
-        child => child.uid
+        (child) => child.uid
       );
 
       if (
         sortingExists &&
         areArraysEqual(
           order,
-          unsorted.map(child => child.uid)
+          unsorted.map((child) => child.uid)
         )
       ) {
         // Remove existing sorting if the new value is the same as the source
@@ -264,14 +266,14 @@ export default (state, action) => {
         sortings.push({
           uid: cuid(),
           parentId,
-          order
+          order,
         });
       }
 
       return {
         ...state,
         sortings,
-        sessionCount: state.sessionCount + 1
+        sessionCount: state.sessionCount + 1,
       };
     }
     default:

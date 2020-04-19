@@ -12,8 +12,8 @@ const Tooltip = ({ children, className, tip }) => {
         role="button"
         tabIndex={0}
         aria-describedby={`tooltip-${uid}`}
-        onMouseDown={e => e.preventDefault()}
-        onTouchStart={e => e.target.focus()}
+        onMouseDown={(e) => e.preventDefault()}
+        onTouchStart={(e) => e.target.focus()}
       >
         {children}
       </span>
@@ -27,7 +27,7 @@ const Tooltip = ({ children, className, tip }) => {
 Tooltip.propTypes = {
   tip: PropTypes.string,
   children: PropTypes.any,
-  className: PropTypes.string
+  className: PropTypes.string,
 };
 
 export default Tooltip;

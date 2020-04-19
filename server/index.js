@@ -19,7 +19,7 @@ const { NODE_ENV } = process.env;
 const nextApp = next({
   dir: './client',
   dev: NODE_ENV !== 'production',
-  conf: nextConfig
+  conf: nextConfig,
 });
 
 module.exports = nextApp
@@ -29,15 +29,15 @@ module.exports = nextApp
       typeDefs: path.resolve(__dirname, 'schema/schema.graphql'),
       resolvers,
       middlewares: [permissions],
-      context: request => {
+      context: (request) => {
         return {
           ...request,
-          prisma
+          prisma,
         };
-      }
+      },
     });
   })
-  .then(server => {
+  .then((server) => {
     server.express.use(morgan('common'));
     server.express.use(
       '/public',
@@ -54,7 +54,7 @@ module.exports = nextApp
 
     return server;
   })
-  .catch(ex => {
+  .catch((ex) => {
     console.error(ex.stack);
     throw 'Could not set up express server';
   });

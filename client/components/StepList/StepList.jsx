@@ -11,9 +11,9 @@ export default class StepList extends Component {
   static propTypes = {
     children: PropTypes.oneOfType([
       PropTypes.arrayOf(PropTypes.node),
-      PropTypes.node
+      PropTypes.node,
     ]),
-    itemId: PropTypes.string
+    itemId: PropTypes.string,
   };
 
   render() {
@@ -23,7 +23,7 @@ export default class StepList extends Component {
         {(provided, snapshot) => (
           <ol
             className={classnames(css.steps, {
-              [css.draggingOver]: snapshot.isDraggingOver
+              [css.draggingOver]: snapshot.isDraggingOver,
             })}
             ref={provided.innerRef}
             {...provided.droppableProps}

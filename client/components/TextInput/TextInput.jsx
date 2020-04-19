@@ -8,7 +8,7 @@ import css from './TextInput.module.css';
 const TextInput = ({ error, className, inputRef, ...props }) => (
   <div
     className={classnames(className, css.inputContainer, {
-      [css.hasError]: error
+      [css.hasError]: error,
     })}
   >
     <input ref={inputRef} {...props} />
@@ -23,11 +23,11 @@ const TextInput = ({ error, className, inputRef, ...props }) => (
 TextInput.propTypes = {
   error: PropTypes.string,
   className: PropTypes.string,
-  inputRef: PropTypes.object
+  inputRef: PropTypes.object,
 };
 
 TextInput.defaultProps = {
-  type: 'text'
+  type: 'text',
 };
 
 export default TextInput;

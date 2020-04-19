@@ -18,7 +18,7 @@ const IndexPage = ({ modification, recipe, placeholderPhoto }) => (
 IndexPage.propTypes = {
   modification: PropTypes.object,
   recipe: PropTypes.object,
-  placeholderPhoto: PropTypes.string
+  placeholderPhoto: PropTypes.string,
 };
 
 IndexPage.getInitialProps = async ({ query, apolloClient }) => {
@@ -26,13 +26,13 @@ IndexPage.getInitialProps = async ({ query, apolloClient }) => {
   const { data } = await apolloClient.query({
     query: RecipeWithModificationQuery,
     variables: {
-      slug
-    }
+      slug,
+    },
   });
   const { modification, ...recipe } = data.recipe;
   return {
     modification,
-    recipe
+    recipe,
   };
 };
 

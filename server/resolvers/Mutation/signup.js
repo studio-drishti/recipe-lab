@@ -32,7 +32,7 @@ module.exports = async (
     name,
     slug,
     email: normalizeEmail(email),
-    password: hashedPassword
+    password: hashedPassword,
   });
 
   if (modifications) {
@@ -49,6 +49,6 @@ module.exports = async (
   return {
     token,
     user,
-    recipeModsCreated
+    recipeModsCreated,
   };
 };

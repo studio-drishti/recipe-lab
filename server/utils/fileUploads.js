@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const getSlug = require('speakingurl');
 
-const generateFilename = originalFilename => {
+const generateFilename = (originalFilename) => {
   const maxLength = 50;
   const filePath = path.parse(originalFilename);
 
@@ -22,19 +22,19 @@ const storeFS = (stream, dest, originalFilename) => {
   const filepath = path.join(dest, filename);
   return new Promise((resolve, reject) =>
     stream
-      .on('error', error => {
+      .on('error', (error) => {
         if (stream.truncated)
           // Delete the truncated file.
           fs.unlinkSync(filepath);
         reject(error);
       })
       .pipe(fs.createWriteStream(filepath))
-      .on('error', error => reject(error))
+      .on('error', (error) => reject(error))
       .on('finish', () => resolve({ id, filename }))
   );
 };
 
 module.exports = {
   generateFilename,
-  storeFS
+  storeFS,
 };

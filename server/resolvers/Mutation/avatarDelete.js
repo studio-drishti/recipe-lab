@@ -15,7 +15,7 @@ module.exports = async (parent, { userId }, ctx) => {
   return await ctx.prisma.updateUser({
     where: { id: userId },
     data: {
-      avatar: null
-    }
+      avatar: null,
+    },
   });
 };

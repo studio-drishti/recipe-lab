@@ -21,5 +21,5 @@ module.exports = {
   Modification,
   ItemAddition,
   StepAddition,
-  IngredientAddition
+  IngredientAddition,
 };

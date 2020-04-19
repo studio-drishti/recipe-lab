@@ -6,7 +6,7 @@ import css from './RecipeBio.module.css';
 export default class Navigation extends PureComponent {
   static displayName = 'RecipeHeader';
   static propTypes = {
-    author: PropTypes.object
+    author: PropTypes.object,
   };
 
   render() {

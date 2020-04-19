@@ -20,20 +20,20 @@ const rules = {
       const userId = getUserId(ctx);
       return await ctx.prisma.$exists.recipe({
         uid: recipeId,
-        author: { id: userId }
+        author: { id: userId },
       });
     }
   ),
   isAccountOwner: rule({ cache: 'contextual' })(async (parent, args, ctx) => {
     const userId = getUserId(ctx);
     return Boolean(userId && userId === args.userId);
-  })
+  }),
 };
 
 module.exports = shield(
   {
     Query: {
-      sessionUser: rules.isAuthenticatedUser
+      sessionUser: rules.isAuthenticatedUser,
     },
     Mutation: {
       avatarUpload: or(rules.isAccountOwner, rules.isExecutiveChef),
@@ -41,11 +41,11 @@ module.exports = shield(
       recipePhotoUpload: or(rules.isRecipeOwner, rules.isExecutiveChef),
       recipePhotoDelete: or(rules.isRecipeOwner, rules.isExecutiveChef),
       updateUser: or(rules.isAccountOwner, rules.isExecutiveChef),
-      publishRecipe: rules.isRecipeOwner
-    }
+      publishRecipe: rules.isRecipeOwner,
+    },
   },
   {
     fallbackError: false,
-    allowExternalErros: true
+    allowExternalErros: true,
   }
 );

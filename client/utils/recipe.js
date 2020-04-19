@@ -3,7 +3,7 @@ import DiffText from '../components/DiffText';
 import Tooltip from '../components/Tooltip';
 
 export const getSorted = (unsorted, sortings, parentId) => {
-  const sortMod = sortings.find(mod => mod.parentId === parentId);
+  const sortMod = sortings.find((mod) => mod.parentId === parentId);
 
   if (sortMod === undefined) return unsorted;
 
@@ -25,11 +25,11 @@ export const getSorted = (unsorted, sortings, parentId) => {
  */
 export const areAllFieldsEmpty = (fields, source, alterations, edits) =>
   !fields.some(
-    fieldName =>
+    (fieldName) =>
       (edits !== undefined && edits[fieldName]) ||
       source[fieldName] ||
       alterations.some(
-        mod => mod.sourceId === source.uid && mod.field === fieldName
+        (mod) => mod.sourceId === source.uid && mod.field === fieldName
       )
   );
 
@@ -43,7 +43,7 @@ export const areAllFieldsEmpty = (fields, source, alterations, edits) =>
 export const getFieldValue = (fieldName, source, alterations, edits = {}) => {
   if (edits[fieldName] !== undefined) return edits[fieldName];
   const mod = alterations.find(
-    mod => mod.sourceId === source.uid && mod.field === fieldName
+    (mod) => mod.sourceId === source.uid && mod.field === fieldName
   );
   return mod ? mod.value : source[fieldName];
 };
@@ -87,10 +87,10 @@ export const getLocalStorageModifications = () =>
         sortings,
         alterations,
         removals,
-        items: additions.filter(addition => addition.kind === 'Item'),
-        steps: additions.filter(addition => addition.kind === 'Step'),
+        items: additions.filter((addition) => addition.kind === 'Item'),
+        steps: additions.filter((addition) => addition.kind === 'Step'),
         ingredients: additions.filter(
-          addition => addition.kind === 'Ingredient'
-        )
+          (addition) => addition.kind === 'Ingredient'
+        ),
       };
     });

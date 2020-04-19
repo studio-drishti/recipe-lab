@@ -1,3 +1,3 @@
 module.exports = {
-  kind: () => 'Item'
+  kind: () => 'Item',
 };
