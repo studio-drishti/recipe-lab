@@ -33,7 +33,7 @@ import TextInput from '../TextInput';
 import Select from '../Select';
 import css from './Ingredient.module.css';
 
-const Ingredient = ({ index, ingredient, itemId, stepId }) => {
+const Ingredient = ({ index, ingredient, itemId, stepId, setStepHovering }) => {
   const ingredientFields = ['quantity', 'unit', 'name', 'processing'];
   const {
     modification: { removals, alterations },
@@ -289,6 +289,8 @@ const Ingredient = ({ index, ingredient, itemId, stepId }) => {
           {...provided.draggableProps}
         >
           <div
+            onMouseEnter={() => setStepHovering(false)}
+            onMouseLeave={() => setStepHovering(true)}
             className={classnames(css.ingredient, {
               [css.dragging]: snapshot.isDragging,
               [css.editing]: editing
@@ -405,7 +407,8 @@ Ingredient.propTypes = {
   index: PropTypes.number,
   ingredient: PropTypes.object.isRequired,
   itemId: PropTypes.string,
-  stepId: PropTypes.string
+  stepId: PropTypes.string,
+  setStepHovering: PropTypes.func
 };
 
 export default Ingredient;

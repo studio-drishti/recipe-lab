@@ -36,11 +36,11 @@ const IngredientList = ({ stepId, children }) => {
         </Droppable>
       )}
       {
-        <div className={classnames(css.listActions)}>
-          <TextButton onClick={handleCreateIngredient}>
-            <MdAdd /> add ingredient
-          </TextButton>
-        </div>
+        // <div className={classnames(css.listActions)}>
+        //   <TextButton onClick={handleCreateIngredient}>
+        //     <MdAdd /> add ingredient
+        //   </TextButton>
+        // </div>
       }
     </>
   );

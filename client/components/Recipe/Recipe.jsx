@@ -3,7 +3,7 @@ import React, {
   useContext,
   useCallback,
   useEffect,
-  useRef,
+  useRef
 } from 'react';
 import PropTypes from 'prop-types';
 import { DragDropContext } from 'react-beautiful-dnd';
@@ -26,7 +26,7 @@ import IngredientTotals from '../IngredientTotals';
 import RecipeStatus from '../RecipeStatus';
 import css from './Recipe.module.css';
 
-const Recipe = (props) => {
+const Recipe = props => {
   const sensorAPIRef = useRef();
   const { user } = useContext(UserContext);
   const [recipe, recipeDispatch] = useReducer(
@@ -42,7 +42,7 @@ const Recipe = (props) => {
           alterations: [],
           removals: [],
           additions: [],
-          sessionCount: 0,
+          sessionCount: 0
         }
   );
   const localStoreId = props.recipe
@@ -61,7 +61,7 @@ const Recipe = (props) => {
     }
   }, []);
 
-  const onDragEnd = (result) => {
+  const onDragEnd = result => {
     // dropped outside the list or dropped in place
     if (!result.destination || result.destination.index === result.source.index)
       return;
@@ -76,7 +76,7 @@ const Recipe = (props) => {
       );
     } else if (result.type.startsWith('STEP')) {
       const itemId = result.destination.droppableId;
-      const item = getUnsortedItems().find((item) => item.uid === itemId);
+      const item = getUnsortedItems().find(item => item.uid === itemId);
       setSorting(
         itemId,
         getUnsortedSteps(item),
@@ -87,8 +87,8 @@ const Recipe = (props) => {
     } else if (result.type.startsWith('INGREDIENT')) {
       const stepId = result.destination.droppableId;
       const step = getUnsortedItems()
-        .flatMap((item) => getUnsortedSteps(item))
-        .find((step) => step.uid === stepId);
+        .flatMap(item => getUnsortedSteps(item))
+        .find(step => step.uid === stepId);
       setSorting(
         stepId,
         getUnsortedIngredients(step),
@@ -128,7 +128,7 @@ const Recipe = (props) => {
     if (!recipe) return [];
 
     const addedItems = modification.additions.filter(
-      (addition) => addition.parentId === recipe.uid
+      addition => addition.parentId === recipe.uid
     );
 
     const items = addedItems.length
@@ -139,34 +139,34 @@ const Recipe = (props) => {
   };
 
   const getUnsortedItems = useCallback(() => getItems(false), [
-    modification.additions,
+    modification.additions
   ]);
 
   const getSortedItems = useCallback(() => getItems(), [
     modification.additions,
-    modification.sortings,
+    modification.sortings
   ]);
 
   const getSteps = (item, sorted = true) => {
     const steps = modification.additions.filter(
-      (addition) => addition.parentId === item.uid
+      addition => addition.parentId === item.uid
     );
     if ('steps' in item) steps.unshift(...item.steps);
     return sorted ? getSorted(steps, modification.sortings, item.uid) : steps;
   };
 
-  const getUnsortedSteps = useCallback((item) => getSteps(item, false), [
-    modification.additions,
+  const getUnsortedSteps = useCallback(item => getSteps(item, false), [
+    modification.additions
   ]);
 
-  const getSortedSteps = useCallback((item) => getSteps(item), [
+  const getSortedSteps = useCallback(item => getSteps(item), [
     modification.additions,
-    modification.sortings,
+    modification.sortings
   ]);
 
   const getIngredients = (step, sorted = true) => {
     const ingredients = modification.additions.filter(
-      (addition) => addition.parentId === step.uid
+      addition => addition.parentId === step.uid
     );
     if ('ingredients' in step) ingredients.unshift(...step.ingredients);
     return sorted
@@ -175,13 +175,13 @@ const Recipe = (props) => {
   };
 
   const getUnsortedIngredients = useCallback(
-    (step) => getIngredients(step, false),
+    step => getIngredients(step, false),
     [modification.additions]
   );
 
-  const getSortedIngredients = useCallback((step) => getIngredients(step), [
+  const getSortedIngredients = useCallback(step => getIngredients(step), [
     modification.additions,
-    modification.sortings,
+    modification.sortings
   ]);
 
   const recipeItems = getSortedItems();
@@ -193,15 +193,15 @@ const Recipe = (props) => {
         recipe,
         modification,
         recipeDispatch,
-        modificationDispatch,
+        modificationDispatch
       }}
     >
       <DragDropContext
         onDragEnd={onDragEnd}
         sensors={[
-          (api) => {
+          api => {
             sensorAPIRef.current = api;
-          },
+          }
         ]}
       >
         <header className={css.recipeHeader}>
@@ -213,8 +213,8 @@ const Recipe = (props) => {
         </header>
         <div className={css.ingredientTotals}>
           {recipeItems
-            .filter((item) => !modification.removals.includes(item.uid))
-            .map((item) => (
+            .filter(item => !modification.removals.includes(item.uid))
+            .map(item => (
               <div key={item.uid}>
                 <h3>
                   Ingredients for{' '}
@@ -222,11 +222,11 @@ const Recipe = (props) => {
                 </h3>
                 <IngredientTotals
                   ingredients={getSortedSteps(item)
-                    .filter((step) => !modification.removals.includes(step.uid))
+                    .filter(step => !modification.removals.includes(step.uid))
                     .reduce((result, step) => {
                       return result.concat(
                         getSortedIngredients(step).filter(
-                          (ingredient) =>
+                          ingredient =>
                             !modification.removals.includes(ingredient.uid)
                         )
                       );
@@ -262,19 +262,22 @@ const Recipe = (props) => {
                               moveDraggable={moveDraggable}
                               steps={item.steps}
                             >
-                              <IngredientList stepId={step.uid}>
-                                {getSortedIngredients(step).map(
-                                  (ingredient, i) => (
-                                    <Ingredient
-                                      key={ingredient.uid}
-                                      index={i}
-                                      ingredient={ingredient}
-                                      itemId={item.uid}
-                                      stepId={step.uid}
-                                    />
-                                  )
-                                )}
-                              </IngredientList>
+                              {setStepHovering => (
+                                <IngredientList stepId={step.uid}>
+                                  {getSortedIngredients(step).map(
+                                    (ingredient, i) => (
+                                      <Ingredient
+                                        key={ingredient.uid}
+                                        index={i}
+                                        ingredient={ingredient}
+                                        itemId={item.uid}
+                                        stepId={step.uid}
+                                        setStepHovering={setStepHovering}
+                                      />
+                                    )
+                                  )}
+                                </IngredientList>
+                              )}
                             </Step>
                           ))}
                         </StepList>
@@ -306,10 +309,10 @@ Recipe.propTypes = {
     servingAmount: PropTypes.string,
     servingType: PropTypes.string,
     items: PropTypes.arrayOf(PropTypes.object),
-    photo: PropTypes.string,
+    photo: PropTypes.string
   }),
   modification: PropTypes.object,
-  placeholderPhoto: PropTypes.string,
+  placeholderPhoto: PropTypes.string
 };
 
 export default Recipe;

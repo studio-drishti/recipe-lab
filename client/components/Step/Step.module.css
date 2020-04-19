@@ -48,7 +48,7 @@
 }
 
 .stepContents {
-  &:hover .textButtonActions {
+  &.hover .textButtonActions {
     opacity: 1;
     transition: opacity ease-in 0.3s;
   }
@@ -103,5 +103,21 @@
     grid-template-columns: 1fr 1fr;
     grid-gap: 2rem;
     align-items: flex-start;
+  }
+
+  .directions {
+    order: 0;
+  }
+
+  .ingredients {
+    order: 1;
+  }
+
+  .stepActions {
+    order: 2;
+  }
+
+  .ingredientActions {
+    order: 3;
   }
 }
