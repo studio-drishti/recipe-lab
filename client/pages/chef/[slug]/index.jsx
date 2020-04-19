@@ -8,22 +8,22 @@ import ChefProfileQuery from '../../../graphql/ChefProfile.graphql';
 import ChefContext from '../../../context/ChefContext';
 import css from '../chef.module.css';
 
-const ProfilePage = props => {
+const ProfilePage = (props) => {
   const [chef, setChef] = useState(props.chef);
   const [getChef] = useLazyQuery(ChefProfileQuery, {
     fetchPolicy: 'network-only',
     refetch: true,
-    onCompleted: data => {
+    onCompleted: (data) => {
       setChef(data.user);
-    }
+    },
   });
 
-  const refreshChef = data => {
+  const refreshChef = (data) => {
     if (data) {
       setChef(data);
     } else {
       getChef({
-        variables: { slug: chef.slug }
+        variables: { slug: chef.slug },
       });
     }
   };
@@ -45,18 +45,18 @@ ProfilePage.getInitialProps = async ({ query, apolloClient }) => {
   const { data } = await apolloClient.query({
     query: ChefProfileQuery,
     variables: {
-      slug
-    }
+      slug,
+    },
   });
   return {
     chef: data.user,
-    tab: tabSlug || 'dashboard'
+    tab: tabSlug || 'dashboard',
   };
 };
 
 ProfilePage.propTypes = {
   chef: PropTypes.object,
-  tab: PropTypes.string
+  tab: PropTypes.string,
 };
 
 export default ProfilePage;

@@ -11,14 +11,14 @@ const NewRecipePage = ({ placeholderPhoto }) => (
 );
 
 NewRecipePage.propTypes = {
-  placeholderPhoto: PropTypes.string
+  placeholderPhoto: PropTypes.string,
 };
 
 NewRecipePage.getInitialProps = () => {
   return {
     placeholderPhoto: `/static/placeholders/recipe-${Math.floor(
       Math.random() * 3 + 1
-    )}.jpg`
+    )}.jpg`,
   };
 };
 

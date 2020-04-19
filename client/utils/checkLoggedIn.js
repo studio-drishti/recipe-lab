@@ -4,7 +4,7 @@ export default (apolloClient, fetchPolicy = 'cache-first') =>
   apolloClient
     .query({
       query: SessionUserQuery,
-      fetchPolicy
+      fetchPolicy,
     })
     .then(({ data }) => {
       return { user: data.sessionUser };

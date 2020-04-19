@@ -1,3 +1,3 @@
 module.exports = {
-  kind: () => 'Step'
+  kind: () => 'Step',
 };

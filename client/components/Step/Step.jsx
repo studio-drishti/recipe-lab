@@ -1,34 +1,59 @@
 import React, { useContext, useState, useEffect, useRef, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { Draggable } from 'react-beautiful-dnd';
-import { MdEdit, MdClear, MdCheck, MdRefresh } from 'react-icons/md';
+import {
+  MdEdit,
+  MdClear,
+  MdCheck,
+  MdRefresh,
+  MdKeyboardArrowDown,
+  MdKeyboardArrowUp,
+  MdDoNotDisturb,
+  MdAdd,
+} from 'react-icons/md';
 import classnames from 'classnames';
 import Textarea from '../Textarea';
 import RecipeContext from '../../context/RecipeContext';
 import {
   removeStep,
   undoRemoval,
-  setAlteration
+  setAlteration,
+  createStep,
 } from '../../actions/modification';
 import {
   areAllFieldsEmpty,
   getFieldValue,
-  renderFieldWithMods
+  renderFieldWithMods,
 } from '../../utils/recipe';
 import TextButton from '../TextButton';
 import TextButtonGroup from '../TextButtonGroup';
+import IconButton from '../IconButton';
+import IconButtonGroup from '../IconButtonGroup';
 import css from './Step.module.css';
+import { createIngredient } from '../../actions/modification';
 
-const Step = ({ index, itemId, step, children }) => {
+const Step = ({
+  index,
+  step,
+  itemId,
+  children,
+  isLast,
+  moveDraggable,
+  steps,
+}) => {
   const stepFields = ['directions'];
   const {
-    modification: { alterations, removals },
-    modificationDispatch
+    modification: { alterations, removals, additions },
+    modificationDispatch,
   } = useContext(RecipeContext);
   const isRemoved = useMemo(
-    () => removals.some(sourceId => [itemId, step.uid].includes(sourceId)),
+    () => removals.some((sourceId) => [itemId, step.uid].includes(sourceId)),
     [removals]
   );
+  const handleCreateIngredient = (e) => {
+    e.stopPropagation();
+    createIngredient(step.uid, modificationDispatch);
+  };
   const [hovering, setHovering] = useState(false);
   const [edits, setEdits] = useState({});
   const [errors, setErrors] = useState({});
@@ -43,12 +68,29 @@ const Step = ({ index, itemId, step, children }) => {
   const restoreStep = () =>
     undoRemoval([itemId, step.uid], modificationDispatch);
 
-  const getStepValue = fieldName =>
+  const getStepValue = (fieldName) =>
     getFieldValue(fieldName, step, alterations, edits);
 
-  const handleClick = e => {
+  const handleClick = (e) => {
     if (!stepRef.current) return;
     if (stepRef.current.contains(e.target)) return;
+    setEditing(false);
+  };
+
+  const handleCreateStep = () => {
+    if (!editing) {
+      const unsortedSteps = [
+        ...steps,
+        ...additions.filter((step) => step.parentId === itemId),
+      ];
+      createStep(itemId, unsortedSteps, index, modificationDispatch);
+    }
+  };
+
+  const discardChanges = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setEdits({});
     setEditing(false);
   };
 
@@ -70,18 +112,18 @@ const Step = ({ index, itemId, step, children }) => {
       });
   };
 
-  const handleSave = e => {
+  const handleSave = (e) => {
     e.preventDefault();
     saveEdits();
     setEditing(false);
   };
 
-  const handleRemove = e => {
+  const handleRemove = (e) => {
     e.stopPropagation();
     removeStep(step, modificationDispatch);
   };
 
-  const handleRestore = e => {
+  const handleRestore = (e) => {
     e.stopPropagation();
     restoreStep();
   };
@@ -96,15 +138,15 @@ const Step = ({ index, itemId, step, children }) => {
         break;
     }
 
-    setErrors(errors => ({
+    setErrors((errors) => ({
       ...errors,
-      [fieldName]: err
+      [fieldName]: err,
     }));
 
     return Boolean(!err);
   };
 
-  const handleStepChange = e => {
+  const handleStepChange = (e) => {
     const { name, value } = e.target;
     if (isRemoved) undoRemoval([itemId, step.uid], modificationDispatch);
 
@@ -113,7 +155,7 @@ const Step = ({ index, itemId, step, children }) => {
 
     setEdits({
       ...edits,
-      [name]: value
+      [name]: value,
     });
 
     validationTimeouts.current[name] = setTimeout(() => {
@@ -122,7 +164,7 @@ const Step = ({ index, itemId, step, children }) => {
     }, 1000);
   };
 
-  const handleKeyPress = e => {
+  const handleKeyPress = (e) => {
     if (e.key === 'Enter') {
       handleSave(e);
       return;
@@ -153,19 +195,34 @@ const Step = ({ index, itemId, step, children }) => {
           {...provided.draggableProps}
         >
           <div
+            onMouseEnter={mouseEnter}
+            onMouseLeave={mouseLeave}
             className={classnames(css.step, {
               [css.hover]: hovering,
               [css.editing]: editing,
-              [css.dragging]: snapshot.isDragging
+              [css.dragging]: snapshot.isDragging,
             })}
           >
-            <div
-              onMouseOver={mouseEnter}
-              onMouseLeave={mouseLeave}
-              className={css.stepNum}
-              {...provided.dragHandleProps}
-            >
+            <div className={css.stepNum} {...provided.dragHandleProps}>
               Step {index + 1}
+              <IconButtonGroup className={classnames(css.stepActions)}>
+                {!editing && (
+                  <>
+                    <IconButton
+                      disabled={snapshot.isDragging || isLast}
+                      onClick={() => moveDraggable(step.uid, 'down')}
+                    >
+                      <MdKeyboardArrowDown />
+                    </IconButton>
+                    <IconButton
+                      disabled={snapshot.isDragging || index === 0}
+                      onClick={() => moveDraggable(step.uid, 'up')}
+                    >
+                      <MdKeyboardArrowUp />
+                    </IconButton>
+                  </>
+                )}
+              </IconButtonGroup>
             </div>
 
             <div className={css.stepContents}>
@@ -185,7 +242,7 @@ const Step = ({ index, itemId, step, children }) => {
                 {!editing && (
                   <p
                     className={classnames(css.stepDirections, {
-                      [css.error]: errors.directions
+                      [css.error]: errors.directions,
                     })}
                     onMouseDown={() => setEditing(true)}
                   >
@@ -199,40 +256,71 @@ const Step = ({ index, itemId, step, children }) => {
                     )}
                   </p>
                 )}
-
-                <div className={css.stepActions}>
-                  <TextButtonGroup className={css.buttons}>
-                    {editing && (
-                      <TextButton onClick={handleSave}>
-                        <MdCheck /> save directions
+                <TextButtonGroup
+                  className={(css.buttons, css.textButtonActions)}
+                >
+                  {!editing && !isRemoved && (
+                    <>
+                      <TextButton onClick={() => setEditing(true)}>
+                        <MdEdit /> edit step
                       </TextButton>
-                    )}
+                    </>
+                  )}
 
-                    {!editing && !isRemoved && (
+                  {isRemoved && !editing && (
+                    <TextButton onClick={handleRestore}>
+                      <MdRefresh /> restore step
+                    </TextButton>
+                  )}
+
+                  {editing && (
+                    <>
                       <TextButton
-                        title="edit directions"
-                        onClick={() => setEditing(true)}
+                        title="save changes"
+                        type="submit"
+                        onClick={handleSave}
                       >
-                        <MdEdit /> edit directions
+                        <MdCheck /> save
                       </TextButton>
-                    )}
-
-                    {!isRemoved && !editing && (
-                      <TextButton onClick={handleRemove}>
-                        <MdClear /> remove step
+                      <TextButton
+                        title="discard changes"
+                        onClick={discardChanges}
+                      >
+                        <MdDoNotDisturb /> discard
                       </TextButton>
-                    )}
-
-                    {isRemoved && !editing && (
-                      <TextButton onClick={handleRestore}>
-                        <MdRefresh /> restore step
-                      </TextButton>
-                    )}
-                  </TextButtonGroup>
-                </div>
+                    </>
+                  )}
+                </TextButtonGroup>
               </form>
 
-              <div>{children}</div>
+              <TextButtonGroup
+                className={classnames(css.textButtonActions, css.stepActions)}
+              >
+                {!editing && (
+                  <>
+                    <TextButton onClick={handleCreateStep} disabled={editing}>
+                      <MdAdd /> add step
+                    </TextButton>
+
+                    <TextButton onClick={handleRemove}>
+                      <MdClear /> remove step
+                    </TextButton>
+                  </>
+                )}
+              </TextButtonGroup>
+
+              <div className={css.ingredients}>{children(setHovering)}</div>
+
+              <TextButtonGroup
+                className={classnames(
+                  css.textButtonActions,
+                  css.ingredientActions
+                )}
+              >
+                <TextButton onClick={handleCreateIngredient}>
+                  <MdAdd /> add ingredient
+                </TextButton>
+              </TextButtonGroup>
             </div>
           </div>
         </li>
@@ -245,7 +333,10 @@ Step.propTypes = {
   index: PropTypes.number,
   itemId: PropTypes.string,
   step: PropTypes.object,
-  children: PropTypes.node
+  children: PropTypes.node,
+  isLast: PropTypes.bool,
+  moveDraggable: PropTypes.func,
+  steps: PropTypes.arrayOf(PropTypes.object),
 };
 
 export default Step;

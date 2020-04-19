@@ -13,7 +13,7 @@ function parseCookies(req, options = {}) {
   );
 }
 
-export default App => {
+export default (App) => {
   return class WithData extends React.Component {
     // It is needed for better devtools experience. Check how react devtools shows it: "MyApp WithData"
     static displayName = `WithData(${App.displayName})`;
@@ -21,22 +21,22 @@ export default App => {
     // Since apolloState is required but it is missed before this method returns the new props,
     // so it is needed to provide defaults
     static defaultProps = {
-      apolloState: {}
+      apolloState: {},
     };
 
     static propTypes = {
-      apolloState: PropTypes.object.isRequired
+      apolloState: PropTypes.object.isRequired,
     };
 
     static async getInitialProps(ctx) {
       const {
         AppTree,
-        ctx: { req, res }
+        ctx: { req, res },
       } = ctx;
       const apollo = initApollo(
         {},
         {
-          getToken: () => parseCookies(req).token
+          getToken: () => parseCookies(req).token,
         }
       );
 
@@ -78,7 +78,7 @@ export default App => {
 
       return {
         ...appProps,
-        apolloState
+        apolloState,
       };
     }
 
@@ -89,7 +89,7 @@ export default App => {
       this.apolloClient = initApollo(props.apolloState, {
         getToken: () => {
           return parseCookies().token;
-        }
+        },
       });
     }
 

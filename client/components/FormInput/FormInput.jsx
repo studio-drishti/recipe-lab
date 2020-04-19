@@ -36,13 +36,13 @@ FormInput.propTypes = {
   label: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
   type: PropTypes.oneOf(['textarea', 'select', 'text', 'password']),
-  required: PropTypes.bool
+  required: PropTypes.bool,
 };
 
 FormInput.defaultProps = {
   className: null,
   type: 'text',
-  required: false
+  required: false,
 };
 
 export default FormInput;

@@ -4,10 +4,10 @@ import redirect from './redirect';
 import checkLoggedIn from './checkLoggedIn';
 
 // Gets the display name of a JSX component for dev tools
-const getDisplayName = Component =>
+const getDisplayName = (Component) =>
   Component.displayName || Component.name || 'Component';
 
-export default Page =>
+export default (Page) =>
   class extends Component {
     static displayName = `withAuthGuard(${getDisplayName(Page)})`;
 

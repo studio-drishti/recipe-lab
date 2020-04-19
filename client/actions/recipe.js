@@ -1,7 +1,7 @@
 export const setRecipePhoto = (photo, dispatch) =>
   dispatch({
     type: 'SET_RECIPE_PHOTO',
-    payload: { photo }
+    payload: { photo },
   });
 
 export const setRecipe = (recipe, dispatch) =>

@@ -20,7 +20,7 @@ module.exports = async (parent, { email, password, modifications }, ctx) => {
       modifications.map(async ({ recipeId, ...modification }) => {
         const modExists = await ctx.prisma.$exists.modification({
           user: { id: user.id },
-          recipe: { uid: recipeId }
+          recipe: { uid: recipeId },
         });
         if (!modExists) {
           await createModification(ctx, recipeId, user.id, modification);
@@ -38,6 +38,6 @@ module.exports = async (parent, { email, password, modifications }, ctx) => {
     token,
     user,
     recipeModsCreated,
-    recipeModsInConflict
+    recipeModsInConflict,
   };
 };

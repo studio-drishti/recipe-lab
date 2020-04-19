@@ -19,5 +19,5 @@ module.exports = {
   saveModification,
   createRecipe,
   updateUser,
-  publishRecipe
+  publishRecipe,
 };

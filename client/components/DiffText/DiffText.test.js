@@ -3,11 +3,11 @@ import React from 'react';
 
 import DiffText from './DiffText.jsx';
 
-const setup = propOverrides => {
+const setup = (propOverrides) => {
   const props = Object.assign(
     {
       original: '1 super great omlet',
-      modified: '1 mediocre omlet'
+      modified: '1 mediocre omlet',
     },
     propOverrides
   );
@@ -18,7 +18,7 @@ const setup = propOverrides => {
     props,
     wrapper,
     del: wrapper.find('del'),
-    ins: wrapper.find('ins')
+    ins: wrapper.find('ins'),
   };
 };
 

@@ -3,5 +3,5 @@ export default createContext({
   recipe: {},
   modification: {},
   recipeDispatch: null,
-  modificationDispatch: null
+  modificationDispatch: null,
 });

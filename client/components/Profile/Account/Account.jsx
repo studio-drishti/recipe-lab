@@ -30,14 +30,14 @@ const Account = () => {
   const [deleteAvatar] = useMutation(AvatarDeleteMutation);
   const [
     updateUser,
-    { loading: isSaving, error: hasError, called: wasSubmitted }
+    { loading: isSaving, error: hasError, called: wasSubmitted },
   ] = useMutation(UpdateUserMutation);
   const validationTimeouts = useRef({});
   const pond = useRef();
   // const isProfileOwner = user.id === chef.id;
   // const isAdmin = user.role === 'EXECUTIVE_CHEF';
 
-  const getChefValue = fieldName => {
+  const getChefValue = (fieldName) => {
     if (edits[fieldName] !== undefined) return edits[fieldName];
     if (['password', 'passwordMatch'].includes(fieldName)) return '';
     return chef[fieldName];
@@ -80,15 +80,15 @@ const Account = () => {
         break;
     }
 
-    setErrors(errors => ({
+    setErrors((errors) => ({
       ...errors,
-      [fieldName]: err
+      [fieldName]: err,
     }));
 
     return Boolean(!err);
   };
 
-  const handleFormChange = e => {
+  const handleFormChange = (e) => {
     const { name, value } = e.target;
 
     if (validationTimeouts.current[name])
@@ -96,7 +96,7 @@ const Account = () => {
 
     setEdits({
       ...edits,
-      [name]: value
+      [name]: value,
     });
 
     validationTimeouts.current[name] = setTimeout(() => {
@@ -105,7 +105,7 @@ const Account = () => {
     }, 1000);
   };
 
-  const resetUsername = e => {
+  const resetUsername = (e) => {
     e.preventDefault();
     if (validationTimeouts.current.slug) {
       clearTimeout(validationTimeouts.current.slug);
@@ -130,17 +130,17 @@ const Account = () => {
         load();
         refreshChef(data.avatarUpload);
       })
-      .catch(err => error(err));
+      .catch((err) => error(err));
 
     return {
       abort: () => {
         controller.abort();
         abort();
-      }
+      },
     };
   };
 
-  const handleAvatarDelete = e => {
+  const handleAvatarDelete = (e) => {
     e.preventDefault();
     deleteAvatar({ variables: { userId: chef.id } }).then(({ data }) =>
       refreshChef(data.deleteAvatar)
@@ -153,7 +153,7 @@ const Account = () => {
     }, 1000);
   };
 
-  const saveChef = e => {
+  const saveChef = (e) => {
     e.preventDefault();
     const editEntries = Object.entries(edits);
     if (editEntries.length === 0) return;
@@ -171,7 +171,7 @@ const Account = () => {
         name: getChefValue('name'),
         bio: getChefValue('bio'),
         email: getChefValue('email'),
-        slug: getChefValue('slug')
+        slug: getChefValue('slug'),
       };
 
       if (edits.password) {

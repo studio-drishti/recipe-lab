@@ -9,7 +9,7 @@ import css from './Textarea.module.css';
 const Textarea = ({ error, className, ...props }) => (
   <div
     className={classnames(className, css.inputContainer, {
-      [css.hasError]: error
+      [css.hasError]: error,
     })}
   >
     <TextareaAutosize {...props} />
@@ -23,11 +23,11 @@ const Textarea = ({ error, className, ...props }) => (
 
 Textarea.propTypes = {
   error: PropTypes.string,
-  className: PropTypes.string
+  className: PropTypes.string,
 };
 
 Textarea.defaultProps = {
-  type: 'text'
+  type: 'text',
 };
 
 export default Textarea;

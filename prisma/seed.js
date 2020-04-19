@@ -40,17 +40,17 @@ async function main() {
                             index: 0,
                             name: 'avocado oil',
                             quantity: '2',
-                            unit: 'tbsp'
+                            unit: 'tbsp',
                           },
                           {
                             uid: cuid(),
                             index: 1,
                             name: 'medium onion',
                             quantity: '1',
-                            processing: 'chopped'
-                          }
-                        ]
-                      }
+                            processing: 'chopped',
+                          },
+                        ],
+                      },
                     },
                     {
                       uid: cuid(),
@@ -64,17 +64,17 @@ async function main() {
                             index: 0,
                             name: 'garlic cloves',
                             quantity: '2',
-                            processing: 'minced'
+                            processing: 'minced',
                           },
                           {
                             uid: cuid(),
                             index: 1,
                             name: 'italian seasoning',
                             quantity: '2',
-                            unit: 'tsp'
-                          }
-                        ]
-                      }
+                            unit: 'tsp',
+                          },
+                        ],
+                      },
                     },
                     {
                       uid: cuid(),
@@ -88,10 +88,10 @@ async function main() {
                             index: 0,
                             name: 'red wine',
                             quantity: '1',
-                            unit: 'cup'
-                          }
-                        ]
-                      }
+                            unit: 'cup',
+                          },
+                        ],
+                      },
                     },
                     {
                       uid: cuid(),
@@ -105,24 +105,24 @@ async function main() {
                             index: 0,
                             name: 'red wine',
                             quantity: '1',
-                            unit: 'cup'
+                            unit: 'cup',
                           },
                           {
                             uid: cuid(),
                             index: 1,
                             name: 'chicken stock',
                             quantity: '1/2',
-                            unit: 'cup'
+                            unit: 'cup',
                           },
                           {
                             uid: cuid(),
                             index: 2,
                             name: '28-ounce can whole peeled tomatoes',
                             quantity: '1',
-                            processing: 'blended into a puree'
-                          }
-                        ]
-                      }
+                            processing: 'blended into a puree',
+                          },
+                        ],
+                      },
                     },
                     {
                       uid: cuid(),
@@ -136,13 +136,13 @@ async function main() {
                             index: 0,
                             name: 'gulten-free spaghetti',
                             quantity: '1',
-                            unit: 'lb'
-                          }
-                        ]
-                      }
-                    }
-                  ]
-                }
+                            unit: 'lb',
+                          },
+                        ],
+                      },
+                    },
+                  ],
+                },
               },
               {
                 uid: cuid(),
@@ -153,7 +153,7 @@ async function main() {
                     {
                       uid: cuid(),
                       index: 0,
-                      directions: 'Preheat the oven to 350 F'
+                      directions: 'Preheat the oven to 350 F',
                     },
                     {
                       uid: cuid(),
@@ -167,7 +167,7 @@ async function main() {
                             index: 0,
                             quantity: '1',
                             unit: 'lb',
-                            name: 'ground beef'
+                            name: 'ground beef',
                           },
                           {
                             uid: cuid(),
@@ -175,41 +175,41 @@ async function main() {
                             quantity: '1/4',
                             unit: 'cup',
                             name: 'onion',
-                            processing: 'minced'
+                            processing: 'minced',
                           },
                           {
                             uid: cuid(),
                             index: 2,
                             quantity: '1',
-                            name: 'egg'
+                            name: 'egg',
                           },
                           {
                             uid: cuid(),
                             index: 3,
                             quantity: '1',
                             unit: 'tbsp',
-                            name: 'chia seeds'
+                            name: 'chia seeds',
                           },
                           {
                             uid: cuid(),
                             index: 4,
                             quantity: '2',
                             unit: 'tbsp',
-                            name: 'almond flour'
+                            name: 'almond flour',
                           },
                           {
                             uid: cuid(),
                             index: 5,
                             quantity: '1/4',
                             unit: 'cup',
-                            name: 'parsley'
+                            name: 'parsley',
                           },
                           {
                             uid: cuid(),
                             index: 6,
                             quantity: '2',
                             unit: 'tsp',
-                            name: 'sea salt'
+                            name: 'sea salt',
                           },
                           {
                             uid: cuid(),
@@ -217,10 +217,10 @@ async function main() {
                             quantity: '1/4',
                             unit: 'tsp',
                             name: 'black pepper',
-                            processing: 'freshly ground'
-                          }
-                        ]
-                      }
+                            processing: 'freshly ground',
+                          },
+                        ],
+                      },
                     },
                     {
                       uid: cuid(),
@@ -234,19 +234,19 @@ async function main() {
                             index: 0,
                             quantity: '2',
                             unit: 'tbsp',
-                            name: 'avocado oil'
-                          }
-                        ]
-                      }
-                    }
-                  ]
-                }
-              }
-            ]
-          }
-        }
-      ]
-    }
+                            name: 'avocado oil',
+                          },
+                        ],
+                      },
+                    },
+                  ],
+                },
+              },
+            ],
+          },
+        },
+      ],
+    },
   });
 
   await prisma.createUser({
@@ -287,17 +287,17 @@ async function main() {
                             index: 0,
                             name: 'Butter',
                             quantity: '2',
-                            unit: 'tbsp'
+                            unit: 'tbsp',
                           },
                           {
                             uid: cuid(),
                             index: 1,
                             name: 'medium onion',
                             quantity: '1',
-                            processing: 'chopped'
-                          }
-                        ]
-                      }
+                            processing: 'chopped',
+                          },
+                        ],
+                      },
                     },
                     {
                       uid: cuid(),
@@ -311,10 +311,10 @@ async function main() {
                             index: 0,
                             name: 'garlic cloves',
                             quantity: '2',
-                            processing: 'minced'
-                          }
-                        ]
-                      }
+                            processing: 'minced',
+                          },
+                        ],
+                      },
                     },
                     {
                       uid: cuid(),
@@ -329,10 +329,10 @@ async function main() {
                               'Carrots - Rainbow carrots are fun and add some color',
                             quantity: '1/2',
                             unit: 'cup',
-                            processing: 'diced'
-                          }
-                        ]
-                      }
+                            processing: 'diced',
+                          },
+                        ],
+                      },
                     },
                     {
                       uid: cuid(),
@@ -347,10 +347,10 @@ async function main() {
                             name: 'Bell peppers',
                             quantity: '2/3',
                             unit: 'cup',
-                            processing: 'diced'
-                          }
-                        ]
-                      }
+                            processing: 'diced',
+                          },
+                        ],
+                      },
                     },
                     {
                       uid: cuid(),
@@ -364,10 +364,10 @@ async function main() {
                             name: 'Chicken',
                             quantity: '1',
                             unit: 'cup',
-                            processing: 'cubed or pulled'
-                          }
-                        ]
-                      }
+                            processing: 'cubed or pulled',
+                          },
+                        ],
+                      },
                     },
                     {
                       uid: cuid(),
@@ -381,17 +381,17 @@ async function main() {
                             index: 0,
                             name: 'Chicken stock',
                             quantity: '1',
-                            unit: 'cup'
+                            unit: 'cup',
                           },
                           {
                             uid: cuid(),
                             index: 1,
                             name: 'Coconut milk',
                             quantity: '1',
-                            unit: 'can'
-                          }
-                        ]
-                      }
+                            unit: 'can',
+                          },
+                        ],
+                      },
                     },
                     {
                       uid: cuid(),
@@ -405,10 +405,10 @@ async function main() {
                             index: 0,
                             name: 'qunioa',
                             quantity: '1/2',
-                            unit: 'Cup'
-                          }
-                        ]
-                      }
+                            unit: 'Cup',
+                          },
+                        ],
+                      },
                     },
                     {
                       uid: cuid(),
@@ -423,10 +423,10 @@ async function main() {
                             name: 'Greens',
                             quantity: '1/2',
                             unit: 'Cup',
-                            processing: 'Chopped'
-                          }
-                        ]
-                      }
+                            processing: 'Chopped',
+                          },
+                        ],
+                      },
                     },
                     {
                       uid: cuid(),
@@ -441,46 +441,46 @@ async function main() {
                             name: 'Lime',
                             quantity: '1',
                             unit: 'Whole lime',
-                            processing: 'Squeezed'
+                            processing: 'Squeezed',
                           },
                           {
                             uid: cuid(),
                             index: 0,
                             name: 'Powdered ginger',
                             quantity: '1',
-                            unit: 'tsp'
+                            unit: 'tsp',
                           },
                           {
                             uid: cuid(),
                             index: 0,
                             name: 'Cayanne pepper',
                             quantity: '1/2',
-                            unit: 'tsp'
+                            unit: 'tsp',
                           },
                           {
                             uid: cuid(),
                             index: 0,
                             name: 'Salt',
                             quantity: '1',
-                            unit: 'tsp'
-                          }
-                        ]
-                      }
+                            unit: 'tsp',
+                          },
+                        ],
+                      },
                     },
                     {
                       uid: cuid(),
                       index: 4,
                       directions:
-                        'Place qunioa at the bottom of the bowl, add optional chopped greens and then put the curry on top. Eat until you are good and full. If you want some extra color or flavor. Add a diced radish or pumpkin seeds to the top of the bowl.'
-                    }
-                  ]
-                }
-              }
-            ]
-          }
-        }
-      ]
-    }
+                        'Place qunioa at the bottom of the bowl, add optional chopped greens and then put the curry on top. Eat until you are good and full. If you want some extra color or flavor. Add a diced radish or pumpkin seeds to the top of the bowl.',
+                    },
+                  ],
+                },
+              },
+            ],
+          },
+        },
+      ],
+    },
   });
 }
 

@@ -31,7 +31,7 @@ module.exports = async (parent, { file, recipeId }, ctx) => {
   return await ctx.prisma.updateRecipe({
     where: { uid: recipeId },
     data: {
-      photo: filename
-    }
+      photo: filename,
+    },
   });
 };

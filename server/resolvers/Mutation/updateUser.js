@@ -10,7 +10,7 @@ module.exports = async (
     name,
     email: normalizeEmail(email),
     bio,
-    slug
+    slug,
   };
 
   if (password) {
@@ -20,9 +20,9 @@ module.exports = async (
 
   const user = await ctx.prisma.updateUser({
     where: {
-      id: userId
+      id: userId,
     },
-    data
+    data,
   });
   return user;
 };

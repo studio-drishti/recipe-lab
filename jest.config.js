@@ -3,6 +3,6 @@ module.exports = {
   testPathIgnorePatterns: ['<rootDir>/.next/', '<rootDir>/node_modules/'],
   moduleNameMapper: {
     '\\.(gql|graphql)$': 'jest-transform-graphql',
-    '\\.(css|scss|sass)$': 'identity-obj-proxy'
-  }
+    '\\.(css|scss|sass)$': 'identity-obj-proxy',
+  },
 };

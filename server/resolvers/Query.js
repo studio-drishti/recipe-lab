@@ -7,5 +7,5 @@ module.exports = {
   },
   recipes: (parent, args, ctx) => ctx.prisma.recipes(),
   recipe: (parent, { slug }, ctx) => ctx.prisma.recipe({ slug }),
-  user: (parent, { slug }, ctx) => ctx.prisma.user({ slug })
+  user: (parent, { slug }, ctx) => ctx.prisma.user({ slug }),
 };

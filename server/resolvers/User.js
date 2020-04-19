@@ -2,7 +2,7 @@ module.exports = {
   recipes: ({ id }, args, ctx) => {
     return ctx.prisma.user({ id }).posts();
   },
-  avatar: parent => {
+  avatar: (parent) => {
     return parent.avatar
       ? `/public/avatars/${parent.avatar}`
       : `/static/placeholders/avatar-${Math.floor(Math.random() * 2 + 1)}.jpg`;
@@ -17,10 +17,10 @@ module.exports = {
     return ctx.prisma
       .modificationsConnection({
         where: {
-          AND: [{ user: { id } }, { recipe: { author: { id_not: id } } }]
-        }
+          AND: [{ user: { id } }, { recipe: { author: { id_not: id } } }],
+        },
       })
       .aggregate()
       .count();
-  }
+  },
 };

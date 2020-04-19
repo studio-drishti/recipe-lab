@@ -3,7 +3,7 @@ import React, {
   useRef,
   useContext,
   useEffect,
-  useCallback
+  useCallback,
 } from 'react';
 import { useMutation } from 'react-apollo';
 import Link from 'next/link';
@@ -29,7 +29,7 @@ const RecipeStatus = () => {
     recipe,
     localStoreId,
     recipeDispatch,
-    modificationDispatch
+    modificationDispatch,
   } = useContext(RecipeContext);
   const [savedCount, setSavedCount] = useState(0);
   const [countDown, setCountDown] = useState(null);
@@ -38,7 +38,7 @@ const RecipeStatus = () => {
 
   const additionsCount = additions.length;
 
-  const handleModificationSave = e => {
+  const handleModificationSave = (e) => {
     if (e) e.preventDefault();
     if (user) {
       uploadModifications();
@@ -53,43 +53,43 @@ const RecipeStatus = () => {
         recipeId: recipe.uid,
         userId: user.id,
         removals: removals,
-        sortings: sortings.map(sorting => ({
+        sortings: sortings.map((sorting) => ({
           uid: sorting.uid,
           parentId: sorting.parentId,
-          order: sorting.order
+          order: sorting.order,
         })),
-        alterations: alterations.map(alteration => ({
+        alterations: alterations.map((alteration) => ({
           uid: alteration.uid,
           sourceId: alteration.sourceId,
           field: alteration.field,
-          value: alteration.value
+          value: alteration.value,
         })),
         items: additions
-          .filter(addition => addition.kind === 'Item')
-          .map(item => ({
+          .filter((addition) => addition.kind === 'Item')
+          .map((item) => ({
             uid: item.uid,
             parentId: item.parentId,
-            name: item.name
+            name: item.name,
           })),
         steps: additions
-          .filter(addition => addition.kind === 'Step')
-          .map(step => ({
+          .filter((addition) => addition.kind === 'Step')
+          .map((step) => ({
             uid: step.uid,
             parentId: step.parentId,
-            directions: step.directions
+            directions: step.directions,
           })),
         ingredients: additions
-          .filter(addition => addition.kind === 'Ingredient')
-          .map(ingredient => ({
+          .filter((addition) => addition.kind === 'Ingredient')
+          .map((ingredient) => ({
             uid: ingredient.uid,
             parentId: ingredient.parentId,
             name: ingredient.name,
             quantity: ingredient.quantity,
             unit: ingredient.unit,
-            processing: ingredient.processing
-          }))
-      }
-    }).then(data => {
+            processing: ingredient.processing,
+          })),
+      },
+    }).then((data) => {
       setModification(data.saveModification, modificationDispatch);
       setSavedCount(sessionCount);
     });
@@ -102,7 +102,7 @@ const RecipeStatus = () => {
         sortings,
         alterations,
         removals,
-        additions
+        additions,
       })
     );
     setSavedCount(sessionCount);
@@ -117,7 +117,7 @@ const RecipeStatus = () => {
           alterations: [],
           removals: [],
           additions: [],
-          sessionCount: 0
+          sessionCount: 0,
         },
         modificationDispatch
       );

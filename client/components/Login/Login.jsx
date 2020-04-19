@@ -14,16 +14,16 @@ const Login = () => {
   const { refreshUser } = useContext(UserContext);
   const [fields, setFields] = useState({ email: '', password: '' });
 
-  const handleInputChange = e => {
+  const handleInputChange = (e) => {
     const { value, name } = e.target;
 
     setFields({
       ...fields,
-      [name]: value
+      [name]: value,
     });
   };
 
-  const handleSubmission = e => {
+  const handleSubmission = (e) => {
     e.preventDefault();
     const variables = { ...fields };
 
@@ -33,16 +33,16 @@ const Login = () => {
     signIn({ variables }).then(
       ({
         data: {
-          login: { token, recipeModsCreated }
-        }
+          login: { token, recipeModsCreated },
+        },
       }) => {
         // Store the token in cookie
         document.cookie = cookie.serialize('token', token, {
-          maxAge: 30 * 24 * 60 * 60 // 30 days
+          maxAge: 30 * 24 * 60 * 60, // 30 days
         });
 
         // Remove any mods from localstorage that were created on the server
-        recipeModsCreated.forEach(recipeId => {
+        recipeModsCreated.forEach((recipeId) => {
           localStorage.removeItem(`MOD-${recipeId}`);
         });
 
@@ -52,7 +52,7 @@ const Login = () => {
           .then(() => {
             return refreshUser();
           })
-          .then(user => {
+          .then((user) => {
             redirect({}, `/chef/${user.slug}`);
           });
       }

@@ -7,7 +7,7 @@ import RecipesQuery from '../../graphql/Recipes.graphql';
 
 const RecipesPage = ({ recipes }) => (
   <Page>
-    {recipes.map(recipe => (
+    {recipes.map((recipe) => (
       <div key={recipe.uid}>
         <h1>{recipe.title}</h1>
         <p>{recipe.description}</p>
@@ -20,14 +20,14 @@ const RecipesPage = ({ recipes }) => (
 );
 
 RecipesPage.propTypes = {
-  recipes: PropTypes.arrayOf(PropTypes.object)
+  recipes: PropTypes.arrayOf(PropTypes.object),
 };
 
 RecipesPage.getInitialProps = async ({ apolloClient }) => {
   const {
-    data: { recipes }
+    data: { recipes },
   } = await apolloClient.query({
-    query: RecipesQuery
+    query: RecipesQuery,
   });
   return { recipes };
 };

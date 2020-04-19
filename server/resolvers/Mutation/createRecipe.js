@@ -25,7 +25,7 @@ module.exports = async (parent, args, ctx) => {
     servingType,
     description,
     author: {
-      connect: { id: userId }
-    }
+      connect: { id: userId },
+    },
   });
 };

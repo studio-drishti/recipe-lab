@@ -46,7 +46,7 @@ const ProfileHeader = () => {
 };
 
 ProfileHeader.propTypes = {
-  chef: PropTypes.object
+  chef: PropTypes.object,
 };
 
 export default ProfileHeader;

@@ -1,7 +1,7 @@
 import {
   ApolloClient,
   InMemoryCache,
-  IntrospectionFragmentMatcher
+  IntrospectionFragmentMatcher,
 } from 'apollo-boost';
 import { createUploadLink } from 'apollo-upload-client';
 import { setContext } from 'apollo-link-context';
@@ -18,7 +18,7 @@ if (!isBrowser) {
 function create(initialState, { getToken }) {
   const httpLink = createUploadLink({
     uri: 'http://localhost:3000/graphql',
-    credentials: 'same-origin'
+    credentials: 'same-origin',
   });
 
   const authLink = setContext((_, { headers }) => {
@@ -26,8 +26,8 @@ function create(initialState, { getToken }) {
     return {
       headers: {
         ...headers,
-        Authorization: token ? `Bearer ${token}` : ''
-      }
+        Authorization: token ? `Bearer ${token}` : '',
+      },
     };
   });
 
@@ -36,9 +36,9 @@ function create(initialState, { getToken }) {
   const fragmentMatcher = new IntrospectionFragmentMatcher({
     introspectionQueryResultData: {
       __schema: {
-        types: []
-      }
-    }
+        types: [],
+      },
+    },
   });
 
   // Check out https://github.com/zeit/next.js/pull/4611 if you want to use the AWSAppSyncClient
@@ -46,7 +46,7 @@ function create(initialState, { getToken }) {
     connectToDevTools: isBrowser,
     ssrMode: !isBrowser, // Disables forceFetch on the server (so queries are only run once)
     link: authLink.concat(httpLink),
-    cache: new InMemoryCache({ fragmentMatcher }).restore(initialState || {})
+    cache: new InMemoryCache({ fragmentMatcher }).restore(initialState || {}),
   });
 }
 

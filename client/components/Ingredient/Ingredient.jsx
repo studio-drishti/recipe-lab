@@ -4,7 +4,7 @@ import React, {
   useEffect,
   useContext,
   useMemo,
-  useCallback
+  useCallback,
 } from 'react';
 import PropTypes from 'prop-types';
 import {
@@ -12,7 +12,7 @@ import {
   MdEdit,
   MdRefresh,
   MdCheck,
-  MdDragHandle
+  MdDragHandle,
 } from 'react-icons/md';
 import classnames from 'classnames';
 import { fraction } from 'mathjs';
@@ -21,7 +21,7 @@ import RecipeContext from '../../context/RecipeContext';
 import {
   undoRemoval,
   setAlteration,
-  removeIngredient
+  removeIngredient,
 } from '../../actions/modification';
 import { areAllFieldsEmpty, getFieldValue } from '../../utils/recipe';
 import Tooltip from '../Tooltip';
@@ -33,15 +33,15 @@ import TextInput from '../TextInput';
 import Select from '../Select';
 import css from './Ingredient.module.css';
 
-const Ingredient = ({ index, ingredient, itemId, stepId }) => {
+const Ingredient = ({ index, ingredient, itemId, stepId, setStepHovering }) => {
   const ingredientFields = ['quantity', 'unit', 'name', 'processing'];
   const {
     modification: { removals, alterations },
-    modificationDispatch
+    modificationDispatch,
   } = useContext(RecipeContext);
   const isRemoved = useMemo(
     () =>
-      removals.some(sourceId =>
+      removals.some((sourceId) =>
         [itemId, stepId, ingredient.uid].includes(sourceId)
       ),
     [removals]
@@ -58,13 +58,13 @@ const Ingredient = ({ index, ingredient, itemId, stepId }) => {
   const restoreIngredient = () =>
     undoRemoval([itemId, stepId, ingredient.uid], modificationDispatch);
 
-  const getIngredientValue = fieldName =>
+  const getIngredientValue = (fieldName) =>
     getFieldValue(fieldName, ingredient, alterations, edits);
 
   const renderRemovedIngredient = useCallback(() => {
     const removedIngredient = [];
 
-    ingredientFields.forEach(fieldName => {
+    ingredientFields.forEach((fieldName) => {
       if (ingredient[fieldName])
         removedIngredient.push(
           'name' === fieldName && ingredient['processing']
@@ -164,20 +164,20 @@ const Ingredient = ({ index, ingredient, itemId, stepId }) => {
     );
   }, [editing, isRemoved, ingredient]);
 
-  const handleClick = e => {
+  const handleClick = (e) => {
     if (!ingredientRef.current) return;
     if (ingredientRef.current.contains(e.target)) return;
     saveEdits();
     setEditing(false);
   };
 
-  const handleSave = e => {
+  const handleSave = (e) => {
     e.preventDefault();
     saveEdits();
     setEditing(false);
   };
 
-  const handleSelect = e => {
+  const handleSelect = (e) => {
     e.stopPropagation();
     setEditing(true);
   };
@@ -192,35 +192,35 @@ const Ingredient = ({ index, ingredient, itemId, stepId }) => {
       });
   };
 
-  const handleKeybdSelect = e => {
+  const handleKeybdSelect = (e) => {
     if (e.key !== 'Enter') return;
     handleSelect(e);
   };
 
-  const handleRemove = e => {
+  const handleRemove = (e) => {
     e.stopPropagation();
     removeIngredient(ingredient, modificationDispatch);
   };
 
-  const handleKeybdRemove = e => {
+  const handleKeybdRemove = (e) => {
     if (e.key !== 'Enter') return;
     e.preventDefault();
     handleRemove(e);
   };
 
-  const handleRestore = e => {
+  const handleRestore = (e) => {
     e.stopPropagation();
     restoreIngredient();
   };
 
-  const handleKeybdRestore = e => {
+  const handleKeybdRestore = (e) => {
     if (e.key !== 'Enter') return;
     e.preventDefault();
     handleRestore(e);
     ingredientRef.current.focus();
   };
 
-  const handleIngredientChange = e => {
+  const handleIngredientChange = (e) => {
     let { name, value } = e.target;
 
     if (isRemoved) restoreIngredient();
@@ -230,7 +230,7 @@ const Ingredient = ({ index, ingredient, itemId, stepId }) => {
 
     setEdits({
       ...edits,
-      [name]: value
+      [name]: value,
     });
 
     validationTimeouts.current[name] = setTimeout(() => {
@@ -258,9 +258,9 @@ const Ingredient = ({ index, ingredient, itemId, stepId }) => {
         break;
     }
 
-    setErrors(errors => ({
+    setErrors((errors) => ({
       ...errors,
-      [fieldName]: err
+      [fieldName]: err,
     }));
 
     return Boolean(!err);
@@ -289,9 +289,11 @@ const Ingredient = ({ index, ingredient, itemId, stepId }) => {
           {...provided.draggableProps}
         >
           <div
+            onMouseEnter={() => setStepHovering(false)}
+            onMouseLeave={() => setStepHovering(true)}
             className={classnames(css.ingredient, {
               [css.dragging]: snapshot.isDragging,
-              [css.editing]: editing
+              [css.editing]: editing,
             })}
             onKeyPress={handleKeybdSelect}
             tabIndex="0"
@@ -318,7 +320,7 @@ const Ingredient = ({ index, ingredient, itemId, stepId }) => {
                     onChange={handleIngredientChange}
                   >
                     <option value="">--</option>
-                    {MEASURE_UNITS.map(unit => (
+                    {MEASURE_UNITS.map((unit) => (
                       <option key={unit} value={unit}>
                         {unit}
                       </option>
@@ -405,7 +407,8 @@ Ingredient.propTypes = {
   index: PropTypes.number,
   ingredient: PropTypes.object.isRequired,
   itemId: PropTypes.string,
-  stepId: PropTypes.string
+  stepId: PropTypes.string,
+  setStepHovering: PropTypes.func,
 };
 
 export default Ingredient;

@@ -23,7 +23,7 @@ module.exports = async (parent, { file, userId }, ctx) => {
   return await ctx.prisma.updateUser({
     where: { id: userId },
     data: {
-      avatar: filename
-    }
+      avatar: filename,
+    },
   });
 };

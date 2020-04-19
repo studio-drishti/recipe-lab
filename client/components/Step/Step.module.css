@@ -10,6 +10,16 @@
   border: 1px solid transparent;
   transition: all linear 0.2s;
 
+  &.hover .stepActions {
+    opacity: 1;
+    transition: opacity ease-in 0.3s;
+  }
+
+  &.hover .textButtonActions {
+    opacity: 1;
+    transition: opacity ease-in 0.3s;
+  }
+
   &.hover,
   &.editing,
   &.dragging {
@@ -37,18 +47,26 @@
   }
 }
 
-.directions {
-  & p {
-    cursor: pointer;
-    margin: 0;
-  }
-  &:hover .stepActions {
+.stepContents {
+  &.hover .textButtonActions {
     opacity: 1;
     transition: opacity ease-in 0.3s;
   }
 }
 
+.directions {
+  & p {
+    cursor: pointer;
+    margin: 0;
+  }
+}
+
 :not(.editing) .stepActions {
+  opacity: 0;
+  transition: opacity ease-out 0.3s;
+}
+
+:not(.editing) .textButtonActions {
   opacity: 0;
   transition: opacity ease-out 0.3s;
 }
@@ -70,6 +88,11 @@
   }
 }
 
+.stepActions {
+  float: right;
+  padding-right: 0.5rem;
+}
+
 .error {
   color: var(--color-error);
 }
@@ -78,7 +101,23 @@
   .stepContents {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    grid-gap: 2rem;
+    grid-column-gap: 2rem;
     align-items: flex-start;
+  }
+
+  .directions {
+    order: 0;
+  }
+
+  .ingredients {
+    order: 1;
+  }
+
+  .stepActions {
+    order: 2;
+  }
+
+  .ingredientActions {
+    order: 3;
   }
 }

@@ -8,7 +8,7 @@ import css from './Select.module.css';
 const Select = ({ error, className, inputRef, children, ...props }) => (
   <div
     className={classnames(className, css.inputContainer, {
-      [css.hasError]: error
+      [css.hasError]: error,
     })}
   >
     <select ref={inputRef} {...props}>
@@ -28,12 +28,12 @@ Select.propTypes = {
   inputRef: PropTypes.object,
   children: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.node),
-    PropTypes.node
-  ])
+    PropTypes.node,
+  ]),
 };
 
 Select.defaultProps = {
-  type: 'text'
+  type: 'text',
 };
 
 export default Select;

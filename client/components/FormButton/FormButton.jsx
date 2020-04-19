@@ -11,12 +11,12 @@ const FormButton = ({ children, className, ...props }) => (
 
 FormButton.propTypes = {
   className: PropTypes.string,
-  children: PropTypes.any
+  children: PropTypes.any,
 };
 
 FormButton.defaultProps = {
   className: null,
-  type: 'submit'
+  type: 'submit',
 };
 
 export default FormButton;

@@ -10,7 +10,7 @@ export default class DiffText extends PureComponent {
   static propTypes = {
     original: PropTypes.string,
     modified: PropTypes.string,
-    className: PropTypes.string
+    className: PropTypes.string,
   };
 
   render() {
