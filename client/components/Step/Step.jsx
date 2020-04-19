@@ -9,7 +9,7 @@ import {
   MdKeyboardArrowDown,
   MdKeyboardArrowUp,
   MdDoNotDisturb,
-  MdAdd
+  MdAdd,
 } from 'react-icons/md';
 import classnames from 'classnames';
 import Textarea from '../Textarea';
@@ -18,18 +18,19 @@ import {
   removeStep,
   undoRemoval,
   setAlteration,
-  createStep
+  createStep,
 } from '../../actions/modification';
 import {
   areAllFieldsEmpty,
   getFieldValue,
-  renderFieldWithMods
+  renderFieldWithMods,
 } from '../../utils/recipe';
 import TextButton from '../TextButton';
 import TextButtonGroup from '../TextButtonGroup';
 import IconButton from '../IconButton';
 import IconButtonGroup from '../IconButtonGroup';
 import css from './Step.module.css';
+import { createIngredient } from '../../actions/modification';
 
 const Step = ({
   index,
@@ -38,17 +39,21 @@ const Step = ({
   children,
   isLast,
   moveDraggable,
-  steps
+  steps,
 }) => {
   const stepFields = ['directions'];
   const {
     modification: { alterations, removals, additions },
-    modificationDispatch
+    modificationDispatch,
   } = useContext(RecipeContext);
   const isRemoved = useMemo(
-    () => removals.some(sourceId => [itemId, step.uid].includes(sourceId)),
+    () => removals.some((sourceId) => [itemId, step.uid].includes(sourceId)),
     [removals]
   );
+  const handleCreateIngredient = (e) => {
+    e.stopPropagation();
+    createIngredient(step.uid, modificationDispatch);
+  };
   const [hovering, setHovering] = useState(false);
   const [edits, setEdits] = useState({});
   const [errors, setErrors] = useState({});
@@ -63,10 +68,10 @@ const Step = ({
   const restoreStep = () =>
     undoRemoval([itemId, step.uid], modificationDispatch);
 
-  const getStepValue = fieldName =>
+  const getStepValue = (fieldName) =>
     getFieldValue(fieldName, step, alterations, edits);
 
-  const handleClick = e => {
+  const handleClick = (e) => {
     if (!stepRef.current) return;
     if (stepRef.current.contains(e.target)) return;
     setEditing(false);
@@ -76,13 +81,13 @@ const Step = ({
     if (!editing) {
       const unsortedSteps = [
         ...steps,
-        ...additions.filter(step => step.parentId === itemId)
+        ...additions.filter((step) => step.parentId === itemId),
       ];
       createStep(itemId, unsortedSteps, index, modificationDispatch);
     }
   };
 
-  const discardChanges = e => {
+  const discardChanges = (e) => {
     e.preventDefault();
     e.stopPropagation();
     setEdits({});
@@ -107,18 +112,18 @@ const Step = ({
       });
   };
 
-  const handleSave = e => {
+  const handleSave = (e) => {
     e.preventDefault();
     saveEdits();
     setEditing(false);
   };
 
-  const handleRemove = e => {
+  const handleRemove = (e) => {
     e.stopPropagation();
     removeStep(step, modificationDispatch);
   };
 
-  const handleRestore = e => {
+  const handleRestore = (e) => {
     e.stopPropagation();
     restoreStep();
   };
@@ -133,15 +138,15 @@ const Step = ({
         break;
     }
 
-    setErrors(errors => ({
+    setErrors((errors) => ({
       ...errors,
-      [fieldName]: err
+      [fieldName]: err,
     }));
 
     return Boolean(!err);
   };
 
-  const handleStepChange = e => {
+  const handleStepChange = (e) => {
     const { name, value } = e.target;
     if (isRemoved) undoRemoval([itemId, step.uid], modificationDispatch);
 
@@ -150,7 +155,7 @@ const Step = ({
 
     setEdits({
       ...edits,
-      [name]: value
+      [name]: value,
     });
 
     validationTimeouts.current[name] = setTimeout(() => {
@@ -159,7 +164,7 @@ const Step = ({
     }, 1000);
   };
 
-  const handleKeyPress = e => {
+  const handleKeyPress = (e) => {
     if (e.key === 'Enter') {
       handleSave(e);
       return;
@@ -195,7 +200,7 @@ const Step = ({
             className={classnames(css.step, {
               [css.hover]: hovering,
               [css.editing]: editing,
-              [css.dragging]: snapshot.isDragging
+              [css.dragging]: snapshot.isDragging,
             })}
           >
             <div className={css.stepNum} {...provided.dragHandleProps}>
@@ -237,7 +242,7 @@ const Step = ({
                 {!editing && (
                   <p
                     className={classnames(css.stepDirections, {
-                      [css.error]: errors.directions
+                      [css.error]: errors.directions,
                     })}
                     onMouseDown={() => setEditing(true)}
                   >
@@ -256,9 +261,6 @@ const Step = ({
                 >
                   {!editing && !isRemoved && (
                     <>
-                      <TextButton onClick={handleRemove}>
-                        <MdClear /> remove step
-                      </TextButton>
                       <TextButton onClick={() => setEditing(true)}>
                         <MdEdit /> edit step
                       </TextButton>
@@ -295,9 +297,15 @@ const Step = ({
                 className={classnames(css.textButtonActions, css.stepActions)}
               >
                 {!editing && (
-                  <TextButton onClick={handleCreateStep} disabled={editing}>
-                    <MdAdd /> add step
-                  </TextButton>
+                  <>
+                    <TextButton onClick={handleCreateStep} disabled={editing}>
+                      <MdAdd /> add step
+                    </TextButton>
+
+                    <TextButton onClick={handleRemove}>
+                      <MdClear /> remove step
+                    </TextButton>
+                  </>
                 )}
               </TextButtonGroup>
 
@@ -309,7 +317,7 @@ const Step = ({
                   css.ingredientActions
                 )}
               >
-                <TextButton>
+                <TextButton onClick={handleCreateIngredient}>
                   <MdAdd /> add ingredient
                 </TextButton>
               </TextButtonGroup>
@@ -328,7 +336,7 @@ Step.propTypes = {
   children: PropTypes.node,
   isLast: PropTypes.bool,
   moveDraggable: PropTypes.func,
-  steps: PropTypes.arrayOf(PropTypes.object)
+  steps: PropTypes.arrayOf(PropTypes.object),
 };
 
 export default Step;

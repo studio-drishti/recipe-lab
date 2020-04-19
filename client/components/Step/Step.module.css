@@ -101,7 +101,7 @@
   .stepContents {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    grid-gap: 2rem;
+    grid-column-gap: 2rem;
     align-items: flex-start;
   }
 
