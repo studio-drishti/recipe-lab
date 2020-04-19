@@ -1,0 +1,11 @@
+mutation Signin(
+  $email: String!
+  $password: String!
+  $modifications: [ModificationInput!]
+) {
+  login(email: $email, password: $password, modifications: $modifications) {
+    token
+    recipeModsCreated
+    recipeModsInConflict
+  }
+}

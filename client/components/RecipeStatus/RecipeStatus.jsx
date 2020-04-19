@@ -50,8 +50,8 @@ const RecipeStatus = () => {
   const uploadModifications = () => {
     saveModification({
       variables: {
-        recipe: recipe.uid,
-        user: user.id,
+        recipeId: recipe.uid,
+        userId: user.id,
         removals: removals,
         sortings: sortings.map(sorting => ({
           uid: sorting.uid,
@@ -146,8 +146,8 @@ const RecipeStatus = () => {
     // User is not logged in thus prompt for login
     if (!user) {
       return (
-        <Link className={css.button} href="/login">
-          login
+        <Link href="/register">
+          <a className={css.button}>Login</a>
         </Link>
       );
     }
@@ -156,7 +156,7 @@ const RecipeStatus = () => {
     if (sessionCount !== savedCount) {
       return (
         <button onClick={handleModificationSave} className={css.button}>
-          save Now
+          Save now
         </button>
       );
     }
@@ -169,13 +169,13 @@ const RecipeStatus = () => {
           className={css.button}
           disabled={isPublishing}
         >
-          publish
+          Publish
         </button>
       );
     }
 
     // User is logged in but is not the recipe owner thus encourage sharing
-    return <button className={css.button}>share</button>;
+    return <button className={css.button}>Share</button>;
 
     // TODO: Alow for "forking" a recipe if more than xx amount of modifications have been made
   }, [user, isSaving, sessionCount, savedCount]);

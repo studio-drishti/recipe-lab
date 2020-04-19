@@ -1,0 +1,17 @@
+mutation Signup(
+  $name: String!
+  $email: String!
+  $password: String!
+  $modifications: [ModificationInput!]
+) {
+  signup(
+    name: $name
+    email: $email
+    password: $password
+    modifications: $modifications
+  ) {
+    token
+    recipeModsCreated
+    recipeModsInConflict
+  }
+}
