@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react';
+import { useRouter } from 'next/router';
 import { useMutation } from 'react-apollo';
 import cookie from 'cookie';
-import redirect from '../../utils/redirect';
 import UserContext from '../../context/UserContext';
 import SignInMutation from '../../graphql/SignInMutation.graphql';
 import { getLocalStorageModifications } from '../../utils/recipe';
@@ -10,6 +10,7 @@ import FormButton from '../FormButton';
 import css from './Login.module.css';
 
 const Login = () => {
+  const router = useRouter();
   const [signIn, { error, client }] = useMutation(SignInMutation);
   const { refreshUser } = useContext(UserContext);
   const [fields, setFields] = useState({ email: '', password: '' });
@@ -33,7 +34,7 @@ const Login = () => {
     signIn({ variables }).then(
       ({
         data: {
-          login: { token, recipeModsCreated },
+          login: { token, recipeModsCreated, recipeModsInConflict },
         },
       }) => {
         // Store the token in cookie
@@ -53,7 +54,22 @@ const Login = () => {
             return refreshUser();
           })
           .then((user) => {
-            redirect({}, `/chef/${user.slug}`);
+            if (recipeModsInConflict.length > 0) {
+              router.replace({
+                pathname: '/conflict',
+                query: {
+                  returnTo: router.query.returnTo,
+                  recipes: recipeModsInConflict.join(','),
+                },
+              });
+            } else if ('returnTo' in router.query) {
+              router.replace(
+                '/recipes/[slug]',
+                `/recipes/${router.query.returnTo}`
+              );
+            } else {
+              router.replace('/chef/[slug]', `/chef/${user.slug}`);
+            }
           });
       }
     );

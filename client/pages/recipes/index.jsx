@@ -1,9 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Link from 'next/link';
-
 import Page from '../../layouts/Main';
-import RecipesQuery from '../../graphql/Recipes.graphql';
+import RecipesQuery from '../../graphql/RecipesQuery.graphql';
 
 const RecipesPage = ({ recipes }) => (
   <Page>

@@ -8,7 +8,7 @@ scalar Upload
 
 type Query {
   sessionUser: User
-  recipes: [Recipe!]!
+  recipes(where: RecipesWhereInput): [Recipe!]!
   recipe(slug: String!): Recipe
   user(slug: String!): User
   modification(uid: ID!): Modification

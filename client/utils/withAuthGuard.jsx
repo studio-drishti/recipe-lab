@@ -14,7 +14,7 @@ export default (Page) =>
     static async getInitialProps(ctx) {
       const session = await checkLoggedIn(ctx.apolloClient);
 
-      if (!session.user) return redirect(ctx, '/register');
+      if (!session.user) return redirect(ctx, '/sign-in');
 
       const componentProps =
         Page.getInitialProps && (await Page.getInitialProps(ctx));

@@ -2,9 +2,9 @@ import React from 'react';
 import Page from '../../layouts/Main';
 import Register from '../../components/Register';
 import Login from '../../components/Login';
-import css from './register.module.css';
+import css from './signIn.module.css';
 
-const RegisterPage = () => (
+const SignInPage = () => (
   <Page>
     <div className={css.forms}>
       <div>
@@ -19,4 +19,4 @@ const RegisterPage = () => (
   </Page>
 );
 
-export default RegisterPage;
+export default SignInPage;
