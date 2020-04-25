@@ -2,7 +2,7 @@ import React, {
   useReducer,
   useContext,
   useCallback,
-  useEffect,
+  useLayoutEffect,
   useRef,
 } from 'react';
 import PropTypes from 'prop-types';
@@ -49,8 +49,14 @@ const Recipe = (props) => {
     ? `MOD-${props.recipe.uid}`
     : 'MOD-NEW-RECIPE';
 
-  useEffect(() => {
-    if (localStorage && localStorage.getItem(localStoreId)) {
+  useLayoutEffect(() => {
+    if (!localStorage) return;
+    // If a user is signed in and there is a change in localstorage
+    // It means they disregarded the conflict resolution page.
+    // So just delete the localstorage mod
+    if (user && localStorage.getItem(localStoreId)) {
+      localStorage.removeItem(localStoreId);
+    } else if (localStorage.getItem(localStoreId)) {
       setModification(
         Object.assign(
           modification,

@@ -2,21 +2,21 @@ import React from 'react';
 import Page from '../../layouts/Main';
 import Register from '../../components/Register';
 import Login from '../../components/Login';
-import css from './register.module.css';
+import css from './signIn.module.css';
 
-const RegisterPage = () => (
+const SignInPage = () => (
   <Page>
     <div className={css.forms}>
       <div>
-        <h1>Register</h1>
+        <h1>Sign Up</h1>
         <Register />
       </div>
       <div>
-        <h1>Login</h1>
+        <h1>Sign In</h1>
         <Login />
       </div>
     </div>
   </Page>
 );
 
-export default RegisterPage;
+export default SignInPage;

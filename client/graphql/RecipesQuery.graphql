@@ -1,0 +1,8 @@
+query RecipesQuery($where: RecipesWhereInput) {
+  recipes(where: $where) {
+    uid
+    slug
+    title
+    description
+  }
+}

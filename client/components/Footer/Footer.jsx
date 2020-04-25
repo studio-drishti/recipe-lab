@@ -1,19 +1,16 @@
-import React, { Component } from 'react';
+import React from 'react';
 import css from './Footer.module.css';
 
-export default class Footer extends Component {
-  static displayName = 'Footer';
+const Footer = () => (
+  <footer className={css.footer}>
+    <div className={css.copyright}>
+      Copyright &copy; {new Date().getFullYear()} Recipe Lab
+    </div>
+    <div className={css.social}>
+      <a href="https://instagram.com/recipelab.io">Instagram</a> |{' '}
+      <a href="#">Facebook</a>
+    </div>
+  </footer>
+);
 
-  render() {
-    return (
-      <footer className={css.footer}>
-        <div className={css.copyright}>
-          Copyright &copy; {new Date().getFullYear()} Recipe Lab
-        </div>
-        <div className={css.social}>
-          <a href="#">Pixelfed</a> | <a href="#">Mastodon</a>
-        </div>
-      </footer>
-    );
-  }
-}
+export default Footer;

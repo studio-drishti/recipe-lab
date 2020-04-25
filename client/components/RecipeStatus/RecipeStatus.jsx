@@ -146,7 +146,7 @@ const RecipeStatus = () => {
     // User is not logged in thus prompt for login
     if (!user) {
       return (
-        <Link href="/register">
+        <Link href={`/sign-in?returnTo=${recipe.slug}`}>
           <a className={css.button}>Login</a>
         </Link>
       );

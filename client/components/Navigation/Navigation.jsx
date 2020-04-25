@@ -34,8 +34,8 @@ const Navigation = () => {
         )}
 
         {!user && (
-          <Link href="/register">
-            <a>Login / Register</a>
+          <Link href="/sign-in">
+            <a>Sign In</a>
           </Link>
         )}
       </div>
