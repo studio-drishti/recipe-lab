@@ -8,11 +8,11 @@ const SignInPage = () => (
   <Page>
     <div className={css.forms}>
       <div>
-        <h1>Register</h1>
+        <h1>Sign Up</h1>
         <Register />
       </div>
       <div>
-        <h1>Login</h1>
+        <h1>Sign In</h1>
         <Login />
       </div>
     </div>

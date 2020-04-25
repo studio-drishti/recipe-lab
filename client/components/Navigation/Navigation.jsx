@@ -35,7 +35,7 @@ const Navigation = () => {
 
         {!user && (
           <Link href="/sign-in">
-            <a>Login / Register</a>
+            <a>Sign In</a>
           </Link>
         )}
       </div>
