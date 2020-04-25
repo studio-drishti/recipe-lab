@@ -2,14 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import RecipesQuery from '../graphql/RecipesQuery.graphql';
 import Page from '../layouts/Main';
+import ConflictResolution from '../components/ConflictResolution';
 
 const IndexPage = ({ recipes }) => (
   <Page>
-    Yo bra, you got conflicts here...
-    <br />
-    {recipes.map((recipe) => (
-      <p key={recipe.uid}>{recipe.title}</p>
-    ))}
+    <ConflictResolution recipes={recipes} />
   </Page>
 );
 
