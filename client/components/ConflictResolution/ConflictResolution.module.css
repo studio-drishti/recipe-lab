@@ -1,0 +1,9 @@
+.conflicts {
+  margin-bottom: 2rem;
+}
+
+.conflictDetails {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-column-gap: 2rem;
+}

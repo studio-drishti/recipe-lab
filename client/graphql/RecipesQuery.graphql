@@ -1,8 +1,10 @@
-query RecipesQuery($where: RecipesWhereInput) {
+#import './ModificationFragment.graphql'
+#import './RecipeFragment.graphql'
+query RecipesQuery($where: RecipesWhereInput, $user: ID) {
   recipes(where: $where) {
-    uid
-    slug
-    title
-    description
+    ...RecipeFragment
+    modification(user: $user) {
+      ...ModificationFragment
+    }
   }
 }

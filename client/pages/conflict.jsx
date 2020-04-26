@@ -1,8 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import dynamic from 'next/dynamic';
 import RecipesQuery from '../graphql/RecipesQuery.graphql';
 import Page from '../layouts/Main';
-import ConflictResolution from '../components/ConflictResolution';
+
+// Because ConflictResolution depends on localStorage, use dynamic import
+// to prevent loading during server side rendering.
+const ConflictResolution = dynamic(
+  () => import('../components/ConflictResolution'),
+  { ssr: false }
+);
 
 const IndexPage = ({ recipes }) => (
   <Page>
