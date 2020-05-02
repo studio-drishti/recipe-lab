@@ -87,10 +87,14 @@ export const getLocalStorageModifications = () =>
         sortings,
         alterations,
         removals,
-        items: additions.filter((addition) => addition.kind === 'Item'),
-        steps: additions.filter((addition) => addition.kind === 'Step'),
-        ingredients: additions.filter(
-          (addition) => addition.kind === 'Ingredient'
-        ),
+        items: additions
+          .filter((addition) => addition.kind === 'Item')
+          .map(({ kind, ...item }) => item),
+        steps: additions
+          .filter((addition) => addition.kind === 'Step')
+          .map(({ kind, ...step }) => step),
+        ingredients: additions
+          .filter((addition) => addition.kind === 'Ingredient')
+          .map(({ kind, ...ingredient }) => ingredient),
       };
     });

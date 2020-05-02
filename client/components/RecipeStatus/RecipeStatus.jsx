@@ -11,7 +11,7 @@ import UserContext from '../../context/UserContext';
 import RecipeContext from '../../context/RecipeContext';
 import { setModification } from '../../actions/modification';
 import { setRecipe } from '../../actions/recipe';
-import SaveModificationMutation from '../../graphql/SaveModification.graphql';
+import SaveModificationMutation from '../../graphql/SaveModificationMutation.graphql';
 import PublishRecipeMutation from '../../graphql/PublishRecipeMutation.graphql';
 import css from './RecipeStatus.module.css';
 
