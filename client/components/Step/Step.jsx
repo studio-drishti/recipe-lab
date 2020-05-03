@@ -206,7 +206,7 @@ const Step = ({
             <div className={css.stepNum} {...provided.dragHandleProps}>
               <div>Step {index + 1}</div>
               <IconButtonGroup
-                className={classnames(css.stepSort, css.stepButtons)}
+                className={classnames(css.stepSort, css.buttons)}
               >
                 {!editing && (
                   <>
