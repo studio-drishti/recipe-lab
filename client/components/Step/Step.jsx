@@ -343,7 +343,7 @@ Step.propTypes = {
   index: PropTypes.number,
   itemId: PropTypes.string,
   step: PropTypes.object,
-  children: PropTypes.node,
+  children: PropTypes.func,
   isLast: PropTypes.bool,
   moveDraggable: PropTypes.func,
   steps: PropTypes.arrayOf(PropTypes.object),
