@@ -10,12 +10,14 @@
   border: 1px solid transparent;
   transition: all linear 0.2s;
 
-  &.hover .stepActions {
-    opacity: 1;
-    transition: opacity ease-in 0.3s;
+  & .buttons {
+    opacity: 0;
+    transition: opacity ease-out 0.3s;
   }
 
-  &.hover .textButtonActions {
+  &.hover .buttons,
+  &.editing .buttons,
+  &.dragging .buttons {
     opacity: 1;
     transition: opacity ease-in 0.3s;
   }
@@ -25,33 +27,15 @@
   &.dragging {
     border: 1px solid var(--color-medium-gray);
   }
-
-  &.editing {
-    & .stepShortcuts {
-      opacity: 1;
-    }
-    & .stepActions {
-      opacity: 1;
-    }
-  }
-
-  &.dragging .stepShortcuts {
-    opacity: 0;
-  }
-
-  & .stepNum {
-    border-bottom: 1px dashed var(--color-black);
-    padding-bottom: 0.5rem;
-    margin-bottom: 1rem;
-    text-transform: uppercase;
-  }
 }
 
-.stepContents {
-  &.hover .textButtonActions {
-    opacity: 1;
-    transition: opacity ease-in 0.3s;
-  }
+.stepNum {
+  border-bottom: 1px dashed var(--color-black);
+  padding-bottom: 0.5rem;
+  margin-bottom: 1rem;
+  text-transform: uppercase;
+  display: grid;
+  grid-template-columns: auto max-content;
 }
 
 .directions {
@@ -59,16 +43,6 @@
     cursor: pointer;
     margin: 0;
   }
-}
-
-:not(.editing) .stepActions {
-  opacity: 0;
-  transition: opacity ease-out 0.3s;
-}
-
-:not(.editing) .textButtonActions {
-  opacity: 0;
-  transition: opacity ease-out 0.3s;
 }
 
 .stepShortcuts {
@@ -86,11 +60,6 @@
       border-right: 0;
     }
   }
-}
-
-.stepActions {
-  float: right;
-  padding-right: 0.5rem;
 }
 
 .error {

@@ -204,8 +204,10 @@ const Step = ({
             })}
           >
             <div className={css.stepNum} {...provided.dragHandleProps}>
-              Step {index + 1}
-              <IconButtonGroup className={classnames(css.stepActions)}>
+              <div>Step {index + 1}</div>
+              <IconButtonGroup
+                className={classnames(css.stepSort, css.stepButtons)}
+              >
                 {!editing && (
                   <>
                     <IconButton
@@ -256,19 +258,23 @@ const Step = ({
                     )}
                   </p>
                 )}
-                <TextButtonGroup
-                  className={(css.buttons, css.textButtonActions)}
-                >
+                <TextButtonGroup className={css.buttons}>
                   {!editing && !isRemoved && (
                     <>
-                      <TextButton onClick={() => setEditing(true)}>
+                      <TextButton
+                        onClick={() => setEditing(true)}
+                        disabled={snapshot.isDragging}
+                      >
                         <MdEdit /> edit step
                       </TextButton>
                     </>
                   )}
 
                   {isRemoved && !editing && (
-                    <TextButton onClick={handleRestore}>
+                    <TextButton
+                      onClick={handleRestore}
+                      disabled={snapshot.isDragging}
+                    >
                       <MdRefresh /> restore step
                     </TextButton>
                   )}
@@ -279,12 +285,14 @@ const Step = ({
                         title="save changes"
                         type="submit"
                         onClick={handleSave}
+                        disabled={snapshot.isDragging}
                       >
                         <MdCheck /> save
                       </TextButton>
                       <TextButton
                         title="discard changes"
                         onClick={discardChanges}
+                        disabled={snapshot.isDragging}
                       >
                         <MdDoNotDisturb /> discard
                       </TextButton>
@@ -294,30 +302,32 @@ const Step = ({
               </form>
 
               <TextButtonGroup
-                className={classnames(css.textButtonActions, css.stepActions)}
+                className={classnames(css.buttons, css.stepActions)}
               >
-                {!editing && (
-                  <>
-                    <TextButton onClick={handleCreateStep} disabled={editing}>
-                      <MdAdd /> add step
-                    </TextButton>
+                <TextButton
+                  onClick={handleCreateStep}
+                  disabled={editing || snapshot.isDragging}
+                >
+                  <MdAdd /> add step
+                </TextButton>
 
-                    <TextButton onClick={handleRemove}>
-                      <MdClear /> remove step
-                    </TextButton>
-                  </>
-                )}
+                <TextButton
+                  onClick={handleRemove}
+                  disabled={editing || snapshot.isDragging}
+                >
+                  <MdClear /> remove step
+                </TextButton>
               </TextButtonGroup>
 
               <div className={css.ingredients}>{children(setHovering)}</div>
 
               <TextButtonGroup
-                className={classnames(
-                  css.textButtonActions,
-                  css.ingredientActions
-                )}
+                className={classnames(css.buttons, css.ingredientActions)}
               >
-                <TextButton onClick={handleCreateIngredient}>
+                <TextButton
+                  onClick={handleCreateIngredient}
+                  disabled={editing || snapshot.isDragging}
+                >
                   <MdAdd /> add ingredient
                 </TextButton>
               </TextButtonGroup>
