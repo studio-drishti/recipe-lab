@@ -7,6 +7,7 @@ import React, {
 } from 'react';
 import PropTypes from 'prop-types';
 import { DragDropContext } from 'react-beautiful-dnd';
+import classnames from 'classnames';
 import UserContext from '../../context/UserContext';
 import RecipeContext from '../../context/RecipeContext';
 import recipeReducer from '../../reducers/recipe';
@@ -217,86 +218,113 @@ const Recipe = (props) => {
           />
           <RecipeDetails className={css.recipeDetails} />
         </header>
-        <div className={css.ingredientTotals}>
-          {recipeItems
-            .filter((item) => !modification.removals.includes(item.uid))
-            .map((item) => (
-              <div key={item.uid}>
-                <h3>
-                  Ingredients for{' '}
-                  {getFieldValue('name', item, modification.alterations)}
-                </h3>
-                <IngredientTotals
-                  ingredients={getSortedSteps(item)
-                    .filter((step) => !modification.removals.includes(step.uid))
-                    .reduce((result, step) => {
-                      return result.concat(
-                        getSortedIngredients(step).filter(
-                          (ingredient) =>
-                            !modification.removals.includes(ingredient.uid)
-                        )
-                      );
-                    }, [])}
-                />
-              </div>
-            ))}
-        </div>
 
-        <article className={css.recipe}>
-          <div className={css.recipeMain}>
-            {recipe && (
-              <ItemList recipeId={recipe.uid}>
-                {recipeItems.map((item, itemI) => {
-                  const itemSteps = getSortedSteps(item);
-                  return (
-                    <Item
-                      key={item.uid}
-                      item={item}
-                      index={itemI}
-                      isLast={itemI === recipeItems.length - 1}
-                      moveDraggable={moveDraggable}
-                    >
-                      {itemSteps.length > 0 && (
-                        <StepList itemId={item.uid}>
-                          {itemSteps.map((step, stepI) => (
-                            <Step
-                              key={step.uid}
-                              index={stepI}
-                              itemId={item.uid}
-                              step={step}
-                              isLast={stepI === itemSteps.length - 1}
-                              moveDraggable={moveDraggable}
-                              steps={item.steps}
-                            >
-                              {(setStepHovering) => (
-                                <IngredientList stepId={step.uid}>
-                                  {getSortedIngredients(step).map(
-                                    (ingredient, i) => (
-                                      <Ingredient
-                                        key={ingredient.uid}
-                                        index={i}
-                                        ingredient={ingredient}
-                                        itemId={item.uid}
-                                        stepId={step.uid}
-                                        setStepHovering={setStepHovering}
-                                      />
-                                    )
-                                  )}
-                                </IngredientList>
-                              )}
-                            </Step>
-                          ))}
-                        </StepList>
-                      )}
-                    </Item>
-                  );
-                })}
-              </ItemList>
-            )}
-
-            {!recipe && <p>you gotta finish creating your recipe, dude!</p>}
+        {recipeItems.length > 0 ? (
+          <div className={css.ingredientTotals}>
+            {recipeItems
+              .filter((item) => !modification.removals.includes(item.uid))
+              .map((item) => (
+                <div key={item.uid}>
+                  <h3>
+                    Ingredients for{' '}
+                    {getFieldValue('name', item, modification.alterations)}
+                  </h3>
+                  <IngredientTotals
+                    ingredients={getSortedSteps(item)
+                      .filter(
+                        (step) => !modification.removals.includes(step.uid)
+                      )
+                      .reduce((result, step) => {
+                        return result.concat(
+                          getSortedIngredients(step).filter(
+                            (ingredient) =>
+                              !modification.removals.includes(ingredient.uid)
+                          )
+                        );
+                      }, [])}
+                  />
+                </div>
+              ))}
           </div>
-        </article>
+        ) : (
+          <div className={classnames(css.ingredientTotals, css.placeholder)}>
+            {/* TODO: Better placeholder for ingredient totals. */}
+            <h3>Ingredient Totals</h3>
+            <ul>
+              <li>-- - - - --- -- - </li>
+              <li>-- - --- --</li>
+              <li>-- -- - - -- - - --</li>
+              <li>-- - -- - --- - - -- </li>
+              <li>-- - -- - --- -</li>
+            </ul>
+          </div>
+        )}
+
+        {recipe ? (
+          <article className={css.recipe}>
+            <ItemList>
+              {recipeItems.map((item, itemI) => {
+                const itemSteps = getSortedSteps(item);
+                return (
+                  <Item
+                    key={item.uid}
+                    item={item}
+                    index={itemI}
+                    isLast={itemI === recipeItems.length - 1}
+                    moveDraggable={moveDraggable}
+                  >
+                    <StepList itemId={item.uid}>
+                      {itemSteps.map((step, stepI) => (
+                        <Step
+                          key={step.uid}
+                          index={stepI}
+                          itemId={item.uid}
+                          step={step}
+                          isLast={stepI === itemSteps.length - 1}
+                          moveDraggable={moveDraggable}
+                          steps={item.steps}
+                        >
+                          {(setStepHovering) => (
+                            <IngredientList stepId={step.uid}>
+                              {getSortedIngredients(step).map(
+                                (ingredient, i) => (
+                                  <Ingredient
+                                    key={ingredient.uid}
+                                    index={i}
+                                    ingredient={ingredient}
+                                    itemId={item.uid}
+                                    stepId={step.uid}
+                                    setStepHovering={setStepHovering}
+                                  />
+                                )
+                              )}
+                            </IngredientList>
+                          )}
+                        </Step>
+                      ))}
+                    </StepList>
+                  </Item>
+                );
+              })}
+            </ItemList>
+          </article>
+        ) : (
+          <article className={classnames(css.recipe, css.placeholder)}>
+            {/* TODO: Better placeholder for recipe. */}
+            <h2>Recipe Item</h2>
+            <div>
+              <p>
+                --- - ------- - - - -------------- - - -- - - - - - -- - - - -
+                -- - --
+              </p>
+              <ul>
+                <li>-- - - -- -- - - - -- --</li>
+                <li>-- - - -- -</li>
+              </ul>
+            </div>
+          </article>
+        )}
+
         <RecipeBio author={recipe ? recipe.author : user} />
         <RecipeStatus />
       </DragDropContext>

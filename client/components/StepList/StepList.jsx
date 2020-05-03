@@ -1,38 +1,48 @@
-import React from 'react';
-import { Component } from 'react';
+import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import { Droppable } from 'react-beautiful-dnd';
 import classnames from 'classnames';
+import { MdAdd } from 'react-icons/md';
+import RecipeContext from '../../context/RecipeContext';
+import { createStep } from '../../actions/modification';
+import TextButton from '../TextButton';
 import css from './StepList.module.css';
 
-export default class StepList extends Component {
-  static displayName = 'StepList';
+const StepList = ({ children, itemId }) => {
+  const { modificationDispatch } = useContext(RecipeContext);
 
-  static propTypes = {
-    children: PropTypes.oneOfType([
-      PropTypes.arrayOf(PropTypes.node),
-      PropTypes.node,
-    ]),
-    itemId: PropTypes.string,
+  const handleCreateStep = () => {
+    createStep(itemId, [], 0, modificationDispatch);
   };
 
-  render() {
-    const { children, itemId } = this.props;
-    return (
-      <Droppable type={`STEP-${itemId}`} droppableId={itemId}>
-        {(provided, snapshot) => (
-          <ol
-            className={classnames(css.steps, {
-              [css.draggingOver]: snapshot.isDraggingOver,
-            })}
-            ref={provided.innerRef}
-            {...provided.droppableProps}
-          >
-            {children}
-            {provided.placeholder}
-          </ol>
-        )}
-      </Droppable>
-    );
-  }
-}
+  return children.length > 0 ? (
+    <Droppable type={`STEP-${itemId}`} droppableId={itemId}>
+      {(provided, snapshot) => (
+        <ol
+          className={classnames(css.steps, {
+            [css.draggingOver]: snapshot.isDraggingOver,
+          })}
+          ref={provided.innerRef}
+          {...provided.droppableProps}
+        >
+          {children}
+          {provided.placeholder}
+        </ol>
+      )}
+    </Droppable>
+  ) : (
+    <div>
+      Some placeholder stuff for steps... la la la... <br />{' '}
+      <TextButton onClick={handleCreateStep}>
+        <MdAdd /> add step
+      </TextButton>
+    </div>
+  );
+};
+
+StepList.propTypes = {
+  children: PropTypes.arrayOf(PropTypes.node),
+  itemId: PropTypes.string,
+};
+
+export default StepList;

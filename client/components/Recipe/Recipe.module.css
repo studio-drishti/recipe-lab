@@ -2,6 +2,19 @@
   margin-bottom: 2rem;
 }
 
+.recipe.placeholder {
+  & > div {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-column-gap: 2rem;
+  }
+
+  & ul {
+    list-style-type: none;
+    padding: 0;
+  }
+}
+
 .recipeHeader {
   display: grid;
   grid-template-columns: 1fr;
@@ -58,5 +71,14 @@
 
   & > div:last-child > *:last-child {
     margin-bottom: 0;
+  }
+}
+
+.ingredientTotals.placeholder {
+  & ul {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    list-style-type: none;
+    padding: 0;
   }
 }
