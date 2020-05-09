@@ -1,7 +1,13 @@
 import { ApolloClient } from 'apollo-client';
-import { InMemoryCache } from 'apollo-cache-inmemory';
-import { HttpLink } from 'apollo-link-http';
+import {
+  InMemoryCache,
+  IntrospectionFragmentMatcher,
+} from 'apollo-cache-inmemory';
+// import { HttpLink } from 'apollo-link-http';
+import { createUploadLink } from 'apollo-upload-client';
+import { setContext } from 'apollo-link-context';
 import fetch from 'isomorphic-unfetch';
+import nextCookie from 'next-cookies';
 
 // On the client, we store the Apollo Client in the following variable.
 // This prevents the client from reinitializing between page transitions.
@@ -71,15 +77,36 @@ export const initApolloClient = (initialState, ctx) => {
 };
 
 export const createApolloClient = (initialState, ctx) => {
+  const { token } = nextCookie(ctx ? ctx : {});
+
+  const httpLink = createUploadLink({
+    uri: 'http://localhost:3000/graphql',
+    credentials: 'same-origin',
+    fetch,
+  });
+
+  const authLink = setContext((_, { headers }) => ({
+    headers: {
+      ...headers,
+      Authorization: token ? `Bearer ${token}` : '',
+    },
+  }));
+
+  // Needed for using interfaces and unions for some reason...
+  // See: https://github.com/apollographql/apollo-client/issues/3397
+  const fragmentMatcher = new IntrospectionFragmentMatcher({
+    introspectionQueryResultData: {
+      __schema: {
+        types: [],
+      },
+    },
+  });
+
   // The `ctx` (NextPageContext) will only be present on the server.
   // use it to extract auth headers (ctx.req) or similar.
   return new ApolloClient({
     ssrMode: Boolean(ctx),
-    link: new HttpLink({
-      uri: 'https://api.graph.cool/simple/v1/cixmkt2ul01q00122mksg82pn', // Server URL (must be absolute)
-      credentials: 'same-origin', // Additional fetch() options like `credentials` or `headers`
-      fetch,
-    }),
-    cache: new InMemoryCache().restore(initialState),
+    link: authLink.concat(httpLink),
+    cache: new InMemoryCache({ fragmentMatcher }).restore(initialState),
   });
 };
