@@ -7,7 +7,7 @@ import '../styles/variables.css';
 import '../styles/global.css';
 
 import UserContext from '../context/UserContext';
-import withApollo from '../utils/withApollo.jsx';
+import withApollo from '../hoc/withApollo.js';
 import checkLoggedIn from '../utils/checkLoggedIn';
 
 class MyApp extends App {
@@ -50,4 +50,4 @@ class MyApp extends App {
   }
 }
 
-export default withApollo(MyApp);
+export default withApollo({ ssr: true })(MyApp);
