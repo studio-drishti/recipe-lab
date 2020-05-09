@@ -1,8 +1,6 @@
 # Recipe Lab
 
-Play with your food.
-
-## Node Docker Good Defaults
+Play with your food. A recipe collaboration web application.
 
 The Docker workflow was adapted from [Node Docker Good Defaults](https://github.com/BretFisher/node-docker-good-defaults)
 
@@ -36,7 +34,7 @@ The Docker workflow was adapted from [Node Docker Good Defaults](https://github.
 
 ### Getting Started
 
-If this was your Node.js app, to start local development you would:
+To start local development first install dev dependencies with `npm i --only=dev` then...
 
 - Running `docker-compose up` is all you need. It will:
 - Build custom local image enabled for development (nodemon, `NODE_ENV=development`).
