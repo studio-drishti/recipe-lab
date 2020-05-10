@@ -16,11 +16,11 @@ const withAuthGuard = (PageComponent) => {
     }
 
     if (typeof window === 'undefined') {
-      ctx.res.writeHead(302, { Location: target });
+      ctx.res.writeHead(302, { Location: '/sign-in' });
       ctx.res.end();
     } else {
       // In the browser, we just pretend like this never even happened ;)
-      Router.replace(target);
+      Router.replace('/sign-in');
     }
   };
   return WithAuthGuard;

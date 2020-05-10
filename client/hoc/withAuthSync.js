@@ -1,10 +1,14 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useContext } from 'react';
+import Router from 'next/router';
+import UserContext from '../context/UserContext';
 
 const withAuthSync = (PageComponent) => {
   const Wrapper = (props) => {
+    const { setUser } = useContext(UserContext);
+
     const syncLogout = (event) => {
       if (event.key === 'logout') {
-        console.log('logged out from storage!');
+        setUser(null);
         Router.push('/sign-in');
       }
     };
