@@ -1,6 +1,6 @@
 import App from 'next/app';
 import React, { useState } from 'react';
-import { useApolloClient } from 'react-apollo';
+import { useApolloClient } from '@apollo/react-hooks';
 import 'normalize.css';
 import '../styles/variables.css';
 import '../styles/global.css';

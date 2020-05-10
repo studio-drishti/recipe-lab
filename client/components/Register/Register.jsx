@@ -1,7 +1,7 @@
 import React, { useState, useContext, useRef } from 'react';
-import { useMutation } from 'react-apollo';
+import { useMutation } from '@apollo/react-hooks';
 import isEmail from 'validator/lib/isEmail';
-import cookie from 'cookie';
+import Cookies from 'js-cookie';
 import redirect from '../../utils/redirect';
 import UserContext from '../../context/UserContext';
 import SignUpMutation from '../../graphql/SignUpMutation.graphql';
@@ -85,9 +85,7 @@ const Register = () => {
         },
       }) => {
         // Store the token in cookie
-        document.cookie = cookie.serialize('token', token, {
-          maxAge: 30 * 24 * 60 * 60, // 30 days
-        });
+        Cookies.set('token', token, { expires: 30 });
 
         // Remove any mods from localstorage that were created on the server
         recipeModsCreated.forEach((recipeId) => {

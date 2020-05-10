@@ -5,7 +5,7 @@ import React, {
   useEffect,
   useCallback,
 } from 'react';
-import { useMutation } from 'react-apollo';
+import { useMutation } from '@apollo/react-hooks';
 import Link from 'next/link';
 import UserContext from '../../context/UserContext';
 import RecipeContext from '../../context/RecipeContext';
