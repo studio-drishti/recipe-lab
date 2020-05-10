@@ -1,28 +1,29 @@
-import React, { Component } from 'react';
-
-import redirect from '../lib/redirect';
+import React from 'react';
+import Router from 'next/router';
 import { checkLoggedIn } from '../lib/auth';
 
-// Gets the display name of a JSX component for dev tools
-const getDisplayName = (Component) =>
-  Component.displayName || Component.name || 'Component';
+const withAuthGuard = (PageComponent) => {
+  const WithAuthGuard = (pageProps) => {
+    return <PageComponent {...pageProps} />;
+  };
 
-export default (Page) =>
-  class extends Component {
-    static displayName = `withAuthGuard(${getDisplayName(Page)})`;
+  WithAuthGuard.getInitialProps = async (ctx) => {
+    const session = await checkLoggedIn(ctx.apolloClient);
 
-    static async getInitialProps(ctx) {
-      const session = await checkLoggedIn(ctx.apolloClient);
-
-      if (!session.user) return redirect(ctx, '/sign-in');
-
-      const componentProps =
-        Page.getInitialProps && (await Page.getInitialProps(ctx));
-
-      return { ...componentProps };
+    if (session.user) {
+      const pageProps = await PageComponent.getInitialProps(ctx);
+      return { ...pageProps };
     }
 
-    render() {
-      return <Page {...this.props} />;
+    if (typeof window === 'undefined') {
+      ctx.res.writeHead(302, { Location: target });
+      ctx.res.end();
+    } else {
+      // In the browser, we just pretend like this never even happened ;)
+      Router.replace(target);
     }
   };
+  return WithAuthGuard;
+};
+
+export default withAuthGuard;
