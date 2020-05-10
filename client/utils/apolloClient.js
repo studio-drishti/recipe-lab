@@ -3,7 +3,6 @@ import {
   InMemoryCache,
   IntrospectionFragmentMatcher,
 } from 'apollo-cache-inmemory';
-// import { HttpLink } from 'apollo-link-http';
 import { createUploadLink } from 'apollo-upload-client';
 import { setContext } from 'apollo-link-context';
 import fetch from 'isomorphic-unfetch';
