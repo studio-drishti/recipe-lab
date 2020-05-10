@@ -1,9 +1,0 @@
-{
-  sessionUser {
-    id
-    name
-    avatar
-    role
-    slug
-  }
-}

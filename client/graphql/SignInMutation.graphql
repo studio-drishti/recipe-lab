@@ -1,3 +1,4 @@
+#import './SessionUserFragment.graphql'
 mutation Signin(
   $email: String!
   $password: String!
@@ -7,5 +8,8 @@ mutation Signin(
     token
     recipeModsCreated
     recipeModsInConflict
+    user {
+      ...SessionUser
+    }
   }
 }

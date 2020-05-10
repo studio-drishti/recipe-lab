@@ -1,0 +1,7 @@
+fragment SessionUser on User {
+  id
+  name
+  avatar
+  role
+  slug
+}

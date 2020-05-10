@@ -1,0 +1,6 @@
+#import './SessionUserFragment.graphql'
+{
+  sessionUser {
+    ...SessionUser
+  }
+}

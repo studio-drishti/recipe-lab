@@ -2,7 +2,7 @@ import React, { useState, useContext, useRef } from 'react';
 import { useRouter } from 'next/router';
 import { useMutation } from '@apollo/react-hooks';
 import isEmail from 'validator/lib/isEmail';
-import Cookies from 'js-cookie';
+import { login } from '../../lib/auth';
 import UserContext from '../../context/UserContext';
 import SignUpMutation from '../../graphql/SignUpMutation.graphql';
 import { getLocalStorageModifications } from '../../lib/recipe';
@@ -14,7 +14,7 @@ const Register = () => {
   const router = useRouter();
   const validationTimeouts = useRef({});
   const [signUp, { error, client }] = useMutation(SignUpMutation);
-  const { refreshUser } = useContext(UserContext);
+  const { setUser } = useContext(UserContext);
   const [errors, setErrors] = useState({});
   const [edits, setEdits] = useState({
     password: '',
@@ -82,11 +82,14 @@ const Register = () => {
     signUp({ variables }).then(
       ({
         data: {
-          signup: { token, recipeModsCreated },
+          signup: { user, token, recipeModsCreated },
         },
       }) => {
         // Store the token in cookie
-        Cookies.set('token', token, { expires: 30 });
+        login({ token });
+
+        // Set global user context
+        setUser(user);
 
         // Remove any mods from localstorage that were created on the server
         recipeModsCreated.forEach((recipeId) => {
@@ -94,21 +97,16 @@ const Register = () => {
         });
 
         // Force a reload of all the current queries now that the user is logged in
-        client.cache
-          .reset()
-          .then(() => {
-            return refreshUser();
-          })
-          .then((user) => {
-            if (router.query.returnTo) {
-              router.replace(
-                '/recipes/[slug]',
-                `/recipes/${router.query.returnTo}`
-              );
-            } else {
-              router.replace('/chef/[slug]', `/chef/${user.slug}`);
-            }
-          });
+        client.cache.reset().then(() => {
+          if (router.query.returnTo) {
+            router.replace(
+              '/recipes/[slug]',
+              `/recipes/${router.query.returnTo}`
+            );
+          } else {
+            router.replace('/chef/[slug]', `/chef/${user.slug}`);
+          }
+        });
       }
     );
   };

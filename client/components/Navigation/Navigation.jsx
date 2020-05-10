@@ -1,8 +1,7 @@
 import React, { useContext } from 'react';
 import Link from 'next/link';
-
+import { logout } from '../../lib/auth';
 import UserContext from '../../context/UserContext';
-
 import css from './Navigation.module.css';
 
 const Navigation = () => {
@@ -33,10 +32,12 @@ const Navigation = () => {
           </>
         )}
 
-        {!user && (
+        {!user ? (
           <Link href="/sign-in">
             <a>Sign In</a>
           </Link>
+        ) : (
+          <button onClick={logout}>Sign Out</button>
         )}
       </div>
     </nav>

@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react';
 import { useRouter } from 'next/router';
 import { useMutation } from '@apollo/react-hooks';
-import Cookies from 'js-cookie';
+import { login } from '../../lib/auth';
 import UserContext from '../../context/UserContext';
 import SignInMutation from '../../graphql/SignInMutation.graphql';
 import { getLocalStorageModifications } from '../../lib/recipe';
@@ -12,7 +12,7 @@ import css from './Login.module.css';
 const Login = () => {
   const router = useRouter();
   const [signIn, { error, client }] = useMutation(SignInMutation);
-  const { refreshUser } = useContext(UserContext);
+  const { setUser } = useContext(UserContext);
   const [fields, setFields] = useState({ email: '', password: '' });
 
   const handleInputChange = (e) => {
@@ -34,11 +34,14 @@ const Login = () => {
     signIn({ variables }).then(
       ({
         data: {
-          login: { token, recipeModsCreated, recipeModsInConflict },
+          login: { user, token, recipeModsCreated, recipeModsInConflict },
         },
       }) => {
         // Store the token in cookie
-        Cookies.set('token', token, { expires: 30 });
+        login({ token });
+
+        // Set global user context
+        setUser(user);
 
         // Remove any mods from localstorage that were created on the server
         recipeModsCreated.forEach((recipeId) => {
@@ -46,29 +49,24 @@ const Login = () => {
         });
 
         // Force a reload of all the current queries now that the user is logged in
-        client.cache
-          .reset()
-          .then(() => {
-            return refreshUser();
-          })
-          .then((user) => {
-            if (recipeModsInConflict.length > 0) {
-              router.replace({
-                pathname: '/conflict',
-                query: {
-                  returnTo: router.query.returnTo,
-                  recipes: recipeModsInConflict.join(','),
-                },
-              });
-            } else if (router.query.returnTo) {
-              router.replace(
-                '/recipes/[slug]',
-                `/recipes/${router.query.returnTo}`
-              );
-            } else {
-              router.replace('/chef/[slug]', `/chef/${user.slug}`);
-            }
-          });
+        client.cache.reset().then(() => {
+          if (recipeModsInConflict.length > 0) {
+            router.replace({
+              pathname: '/conflict',
+              query: {
+                returnTo: router.query.returnTo,
+                recipes: recipeModsInConflict.join(','),
+              },
+            });
+          } else if (router.query.returnTo) {
+            router.replace(
+              '/recipes/[slug]',
+              `/recipes/${router.query.returnTo}`
+            );
+          } else {
+            router.replace('/chef/[slug]', `/chef/${user.slug}`);
+          }
+        });
       }
     );
   };
