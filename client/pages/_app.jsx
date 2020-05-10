@@ -6,7 +6,7 @@ import '../styles/variables.css';
 import '../styles/global.css';
 import UserContext from '../context/UserContext';
 import withApollo from '../hoc/withApollo.js';
-import checkLoggedIn from '../utils/checkLoggedIn';
+import { checkLoggedIn } from '../lib/auth';
 
 const MyApp = ({ Component, pageProps, session }) => {
   const apolloClient = useApolloClient();

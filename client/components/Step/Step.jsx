@@ -24,7 +24,7 @@ import {
   areAllFieldsEmpty,
   getFieldValue,
   renderFieldWithMods,
-} from '../../utils/recipe';
+} from '../../lib/recipe';
 import TextButton from '../TextButton';
 import TextButtonGroup from '../TextButtonGroup';
 import IconButton from '../IconButton';

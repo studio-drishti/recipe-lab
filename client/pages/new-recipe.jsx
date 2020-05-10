@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import withAuthGuard from '../utils/withAuthGuard.jsx';
+import withAuthGuard from '../hoc/withAuthGuard';
 import Recipe from '../components/Recipe';
 import Page from '../layouts/Main';
 

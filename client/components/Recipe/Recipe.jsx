@@ -13,7 +13,7 @@ import RecipeContext from '../../context/RecipeContext';
 import recipeReducer from '../../reducers/recipe';
 import modificationReducer from '../../reducers/modification';
 import { setSorting, setModification } from '../../actions/modification';
-import { getSorted, getFieldValue } from '../../utils/recipe';
+import { getSorted, getFieldValue } from '../../lib/recipe';
 import RecipeDetails from '../RecipeDetails';
 import RecipePhoto from '../RecipePhoto';
 import RecipeBio from '../RecipeBio';

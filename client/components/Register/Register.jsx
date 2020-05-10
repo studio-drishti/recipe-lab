@@ -1,16 +1,17 @@
 import React, { useState, useContext, useRef } from 'react';
+import { useRouter } from 'next/router';
 import { useMutation } from '@apollo/react-hooks';
 import isEmail from 'validator/lib/isEmail';
 import Cookies from 'js-cookie';
-import redirect from '../../utils/redirect';
 import UserContext from '../../context/UserContext';
 import SignUpMutation from '../../graphql/SignUpMutation.graphql';
-import { getLocalStorageModifications } from '../../utils/recipe';
+import { getLocalStorageModifications } from '../../lib/recipe';
 import FormInput from '../FormInput';
 import FormButton from '../FormButton';
 import css from './Register.module.css';
 
 const Register = () => {
+  const router = useRouter();
   const validationTimeouts = useRef({});
   const [signUp, { error, client }] = useMutation(SignUpMutation);
   const { refreshUser } = useContext(UserContext);
@@ -99,7 +100,14 @@ const Register = () => {
             return refreshUser();
           })
           .then((user) => {
-            redirect({}, `/chef/${user.slug}`);
+            if (router.query.returnTo) {
+              router.replace(
+                '/recipes/[slug]',
+                `/recipes/${router.query.returnTo}`
+              );
+            } else {
+              router.replace('/chef/[slug]', `/chef/${user.slug}`);
+            }
           });
       }
     );

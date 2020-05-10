@@ -4,7 +4,7 @@ import { useMutation } from '@apollo/react-hooks';
 import Cookies from 'js-cookie';
 import UserContext from '../../context/UserContext';
 import SignInMutation from '../../graphql/SignInMutation.graphql';
-import { getLocalStorageModifications } from '../../utils/recipe';
+import { getLocalStorageModifications } from '../../lib/recipe';
 import FormInput from '../FormInput';
 import FormButton from '../FormButton';
 import css from './Login.module.css';
@@ -60,7 +60,7 @@ const Login = () => {
                   recipes: recipeModsInConflict.join(','),
                 },
               });
-            } else if ('returnTo' in router.query) {
+            } else if (router.query.returnTo) {
               router.replace(
                 '/recipes/[slug]',
                 `/recipes/${router.query.returnTo}`

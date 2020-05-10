@@ -1,6 +1,6 @@
 import { format, fraction, floor, divide, sum } from 'mathjs';
 
-module.exports = (...fractions) => {
+export const addFractions = (...fractions) => {
   const total = format(sum(fractions.map((fract) => fraction(fract))));
   const dividend = total.split('/').shift();
   const divisor = total.split('/').pop();

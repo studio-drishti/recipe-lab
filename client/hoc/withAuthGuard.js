@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
-import redirect from './redirect';
-import checkLoggedIn from './checkLoggedIn';
+import redirect from '../lib/redirect';
+import { checkLoggedIn } from '../lib/auth';
 
 // Gets the display name of a JSX component for dev tools
 const getDisplayName = (Component) =>

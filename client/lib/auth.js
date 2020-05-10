@@ -2,6 +2,21 @@ import { useEffect } from 'react';
 import Router from 'next/router';
 import nextCookie from 'next-cookies';
 import cookie from 'js-cookie';
+import SessionUserQuery from '../graphql/SessionUser.graphql';
+
+export const checkLoggedIn = (apolloClient, fetchPolicy = 'cache-first') =>
+  apolloClient
+    .query({
+      query: SessionUserQuery,
+      fetchPolicy,
+    })
+    .then(({ data }) => {
+      return { user: data.sessionUser };
+    })
+    .catch(() => {
+      // Fail gracefully
+      return { user: null };
+    });
 
 export const login = ({ token }) => {
   cookie.set('token', token, { expires: 1 });
