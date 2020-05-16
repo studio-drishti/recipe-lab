@@ -1,12 +1,14 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import Link from 'next/link';
+import classnames from 'classnames';
 import { useApolloClient } from '@apollo/react-hooks';
 import { logout } from '../../lib/auth';
 import UserContext from '../../context/UserContext';
 import css from './Navigation.module.css';
 
 const Navigation = () => {
-  const { user, setUser } = useContext(UserContext);
+  const [isOpen, setOpen] = useState(false);
+  const { user } = useContext(UserContext);
   const apolloClient = useApolloClient();
 
   const signOut = () => {
@@ -16,40 +18,60 @@ const Navigation = () => {
   };
 
   return (
-    <nav className={css.nav}>
-      <Link href="/index" as="/">
-        <a className={css.logo}>
-          <img src="/static/logo.svg" />
-        </a>
-      </Link>
-      <div className={css.links}>
-        <Link href="/recipes">
-          <a>Recipes</a>
+    <header className={css.header}>
+      <figure className={css.logo}>
+        <Link href="/index" as="/">
+          <a>
+            <img src="/static/logo.svg" />
+          </a>
         </Link>
-        <Link href="/about">
-          <a>About</a>
-        </Link>
+      </figure>
 
-        {user && (
-          <>
-            <Link href="/chef/[slug]" as={`/chef/${user.slug}`}>
-              <a>My Profile</a>
+      <nav className={css.nav}>
+        <button
+          className={css.mobileMenuBtn}
+          onClick={() => setOpen(!isOpen)}
+          title="Menu"
+        />
+        <ul className={classnames({ [css.closed]: !isOpen })}>
+          <li>
+            <Link href="/recipes">
+              <a>Recipes</a>
             </Link>
-            <Link href="/new-recipe">
-              <a>+ New Recipe</a>
+          </li>
+          <li>
+            <Link href="/about">
+              <a>About</a>
             </Link>
-          </>
-        )}
-
-        {!user ? (
-          <Link href="/sign-in">
-            <a>Sign In</a>
-          </Link>
-        ) : (
-          <button onClick={signOut}>Sign Out</button>
-        )}
-      </div>
-    </nav>
+          </li>
+          {user && (
+            <>
+              <li>
+                <Link href="/chef/[slug]" as={`/chef/${user.slug}`}>
+                  <a>My Profile</a>
+                </Link>
+              </li>
+              <li>
+                <Link href="/new-recipe">
+                  <a>+ New Recipe</a>
+                </Link>
+              </li>
+            </>
+          )}
+          {!user ? (
+            <li>
+              <Link href="/sign-in">
+                <a>Sign In</a>
+              </Link>
+            </li>
+          ) : (
+            <li>
+              <button onClick={signOut}>Sign Out</button>
+            </li>
+          )}
+        </ul>
+      </nav>
+    </header>
   );
 };
 

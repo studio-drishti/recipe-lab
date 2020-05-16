@@ -28,4 +28,5 @@
 
 /* Breakpoints
 -------------- */
+@custom-media --small-viewport screen and (min-width: 600px);
 @custom-media --medium-viewport screen and (min-width: 800px);
