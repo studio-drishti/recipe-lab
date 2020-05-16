@@ -101,7 +101,7 @@
   }
 }
 
-@media (--small-viewport) {
+@media (--medium-viewport) {
   .mobileMenuBtn {
     display: none;
   }

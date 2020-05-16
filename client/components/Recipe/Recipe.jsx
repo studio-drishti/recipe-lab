@@ -14,8 +14,7 @@ import recipeReducer from '../../reducers/recipe';
 import modificationReducer from '../../reducers/modification';
 import { setSorting, setModification } from '../../actions/modification';
 import { getSorted, getFieldValue } from '../../lib/recipe';
-import RecipeDetails from '../RecipeDetails';
-import RecipePhoto from '../RecipePhoto';
+import RecipeHeader from '../RecipeHeader';
 import RecipeBio from '../RecipeBio';
 import StepList from '../StepList';
 import Step from '../Step';
@@ -211,13 +210,7 @@ const Recipe = (props) => {
           },
         ]}
       >
-        <header className={css.recipeHeader}>
-          <RecipePhoto
-            className={css.recipePhoto}
-            placeholderPhoto={props.placeholderPhoto}
-          />
-          <RecipeDetails className={css.recipeDetails} />
-        </header>
+        <RecipeHeader placeholderPhoto={props.placeholderPhoto} />
 
         {recipeItems.length > 0 ? (
           <div className={css.ingredientTotals}>

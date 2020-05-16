@@ -15,50 +15,6 @@
   }
 }
 
-.recipeHeader {
-  display: grid;
-  grid-template-columns: 1fr;
-  grid-column-gap: 2rem;
-  margin-bottom: 2rem;
-  align-items: center;
-}
-
-@media (--medium-viewport) {
-  .recipeHeader {
-    grid-template-columns: 1fr 1fr;
-  }
-
-  .recipePhoto {
-    order: 1;
-  }
-}
-
-.stepDetail {
-  position: relative;
-
-  & img {
-    width: 100%;
-  }
-
-  & .sticky {
-    position: sticky;
-    top: 2rem;
-    height: auto;
-    max-height: calc(100vh - 4rem);
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-  }
-}
-
-.stepDetailContent {
-  padding: 1rem;
-  border: 1px solid lightgray;
-  border-top: 0;
-  overflow-y: scroll;
-  flex: 0 1 auto;
-}
-
 .ingredientTotals {
   margin-bottom: 2rem;
   padding: 2rem;

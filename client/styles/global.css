@@ -23,6 +23,7 @@ h6 {
   font-family: var(--heading-font-family);
   letter-spacing: 1px;
   font-weight: var(--heading-font-weight);
+  line-height: 1.15;
 }
 
 h6 {
