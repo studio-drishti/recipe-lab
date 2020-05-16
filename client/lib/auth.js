@@ -22,20 +22,9 @@ export const login = ({ token }) => {
   Cookies.set('token', token, { expires: 30 });
 };
 
-export const auth = (ctx) => {
+export const auth = (ctx = {}) => {
   const { token } = nextCookie(ctx);
-
-  // If there's no token, it means the user is not logged in.
-  if (!token) {
-    if (typeof window === 'undefined') {
-      ctx.res.writeHead(302, { Location: '/sign-in' });
-      ctx.res.end();
-    } else {
-      Router.push('/sign-in');
-    }
-  }
-
-  return token;
+  return Boolean(token);
 };
 
 export const logout = () => {

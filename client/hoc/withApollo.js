@@ -1,8 +1,13 @@
-import React from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import App from 'next/app';
 import Head from 'next/head';
 import { ApolloProvider } from '@apollo/react-hooks';
-import { initApolloClient, initOnContext } from '../lib/apolloClient';
+import UserContext from '../context/UserContext';
+import {
+  initApolloClient,
+  createApolloClient,
+  initOnContext,
+} from '../lib/apolloClient';
 
 /**
  * Creates a withApollo HOC
@@ -14,14 +19,18 @@ import { initApolloClient, initOnContext } from '../lib/apolloClient';
  */
 const withApollo = ({ ssr = false } = {}) => (PageComponent) => {
   const WithApollo = ({ apolloClient, apolloState, ...pageProps }) => {
-    let client;
-    if (apolloClient) {
-      // Happens on: getDataFromTree & next.js ssr
-      client = apolloClient;
-    } else {
-      // Happens on: next.js csr
-      client = initApolloClient(apolloState, undefined);
-    }
+    // apolloClient is available on: getDataFromTree & next.js ssr
+    // otherwise initApolloClient on next.js csr
+    const [client, setClient] = useState(
+      apolloClient ? apolloClient : initApolloClient(apolloState, undefined)
+    );
+    const { user } = useContext(UserContext);
+
+    // When user changes (e.g. login and logout)
+    // Recreate apollo client so auth headers are not set.
+    useEffect(() => {
+      setClient(createApolloClient({}, undefined));
+    }, [user]);
 
     return (
       <ApolloProvider client={client}>

@@ -1,6 +1,6 @@
 import React from 'react';
 import Router from 'next/router';
-import { checkLoggedIn } from '../lib/auth';
+import { auth } from '../lib/auth';
 
 const withAuthGuard = (PageComponent) => {
   const WithAuthGuard = (pageProps) => {
@@ -8,21 +8,18 @@ const withAuthGuard = (PageComponent) => {
   };
 
   WithAuthGuard.getInitialProps = async (ctx) => {
-    const session = await checkLoggedIn(ctx.apolloClient);
-
-    if (session.user) {
-      const pageProps = await PageComponent.getInitialProps(ctx);
-      return { ...pageProps };
+    if (!auth(ctx)) {
+      if (typeof window === 'undefined') {
+        ctx.res.writeHead(302, { Location: '/sign-in' });
+        ctx.res.end();
+      } else {
+        Router.replace('/sign-in');
+      }
     }
-
-    if (typeof window === 'undefined') {
-      ctx.res.writeHead(302, { Location: '/sign-in' });
-      ctx.res.end();
-    } else {
-      // In the browser, we just pretend like this never even happened ;)
-      Router.replace('/sign-in');
-    }
+    const pageProps = await PageComponent.getInitialProps(ctx);
+    return { ...pageProps };
   };
+
   return WithAuthGuard;
 };
 

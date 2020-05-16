@@ -11,7 +11,6 @@ const Navigation = () => {
 
   const signOut = () => {
     apolloClient.cache.reset().then(() => {
-      setUser(null);
       logout();
     });
   };
