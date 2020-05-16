@@ -1,7 +1,6 @@
 import cuid from 'cuid';
-import reorder from '../utils/reorder';
-import areArraysEqual from '../utils/areArraysEqual';
-import { getSorted } from '../utils/recipe';
+import { areArraysEqual, reorder } from '../lib/arrays';
+import { getSorted } from '../lib/recipe';
 
 export default (state, action) => {
   switch (action.type) {

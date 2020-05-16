@@ -1,4 +1,4 @@
-import areArraysEqual from './areArraysEqual';
+import { areArraysEqual } from './arrays';
 
 describe('are arrays equal', () => {
   test('false when not the same order', () => {

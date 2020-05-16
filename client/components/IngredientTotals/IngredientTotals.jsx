@@ -1,7 +1,7 @@
 import React, { useContext, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import RecipeContext from '../../context/RecipeContext';
-import addFractions from '../../utils/addFractions';
+import { addFractions } from '../../lib/math';
 
 import css from './IngredientTotals.module.css';
 import { MEASURE_UNITS } from '../../config';

@@ -12,7 +12,7 @@ import {
 } from 'react-icons/md';
 import classnames from 'classnames';
 import { fraction } from 'mathjs';
-import { useMutation } from 'react-apollo';
+import { useMutation } from '@apollo/react-hooks';
 
 import { TIME_OPTIONS } from '../../config';
 import UserContext from '../../context/UserContext';

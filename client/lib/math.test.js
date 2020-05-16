@@ -1,4 +1,4 @@
-import addFractions from './addFractions';
+import { addFractions } from './math';
 
 describe('are arrays equal', () => {
   test('2 whole numbers results in a whole number', () => {

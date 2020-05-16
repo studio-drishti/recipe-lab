@@ -1,12 +1,20 @@
 import React, { useContext } from 'react';
 import Link from 'next/link';
-
+import { useApolloClient } from '@apollo/react-hooks';
+import { logout } from '../../lib/auth';
 import UserContext from '../../context/UserContext';
-
 import css from './Navigation.module.css';
 
 const Navigation = () => {
-  const { user } = useContext(UserContext);
+  const { user, setUser } = useContext(UserContext);
+  const apolloClient = useApolloClient();
+
+  const signOut = () => {
+    apolloClient.cache.reset().then(() => {
+      logout();
+    });
+  };
+
   return (
     <nav className={css.nav}>
       <Link href="/index" as="/">
@@ -33,10 +41,12 @@ const Navigation = () => {
           </>
         )}
 
-        {!user && (
+        {!user ? (
           <Link href="/sign-in">
             <a>Sign In</a>
           </Link>
+        ) : (
+          <button onClick={signOut}>Sign Out</button>
         )}
       </div>
     </nav>

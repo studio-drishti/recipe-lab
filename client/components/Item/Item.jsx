@@ -19,7 +19,7 @@ import {
   undoRemoval,
   createItem,
 } from '../../actions/modification';
-import { areAllFieldsEmpty, getFieldValue } from '../../utils/recipe';
+import { areAllFieldsEmpty, getFieldValue } from '../../lib/recipe';
 import TextInput from '../TextInput';
 import TextButton from '../TextButton';
 import TextButtonGroup from '../TextButtonGroup';

@@ -23,7 +23,7 @@ import {
   setAlteration,
   removeIngredient,
 } from '../../actions/modification';
-import { areAllFieldsEmpty, getFieldValue } from '../../utils/recipe';
+import { areAllFieldsEmpty, getFieldValue } from '../../lib/recipe';
 import Tooltip from '../Tooltip';
 import DiffText from '../DiffText';
 import { MEASURE_UNITS } from '../../config';

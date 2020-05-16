@@ -1,53 +1,28 @@
 import App from 'next/app';
-import React from 'react';
-import { ApolloProvider } from 'react-apollo';
-
+import React, { useState } from 'react';
 import 'normalize.css';
 import '../styles/variables.css';
 import '../styles/global.css';
-
 import UserContext from '../context/UserContext';
-import withApollo from '../utils/withApollo.jsx';
-import checkLoggedIn from '../utils/checkLoggedIn';
+import withApollo from '../hoc/withApollo';
+import withAuthSync from '../hoc/withAuthSync';
+import { checkLoggedIn } from '../lib/auth';
 
-class MyApp extends App {
-  static async getInitialProps({ Component, ctx }) {
-    let pageProps = {};
+const MyApp = ({ Component, pageProps, session }) => {
+  const [user, setUser] = useState(session.user);
 
-    if (Component.getInitialProps) {
-      pageProps = await Component.getInitialProps(ctx);
-    }
+  return (
+    <UserContext.Provider value={{ user, setUser }}>
+      <Component {...pageProps} />
+    </UserContext.Provider>
+  );
+};
 
-    return {
-      pageProps,
-      session: await checkLoggedIn(ctx.apolloClient),
-    };
-  }
+MyApp.getInitialProps = async (appContext) => {
+  // calls page's `getInitialProps` and fills `appProps.pageProps`
+  const appProps = await App.getInitialProps(appContext);
+  const session = await checkLoggedIn(appContext.apolloClient);
+  return { ...appProps, session };
+};
 
-  refreshUser = async () => {
-    const session = await checkLoggedIn(
-      this.props.apolloClient,
-      'network-only'
-    );
-    this.setState({ user: session.user });
-    return session.user;
-  };
-
-  state = {
-    user: this.props.session.user,
-    refreshUser: this.refreshUser,
-  };
-
-  render() {
-    const { Component, pageProps, apolloClient } = this.props;
-    return (
-      <ApolloProvider client={apolloClient}>
-        <UserContext.Provider value={this.state}>
-          <Component {...pageProps} />
-        </UserContext.Provider>
-      </ApolloProvider>
-    );
-  }
-}
-
-export default withApollo(MyApp);
+export default withAuthSync(withApollo({ ssr: true })(MyApp));
