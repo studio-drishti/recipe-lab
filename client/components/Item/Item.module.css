@@ -47,6 +47,8 @@
     grid-template-columns: max-content max-content;
     justify-content: space-between;
     grid-column-gap: 0.5rem;
+    border-bottom: 1px solid var(--color-black);
+    padding-bottom: 0.5rem;
 
     & h2 {
       cursor: pointer;

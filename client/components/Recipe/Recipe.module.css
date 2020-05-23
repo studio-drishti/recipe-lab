@@ -17,7 +17,9 @@
 
 .ingredientTotals {
   margin-bottom: 2rem;
-  padding: 2rem;
+  margin-left: -1rem;
+  margin-right: -1rem;
+  padding: 1.5rem;
   background: var(--color-light-gray);
   border-radius: var(--border-radius-sm);
 
@@ -36,5 +38,13 @@
     grid-template-columns: 1fr 1fr;
     list-style-type: none;
     padding: 0;
+  }
+}
+
+@media (--medium-viewport) {
+  .ingredientTotals {
+    padding: 2rem;
+    margin-left: 0;
+    margin-right: 0;
   }
 }

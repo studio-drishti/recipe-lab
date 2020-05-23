@@ -79,11 +79,16 @@ const IngredientTotals = ({ ingredients }) => {
     return text;
   };
 
-  return (
+  return ingredients.length ? (
     <ul className={css.ingredients}>
       {ingredientTotals.map((ingredient, i) => (
         <li key={i}>{formatIngredientTotal(ingredient)}</li>
       ))}
+    </ul>
+  ) : (
+    <ul className={css.ingredients}>
+      <li>xx x xx x x xx </li>
+      <li>xx x x x xx </li>
     </ul>
   );
 };

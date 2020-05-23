@@ -4,7 +4,7 @@
 
 .ingredient {
   background: var(--color-white);
-  padding: 0.5em;
+  padding: 0.5rem;
   border: 0.01em solid transparent;
   border-radius: var(--default-border-radius);
   transition: all ease-out 0.3s;

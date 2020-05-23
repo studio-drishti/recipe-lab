@@ -7,6 +7,8 @@
 }
 
 .recipeDetails {
+  text-align: center;
+
   & [role='button'] {
     cursor: pointer;
   }
@@ -98,6 +100,10 @@
 }
 
 @media (--medium-viewport) {
+  .recipeDetails {
+    text-align: left;
+  }
+
   .recipePhoto {
     margin: 0;
     position: relative;

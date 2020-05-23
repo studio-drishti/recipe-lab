@@ -30,12 +30,14 @@
 }
 
 .stepNum {
-  border-bottom: 1px dashed var(--color-black);
-  padding-bottom: 0.5rem;
-  margin-bottom: 1rem;
   text-transform: uppercase;
   display: grid;
   grid-template-columns: auto max-content;
+}
+
+.stepDirections {
+  padding-top: 0.15rem;
+  line-height: 2.5;
 }
 
 .directions {
