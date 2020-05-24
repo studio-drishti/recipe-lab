@@ -258,65 +258,66 @@ const Step = ({
                     )}
                   </p>
                 )}
-                <TextButtonGroup className={css.buttons}>
-                  {!editing && !isRemoved && (
-                    <>
-                      <TextButton
-                        onClick={() => setEditing(true)}
-                        disabled={snapshot.isDragging}
-                      >
-                        <MdEdit /> edit step
-                      </TextButton>
-                    </>
-                  )}
-
-                  {isRemoved && !editing && (
-                    <TextButton
-                      onClick={handleRestore}
-                      disabled={snapshot.isDragging}
-                    >
-                      <MdRefresh /> restore step
-                    </TextButton>
-                  )}
-
-                  {editing && (
-                    <>
-                      <TextButton
-                        title="save changes"
-                        type="submit"
-                        onClick={handleSave}
-                        disabled={snapshot.isDragging}
-                      >
-                        <MdCheck /> save
-                      </TextButton>
-                      <TextButton
-                        title="discard changes"
-                        onClick={discardChanges}
-                        disabled={snapshot.isDragging}
-                      >
-                        <MdDoNotDisturb /> discard
-                      </TextButton>
-                    </>
-                  )}
-                </TextButtonGroup>
               </form>
 
               <TextButtonGroup
                 className={classnames(css.buttons, css.stepActions)}
               >
-                <TextButton
-                  onClick={handleCreateStep}
-                  disabled={editing || snapshot.isDragging}
-                >
-                  <MdAdd /> add step
-                </TextButton>
+                {!editing && !isRemoved && (
+                  <TextButton
+                    onClick={() => setEditing(true)}
+                    disabled={snapshot.isDragging}
+                  >
+                    <MdEdit /> edit step
+                  </TextButton>
+                )}
 
-                <TextButton
-                  onClick={handleRemove}
-                  disabled={editing || snapshot.isDragging}
-                >
-                  <MdClear /> remove step
-                </TextButton>
+                {!editing && isRemoved && (
+                  <TextButton
+                    onClick={handleRestore}
+                    disabled={snapshot.isDragging}
+                  >
+                    <MdRefresh /> restore step
+                  </TextButton>
+                )}
+
+                {!editing && (
+                  <>
+                    <TextButton
+                      onClick={handleCreateStep}
+                      disabled={editing || snapshot.isDragging}
+                    >
+                      <MdAdd /> add step
+                    </TextButton>
+
+                    <TextButton
+                      onClick={handleRemove}
+                      disabled={editing || snapshot.isDragging}
+                    >
+                      <MdClear /> remove step
+                    </TextButton>
+                  </>
+                )}
+
+                {editing && (
+                  <>
+                    <TextButton
+                      title="save changes"
+                      type="submit"
+                      onClick={handleSave}
+                      disabled={snapshot.isDragging}
+                    >
+                      <MdCheck /> save
+                    </TextButton>
+                    <TextButton
+                      title="discard changes"
+                      onClick={discardChanges}
+                      disabled={snapshot.isDragging}
+                    >
+                      <MdDoNotDisturb /> discard
+                    </TextButton>
+                  </>
+                )}
               </TextButtonGroup>
 
               <div className={css.ingredients}>{children(setHovering)}</div>

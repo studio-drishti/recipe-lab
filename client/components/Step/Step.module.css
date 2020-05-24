@@ -90,5 +90,6 @@
 
   .ingredientActions {
     order: 3;
+    padding-left: 2rem;
   }
 }
