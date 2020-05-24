@@ -319,7 +319,7 @@ const RecipeHeader = ({ placeholderPhoto }) => {
             <h1 role="button" onClick={() => enableEditing('title')}>
               {renderWithMods('title')}
             </h1>
-            <h3>Recipe by {recipe.author.name}</h3>
+            <h5>Recipe by {recipe.author.name}</h5>
             <p role="button" onClick={() => enableEditing('description')}>
               {renderWithMods('description')}
             </p>

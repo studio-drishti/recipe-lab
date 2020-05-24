@@ -20,12 +20,8 @@ export default class MyDocument extends Document {
       <html>
         <Head>
           <link
+            href="https://fonts.googleapis.com/css2?family=Heebo:wght@100;300;400;500&family=Noto+Sans:ital,wght@0,400;0,700;1,400;1,700&display=swap"
             rel="stylesheet"
-            href="https://fonts.googleapis.com/css?family=Cormorant+Garamond:300|Noto+Sans:400,400i,700"
-          />
-          <link
-            rel="stylesheet"
-            href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/4.5.0/css/swiper.min.css"
           />
           <link
             rel="stylesheet"
