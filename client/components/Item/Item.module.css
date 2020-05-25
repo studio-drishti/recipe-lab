@@ -1,13 +1,9 @@
-.itemWrap {
-  margin-bottom: 2rem;
-}
-
 .item {
   background: var(--color-white);
   border: 1px solid transparent;
   border-radius: var(--border-radius-sm);
   transition: border linear 0.2s;
-  margin-bottom: 1rem;
+  margin-bottom: 2rem;
 
   & .itemActions {
     opacity: 0;
@@ -67,4 +63,8 @@
 
 .error {
   color: var(--color-error);
+}
+
+.itemFooterActions {
+  padding: 0.5rem;
 }

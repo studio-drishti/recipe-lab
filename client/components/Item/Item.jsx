@@ -194,109 +194,118 @@ const Item = ({ children, item, index, isLast, moveDraggable }) => {
     <Draggable type="ITEM" draggableId={item.uid} index={index}>
       {(provided, snapshot) => (
         <div
-          className={css.itemWrap}
+          className={classnames(css.item, {
+            [css.hover]: hovering,
+            [css.editing]: editing,
+            [css.dragging]: snapshot.isDragging,
+          })}
           ref={provided.innerRef}
           {...provided.draggableProps}
         >
           <div
-            className={classnames(css.item, {
-              [css.hover]: hovering,
-              [css.editing]: editing,
-              [css.dragging]: snapshot.isDragging,
-            })}
+            onMouseOver={mouseEnter}
+            onMouseLeave={mouseLeave}
+            className={css.itemHeader}
+            {...provided.dragHandleProps}
           >
-            <div
-              onMouseOver={mouseEnter}
-              onMouseLeave={mouseLeave}
-              className={css.itemHeader}
-              {...provided.dragHandleProps}
-            >
-              <form onSubmit={handleSubmit} ref={itemRef}>
+            <form onSubmit={handleSubmit} ref={itemRef}>
+              {editing && (
+                <TextInput
+                  name="name"
+                  className={css.nameInput}
+                  value={getItemValue('name')}
+                  inputRef={inputRef}
+                  placeholder="Item name"
+                  onChange={handleItemChange}
+                  error={errors.name}
+                />
+              )}
+
+              {!editing && (
+                <h2 onMouseDown={handleSelect}>{renderNameWithMods()}</h2>
+              )}
+
+              <IconButtonGroup
+                className={classnames(css.itemActions, {
+                  [css.dragging]: snapshot.isDragging,
+                })}
+              >
                 {editing && (
-                  <TextInput
-                    name="name"
-                    className={css.nameInput}
-                    value={getItemValue('name')}
-                    inputRef={inputRef}
-                    placeholder="Item name"
-                    onChange={handleItemChange}
-                    error={errors.name}
-                  />
+                  <>
+                    <IconButton title="save changes" type="submit">
+                      <MdCheck />
+                    </IconButton>
+                    <IconButton
+                      title="discard changes"
+                      onClick={discardChanges}
+                    >
+                      <MdDoNotDisturb />
+                    </IconButton>
+                  </>
+                )}
+
+                {!editing && !isRemoved && (
+                  <IconButton title="edit item" onClick={handleSelect}>
+                    <MdEdit />
+                  </IconButton>
+                )}
+
+                {!editing && isRemoved && (
+                  <IconButton
+                    title="restore item"
+                    onClick={handleRestore}
+                    disabled={snapshot.isDragging}
+                  >
+                    <MdRefresh />
+                  </IconButton>
                 )}
 
                 {!editing && (
-                  <h2 onMouseDown={handleSelect}>{renderNameWithMods()}</h2>
+                  <>
+                    <IconButton
+                      disabled={snapshot.isDragging || isLast}
+                      onClick={() => moveDraggable(item.uid, 'down')}
+                    >
+                      <MdKeyboardArrowDown />
+                    </IconButton>
+                    <IconButton
+                      disabled={snapshot.isDragging || index === 0}
+                      onClick={() => moveDraggable(item.uid, 'up')}
+                    >
+                      <MdKeyboardArrowUp />
+                    </IconButton>
+                  </>
                 )}
-
-                <IconButtonGroup
-                  className={classnames(css.itemActions, {
-                    [css.dragging]: snapshot.isDragging,
-                  })}
-                >
-                  {editing && (
-                    <>
-                      <IconButton title="save changes" type="submit">
-                        <MdCheck />
-                      </IconButton>
-                      <IconButton
-                        title="discard changes"
-                        onClick={discardChanges}
-                      >
-                        <MdDoNotDisturb />
-                      </IconButton>
-                    </>
-                  )}
-
-                  {!editing && !isRemoved && (
-                    <IconButton title="edit item" onClick={handleSelect}>
-                      <MdEdit />
-                    </IconButton>
-                  )}
-
-                  {!editing && isRemoved && (
-                    <IconButton title="restore item" onClick={handleRestore}>
-                      <MdRefresh />
-                    </IconButton>
-                  )}
-
-                  {!editing && (
-                    <>
-                      <IconButton
-                        disabled={snapshot.isDragging || isLast}
-                        onClick={() => moveDraggable(item.uid, 'down')}
-                      >
-                        <MdKeyboardArrowDown />
-                      </IconButton>
-                      <IconButton
-                        disabled={snapshot.isDragging || index === 0}
-                        onClick={() => moveDraggable(item.uid, 'up')}
-                      >
-                        <MdKeyboardArrowUp />
-                      </IconButton>
-                    </>
-                  )}
-                </IconButtonGroup>
-              </form>
-            </div>
-            {children}
+              </IconButtonGroup>
+            </form>
           </div>
+          {children}
           <TextButtonGroup
-            className={classnames(css.itemActions, {
+            onMouseOver={mouseEnter}
+            onMouseLeave={mouseLeave}
+            className={classnames(css.itemFooterActions, {
               [css.dragging]: snapshot.isDragging,
             })}
           >
-            <TextButton onClick={handleCreateItem} disabled={editing}>
+            <TextButton
+              onClick={handleCreateItem}
+              disabled={editing || snapshot.isDragging}
+            >
               <MdAdd /> add item
             </TextButton>
 
-            {!editing && !isRemoved && (
-              <TextButton onClick={handleRemove}>
+            {!isRemoved ? (
+              <TextButton
+                onClick={handleRemove}
+                disabled={editing || snapshot.isDragging}
+              >
                 <MdClear /> remove {getItemValue('name').toLowerCase()}
               </TextButton>
-            )}
-
-            {!editing && isRemoved && (
-              <TextButton onClick={handleRestore}>
+            ) : (
+              <TextButton
+                onClick={handleRestore}
+                disabled={editing || snapshot.isDragging}
+              >
                 <MdRefresh /> restore {getItemValue('name').toLowerCase()}
               </TextButton>
             )}

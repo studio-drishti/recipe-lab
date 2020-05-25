@@ -256,7 +256,7 @@ const RecipeHeader = ({ placeholderPhoto }) => {
           err = 'Serving type must be between 3 and 125 characters';
         break;
       case 'time':
-        if (!TIME_OPTIONS.includes(value))
+        if (!Object.keys(TIME_OPTIONS).includes(value))
           err = 'Please select a level of commitment';
         break;
     }
@@ -379,9 +379,9 @@ const RecipeHeader = ({ placeholderPhoto }) => {
                   error={errors.time}
                 >
                   <option value="">-- commitment --</option>
-                  {TIME_OPTIONS.map((time) => (
-                    <option key={time} value={time}>
-                      {time}
+                  {Object.entries(TIME_OPTIONS).map(([key, val]) => (
+                    <option key={key} value={key}>
+                      {val}
                     </option>
                   ))}
                 </Select>
