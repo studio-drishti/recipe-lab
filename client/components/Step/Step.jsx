@@ -291,9 +291,9 @@ const Step = ({
                       'directions',
                       step,
                       alterations,
-                      isRemoved,
                       edits,
-                      errors
+                      errors,
+                      isRemoved
                     )}
                   </p>
                 )}

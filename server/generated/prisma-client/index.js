@@ -13,6 +13,10 @@ var models = [
     embedded: false
   },
   {
+    name: "RecipeTime",
+    embedded: false
+  },
+  {
     name: "Recipe",
     embedded: false
   },

@@ -10,15 +10,14 @@ import {
   MdDoNotDisturb,
   MdDeleteForever,
 } from 'react-icons/md';
-import classnames from 'classnames';
 import { fraction } from 'mathjs';
 import { useMutation } from '@apollo/react-hooks';
 import { FilePond, registerPlugin } from 'react-filepond';
 import FilePondPluginImageCrop from 'filepond-plugin-image-crop';
 import FilePondPluginImageResize from 'filepond-plugin-image-resize';
 import FilePondPluginImageTransform from 'filepond-plugin-image-transform';
-import { TIME_OPTIONS } from '../../config';
-import { getFieldValue } from '../../lib/recipe';
+import { TIME_OPTIONS } from '../../../constants';
+import { getFieldValue, renderFieldWithMods } from '../../lib/recipe';
 import UserContext from '../../context/UserContext';
 import RecipeContext from '../../context/RecipeContext';
 import { setRecipePhoto } from '../../actions/recipe';
@@ -207,28 +206,8 @@ const RecipeHeader = ({ placeholderPhoto }) => {
     disableEditing();
   };
 
-  const renderWithMods = (fieldName) => {
-    if (edits[fieldName] !== undefined && errors[fieldName]) {
-      return (
-        <Tooltip tip={errors[fieldName]}>
-          <DiffText
-            className={css.error}
-            original={recipe[fieldName]}
-            modified={edits[fieldName]}
-          />
-        </Tooltip>
-      );
-    }
-
-    const mod = alterations.find(
-      (mod) => mod.sourceId === recipe.uid && mod.field === fieldName
-    );
-    if (mod !== undefined) {
-      return <DiffText original={recipe[fieldName]} modified={mod.value} />;
-    }
-
-    return recipe[fieldName];
-  };
+  const renderWithMods = (fieldName) =>
+    renderFieldWithMods(fieldName, recipe, alterations, edits, errors);
 
   const validate = (fieldName, value) => {
     let err = undefined;

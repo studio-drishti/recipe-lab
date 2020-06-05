@@ -2442,7 +2442,7 @@ type Recipe {
   slug: String!
   author: User!
   title: String!
-  time: String!
+  time: RecipeTime!
   servingAmount: String!
   servingType: String!
   description: String!
@@ -2463,7 +2463,7 @@ input RecipeCreateInput {
   slug: String!
   author: UserCreateOneWithoutRecipesInput!
   title: String
-  time: String
+  time: RecipeTime
   servingAmount: String
   servingType: String
   description: String
@@ -2492,7 +2492,7 @@ input RecipeCreateWithoutAuthorInput {
   uid: ID!
   slug: String!
   title: String
-  time: String
+  time: RecipeTime
   servingAmount: String
   servingType: String
   description: String
@@ -2507,7 +2507,7 @@ input RecipeCreateWithoutItemsInput {
   slug: String!
   author: UserCreateOneWithoutRecipesInput!
   title: String
-  time: String
+  time: RecipeTime
   servingAmount: String
   servingType: String
   description: String
@@ -2521,7 +2521,7 @@ input RecipeCreateWithoutModificationsInput {
   slug: String!
   author: UserCreateOneWithoutRecipesInput!
   title: String
-  time: String
+  time: RecipeTime
   servingAmount: String
   servingType: String
   description: String
@@ -2566,7 +2566,7 @@ type RecipePreviousValues {
   uid: ID!
   slug: String!
   title: String!
-  time: String!
+  time: RecipeTime!
   servingAmount: String!
   servingType: String!
   description: String!
@@ -2646,20 +2646,10 @@ input RecipeScalarWhereInput {
   title_not_starts_with: String
   title_ends_with: String
   title_not_ends_with: String
-  time: String
-  time_not: String
-  time_in: [String!]
-  time_not_in: [String!]
-  time_lt: String
-  time_lte: String
-  time_gt: String
-  time_gte: String
-  time_contains: String
-  time_not_contains: String
-  time_starts_with: String
-  time_not_starts_with: String
-  time_ends_with: String
-  time_not_ends_with: String
+  time: RecipeTime
+  time_not: RecipeTime
+  time_in: [RecipeTime!]
+  time_not_in: [RecipeTime!]
   servingAmount: String
   servingAmount_not: String
   servingAmount_in: [String!]
@@ -2739,12 +2729,18 @@ input RecipeSubscriptionWhereInput {
   NOT: [RecipeSubscriptionWhereInput!]
 }
 
+enum RecipeTime {
+  QUICK
+  MODERATE
+  INVOLVED
+}
+
 input RecipeUpdateInput {
   uid: ID
   slug: String
   author: UserUpdateOneRequiredWithoutRecipesInput
   title: String
-  time: String
+  time: RecipeTime
   servingAmount: String
   servingType: String
   description: String
@@ -2757,7 +2753,7 @@ input RecipeUpdateManyDataInput {
   uid: ID
   slug: String
   title: String
-  time: String
+  time: RecipeTime
   servingAmount: String
   servingType: String
   description: String
@@ -2768,7 +2764,7 @@ input RecipeUpdateManyMutationInput {
   uid: ID
   slug: String
   title: String
-  time: String
+  time: RecipeTime
   servingAmount: String
   servingType: String
   description: String
@@ -2810,7 +2806,7 @@ input RecipeUpdateWithoutAuthorDataInput {
   uid: ID
   slug: String
   title: String
-  time: String
+  time: RecipeTime
   servingAmount: String
   servingType: String
   description: String
@@ -2824,7 +2820,7 @@ input RecipeUpdateWithoutItemsDataInput {
   slug: String
   author: UserUpdateOneRequiredWithoutRecipesInput
   title: String
-  time: String
+  time: RecipeTime
   servingAmount: String
   servingType: String
   description: String
@@ -2837,7 +2833,7 @@ input RecipeUpdateWithoutModificationsDataInput {
   slug: String
   author: UserUpdateOneRequiredWithoutRecipesInput
   title: String
-  time: String
+  time: RecipeTime
   servingAmount: String
   servingType: String
   description: String
@@ -2940,20 +2936,10 @@ input RecipeWhereInput {
   title_not_starts_with: String
   title_ends_with: String
   title_not_ends_with: String
-  time: String
-  time_not: String
-  time_in: [String!]
-  time_not_in: [String!]
-  time_lt: String
-  time_lte: String
-  time_gt: String
-  time_gte: String
-  time_contains: String
-  time_not_contains: String
-  time_starts_with: String
-  time_not_starts_with: String
-  time_ends_with: String
-  time_not_ends_with: String
+  time: RecipeTime
+  time_not: RecipeTime
+  time_in: [RecipeTime!]
+  time_not_in: [RecipeTime!]
   servingAmount: String
   servingAmount_not: String
   servingAmount_in: [String!]
