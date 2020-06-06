@@ -6,13 +6,13 @@ import TextareaAutosize from 'react-textarea-autosize';
 import Tooltip from '../Tooltip';
 import css from './Textarea.module.css';
 
-const Textarea = ({ error, className, ...props }) => (
+const Textarea = ({ error, className, inputRef, ...props }) => (
   <div
     className={classnames(className, css.inputContainer, {
       [css.hasError]: error,
     })}
   >
-    <TextareaAutosize {...props} />
+    <TextareaAutosize ref={inputRef} {...props} />
     {error && (
       <Tooltip tip={error} className={css.errorIcon}>
         <MdWarning />

@@ -1,6 +1,7 @@
 import App from 'next/app';
 import React, { useState } from 'react';
 import 'normalize.css';
+import 'filepond/dist/filepond.min.css';
 import '../styles/variables.css';
 import '../styles/global.css';
 import UserContext from '../context/UserContext';
