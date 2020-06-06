@@ -2,12 +2,12 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import ChefProfileQuery from '../../../graphql/ChefProfile.graphql';
 import Page from '../../../layouts/Profile';
-import Dashboard from '../../../components/Profile/Dashboard';
+import FieldNotes from '../../../components/Profile/FieldNotes';
 
 const ProfilePage = ({ chef }) => {
   return (
-    <Page chef={chef} tab="dashboard">
-      <Dashboard />
+    <Page chef={chef} tab="field-notes">
+      <FieldNotes />
     </Page>
   );
 };

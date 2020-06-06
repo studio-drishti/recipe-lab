@@ -1,52 +1,40 @@
-import React, { useCallback, useContext } from 'react';
+import React, { useContext } from 'react';
 import Link from 'next/link';
 import classnames from 'classnames';
 import ChefContext from '../../../context/ChefContext';
-import Dashboard from '../Dashboard';
-import Account from '../Account';
 import css from './Tabs.module.css';
 
-const ProfileTabs = () => {
-  const { chef, tab } = useContext(ChefContext);
-  const tabs = {
-    dashboard: 'Dashboard',
-    recipes: 'Recipes',
-    account: 'Account',
-  };
-
-  const printTab = useCallback(() => {
-    switch (tab) {
-      case 'dashboard':
-        return <Dashboard />;
-      case 'account':
-        return <Account />;
-      default:
-        null;
-    }
-  }, [tab]);
+const ProfileTabs = ({ children, tab }) => {
+  const { chef } = useContext(ChefContext);
 
   return (
     <div className={css.container}>
       <ul className={css.tabList}>
-        {Object.entries(tabs).map(([tabSlug, tabName]) => (
-          <li
-            key={tabSlug}
-            className={classnames({ [css.active]: tabSlug === tab })}
+        <li className={classnames({ [css.active]: tab === 'dashboard' })}>
+          <Link href={`/chef/[slug]`} as={`/chef/${chef.slug}`}>
+            <a>Dashboard</a>
+          </Link>
+        </li>
+        <li className={classnames({ [css.active]: tab === 'recipes' })}>
+          <Link href={`/chef/[slug]/recipes`} as={`/chef/${chef.slug}/recipes`}>
+            <a>Recipes</a>
+          </Link>
+        </li>
+        <li className={classnames({ [css.active]: tab === 'account' })}>
+          <Link href={`/chef/[slug]/account`} as={`/chef/${chef.slug}/account`}>
+            <a>Account</a>
+          </Link>
+        </li>
+        <li className={classnames({ [css.active]: tab === 'field-notes' })}>
+          <Link
+            href={`/chef/[slug]/field-notes`}
+            as={`/chef/${chef.slug}/field-notes`}
           >
-            <Link
-              href={`/chef/[slug]${
-                tabSlug !== 'dashboard' ? '/[tabSlug]' : ''
-              }`}
-              as={`/chef/${chef.slug}${
-                tabSlug !== 'dashboard' ? `/${tabSlug}` : ''
-              }`}
-            >
-              <a>{tabName}</a>
-            </Link>
-          </li>
-        ))}
+            <a>Field Notes</a>
+          </Link>
+        </li>
       </ul>
-      <div className={css.tabContent}>{printTab()}</div>
+      <div className={css.tabContent}>{children}</div>
     </div>
   );
 };
