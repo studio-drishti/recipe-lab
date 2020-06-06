@@ -27,5 +27,8 @@ fragment RecipeFragment on Recipe {
     name
     avatar
     bio
+    role
+    recipeCount
+    modifiedRecipeCount
   }
 }

@@ -1,5 +1,6 @@
 import React, { useContext, useMemo } from 'react';
 import PropTypes from 'prop-types';
+import { getChefBio } from '../../../lib/chef';
 import ChefContext from '../../../context/ChefContext';
 import css from './Header.module.css';
 
@@ -27,7 +28,7 @@ const ProfileHeader = () => {
       <div>
         <h1>{chef.name}</h1>
         <h3>{chefTitle}</h3>
-        {chef.bio && <p>{chef.bio}</p>}
+        <p>{getChefBio(chef)}</p>
       </div>
       <div>
         <ul>
