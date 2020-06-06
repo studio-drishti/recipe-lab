@@ -4,6 +4,7 @@ import classnames from 'classnames';
 import ChefContext from '../../../context/ChefContext';
 import Dashboard from '../Dashboard';
 import Account from '../Account';
+import FieldNotesEditor from '../FieldNotesEditor';
 import css from './Tabs.module.css';
 
 const ProfileTabs = () => {
@@ -12,6 +13,7 @@ const ProfileTabs = () => {
     dashboard: 'Dashboard',
     recipes: 'Recipes',
     account: 'Account',
+    'field-notes': 'Field Notes',
   };
 
   const printTab = useCallback(() => {
@@ -20,6 +22,8 @@ const ProfileTabs = () => {
         return <Dashboard />;
       case 'account':
         return <Account />;
+      case 'field-notes':
+        return <FieldNotesEditor />;
       default:
         null;
     }
