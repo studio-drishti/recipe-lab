@@ -9,6 +9,9 @@ const EditorConvertToHTML = () => {
     <div>
       <Editor
         editorState={editorState}
+        toolbar={{
+          options: ['inline', 'blockType', 'list', 'link'],
+        }}
         wrapperClassName="demo-wrapper"
         editorClassName="demo-editor"
         onEditorStateChange={() => setEditor(editorState)}
