@@ -1,5 +1,6 @@
 import React from 'react';
+import Wysiwyg from '../../Wysiwyg';
 
-const FieldNotes = () => <div>Field notes!</div>;
+const FieldNotes = () => <Wysiwyg />;
 
 export default FieldNotes;
