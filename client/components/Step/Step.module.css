@@ -29,10 +29,14 @@
   }
 }
 
-.stepNum {
-  text-transform: uppercase;
+.stepHeader {
   display: grid;
   grid-template-columns: auto max-content;
+  margin-bottom: 0.5rem;
+}
+
+.stepNum {
+  text-transform: uppercase;
 }
 
 .stepDirections {
@@ -90,5 +94,6 @@
 
   .ingredientActions {
     order: 3;
+    padding-left: 2rem;
   }
 }

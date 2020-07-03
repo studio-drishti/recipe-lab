@@ -1,13 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import ChefDashboardQuery from '../../../graphql/ChefDashboardQuery.graphql';
+import ChefProfileQuery from '../../../graphql/ChefProfile.graphql';
 import Page from '../../../layouts/Profile';
-import Dashboard from '../../../components/Profile/Dashboard';
+import Account from '../../../components/Profile/Account';
 
-const ProfilePage = ({ chef, originalRecipes }) => {
+const ProfilePage = ({ chef }) => {
   return (
-    <Page chef={chef} tab="dashboard">
-      <Dashboard chef={chef} originalRecipes={originalRecipes} />
+    <Page chef={chef} tab="account">
+      <Account />
     </Page>
   );
 };
@@ -15,14 +15,13 @@ const ProfilePage = ({ chef, originalRecipes }) => {
 ProfilePage.getInitialProps = async ({ query, apolloClient }) => {
   const { slug } = query;
   const { data } = await apolloClient.query({
-    query: ChefDashboardQuery,
+    query: ChefProfileQuery,
     variables: {
       slug,
     },
   });
   return {
     chef: data.user,
-    originalRecipes: data.originalRecipes,
   };
 };
 

@@ -1,5 +1,6 @@
 import React, { useContext, useMemo } from 'react';
 import PropTypes from 'prop-types';
+import { getChefBio } from '../../../lib/chef';
 import ChefContext from '../../../context/ChefContext';
 import css from './Header.module.css';
 
@@ -27,18 +28,19 @@ const ProfileHeader = () => {
       <div>
         <h1>{chef.name}</h1>
         <h3>{chefTitle}</h3>
-        {chef.bio && <p>{chef.bio}</p>}
+        <p>{getChefBio(chef)}</p>
       </div>
       <div>
         <ul>
           <li>
-            {chef.recipeCount}
-            recipe{chef.recipeCount > 1 && 's'}
+            {chef.recipeCount} recipe{chef.recipeCount > 1 && 's'}
           </li>
-          <li>
-            {chef.modifiedRecipeCount}
-            modified recipe{chef.modifiedRecipeCount > 1 && 's'}
-          </li>
+          {chef.modifiedRecipeCount > 0 && (
+            <li>
+              {chef.modifiedRecipeCount} modified recipe
+              {chef.modifiedRecipeCount > 1 && 's'}
+            </li>
+          )}
         </ul>
       </div>
     </header>

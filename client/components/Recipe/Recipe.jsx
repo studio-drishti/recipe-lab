@@ -216,28 +216,27 @@ const Recipe = (props) => {
           <div className={css.ingredientTotals}>
             {recipeItems
               .filter((item) => !modification.removals.includes(item.uid))
-              .map((item) => (
-                <div key={item.uid}>
-                  <h3>
-                    Ingredients for{' '}
-                    {getFieldValue('name', item, modification.alterations)}
-                  </h3>
-                  <IngredientTotals
-                    ingredients={getSortedSteps(item)
-                      .filter(
-                        (step) => !modification.removals.includes(step.uid)
+              .map((item) => {
+                const ingredients = getSortedSteps(item)
+                  .filter((step) => !modification.removals.includes(step.uid))
+                  .reduce((result, step) => {
+                    return result.concat(
+                      getSortedIngredients(step).filter(
+                        (ingredient) =>
+                          !modification.removals.includes(ingredient.uid)
                       )
-                      .reduce((result, step) => {
-                        return result.concat(
-                          getSortedIngredients(step).filter(
-                            (ingredient) =>
-                              !modification.removals.includes(ingredient.uid)
-                          )
-                        );
-                      }, [])}
-                  />
-                </div>
-              ))}
+                    );
+                  }, []);
+                return ingredients.length ? (
+                  <div key={item.uid}>
+                    <h3>
+                      Ingredients for{' '}
+                      {getFieldValue('name', item, modification.alterations)}
+                    </h3>
+                    <IngredientTotals ingredients={ingredients} />
+                  </div>
+                ) : null;
+              })}
           </div>
         ) : (
           <div className={classnames(css.ingredientTotals, css.placeholder)}>

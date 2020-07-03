@@ -4,4 +4,5 @@ fragment SessionUser on User {
   avatar
   role
   slug
+  bio
 }

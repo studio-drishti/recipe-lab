@@ -15,7 +15,7 @@ async function main() {
           uid: cuid(),
           slug: 'spaghetti-meatballs',
           title: 'Spaghetti and Meatballs',
-          time: 'Moderate',
+          time: 'MODERATE',
           servingAmount: '4',
           servingType: 'plates',
           description:
@@ -262,7 +262,7 @@ async function main() {
           uid: cuid(),
           slug: 'thai-chicken-curry',
           title: 'Thai Chicken Curry',
-          time: 'Moderate',
+          time: 'MODERATE',
           servingAmount: '6',
           servingType: 'Bowls',
           description:

@@ -89,7 +89,6 @@ const Step = ({
 
   const discardChanges = (e) => {
     e.preventDefault();
-    e.stopPropagation();
     setEdits({});
     setEditing(false);
   };
@@ -203,11 +202,51 @@ const Step = ({
               [css.dragging]: snapshot.isDragging,
             })}
           >
-            <div className={css.stepNum} {...provided.dragHandleProps}>
-              <div>Step {index + 1}</div>
+            <div className={css.stepHeader}>
+              <div className={css.stepNum} {...provided.dragHandleProps}>
+                Step {index + 1}
+              </div>
               <IconButtonGroup
                 className={classnames(css.stepSort, css.buttons)}
               >
+                {!editing && !isRemoved && (
+                  <IconButton
+                    onClick={() => setEditing(true)}
+                    disabled={snapshot.isDragging}
+                  >
+                    <MdEdit />
+                  </IconButton>
+                )}
+
+                {!editing && isRemoved && (
+                  <IconButton
+                    onClick={handleRestore}
+                    disabled={snapshot.isDragging}
+                  >
+                    <MdRefresh />
+                  </IconButton>
+                )}
+
+                {editing && (
+                  <>
+                    <IconButton
+                      title="save changes"
+                      type="submit"
+                      onClick={handleSave}
+                      disabled={snapshot.isDragging}
+                    >
+                      <MdCheck />
+                    </IconButton>
+                    <IconButton
+                      title="discard changes"
+                      onClick={discardChanges}
+                      disabled={snapshot.isDragging}
+                    >
+                      <MdDoNotDisturb />
+                    </IconButton>
+                  </>
+                )}
+
                 {!editing && (
                   <>
                     <IconButton
@@ -252,53 +291,12 @@ const Step = ({
                       'directions',
                       step,
                       alterations,
-                      isRemoved,
                       edits,
-                      errors
+                      errors,
+                      isRemoved
                     )}
                   </p>
                 )}
-                <TextButtonGroup className={css.buttons}>
-                  {!editing && !isRemoved && (
-                    <>
-                      <TextButton
-                        onClick={() => setEditing(true)}
-                        disabled={snapshot.isDragging}
-                      >
-                        <MdEdit /> edit step
-                      </TextButton>
-                    </>
-                  )}
-
-                  {isRemoved && !editing && (
-                    <TextButton
-                      onClick={handleRestore}
-                      disabled={snapshot.isDragging}
-                    >
-                      <MdRefresh /> restore step
-                    </TextButton>
-                  )}
-
-                  {editing && (
-                    <>
-                      <TextButton
-                        title="save changes"
-                        type="submit"
-                        onClick={handleSave}
-                        disabled={snapshot.isDragging}
-                      >
-                        <MdCheck /> save
-                      </TextButton>
-                      <TextButton
-                        title="discard changes"
-                        onClick={discardChanges}
-                        disabled={snapshot.isDragging}
-                      >
-                        <MdDoNotDisturb /> discard
-                      </TextButton>
-                    </>
-                  )}
-                </TextButtonGroup>
               </form>
 
               <TextButtonGroup
@@ -311,12 +309,21 @@ const Step = ({
                   <MdAdd /> add step
                 </TextButton>
 
-                <TextButton
-                  onClick={handleRemove}
-                  disabled={editing || snapshot.isDragging}
-                >
-                  <MdClear /> remove step
-                </TextButton>
+                {isRemoved ? (
+                  <TextButton
+                    onClick={handleRestore}
+                    disabled={editing || snapshot.isDragging}
+                  >
+                    <MdRefresh /> restore step
+                  </TextButton>
+                ) : (
+                  <TextButton
+                    onClick={handleRemove}
+                    disabled={editing || snapshot.isDragging}
+                  >
+                    <MdClear /> remove step
+                  </TextButton>
+                )}
               </TextButtonGroup>
 
               <div className={css.ingredients}>{children(setHovering)}</div>
@@ -324,12 +331,14 @@ const Step = ({
               <TextButtonGroup
                 className={classnames(css.buttons, css.ingredientActions)}
               >
-                <TextButton
-                  onClick={handleCreateIngredient}
-                  disabled={editing || snapshot.isDragging}
-                >
-                  <MdAdd /> add ingredient
-                </TextButton>
+                {!isRemoved && (
+                  <TextButton
+                    onClick={handleCreateIngredient}
+                    disabled={editing || snapshot.isDragging}
+                  >
+                    <MdAdd /> add ingredient
+                  </TextButton>
+                )}
               </TextButtonGroup>
             </div>
           </div>

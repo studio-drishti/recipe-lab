@@ -1,6 +1,6 @@
 module.exports = {
   recipes: ({ id }, args, ctx) => {
-    return ctx.prisma.user({ id }).posts();
+    return ctx.prisma.user({ id }).recipes();
   },
   avatar: (parent) => {
     return parent.avatar

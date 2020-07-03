@@ -1,4 +1,5 @@
 import React from 'react';
+import { TIME_OPTIONS } from '../../constants';
 import DiffText from '../components/DiffText';
 import Tooltip from '../components/Tooltip';
 
@@ -42,39 +43,56 @@ export const areAllFieldsEmpty = (fields, source, alterations, edits) =>
  */
 export const getFieldValue = (fieldName, source, alterations, edits = {}) => {
   if (edits[fieldName] !== undefined) return edits[fieldName];
+  if (!source) return '';
   const mod = alterations.find(
     (mod) => mod.sourceId === source.uid && mod.field === fieldName
   );
   return mod ? mod.value : source[fieldName];
 };
 
+export const maybeGetEnumValue = (fieldName, value) => {
+  switch (fieldName) {
+    case 'time':
+      return TIME_OPTIONS[value];
+    default:
+      return value;
+  }
+};
+
+export const isEnumField = (fieldName) => ['time'].includes(fieldName);
+
 export const renderFieldWithMods = (
   fieldName,
   source,
   alterations,
-  isRemoved = false,
   edits = {},
-  errors = {}
+  errors = {},
+  isRemoved = false
 ) => {
-  const original = source[fieldName];
+  const original = maybeGetEnumValue(fieldName, source[fieldName]);
 
   if (isRemoved) return <del>{original}</del>;
 
-  const modified = getFieldValue(fieldName, source, alterations, edits);
+  const modified = maybeGetEnumValue(
+    fieldName,
+    getFieldValue(fieldName, source, alterations, edits)
+  );
+
+  if (!modified || original === modified) return original;
+
+  const Diff = isEnumField(fieldName) ? (
+    <>
+      <del>{original}</del> <ins>{modified}</ins>
+    </>
+  ) : (
+    <DiffText original={original} modified={modified} />
+  );
 
   if (edits[fieldName] !== undefined && errors[fieldName]) {
-    return (
-      <Tooltip tip={errors[fieldName]}>
-        <DiffText original={original} modified={modified} />
-      </Tooltip>
-    );
+    return <Tooltip tip={errors[fieldName]}>{Diff}</Tooltip>;
   }
 
-  if (original !== modified) {
-    return <DiffText original={original} modified={modified} />;
-  }
-
-  return original;
+  return Diff;
 };
 
 export const getLocalStorageModifications = () =>

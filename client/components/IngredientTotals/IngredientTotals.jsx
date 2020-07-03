@@ -4,7 +4,7 @@ import RecipeContext from '../../context/RecipeContext';
 import { addFractions } from '../../lib/math';
 
 import css from './IngredientTotals.module.css';
-import { MEASURE_UNITS } from '../../config';
+import { MEASURE_UNITS } from '../../../constants';
 
 const IngredientTotals = ({ ingredients }) => {
   const {
