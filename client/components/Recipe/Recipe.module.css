@@ -21,7 +21,7 @@
   margin-right: -1rem;
   padding: 1.5rem;
   background: var(--color-light-gray);
-  border-radius: var(--border-radius-sm);
+  border-radius: var(--border-radius);
 
   & > div:first-child > *:first-child {
     margin-top: 0;

@@ -14,12 +14,16 @@
   }
 
   & h1 {
-    margin: 0;
+    margin: 0 0 0.5rem;
   }
 
-  & h1,
-  & h2 {
-    color: inherit;
+  & h5 {
+    margin: 0;
+    font-weight: var(--subtitle-font-weight);
+  }
+
+  & p {
+    margin: 1.5rem 0;
   }
 }
 
@@ -92,6 +96,7 @@
 
   & img {
     display: block;
+    border-radius: var(--border-radius);
   }
 }
 
