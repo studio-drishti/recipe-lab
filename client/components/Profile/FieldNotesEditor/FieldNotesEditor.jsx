@@ -1,10 +1,22 @@
 import React, { useState } from 'react';
-import { Editor } from 'react-draft-wysiwyg';
+import dynamic from 'next/dynamic';
 import { EditorState, convertToRaw } from 'draft-js';
 import draftToHtml from 'draftjs-to-html';
 
+const Editor = dynamic(
+  () => {
+    return import('react-draft-wysiwyg').then((mod) => mod.Editor);
+  },
+  { loading: () => null, ssr: false }
+);
+
 const EditorConvertToHTML = () => {
   const [editorState, setEditor] = useState(EditorState.createEmpty());
+
+  const onEditorStateChange = (editorState) => {
+    setEditor(editorState);
+  };
+
   return (
     <div>
       <Editor
@@ -14,7 +26,7 @@ const EditorConvertToHTML = () => {
         }}
         wrapperClassName="demo-wrapper"
         editorClassName="demo-editor"
-        onEditorStateChange={() => setEditor(editorState)}
+        onEditorStateChange={onEditorStateChange}
       />
       <textarea
         disabled
