@@ -4,10 +4,14 @@ import ChefDashboardQuery from '../../../graphql/ChefDashboardQuery.graphql';
 import Page from '../../../layouts/Profile';
 import Dashboard from '../../../components/Profile/Dashboard';
 
-const ProfilePage = ({ chef, originalRecipes }) => {
+const ProfilePage = ({ chef, originalRecipes, modifiedRecipes }) => {
   return (
     <Page chef={chef} tab="dashboard">
-      <Dashboard chef={chef} originalRecipes={originalRecipes} />
+      <Dashboard
+        chef={chef}
+        originalRecipes={originalRecipes}
+        modifiedRecipes={modifiedRecipes}
+      />
     </Page>
   );
 };
@@ -20,10 +24,7 @@ ProfilePage.getInitialProps = async ({ query, apolloClient }) => {
       slug,
     },
   });
-  return {
-    chef: data.user,
-    originalRecipes: data.originalRecipes,
-  };
+  return data;
 };
 
 ProfilePage.propTypes = {
