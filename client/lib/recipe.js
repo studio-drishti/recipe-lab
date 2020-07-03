@@ -43,6 +43,7 @@ export const areAllFieldsEmpty = (fields, source, alterations, edits) =>
  */
 export const getFieldValue = (fieldName, source, alterations, edits = {}) => {
   if (edits[fieldName] !== undefined) return edits[fieldName];
+  if (!source) return '';
   const mod = alterations.find(
     (mod) => mod.sourceId === source.uid && mod.field === fieldName
   );

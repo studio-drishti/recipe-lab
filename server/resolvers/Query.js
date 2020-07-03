@@ -5,7 +5,7 @@ module.exports = {
     const userId = getUserId(ctx);
     return ctx.prisma.user({ id: userId });
   },
-  recipes: (parent, { where }, ctx) => ctx.prisma.recipes({ where }),
+  recipes: (parent, args, ctx) => ctx.prisma.recipes(args),
   recipe: (parent, { slug }, ctx) => ctx.prisma.recipe({ slug }),
   user: (parent, { slug }, ctx) => ctx.prisma.user({ slug }),
 };

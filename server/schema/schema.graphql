@@ -6,9 +6,20 @@
 scalar DateTime
 scalar Upload
 
+enum OrderByInput {
+  createdAt_ASC
+  createdAt_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+}
+
 type Query {
   sessionUser: User
-  recipes(where: RecipesWhereInput): [Recipe!]!
+  recipes(
+    where: RecipesWhereInput
+    orderBy: OrderByInput
+    first: Int
+  ): [Recipe!]!
   recipe(slug: String!): Recipe
   user(slug: String!): User
   modification(uid: ID!): Modification

@@ -14,8 +14,13 @@ type Recipe {
   photo: String
 }
 
+input RecipeAuthorWhereInput {
+  slug: String
+}
+
 input RecipesWhereInput {
   uid_in: [ID!]
+  author: RecipeAuthorWhereInput
 }
 
 type Item {

@@ -1,0 +1,11 @@
+.recipesList {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-gap: 1rem;
+}
+
+@media (--medium-viewport) {
+  .recipesList {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}

@@ -33,13 +33,14 @@ const ProfileHeader = () => {
       <div>
         <ul>
           <li>
-            {chef.recipeCount}
-            recipe{chef.recipeCount > 1 && 's'}
+            {chef.recipeCount} recipe{chef.recipeCount > 1 && 's'}
           </li>
-          <li>
-            {chef.modifiedRecipeCount}
-            modified recipe{chef.modifiedRecipeCount > 1 && 's'}
-          </li>
+          {chef.modifiedRecipeCount > 0 && (
+            <li>
+              {chef.modifiedRecipeCount} modified recipe
+              {chef.modifiedRecipeCount > 1 && 's'}
+            </li>
+          )}
         </ul>
       </div>
     </header>
