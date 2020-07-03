@@ -1,0 +1,2816 @@
+{
+  "version": "0.3.14-fixed",
+  "steps": [
+    {
+      "tag": "CreateEnum",
+      "enum": "UserRole",
+      "values": [
+        "EXECUTIVE_CHEF",
+        "SOUS_CHEF",
+        "COMMIS_CHEF",
+        "KITCHEN_PORTER"
+      ]
+    },
+    {
+      "tag": "CreateEnum",
+      "enum": "RecipeTime",
+      "values": [
+        "QUICK",
+        "MODERATE",
+        "INVOLVED"
+      ]
+    },
+    {
+      "tag": "CreateSource",
+      "source": "db"
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Source",
+        "source": "db"
+      },
+      "argument": "provider",
+      "value": "\"postgresql\""
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Source",
+        "source": "db"
+      },
+      "argument": "url",
+      "value": "\"***\""
+    },
+    {
+      "tag": "CreateModel",
+      "model": "User"
+    },
+    {
+      "tag": "CreateField",
+      "model": "User",
+      "field": "id",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "User",
+          "field": "id"
+        },
+        "directive": "default"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "User",
+          "field": "id"
+        },
+        "directive": "default"
+      },
+      "argument": "",
+      "value": "cuid()"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "User",
+          "field": "id"
+        },
+        "directive": "id"
+      }
+    },
+    {
+      "tag": "CreateField",
+      "model": "User",
+      "field": "createdAt",
+      "type": "DateTime",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "User",
+          "field": "createdAt"
+        },
+        "directive": "default"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "User",
+          "field": "createdAt"
+        },
+        "directive": "default"
+      },
+      "argument": "",
+      "value": "now()"
+    },
+    {
+      "tag": "CreateField",
+      "model": "User",
+      "field": "updatedAt",
+      "type": "DateTime",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "User",
+          "field": "updatedAt"
+        },
+        "directive": "updatedAt"
+      }
+    },
+    {
+      "tag": "CreateField",
+      "model": "User",
+      "field": "email",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "User",
+          "field": "email"
+        },
+        "directive": "unique"
+      }
+    },
+    {
+      "tag": "CreateField",
+      "model": "User",
+      "field": "slug",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "User",
+          "field": "slug"
+        },
+        "directive": "unique"
+      }
+    },
+    {
+      "tag": "CreateField",
+      "model": "User",
+      "field": "password",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateField",
+      "model": "User",
+      "field": "avatar",
+      "type": "String",
+      "arity": "Optional"
+    },
+    {
+      "tag": "CreateField",
+      "model": "User",
+      "field": "bio",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "User",
+          "field": "bio"
+        },
+        "directive": "default"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "User",
+          "field": "bio"
+        },
+        "directive": "default"
+      },
+      "argument": "",
+      "value": "\"\""
+    },
+    {
+      "tag": "CreateField",
+      "model": "User",
+      "field": "emailVerified",
+      "type": "Boolean",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "User",
+          "field": "emailVerified"
+        },
+        "directive": "default"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "User",
+          "field": "emailVerified"
+        },
+        "directive": "default"
+      },
+      "argument": "",
+      "value": "false"
+    },
+    {
+      "tag": "CreateField",
+      "model": "User",
+      "field": "name",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateField",
+      "model": "User",
+      "field": "role",
+      "type": "UserRole",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "User",
+          "field": "role"
+        },
+        "directive": "default"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "User",
+          "field": "role"
+        },
+        "directive": "default"
+      },
+      "argument": "",
+      "value": "KITCHEN_PORTER"
+    },
+    {
+      "tag": "CreateField",
+      "model": "User",
+      "field": "modifications",
+      "type": "Modification",
+      "arity": "List"
+    },
+    {
+      "tag": "CreateField",
+      "model": "User",
+      "field": "recipes",
+      "type": "Recipe",
+      "arity": "List"
+    },
+    {
+      "tag": "CreateModel",
+      "model": "Recipe"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Recipe",
+      "field": "id",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Recipe",
+          "field": "id"
+        },
+        "directive": "default"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Recipe",
+          "field": "id"
+        },
+        "directive": "default"
+      },
+      "argument": "",
+      "value": "cuid()"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Recipe",
+          "field": "id"
+        },
+        "directive": "id"
+      }
+    },
+    {
+      "tag": "CreateField",
+      "model": "Recipe",
+      "field": "uid",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Recipe",
+          "field": "uid"
+        },
+        "directive": "default"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Recipe",
+          "field": "uid"
+        },
+        "directive": "default"
+      },
+      "argument": "",
+      "value": "cuid()"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Recipe",
+          "field": "uid"
+        },
+        "directive": "unique"
+      }
+    },
+    {
+      "tag": "CreateField",
+      "model": "Recipe",
+      "field": "createdAt",
+      "type": "DateTime",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Recipe",
+          "field": "createdAt"
+        },
+        "directive": "default"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Recipe",
+          "field": "createdAt"
+        },
+        "directive": "default"
+      },
+      "argument": "",
+      "value": "now()"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Recipe",
+      "field": "updatedAt",
+      "type": "DateTime",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Recipe",
+          "field": "updatedAt"
+        },
+        "directive": "updatedAt"
+      }
+    },
+    {
+      "tag": "CreateField",
+      "model": "Recipe",
+      "field": "description",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Recipe",
+          "field": "description"
+        },
+        "directive": "default"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Recipe",
+          "field": "description"
+        },
+        "directive": "default"
+      },
+      "argument": "",
+      "value": "\"\""
+    },
+    {
+      "tag": "CreateField",
+      "model": "Recipe",
+      "field": "photo",
+      "type": "String",
+      "arity": "Optional"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Recipe",
+      "field": "servingAmount",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Recipe",
+          "field": "servingAmount"
+        },
+        "directive": "default"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Recipe",
+          "field": "servingAmount"
+        },
+        "directive": "default"
+      },
+      "argument": "",
+      "value": "\"\""
+    },
+    {
+      "tag": "CreateField",
+      "model": "Recipe",
+      "field": "servingType",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Recipe",
+          "field": "servingType"
+        },
+        "directive": "default"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Recipe",
+          "field": "servingType"
+        },
+        "directive": "default"
+      },
+      "argument": "",
+      "value": "\"\""
+    },
+    {
+      "tag": "CreateField",
+      "model": "Recipe",
+      "field": "slug",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Recipe",
+          "field": "slug"
+        },
+        "directive": "unique"
+      }
+    },
+    {
+      "tag": "CreateField",
+      "model": "Recipe",
+      "field": "time",
+      "type": "RecipeTime",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Recipe",
+          "field": "time"
+        },
+        "directive": "default"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Recipe",
+          "field": "time"
+        },
+        "directive": "default"
+      },
+      "argument": "",
+      "value": "MODERATE"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Recipe",
+      "field": "title",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Recipe",
+          "field": "title"
+        },
+        "directive": "default"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Recipe",
+          "field": "title"
+        },
+        "directive": "default"
+      },
+      "argument": "",
+      "value": "\"\""
+    },
+    {
+      "tag": "CreateField",
+      "model": "Recipe",
+      "field": "author",
+      "type": "User",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Recipe",
+          "field": "author"
+        },
+        "directive": "relation"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Recipe",
+          "field": "author"
+        },
+        "directive": "relation"
+      },
+      "argument": "fields",
+      "value": "[authorId]"
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Recipe",
+          "field": "author"
+        },
+        "directive": "relation"
+      },
+      "argument": "references",
+      "value": "[id]"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Recipe",
+      "field": "authorId",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Recipe",
+      "field": "items",
+      "type": "Item",
+      "arity": "List"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Recipe",
+      "field": "modifications",
+      "type": "Modification",
+      "arity": "List"
+    },
+    {
+      "tag": "CreateModel",
+      "model": "Item"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Item",
+      "field": "id",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Item",
+          "field": "id"
+        },
+        "directive": "default"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Item",
+          "field": "id"
+        },
+        "directive": "default"
+      },
+      "argument": "",
+      "value": "cuid()"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Item",
+          "field": "id"
+        },
+        "directive": "id"
+      }
+    },
+    {
+      "tag": "CreateField",
+      "model": "Item",
+      "field": "uid",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Item",
+          "field": "uid"
+        },
+        "directive": "default"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Item",
+          "field": "uid"
+        },
+        "directive": "default"
+      },
+      "argument": "",
+      "value": "cuid()"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Item",
+          "field": "uid"
+        },
+        "directive": "unique"
+      }
+    },
+    {
+      "tag": "CreateField",
+      "model": "Item",
+      "field": "createdAt",
+      "type": "DateTime",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Item",
+          "field": "createdAt"
+        },
+        "directive": "default"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Item",
+          "field": "createdAt"
+        },
+        "directive": "default"
+      },
+      "argument": "",
+      "value": "now()"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Item",
+      "field": "updatedAt",
+      "type": "DateTime",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Item",
+          "field": "updatedAt"
+        },
+        "directive": "updatedAt"
+      }
+    },
+    {
+      "tag": "CreateField",
+      "model": "Item",
+      "field": "index",
+      "type": "Int",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Item",
+      "field": "name",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Item",
+          "field": "name"
+        },
+        "directive": "default"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Item",
+          "field": "name"
+        },
+        "directive": "default"
+      },
+      "argument": "",
+      "value": "\"\""
+    },
+    {
+      "tag": "CreateField",
+      "model": "Item",
+      "field": "recipe",
+      "type": "Recipe",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Item",
+          "field": "recipe"
+        },
+        "directive": "relation"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Item",
+          "field": "recipe"
+        },
+        "directive": "relation"
+      },
+      "argument": "fields",
+      "value": "[recipeId]"
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Item",
+          "field": "recipe"
+        },
+        "directive": "relation"
+      },
+      "argument": "references",
+      "value": "[id]"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Item",
+      "field": "recipeId",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Item",
+      "field": "steps",
+      "type": "Step",
+      "arity": "List"
+    },
+    {
+      "tag": "CreateModel",
+      "model": "Step"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Step",
+      "field": "id",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Step",
+          "field": "id"
+        },
+        "directive": "default"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Step",
+          "field": "id"
+        },
+        "directive": "default"
+      },
+      "argument": "",
+      "value": "cuid()"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Step",
+          "field": "id"
+        },
+        "directive": "id"
+      }
+    },
+    {
+      "tag": "CreateField",
+      "model": "Step",
+      "field": "uid",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Step",
+          "field": "uid"
+        },
+        "directive": "default"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Step",
+          "field": "uid"
+        },
+        "directive": "default"
+      },
+      "argument": "",
+      "value": "cuid()"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Step",
+          "field": "uid"
+        },
+        "directive": "unique"
+      }
+    },
+    {
+      "tag": "CreateField",
+      "model": "Step",
+      "field": "createdAt",
+      "type": "DateTime",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Step",
+          "field": "createdAt"
+        },
+        "directive": "default"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Step",
+          "field": "createdAt"
+        },
+        "directive": "default"
+      },
+      "argument": "",
+      "value": "now()"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Step",
+      "field": "updatedAt",
+      "type": "DateTime",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Step",
+          "field": "updatedAt"
+        },
+        "directive": "updatedAt"
+      }
+    },
+    {
+      "tag": "CreateField",
+      "model": "Step",
+      "field": "index",
+      "type": "Int",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Step",
+      "field": "directions",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Step",
+          "field": "directions"
+        },
+        "directive": "default"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Step",
+          "field": "directions"
+        },
+        "directive": "default"
+      },
+      "argument": "",
+      "value": "\"\""
+    },
+    {
+      "tag": "CreateField",
+      "model": "Step",
+      "field": "item",
+      "type": "Item",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Step",
+          "field": "item"
+        },
+        "directive": "relation"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Step",
+          "field": "item"
+        },
+        "directive": "relation"
+      },
+      "argument": "fields",
+      "value": "[itemId]"
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Step",
+          "field": "item"
+        },
+        "directive": "relation"
+      },
+      "argument": "references",
+      "value": "[id]"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Step",
+      "field": "itemId",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Step",
+      "field": "Ingredient",
+      "type": "Ingredient",
+      "arity": "List"
+    },
+    {
+      "tag": "CreateModel",
+      "model": "Ingredient"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Ingredient",
+      "field": "id",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Ingredient",
+          "field": "id"
+        },
+        "directive": "default"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Ingredient",
+          "field": "id"
+        },
+        "directive": "default"
+      },
+      "argument": "",
+      "value": "cuid()"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Ingredient",
+          "field": "id"
+        },
+        "directive": "id"
+      }
+    },
+    {
+      "tag": "CreateField",
+      "model": "Ingredient",
+      "field": "uid",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Ingredient",
+          "field": "uid"
+        },
+        "directive": "default"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Ingredient",
+          "field": "uid"
+        },
+        "directive": "default"
+      },
+      "argument": "",
+      "value": "cuid()"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Ingredient",
+          "field": "uid"
+        },
+        "directive": "unique"
+      }
+    },
+    {
+      "tag": "CreateField",
+      "model": "Ingredient",
+      "field": "createdAt",
+      "type": "DateTime",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Ingredient",
+          "field": "createdAt"
+        },
+        "directive": "default"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Ingredient",
+          "field": "createdAt"
+        },
+        "directive": "default"
+      },
+      "argument": "",
+      "value": "now()"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Ingredient",
+      "field": "updatedAt",
+      "type": "DateTime",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Ingredient",
+          "field": "updatedAt"
+        },
+        "directive": "updatedAt"
+      }
+    },
+    {
+      "tag": "CreateField",
+      "model": "Ingredient",
+      "field": "index",
+      "type": "Int",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Ingredient",
+      "field": "name",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Ingredient",
+          "field": "name"
+        },
+        "directive": "default"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Ingredient",
+          "field": "name"
+        },
+        "directive": "default"
+      },
+      "argument": "",
+      "value": "\"\""
+    },
+    {
+      "tag": "CreateField",
+      "model": "Ingredient",
+      "field": "processing",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Ingredient",
+          "field": "processing"
+        },
+        "directive": "default"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Ingredient",
+          "field": "processing"
+        },
+        "directive": "default"
+      },
+      "argument": "",
+      "value": "\"\""
+    },
+    {
+      "tag": "CreateField",
+      "model": "Ingredient",
+      "field": "quantity",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Ingredient",
+          "field": "quantity"
+        },
+        "directive": "default"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Ingredient",
+          "field": "quantity"
+        },
+        "directive": "default"
+      },
+      "argument": "",
+      "value": "\"\""
+    },
+    {
+      "tag": "CreateField",
+      "model": "Ingredient",
+      "field": "unit",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Ingredient",
+          "field": "unit"
+        },
+        "directive": "default"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Ingredient",
+          "field": "unit"
+        },
+        "directive": "default"
+      },
+      "argument": "",
+      "value": "\"\""
+    },
+    {
+      "tag": "CreateField",
+      "model": "Ingredient",
+      "field": "step",
+      "type": "Step",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Ingredient",
+          "field": "step"
+        },
+        "directive": "relation"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Ingredient",
+          "field": "step"
+        },
+        "directive": "relation"
+      },
+      "argument": "fields",
+      "value": "[stepId]"
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Ingredient",
+          "field": "step"
+        },
+        "directive": "relation"
+      },
+      "argument": "references",
+      "value": "[id]"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Ingredient",
+      "field": "stepId",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateModel",
+      "model": "Modification"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Modification",
+      "field": "id",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Modification",
+          "field": "id"
+        },
+        "directive": "default"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Modification",
+          "field": "id"
+        },
+        "directive": "default"
+      },
+      "argument": "",
+      "value": "cuid()"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Modification",
+          "field": "id"
+        },
+        "directive": "id"
+      }
+    },
+    {
+      "tag": "CreateField",
+      "model": "Modification",
+      "field": "createdAt",
+      "type": "DateTime",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Modification",
+          "field": "createdAt"
+        },
+        "directive": "default"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Modification",
+          "field": "createdAt"
+        },
+        "directive": "default"
+      },
+      "argument": "",
+      "value": "now()"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Modification",
+      "field": "updatedAt",
+      "type": "DateTime",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Modification",
+          "field": "updatedAt"
+        },
+        "directive": "updatedAt"
+      }
+    },
+    {
+      "tag": "CreateField",
+      "model": "Modification",
+      "field": "recipe",
+      "type": "Recipe",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Modification",
+          "field": "recipe"
+        },
+        "directive": "relation"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Modification",
+          "field": "recipe"
+        },
+        "directive": "relation"
+      },
+      "argument": "fields",
+      "value": "[recipeId]"
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Modification",
+          "field": "recipe"
+        },
+        "directive": "relation"
+      },
+      "argument": "references",
+      "value": "[id]"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Modification",
+      "field": "recipeId",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Modification",
+      "field": "user",
+      "type": "User",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Modification",
+          "field": "user"
+        },
+        "directive": "relation"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Modification",
+          "field": "user"
+        },
+        "directive": "relation"
+      },
+      "argument": "fields",
+      "value": "[userId]"
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Modification",
+          "field": "user"
+        },
+        "directive": "relation"
+      },
+      "argument": "references",
+      "value": "[id]"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Modification",
+      "field": "userId",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Modification",
+      "field": "alterations",
+      "type": "Alteration",
+      "arity": "List"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Modification",
+      "field": "ingredientAdditions",
+      "type": "IngredientAddition",
+      "arity": "List"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Modification",
+      "field": "itemAdditions",
+      "type": "ItemAddition",
+      "arity": "List"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Modification",
+      "field": "removals",
+      "type": "String",
+      "arity": "List"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Modification",
+      "field": "sortings",
+      "type": "Sorting",
+      "arity": "List"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Modification",
+      "field": "stepAdditions",
+      "type": "StepAddition",
+      "arity": "List"
+    },
+    {
+      "tag": "CreateModel",
+      "model": "Alteration"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Alteration",
+      "field": "id",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Alteration",
+          "field": "id"
+        },
+        "directive": "default"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Alteration",
+          "field": "id"
+        },
+        "directive": "default"
+      },
+      "argument": "",
+      "value": "cuid()"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Alteration",
+          "field": "id"
+        },
+        "directive": "id"
+      }
+    },
+    {
+      "tag": "CreateField",
+      "model": "Alteration",
+      "field": "uid",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Alteration",
+          "field": "uid"
+        },
+        "directive": "default"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Alteration",
+          "field": "uid"
+        },
+        "directive": "default"
+      },
+      "argument": "",
+      "value": "cuid()"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Alteration",
+          "field": "uid"
+        },
+        "directive": "unique"
+      }
+    },
+    {
+      "tag": "CreateField",
+      "model": "Alteration",
+      "field": "createdAt",
+      "type": "DateTime",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Alteration",
+          "field": "createdAt"
+        },
+        "directive": "default"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Alteration",
+          "field": "createdAt"
+        },
+        "directive": "default"
+      },
+      "argument": "",
+      "value": "now()"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Alteration",
+      "field": "updatedAt",
+      "type": "DateTime",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Alteration",
+          "field": "updatedAt"
+        },
+        "directive": "updatedAt"
+      }
+    },
+    {
+      "tag": "CreateField",
+      "model": "Alteration",
+      "field": "field",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Alteration",
+      "field": "value",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Alteration",
+      "field": "sourceId",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Alteration",
+      "field": "modification",
+      "type": "Modification",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Alteration",
+          "field": "modification"
+        },
+        "directive": "relation"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Alteration",
+          "field": "modification"
+        },
+        "directive": "relation"
+      },
+      "argument": "fields",
+      "value": "[modificationId]"
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Alteration",
+          "field": "modification"
+        },
+        "directive": "relation"
+      },
+      "argument": "references",
+      "value": "[id]"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Alteration",
+      "field": "modificationId",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateModel",
+      "model": "IngredientAddition"
+    },
+    {
+      "tag": "CreateField",
+      "model": "IngredientAddition",
+      "field": "id",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "IngredientAddition",
+          "field": "id"
+        },
+        "directive": "default"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "IngredientAddition",
+          "field": "id"
+        },
+        "directive": "default"
+      },
+      "argument": "",
+      "value": "cuid()"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "IngredientAddition",
+          "field": "id"
+        },
+        "directive": "id"
+      }
+    },
+    {
+      "tag": "CreateField",
+      "model": "IngredientAddition",
+      "field": "uid",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "IngredientAddition",
+          "field": "uid"
+        },
+        "directive": "default"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "IngredientAddition",
+          "field": "uid"
+        },
+        "directive": "default"
+      },
+      "argument": "",
+      "value": "cuid()"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "IngredientAddition",
+          "field": "uid"
+        },
+        "directive": "unique"
+      }
+    },
+    {
+      "tag": "CreateField",
+      "model": "IngredientAddition",
+      "field": "parentId",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateField",
+      "model": "IngredientAddition",
+      "field": "createdAt",
+      "type": "DateTime",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "IngredientAddition",
+          "field": "createdAt"
+        },
+        "directive": "default"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "IngredientAddition",
+          "field": "createdAt"
+        },
+        "directive": "default"
+      },
+      "argument": "",
+      "value": "now()"
+    },
+    {
+      "tag": "CreateField",
+      "model": "IngredientAddition",
+      "field": "updatedAt",
+      "type": "DateTime",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "IngredientAddition",
+          "field": "updatedAt"
+        },
+        "directive": "updatedAt"
+      }
+    },
+    {
+      "tag": "CreateField",
+      "model": "IngredientAddition",
+      "field": "name",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateField",
+      "model": "IngredientAddition",
+      "field": "processing",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateField",
+      "model": "IngredientAddition",
+      "field": "quantity",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateField",
+      "model": "IngredientAddition",
+      "field": "unit",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateField",
+      "model": "IngredientAddition",
+      "field": "modification",
+      "type": "Modification",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "IngredientAddition",
+          "field": "modification"
+        },
+        "directive": "relation"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "IngredientAddition",
+          "field": "modification"
+        },
+        "directive": "relation"
+      },
+      "argument": "fields",
+      "value": "[modificationId]"
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "IngredientAddition",
+          "field": "modification"
+        },
+        "directive": "relation"
+      },
+      "argument": "references",
+      "value": "[id]"
+    },
+    {
+      "tag": "CreateField",
+      "model": "IngredientAddition",
+      "field": "modificationId",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateModel",
+      "model": "ItemAddition"
+    },
+    {
+      "tag": "CreateField",
+      "model": "ItemAddition",
+      "field": "id",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "ItemAddition",
+          "field": "id"
+        },
+        "directive": "default"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "ItemAddition",
+          "field": "id"
+        },
+        "directive": "default"
+      },
+      "argument": "",
+      "value": "cuid()"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "ItemAddition",
+          "field": "id"
+        },
+        "directive": "id"
+      }
+    },
+    {
+      "tag": "CreateField",
+      "model": "ItemAddition",
+      "field": "uid",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "ItemAddition",
+          "field": "uid"
+        },
+        "directive": "default"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "ItemAddition",
+          "field": "uid"
+        },
+        "directive": "default"
+      },
+      "argument": "",
+      "value": "cuid()"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "ItemAddition",
+          "field": "uid"
+        },
+        "directive": "unique"
+      }
+    },
+    {
+      "tag": "CreateField",
+      "model": "ItemAddition",
+      "field": "parentId",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateField",
+      "model": "ItemAddition",
+      "field": "createdAt",
+      "type": "DateTime",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "ItemAddition",
+          "field": "createdAt"
+        },
+        "directive": "default"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "ItemAddition",
+          "field": "createdAt"
+        },
+        "directive": "default"
+      },
+      "argument": "",
+      "value": "now()"
+    },
+    {
+      "tag": "CreateField",
+      "model": "ItemAddition",
+      "field": "updatedAt",
+      "type": "DateTime",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "ItemAddition",
+          "field": "updatedAt"
+        },
+        "directive": "updatedAt"
+      }
+    },
+    {
+      "tag": "CreateField",
+      "model": "ItemAddition",
+      "field": "name",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateField",
+      "model": "ItemAddition",
+      "field": "modification",
+      "type": "Modification",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "ItemAddition",
+          "field": "modification"
+        },
+        "directive": "relation"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "ItemAddition",
+          "field": "modification"
+        },
+        "directive": "relation"
+      },
+      "argument": "fields",
+      "value": "[modificationId]"
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "ItemAddition",
+          "field": "modification"
+        },
+        "directive": "relation"
+      },
+      "argument": "references",
+      "value": "[id]"
+    },
+    {
+      "tag": "CreateField",
+      "model": "ItemAddition",
+      "field": "modificationId",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateModel",
+      "model": "Sorting"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Sorting",
+      "field": "id",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Sorting",
+          "field": "id"
+        },
+        "directive": "default"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Sorting",
+          "field": "id"
+        },
+        "directive": "default"
+      },
+      "argument": "",
+      "value": "cuid()"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Sorting",
+          "field": "id"
+        },
+        "directive": "id"
+      }
+    },
+    {
+      "tag": "CreateField",
+      "model": "Sorting",
+      "field": "uid",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Sorting",
+          "field": "uid"
+        },
+        "directive": "default"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Sorting",
+          "field": "uid"
+        },
+        "directive": "default"
+      },
+      "argument": "",
+      "value": "cuid()"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Sorting",
+          "field": "uid"
+        },
+        "directive": "unique"
+      }
+    },
+    {
+      "tag": "CreateField",
+      "model": "Sorting",
+      "field": "parentId",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Sorting",
+      "field": "createdAt",
+      "type": "DateTime",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Sorting",
+          "field": "createdAt"
+        },
+        "directive": "default"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Sorting",
+          "field": "createdAt"
+        },
+        "directive": "default"
+      },
+      "argument": "",
+      "value": "now()"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Sorting",
+      "field": "updatedAt",
+      "type": "DateTime",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Sorting",
+          "field": "updatedAt"
+        },
+        "directive": "updatedAt"
+      }
+    },
+    {
+      "tag": "CreateField",
+      "model": "Sorting",
+      "field": "order",
+      "type": "String",
+      "arity": "List"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Sorting",
+      "field": "modification",
+      "type": "Modification",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Sorting",
+          "field": "modification"
+        },
+        "directive": "relation"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Sorting",
+          "field": "modification"
+        },
+        "directive": "relation"
+      },
+      "argument": "fields",
+      "value": "[modificationId]"
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Sorting",
+          "field": "modification"
+        },
+        "directive": "relation"
+      },
+      "argument": "references",
+      "value": "[id]"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Sorting",
+      "field": "modificationId",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateModel",
+      "model": "StepAddition"
+    },
+    {
+      "tag": "CreateField",
+      "model": "StepAddition",
+      "field": "id",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "StepAddition",
+          "field": "id"
+        },
+        "directive": "default"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "StepAddition",
+          "field": "id"
+        },
+        "directive": "default"
+      },
+      "argument": "",
+      "value": "cuid()"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "StepAddition",
+          "field": "id"
+        },
+        "directive": "id"
+      }
+    },
+    {
+      "tag": "CreateField",
+      "model": "StepAddition",
+      "field": "uid",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "StepAddition",
+          "field": "uid"
+        },
+        "directive": "default"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "StepAddition",
+          "field": "uid"
+        },
+        "directive": "default"
+      },
+      "argument": "",
+      "value": "cuid()"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "StepAddition",
+          "field": "uid"
+        },
+        "directive": "unique"
+      }
+    },
+    {
+      "tag": "CreateField",
+      "model": "StepAddition",
+      "field": "parentId",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateField",
+      "model": "StepAddition",
+      "field": "createdAt",
+      "type": "DateTime",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "StepAddition",
+          "field": "createdAt"
+        },
+        "directive": "default"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "StepAddition",
+          "field": "createdAt"
+        },
+        "directive": "default"
+      },
+      "argument": "",
+      "value": "now()"
+    },
+    {
+      "tag": "CreateField",
+      "model": "StepAddition",
+      "field": "updatedAt",
+      "type": "DateTime",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "StepAddition",
+          "field": "updatedAt"
+        },
+        "directive": "updatedAt"
+      }
+    },
+    {
+      "tag": "CreateField",
+      "model": "StepAddition",
+      "field": "directions",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateField",
+      "model": "StepAddition",
+      "field": "modification",
+      "type": "Modification",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "StepAddition",
+          "field": "modification"
+        },
+        "directive": "relation"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "StepAddition",
+          "field": "modification"
+        },
+        "directive": "relation"
+      },
+      "argument": "fields",
+      "value": "[modificationId]"
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "StepAddition",
+          "field": "modification"
+        },
+        "directive": "relation"
+      },
+      "argument": "references",
+      "value": "[id]"
+    },
+    {
+      "tag": "CreateField",
+      "model": "StepAddition",
+      "field": "modificationId",
+      "type": "String",
+      "arity": "Required"
+    }
+  ]
+}
