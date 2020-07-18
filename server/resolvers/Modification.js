@@ -1,18 +1,24 @@
 module.exports = {
   alterations: ({ id }, args, ctx) => {
-    return ctx.prisma.modification({ id }).alterations();
+    return ctx.prisma.modification.findOne({ where: { id } }).alterations();
   },
   sortings: ({ id }, args, ctx) => {
-    return ctx.prisma.modification({ id }).sortings();
+    return ctx.prisma.modification.findOne({ where: { id } }).sortings();
   },
   additions: async ({ id }, args, ctx) => {
     return [
-      ...(await ctx.prisma.modification({ id }).itemAdditions()),
-      ...(await ctx.prisma.modification({ id }).stepAdditions()),
-      ...(await ctx.prisma.modification({ id }).ingredientAdditions()),
+      ...(await ctx.prisma.modification
+        .findOne({ where: { id } })
+        .itemAdditions()),
+      ...(await ctx.prisma
+        .modificationfindOne({ where: { id } })
+        .stepAdditions()),
+      ...(await ctx.prisma
+        .modificationfindOne({ where: { id } })
+        .ingredientAdditions()),
     ];
   },
   user: ({ id }, args, ctx) => {
-    return ctx.prisma.modification({ id }).user();
+    return ctx.prisma.modification.findOne({ where: { id } }).user();
   },
 };

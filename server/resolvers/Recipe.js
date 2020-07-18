@@ -2,20 +2,18 @@ const getUserId = require('../utils/getUserId');
 
 module.exports = {
   author: ({ uid }, args, ctx) => {
-    return ctx.prisma.recipe({ uid }).author();
+    return ctx.prisma.recipe.findOne({ where: { uid } }).author();
   },
   items: ({ uid }, args, ctx) => {
-    return ctx.prisma.recipe({ uid }).items({ orderBy: 'index_ASC' });
+    return ctx.prisma.recipe
+      .findOne({ where: { uid } })
+      .items({ orderBy: { index: 'asc' } });
   },
   photo: async ({ uid }, args, ctx) => {
-    const recipe = await ctx.prisma.recipe({ uid }).$fragment(`
-      fragment RecipeWithAuthor on Recipe {
-        photo
-        author {
-          slug
-        }
-      }
-    `);
+    const recipe = await ctx.prisma.recipe.findOne({
+      where: { uid },
+      include: { author: true },
+    });
 
     return recipe.photo
       ? `/public/${recipe.author.slug}/${recipe.photo}`
@@ -30,8 +28,8 @@ module.exports = {
       }
     }
 
-    return ctx.prisma
-      .modifications({
+    return ctx.prisma.modification
+      .findMany({
         where: { recipe: { uid }, user: { id: user } },
       })
       .then((mods) => mods.shift());

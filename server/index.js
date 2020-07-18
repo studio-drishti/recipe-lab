@@ -3,16 +3,13 @@ const next = require('next');
 const nextConfig = require('../next.config.js');
 const express = require('express');
 const { GraphQLServer } = require('graphql-yoga');
-const { prisma } = require('./generated/prisma-client');
+const { PrismaClient } = require('@prisma/client');
+const morgan = require('morgan');
 const resolvers = require('./resolvers');
 const permissions = require('./permissions');
-const morgan = require('morgan');
-// morgan provides easy logging for express, and by default it logs to stdout
-// which is a best practice in Docker. Friends don't let friends code their apps to
-// do app logging to files in containers.
-
 const routes = require('./routes');
 
+const prisma = new PrismaClient();
 const { NODE_ENV } = process.env;
 
 // Initialize the Next.js app

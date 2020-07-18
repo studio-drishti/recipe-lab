@@ -22,6 +22,7 @@
     "lint-js": "eslint \"**/*.{js,jsx}\"",
     "prettier": "prettier --write \"**/*.{js,jsx,json,yml,xml,md,css}\"",
     "build": "next build",
+    "prisma:up": "prisma migrate up --experimental",
     "seed": "node server/seed.js"
   },
   "dependencies": {
