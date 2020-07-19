@@ -1,8 +1,8 @@
 import React from 'react';
 import { MdAdd } from 'react-icons/md';
-import Wysiwyg from '../../Wysiwyg';
-import TextButtonGroup from '../../TextButtonGroup';
-import TextButton from '../../TextButton';
+import Wysiwyg from '../Wysiwyg';
+import TextButtonGroup from '../TextButtonGroup';
+import TextButton from '../TextButton';
 
 const FieldNotes = () => {
   const createWysiwyg = () => {
