@@ -10,6 +10,10 @@ import cuid from 'cuid';
 //ADD-PHOTO
 //ADD-VIDEO
 //REORDER?
+//EDIT-WYSIWYG
+//REMOVE-PHOTO
+//REMOVE-VIDEO
+//REMOVE-WYSIWYG
 
 export default (state, action) => {
   switch (action.type) {

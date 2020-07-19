@@ -1,23 +1,22 @@
 import React from 'react';
-import { MdAdd } from 'react-icons/md';
-import TextButton from '../../TextButton';
+import Link from 'next/link';
 
 //This component should be a list of field notes with an add field note button
 //A user that is not logged in cannot create a field note entry
+//Field note list only appears when a user is not editing or creating a field note
 
-const FieldNoteList = () => {
-  const createFieldNote = () => {};
+const FieldNotes = () => {
   return (
     <div>
       Prepare to ponder
       <br />
-      <TextButton onClick={createFieldNote}>
-        <MdAdd /> Add field note
-      </TextButton>
+      <Link href="/new-field-note">
+        <a> + Add field note </a>
+      </Link>
       <br />
       List of field notes here
     </div>
   );
 };
 
-export default FieldNoteList;
+export default FieldNotes;

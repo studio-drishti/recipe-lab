@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import ChefProfileQuery from '../../../graphql/ChefProfile.graphql';
 import Page from '../../../layouts/Profile';
-import FieldNote from '../../../components/Profile/FieldNoteList';
+import FieldNote from '../../../components/Profile/FieldNotes';
 
 const ProfilePage = ({ chef }) => {
   return (

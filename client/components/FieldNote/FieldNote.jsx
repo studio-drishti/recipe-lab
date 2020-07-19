@@ -4,7 +4,17 @@ import Wysiwyg from '../Wysiwyg';
 import TextButtonGroup from '../TextButtonGroup';
 import TextButton from '../TextButton';
 
-const FieldNotes = () => {
+const FieldNote = (props) => {
+  //const { user } = useContext(UserContext);
+  // const [fieldNote, fieltNoteDispatch] = useReducer(
+  //   fieltNoteReducer,
+  //   props.fieltNote ? props.fieltNote : null
+  // );
+
+  const localStoreId = props.fieldNote
+    ? `MOD-${props.fieldNote.uid}`
+    : 'MOD-NEW-FIELD-NOTE';
+
   const createWysiwyg = () => {
     <Wysiwyg />; //This should something like createWysiwyg and then an instance of that component is created
   };
@@ -39,4 +49,4 @@ const FieldNotes = () => {
 //When the appropriate button is selected, the editor appears
 //Hovering over each button should tell the user what the icon corresponds to
 
-export default FieldNotes;
+export default FieldNote;
