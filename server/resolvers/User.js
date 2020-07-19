@@ -17,7 +17,7 @@ module.exports = {
   modifiedRecipeCount: ({ id }, args, ctx) => {
     return ctx.prisma.modification.count({
       where: {
-        author: { id },
+        user: { id },
       },
     });
   },

@@ -2,8 +2,8 @@ const createModification = require('../../utils/createModification');
 const updateModification = require('../../utils/updateModification');
 
 module.exports = async (parent, { userId, recipeId, ...modification }, ctx) => {
-  const mod = await ctx.prisma
-    .modifications({
+  const mod = await ctx.prisma.modification
+    .findMany({
       where: { recipe: { uid: recipeId }, user: { id: userId } },
     })
     .then((mods) => mods.shift());

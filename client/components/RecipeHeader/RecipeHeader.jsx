@@ -133,6 +133,7 @@ const RecipeHeader = ({ placeholderPhoto }) => {
   const disableEditing = () => setEditing(null);
 
   const handleClick = (e) => {
+    if (!recipe) return;
     if (!containerRef.current) return;
     if (containerRef.current.contains(e.target)) return;
     disableEditing();

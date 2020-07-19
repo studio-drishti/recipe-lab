@@ -1,5 +1,5 @@
 module.exports = (ctx, modificationId, modification) =>
-  ctx.prisma.updateModification({
+  ctx.prisma.modification.update({
     where: { id: modificationId },
     data: {
       removals: {
@@ -7,9 +7,13 @@ module.exports = (ctx, modificationId, modification) =>
       },
       sortings: {
         deleteMany: {
-          uid_not_in: modification.sortings
-            .filter((sorting) => sorting.uid)
-            .map((sorting) => sorting.uid),
+          where: {
+            uid: {
+              notIn: modification.sortings
+                .filter((sorting) => sorting.uid)
+                .map((sorting) => sorting.uid),
+            },
+          },
         },
         upsert: modification.sortings.map((sorting) => ({
           where: { uid: sorting.uid },
@@ -29,9 +33,13 @@ module.exports = (ctx, modificationId, modification) =>
       },
       alterations: {
         deleteMany: {
-          uid_not_in: modification.alterations.map(
-            (alteration) => alteration.uid
-          ),
+          where: {
+            uid: {
+              notIn: modification.alterations.map(
+                (alteration) => alteration.uid
+              ),
+            },
+          },
         },
         upsert: modification.alterations.map((alteration) => ({
           where: { uid: alteration.uid },
@@ -48,7 +56,11 @@ module.exports = (ctx, modificationId, modification) =>
       },
       itemAdditions: {
         deleteMany: {
-          uid_not_in: modification.items.map((item) => item.uid),
+          where: {
+            uid: {
+              notIn: modification.items.map((item) => item.uid),
+            },
+          },
         },
         upsert: modification.items.map((item) => ({
           where: { uid: item.uid },
@@ -64,7 +76,11 @@ module.exports = (ctx, modificationId, modification) =>
       },
       stepAdditions: {
         deleteMany: {
-          uid_not_in: modification.steps.map((step) => step.uid),
+          where: {
+            uid: {
+              notIn: modification.steps.map((step) => step.uid),
+            },
+          },
         },
         upsert: modification.steps.map((step) => ({
           where: { uid: step.uid },
@@ -80,9 +96,13 @@ module.exports = (ctx, modificationId, modification) =>
       },
       ingredientAdditions: {
         deleteMany: {
-          uid_not_in: modification.ingredients.map(
-            (ingredient) => ingredient.uid
-          ),
+          where: {
+            uid: {
+              notIn: modification.ingredients.map(
+                (ingredient) => ingredient.uid
+              ),
+            },
+          },
         },
         upsert: modification.ingredients.map((ingredient) => ({
           where: { uid: ingredient.uid },

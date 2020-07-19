@@ -1,3 +1,7 @@
+# import Recipe from 'recipes.graphql'
+
+scalar DateTime
+
 type User {
   id: ID!
   createdAt: DateTime!

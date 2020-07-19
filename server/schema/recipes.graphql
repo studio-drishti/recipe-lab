@@ -1,3 +1,8 @@
+# import User from 'users.graphql'
+# import Modification from 'modifications.graphql'
+
+scalar DateTime
+
 type Recipe {
   uid: ID!
   createdAt: DateTime!
@@ -14,31 +19,40 @@ type Recipe {
   photo: String
 }
 
-input RecipeAuthorWhereInput {
-  slug: String
-  slug_not: String
+input StringFilter {
+  equals: String
+  not: String
+  in: [String!]
 }
 
-input RecipeModificationsWhereInput {
-  user: RecipeAuthorWhereInput
+input UserWhereInput {
+  slug: StringFilter
+}
+
+input ModificationWhereInput {
+  user: UserWhereInput
+}
+
+input ModificationFilter {
+  some: ModificationWhereInput
 }
 
 input RecipesWhereInput {
-  uid_in: [ID!]
-  author: RecipeAuthorWhereInput
-  modifications_some: RecipeModificationsWhereInput
-}
-
-type Item {
-  uid: ID!
-  name: String!
-  steps: [Step!]!
+  uid: StringFilter
+  author: UserWhereInput
+  modifications: ModificationFilter
 }
 
 type Step {
   uid: ID!
   directions: String!
   ingredients: [Ingredient!]!
+}
+
+type Item {
+  uid: ID!
+  name: String!
+  steps: [Step!]!
 }
 
 type Ingredient {

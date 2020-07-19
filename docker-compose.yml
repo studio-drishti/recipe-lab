@@ -10,12 +10,14 @@ services:
     # NOTE: if nodemon isn't restarting on changes, you might be on Windows
     # which has trouble seeing file changes, so add -L to use legacy polling
     # https://github.com/remy/nodemon#application-isnt-restarting
-    #command: ../node_modules/.bin/nodemon --debug=0.0.0.0:5858
+    # command: ../node_modules/.bin/nodemon --debug=0.0.0.0:5858
+    # Port 5555 is prisma studio
     command: ../node_modules/.bin/nodemon --inspect=0.0.0.0:9229 ./bin/www.js
     ports:
       - '${WEB_PORT:-3000}:3000'
       # - '9229:9229'
       - '9230:9230'
+      # - '5555:5555'
     volumes:
       - .:/opt/node_app/app:delegated
       # bind-mounting these two files in will let you add packages during development without rebuilding

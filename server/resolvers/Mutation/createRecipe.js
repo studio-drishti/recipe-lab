@@ -4,7 +4,7 @@ const cuid = require('cuid');
 
 const getUnusedSlug = async (originalSlug, ctx, i = 1) => {
   const slug = i > 1 ? `${originalSlug}-${i}` : originalSlug;
-  const slugTaken = await ctx.prisma.$exists.recipe({ slug });
+  const slugTaken = Boolean(await ctx.prisma.recipe.count({ where: { slug } }));
   if (!slugTaken) {
     return slug;
   }
@@ -16,16 +16,20 @@ module.exports = async (parent, args, ctx) => {
   const { title, time, servingAmount, servingType, description } = args;
   const slug = await getUnusedSlug(getSlug(title), ctx);
 
-  return await ctx.prisma.createRecipe({
-    uid: cuid(),
-    slug,
-    title,
-    time,
-    servingAmount,
-    servingType,
-    description,
-    author: {
-      connect: { id: userId },
+  const recipe = await ctx.prisma.recipe.create({
+    data: {
+      uid: cuid(),
+      slug,
+      title,
+      time,
+      servingAmount,
+      servingType,
+      description,
+      author: {
+        connect: { id: userId },
+      },
     },
   });
+
+  return recipe;
 };

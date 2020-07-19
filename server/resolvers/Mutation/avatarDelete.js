@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 
 module.exports = async (parent, { userId }, ctx) => {
-  const user = await ctx.prisma.user({ id: userId });
+  const user = await ctx.prisma.user.findOne({ where: { id: userId } });
 
   if (!user.avatar) throw new Error('Nothing to delete');
 
@@ -12,7 +12,7 @@ module.exports = async (parent, { userId }, ctx) => {
 
   fs.unlinkSync(avatar);
 
-  return await ctx.prisma.updateUser({
+  return await ctx.prisma.user.update({
     where: { id: userId },
     data: {
       avatar: null,

@@ -29,7 +29,7 @@ const Dashboard = ({ modifiedRecipes, originalRecipes, chef }) => (
 
     <hr />
 
-    {modifiedRecipes.length && (
+    {modifiedRecipes.length > 0 && (
       <>
         <h2>Recently Modified</h2>
         <div className={css.recipesList}>

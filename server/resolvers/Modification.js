@@ -1,24 +1,35 @@
+const { mod } = require('mathjs');
+
 module.exports = {
-  alterations: ({ id }, args, ctx) => {
-    return ctx.prisma.modification.findOne({ where: { id } }).alterations();
-  },
-  sortings: ({ id }, args, ctx) => {
-    return ctx.prisma.modification.findOne({ where: { id } }).sortings();
+  alterations: ({ id }, args, ctx) =>
+    ctx.prisma.alteration.findMany({ where: { modification: { id } } }),
+  sortings: ({ id }, args, ctx) =>
+    ctx.prisma.sorting.findMany({ where: { modification: { id } } }),
+  removals: async ({ id }, args, ctx) => {
+    // const modification = await ctx.prisma.modification.findOne({
+    //   where: { id },
+    // });
+    // console.log('XXXXXXXXXXXXXXXXXXXXXXXXXXX');
+    // console.log(modification);
+    return [];
   },
   additions: async ({ id }, args, ctx) => {
+    const modification = await ctx.prisma.modification.findOne({
+      where: { modification: { id } },
+      include: {
+        itemAdditions: true,
+        stepAdditions: true,
+        ingredientAdditions: true,
+      },
+    });
+    console.log('#########################################');
+    console.log(modification);
     return [
-      ...(await ctx.prisma.modification
-        .findOne({ where: { id } })
-        .itemAdditions()),
-      ...(await ctx.prisma
-        .modificationfindOne({ where: { id } })
-        .stepAdditions()),
-      ...(await ctx.prisma
-        .modificationfindOne({ where: { id } })
-        .ingredientAdditions()),
+      ...modification.itemAdditions,
+      ...modification.stepAdditions,
+      ...modification.ingredientAdditions,
     ];
   },
-  user: ({ id }, args, ctx) => {
-    return ctx.prisma.modification.findOne({ where: { id } }).user();
-  },
+  user: ({ id }, args, ctx) =>
+    ctx.prisma.modification.findOne({ where: { id } }).user(),
 };

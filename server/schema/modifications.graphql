@@ -1,7 +1,10 @@
+# import Recipe from 'recipes.graphql'
+# import User from 'users.graphql'
+
 type Modification {
   id: ID!
-  createdAt: DateTime!
-  updatedAt: DateTime!
+  createdAt: String!
+  updatedAt: String!
   user: User!
   recipe: Recipe!
   sortings: [Sorting!]!
