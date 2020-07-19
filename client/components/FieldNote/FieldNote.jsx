@@ -1,22 +1,22 @@
-import React from 'react';
+import React, { useContext, useReducer } from 'react';
 import { MdAdd } from 'react-icons/md';
+import UserContext from '../../context/UserContext';
 import Wysiwyg from '../Wysiwyg';
 import TextButtonGroup from '../TextButtonGroup';
 import TextButton from '../TextButton';
+import { createWysiwyg } from '../../actions/fieldNote';
+import FieldNoteContext from '../../context/FieldNoteContext';
 
 const FieldNote = (props) => {
-  //const { user } = useContext(UserContext);
-  // const [fieldNote, fieltNoteDispatch] = useReducer(
-  //   fieltNoteReducer,
-  //   props.fieltNote ? props.fieltNote : null
-  // );
+  const { user } = useContext(UserContext);
+  const [fieldNote, fieldNoteDispatch] = useContext(FieldNoteContext);
 
   const localStoreId = props.fieldNote
     ? `MOD-${props.fieldNote.uid}`
     : 'MOD-NEW-FIELD-NOTE';
 
-  const createWysiwyg = () => {
-    <Wysiwyg />; //This should something like createWysiwyg and then an instance of that component is created
+  const handleCreateWysiwyg = () => {
+    createWysiwyg(localStoreId, [], 0, fieldNoteDispatch); //How can I get the wysiwyg to display here???
   };
 
   const createVideo = () => {};
@@ -26,7 +26,7 @@ const FieldNote = (props) => {
       Prepare to ponder
       <br />
       <TextButtonGroup>
-        <TextButton onClick={createWysiwyg}>
+        <TextButton onClick={handleCreateWysiwyg}>
           <MdAdd /> Add text
         </TextButton>
         <TextButton onClick={createVideo}>
