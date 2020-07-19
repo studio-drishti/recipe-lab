@@ -7,12 +7,10 @@ module.exports = (ctx, modificationId, modification) =>
       },
       sortings: {
         deleteMany: {
-          where: {
-            uid: {
-              notIn: modification.sortings
-                .filter((sorting) => sorting.uid)
-                .map((sorting) => sorting.uid),
-            },
+          uid: {
+            notIn: modification.sortings
+              .filter((sorting) => sorting.uid)
+              .map((sorting) => sorting.uid),
           },
         },
         upsert: modification.sortings.map((sorting) => ({
@@ -33,12 +31,8 @@ module.exports = (ctx, modificationId, modification) =>
       },
       alterations: {
         deleteMany: {
-          where: {
-            uid: {
-              notIn: modification.alterations.map(
-                (alteration) => alteration.uid
-              ),
-            },
+          uid: {
+            notIn: modification.alterations.map((alteration) => alteration.uid),
           },
         },
         upsert: modification.alterations.map((alteration) => ({
@@ -56,10 +50,8 @@ module.exports = (ctx, modificationId, modification) =>
       },
       itemAdditions: {
         deleteMany: {
-          where: {
-            uid: {
-              notIn: modification.items.map((item) => item.uid),
-            },
+          uid: {
+            notIn: modification.items.map((item) => item.uid),
           },
         },
         upsert: modification.items.map((item) => ({
@@ -76,10 +68,8 @@ module.exports = (ctx, modificationId, modification) =>
       },
       stepAdditions: {
         deleteMany: {
-          where: {
-            uid: {
-              notIn: modification.steps.map((step) => step.uid),
-            },
+          uid: {
+            notIn: modification.steps.map((step) => step.uid),
           },
         },
         upsert: modification.steps.map((step) => ({
@@ -96,12 +86,8 @@ module.exports = (ctx, modificationId, modification) =>
       },
       ingredientAdditions: {
         deleteMany: {
-          where: {
-            uid: {
-              notIn: modification.ingredients.map(
-                (ingredient) => ingredient.uid
-              ),
-            },
+          uid: {
+            notIn: modification.ingredients.map((ingredient) => ingredient.uid),
           },
         },
         upsert: modification.ingredients.map((ingredient) => ({
