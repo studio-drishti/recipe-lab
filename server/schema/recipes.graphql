@@ -16,11 +16,17 @@ type Recipe {
 
 input RecipeAuthorWhereInput {
   slug: String
+  slug_not: String
+}
+
+input RecipeModificationsWhereInput {
+  user: RecipeAuthorWhereInput
 }
 
 input RecipesWhereInput {
   uid_in: [ID!]
   author: RecipeAuthorWhereInput
+  modifications_some: RecipeModificationsWhereInput
 }
 
 type Item {

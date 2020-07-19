@@ -1,12 +1,26 @@
 #import './ChefDetailsFragment.graphql'
 query chefDashboard($slug: String!) {
-  user(slug: $slug) {
+  chef: user(slug: $slug) {
     ...ChefDetails
   }
   originalRecipes: recipes(
     first: 4
     orderBy: updatedAt_DESC
     where: { author: { slug: $slug } }
+  ) {
+    uid
+    title
+    slug
+    description
+    photo
+  }
+  modifiedRecipes: recipes(
+    first: 4
+    orderBy: updatedAt_DESC
+    where: {
+      author: { slug_not: $slug }
+      modifications_some: { user: { slug: $slug } }
+    }
   ) {
     uid
     title
