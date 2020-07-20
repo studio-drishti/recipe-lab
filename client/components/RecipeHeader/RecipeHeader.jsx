@@ -11,7 +11,7 @@ import {
   MdDeleteForever,
 } from 'react-icons/md';
 import { fraction } from 'mathjs';
-import { useMutation } from '@apollo/react-hooks';
+import { useMutation } from '@apollo/client';
 import { FilePond, registerPlugin } from 'react-filepond';
 import FilePondPluginImageCrop from 'filepond-plugin-image-crop';
 import FilePondPluginImageResize from 'filepond-plugin-image-resize';

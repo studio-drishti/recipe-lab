@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react';
 import Link from 'next/link';
 import classnames from 'classnames';
-import { useApolloClient } from '@apollo/react-hooks';
+import { useApolloClient } from '@apollo/client';
 import { logout } from '../../lib/auth';
 import UserContext from '../../context/UserContext';
 import css from './Navigation.module.css';

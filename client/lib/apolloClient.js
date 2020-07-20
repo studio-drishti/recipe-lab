@@ -1,10 +1,6 @@
-import { ApolloClient } from 'apollo-client';
-import {
-  InMemoryCache,
-  IntrospectionFragmentMatcher,
-} from 'apollo-cache-inmemory';
+import { ApolloClient, InMemoryCache } from '@apollo/client';
 import { createUploadLink } from 'apollo-upload-client';
-import { setContext } from 'apollo-link-context';
+import { setContext } from '@apollo/client/link/context';
 import fetch from 'isomorphic-unfetch';
 import nextCookie from 'next-cookies';
 
@@ -93,19 +89,19 @@ export const createApolloClient = (initialState, ctx) => {
 
   // Needed for using interfaces and unions for some reason...
   // See: https://github.com/apollographql/apollo-client/issues/3397
-  const fragmentMatcher = new IntrospectionFragmentMatcher({
-    introspectionQueryResultData: {
-      __schema: {
-        types: [],
-      },
-    },
-  });
+  // const fragmentMatcher = new IntrospectionFragmentMatcher({
+  //   introspectionQueryResultData: {
+  //     __schema: {
+  //       types: [],
+  //     },
+  //   },
+  // });
 
   // The `ctx` (NextPageContext) will only be present on the server.
   // use it to extract auth headers (ctx.req) or similar.
   return new ApolloClient({
     ssrMode: Boolean(ctx),
     link: authLink.concat(httpLink),
-    cache: new InMemoryCache({ fragmentMatcher }).restore(initialState),
+    cache: new InMemoryCache().restore(initialState),
   });
 };

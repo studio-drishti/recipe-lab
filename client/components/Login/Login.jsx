@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react';
 import { useRouter } from 'next/router';
-import { useMutation } from '@apollo/react-hooks';
+import { useMutation } from '@apollo/client';
 import { login } from '../../lib/auth';
 import UserContext from '../../context/UserContext';
 import SignInMutation from '../../graphql/SignInMutation.graphql';
