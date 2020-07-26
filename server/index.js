@@ -8,8 +8,9 @@ const { GraphQLFileLoader } = require('@graphql-tools/graphql-file-loader');
 const { addResolversToSchema } = require('@graphql-tools/schema');
 const { PrismaClient } = require('@prisma/client');
 const morgan = require('morgan');
+const { applyMiddleware } = require('graphql-middleware');
 const resolvers = require('./resolvers');
-// const permissions = require('./permissions');
+const permissions = require('./permissions');
 const routes = require('./routes');
 
 const prisma = new PrismaClient();
@@ -25,15 +26,16 @@ const nextApp = next({
 module.exports = nextApp
   .prepare()
   .then(() => {
-    const schema = addResolversToSchema(
-      loadSchemaSync(path.resolve(__dirname, 'schema/schema.graphql'), {
-        loaders: [new GraphQLFileLoader()],
-      }),
-      resolvers
-    );
     return new ApolloServer({
-      schema,
-      // middlewares: [permissions],
+      schema: applyMiddleware(
+        addResolversToSchema(
+          loadSchemaSync(path.resolve(__dirname, 'schema/schema.graphql'), {
+            loaders: [new GraphQLFileLoader()],
+          }),
+          resolvers
+        ),
+        permissions
+      ),
       context: (request) => {
         return {
           ...request,
