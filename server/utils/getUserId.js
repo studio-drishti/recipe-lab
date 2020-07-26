@@ -1,7 +1,7 @@
 const { verify } = require('jsonwebtoken');
 
 module.exports = (ctx) => {
-  const Authorization = ctx.request.get('Authorization');
+  const Authorization = ctx.req.get('Authorization');
   if (!Authorization) throw new Error('No auth headers found');
   if (Authorization) {
     const token = Authorization.replace('Bearer ', '');
