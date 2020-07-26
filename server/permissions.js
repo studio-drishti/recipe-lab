@@ -21,13 +21,14 @@ const rules = {
   isRecipeOwner: rule({ cache: 'contextual' })(
     async (parent, { recipeId }, ctx) => {
       const userId = getUserId(ctx);
-      const recipeCount = await ctx.prisma.recipe.count({
-        where: {
-          uid: recipeId,
-          author: { id: userId },
-        },
-      });
-      return Boolean(recipeCount >= 1);
+      return Boolean(
+        await ctx.prisma.recipe.count({
+          where: {
+            uid: recipeId,
+            author: { id: userId },
+          },
+        })
+      );
     }
   ),
   isAccountOwner: rule({ cache: 'contextual' })(async (parent, args, ctx) => {

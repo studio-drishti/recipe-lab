@@ -2,76 +2,32 @@ const getUserId = require('../../utils/getUserId');
 
 module.exports = async (parent, { recipeId }, ctx) => {
   const userId = getUserId(ctx);
-  const recipe = await ctx.prisma.recipe({ uid: recipeId }).$fragment(`
-    fragment RecipeWithEverything on Recipe {
-      id
-      uid
-      slug
-      title
-      time
-      servingAmount
-      servingType
-      description
-      items(orderBy: index_ASC) {
-        uid
-        index
-        name
-        steps(orderBy: index_ASC) {
-          uid
-          index
-          directions
-          ingredients(orderBy: index_ASC) {
-            uid
-            index
-            name
-            quantity
-            unit
-            processing
-          }
-        }
-      }
-    }
-  `);
+  const recipe = await ctx.prisma.recipe.findOne({
+    where: { uid: recipeId },
+    include: {
+      items: {
+        orderBy: { index: 'asc' },
+        include: {
+          steps: {
+            orderBy: { index: 'asc' },
+            include: { ingredients: { orderBy: { index: 'asc' } } },
+          },
+        },
+      },
+    },
+  });
 
-  const mod = await ctx.prisma
-    .modifications({
+  const mod = await ctx.prisma.modification
+    .findMany({
       where: { recipe: { uid: recipeId }, user: { id: userId } },
+      include: {
+        sortings: true,
+        alterations: true,
+        itemAdditions: true,
+        stepAdditions: true,
+        ingredientAdditions: true,
+      },
     })
-    .$fragment(
-      `
-      fragment ModificationWithEverything on Modification {
-        id
-        removals
-        sortings {
-          parentId
-          order
-        }
-        alterations {
-          sourceId
-          field
-          value
-        }
-        itemAdditions {
-          uid
-          parentId
-          name
-        }
-        stepAdditions {
-          uid
-          parentId
-          directions
-        }
-        ingredientAdditions {
-          uid
-          parentId
-          name
-          quantity
-          unit
-          processing
-        }
-      }
-    `
-    )
     .then((mods) => mods.shift());
 
   if (!mod)
@@ -183,17 +139,25 @@ module.exports = async (parent, { recipeId }, ctx) => {
     },
   });
 
-  await ctx.prisma.deleteManySteps({
-    uid_in: removals,
-    item: { recipe: { id: recipe.id } },
+  await ctx.prisma.step.deleteMany({
+    where: {
+      uid: {
+        in: removals,
+      },
+      item: { recipe: { id: recipe.id } },
+    },
   });
-  await ctx.prisma.deleteManyIngredients({
-    uid_in: removals,
-    step: { item: { recipe: { id: recipe.id } } },
+  await ctx.prisma.ingredient.deleteMany({
+    where: {
+      uid: {
+        in: removals,
+      },
+      step: { item: { recipe: { id: recipe.id } } },
+    },
   });
 
   const items = recipe.items.filter((item) => !removals.includes(item.uid));
-  const publishedRecipe = await ctx.prisma.updateRecipe({
+  const publishedRecipe = await ctx.prisma.recipe.update({
     where: { uid: recipeId },
     data: {
       title: maybeGetAlteration('title', recipe),
@@ -203,7 +167,9 @@ module.exports = async (parent, { recipeId }, ctx) => {
       description: maybeGetAlteration('description', recipe),
       items: {
         deleteMany: {
-          uid_in: removals,
+          uid: {
+            in: removals,
+          },
         },
         update: items.map(updateItems),
         create: itemAdditions.map((item, i) =>
@@ -213,7 +179,22 @@ module.exports = async (parent, { recipeId }, ctx) => {
     },
   });
 
-  await ctx.prisma.deleteModification({ id: mod.id });
+  await ctx.prisma.sorting.deleteMany({
+    where: { modification: { id: mod.id } },
+  });
+  await ctx.prisma.alteration.deleteMany({
+    where: { modification: { id: mod.id } },
+  });
+  await ctx.prisma.itemAddition.deleteMany({
+    where: { modification: { id: mod.id } },
+  });
+  await ctx.prisma.stepAddition.deleteMany({
+    where: { modification: { id: mod.id } },
+  });
+  await ctx.prisma.ingredientAddition.deleteMany({
+    where: { modification: { id: mod.id } },
+  });
+  await ctx.prisma.modification.delete({ where: { id: mod.id } });
 
   return publishedRecipe;
 };
