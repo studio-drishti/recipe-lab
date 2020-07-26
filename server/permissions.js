@@ -12,16 +12,23 @@ const rules = {
   }),
   isExecutiveChef: rule({ cache: 'contextual' })(async (parent, args, ctx) => {
     const userId = getUserId(ctx);
-    const user = await ctx.prisma.user({ id: userId });
+    const user = await ctx.prisma.user.findOne({
+      where: { id: userId },
+      select: { role: true },
+    });
     return Boolean(user.role === 'EXECUTIVE_CHEF');
   }),
   isRecipeOwner: rule({ cache: 'contextual' })(
     async (parent, { recipeId }, ctx) => {
       const userId = getUserId(ctx);
-      return await ctx.prisma.$exists.recipe({
-        uid: recipeId,
-        author: { id: userId },
-      });
+      return Boolean(
+        await ctx.prisma.recipe.count({
+          where: {
+            uid: recipeId,
+            author: { id: userId },
+          },
+        })
+      );
     }
   ),
   isAccountOwner: rule({ cache: 'contextual' })(async (parent, args, ctx) => {

@@ -6,10 +6,11 @@ const createModification = require('../../utils/createModification');
 
 const getUnusedSlug = async (originalSlug, ctx, i = 1) => {
   const slug = i > 1 ? `${originalSlug}-${i}` : originalSlug;
-  const slugTaken = await ctx.prisma.$exists.user({ slug });
+  const slugTaken = Boolean(await ctx.prisma.user.count({ where: { slug } }));
   if (!slugTaken) {
     return slug;
   }
+
   return getUnusedSlug(originalSlug, ctx, i + 1);
 };
 
@@ -21,18 +22,20 @@ module.exports = async (
   const recipeModsCreated = [];
   const hashedPassword = await hash(password, 10);
 
-  const userExists = await ctx.prisma.$exists.user({ email });
+  const userExists = Boolean(await ctx.prisma.user.count({ where: { email } }));
 
   if (userExists)
     throw new Error('A user with that email address already exists.');
 
   const slug = await getUnusedSlug(getSlug(name), ctx);
 
-  const user = await ctx.prisma.createUser({
-    name,
-    slug,
-    email: normalizeEmail(email),
-    password: hashedPassword,
+  const user = await ctx.prisma.user.create({
+    data: {
+      name,
+      slug,
+      email: normalizeEmail(email),
+      password: hashedPassword,
+    },
   });
 
   if (modifications) {

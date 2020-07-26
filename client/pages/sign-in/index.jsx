@@ -10,7 +10,6 @@ const SignInPage = () => {
   const { setUser } = useContext(UserContext);
 
   useEffect(() => {
-    console.log(Cookies.get('token'));
     if (!Cookies.get('token')) setUser(null);
   }, []);
 

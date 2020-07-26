@@ -18,7 +18,7 @@ module.exports = async (
     data.password = hashedPassword;
   }
 
-  const user = await ctx.prisma.updateUser({
+  const user = await ctx.prisma.user.update({
     where: {
       id: userId,
     },

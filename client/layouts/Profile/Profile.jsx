@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useLazyQuery } from '@apollo/react-hooks';
+import { useLazyQuery } from '@apollo/client';
 import Navigation from '../../components/Navigation';
 import Footer from '../../components/Footer';
 import ProfileHeader from '../../components/Profile/Header';

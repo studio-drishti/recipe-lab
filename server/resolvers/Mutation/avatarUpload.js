@@ -11,7 +11,7 @@ module.exports = async (parent, { file, userId }, ctx) => {
   const dest = path.resolve(__dirname, '../../public/avatars');
   fs.mkdirSync(dest, { recursive: true });
 
-  const user = await ctx.prisma.user({ id: userId });
+  const user = await ctx.prisma.user.findOne({ where: { id: userId } });
   if (user.avatar) {
     const oldAvatar = path.join(dest, user.avatar);
     if (fs.existsSync(oldAvatar)) fs.unlinkSync(oldAvatar);
@@ -20,7 +20,7 @@ module.exports = async (parent, { file, userId }, ctx) => {
   const stream = createReadStream();
   const { filename } = await storeFS(stream, dest, originalFilename);
 
-  return await ctx.prisma.updateUser({
+  return await ctx.prisma.user.update({
     where: { id: userId },
     data: {
       avatar: filename,

@@ -39,6 +39,9 @@ HEALTHCHECK --interval=30s CMD node server/healthcheck.js
 WORKDIR /opt/node_app/app
 COPY . .
 
+# Generate prisma client
+RUN npx prisma generate
+
 COPY docker-entrypoint.sh /usr/local/bin/
 ENTRYPOINT ["docker-entrypoint.sh"]
 

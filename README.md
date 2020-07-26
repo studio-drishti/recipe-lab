@@ -65,8 +65,8 @@ To execute the unit-tests, you would:
 To seed the database:
 
 - Start the container `docker-compose up`
-- Deploy prisma `docker-compose exec node npm run prisma-deploy`
-- Seed the database `docker-compose exec node npm run prisma-seed`
+- Deploy prisma `docker-compose exec app npm run prisma:up`
+- Seed the database `docker-compose exec app npm run seed`
 
 ## Editor Configuration
 

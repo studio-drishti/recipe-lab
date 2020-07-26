@@ -1,6 +1,6 @@
 import React, { useContext, useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { useMutation } from '@apollo/react-hooks';
+import { useMutation } from '@apollo/client';
 import { useRouter } from 'next/router';
 import UserContext from '../../context/UserContext';
 import SaveModificationMutation from '../../graphql/SaveModificationMutation.graphql';

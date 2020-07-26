@@ -4,9 +4,9 @@ query chefDashboard($slug: String!) {
     ...ChefDetails
   }
   originalRecipes: recipes(
-    first: 4
-    orderBy: updatedAt_DESC
-    where: { author: { slug: $slug } }
+    take: 4
+    orderBy: { updatedAt: desc }
+    where: { author: { slug: { equals: $slug } } }
   ) {
     uid
     title
@@ -15,11 +15,11 @@ query chefDashboard($slug: String!) {
     photo
   }
   modifiedRecipes: recipes(
-    first: 4
-    orderBy: updatedAt_DESC
+    take: 4
+    orderBy: { updatedAt: desc }
     where: {
-      author: { slug_not: $slug }
-      modifications_some: { user: { slug: $slug } }
+      author: { slug: { not: $slug } }
+      modifications: { some: { user: { slug: { equals: $slug } } } }
     }
   ) {
     uid

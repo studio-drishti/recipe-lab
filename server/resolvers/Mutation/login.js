@@ -3,7 +3,7 @@ const { sign } = require('jsonwebtoken');
 const createModification = require('../../utils/createModification');
 
 module.exports = async (parent, { email, password, modifications }, ctx) => {
-  const user = await ctx.prisma.user({ email });
+  const user = await ctx.prisma.user.findOne({ where: { email } });
   const recipeModsCreated = [];
   const recipeModsInConflict = [];
   if (!user) {
@@ -18,10 +18,14 @@ module.exports = async (parent, { email, password, modifications }, ctx) => {
   if (modifications) {
     await Promise.all(
       modifications.map(async ({ recipeId, ...modification }) => {
-        const modExists = await ctx.prisma.$exists.modification({
-          user: { id: user.id },
-          recipe: { uid: recipeId },
-        });
+        const modExists = Boolean(
+          await ctx.prisma.modification.count({
+            where: {
+              user: { id: user.id },
+              recipe: { uid: recipeId },
+            },
+          })
+        );
         if (!modExists) {
           await createModification(ctx, recipeId, user.id, modification);
           recipeModsCreated.push(recipeId);

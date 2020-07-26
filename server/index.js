@@ -1,18 +1,19 @@
 const path = require('path');
 const next = require('next');
-const nextConfig = require('../next.config.js');
 const express = require('express');
-const { GraphQLServer } = require('graphql-yoga');
-const { prisma } = require('./generated/prisma-client');
+const nextConfig = require('../next.config.js');
+const { ApolloServer } = require('apollo-server-express');
+const { loadSchemaSync } = require('@graphql-tools/load');
+const { GraphQLFileLoader } = require('@graphql-tools/graphql-file-loader');
+const { addResolversToSchema } = require('@graphql-tools/schema');
+const { PrismaClient } = require('@prisma/client');
+const morgan = require('morgan');
+const { applyMiddleware } = require('graphql-middleware');
 const resolvers = require('./resolvers');
 const permissions = require('./permissions');
-const morgan = require('morgan');
-// morgan provides easy logging for express, and by default it logs to stdout
-// which is a best practice in Docker. Friends don't let friends code their apps to
-// do app logging to files in containers.
-
 const routes = require('./routes');
 
+const prisma = new PrismaClient();
 const { NODE_ENV } = process.env;
 
 // Initialize the Next.js app
@@ -25,10 +26,16 @@ const nextApp = next({
 module.exports = nextApp
   .prepare()
   .then(() => {
-    return new GraphQLServer({
-      typeDefs: path.resolve(__dirname, 'schema/schema.graphql'),
-      resolvers,
-      middlewares: [permissions],
+    return new ApolloServer({
+      schema: applyMiddleware(
+        addResolversToSchema(
+          loadSchemaSync(path.resolve(__dirname, 'schema/schema.graphql'), {
+            loaders: [new GraphQLFileLoader()],
+          }),
+          resolvers
+        ),
+        permissions
+      ),
       context: (request) => {
         return {
           ...request,
@@ -37,22 +44,14 @@ module.exports = nextApp
       },
     });
   })
-  .then((server) => {
-    server.express.use(morgan('common'));
-    server.express.use(
-      '/public',
-      express.static(path.resolve(__dirname, 'public'))
-    );
-    server.express.use(routes);
-
-    server.express.all('*', (req, res, next) => {
-      if (['/playground', '/graphql'].includes(req.path)) return next();
-
-      const nextRequestHandler = nextApp.getRequestHandler();
-      return nextRequestHandler(req, res);
-    });
-
-    return server;
+  .then((apolloServer) => {
+    const app = express();
+    app.use(morgan('common'));
+    app.use('/public', express.static(path.resolve(__dirname, 'public')));
+    app.use(routes);
+    apolloServer.applyMiddleware({ app });
+    app.all('*', nextApp.getRequestHandler());
+    return app;
   })
   .catch((ex) => {
     console.error(ex.stack);

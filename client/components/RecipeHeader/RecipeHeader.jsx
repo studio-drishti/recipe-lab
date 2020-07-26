@@ -11,7 +11,7 @@ import {
   MdDeleteForever,
 } from 'react-icons/md';
 import { fraction } from 'mathjs';
-import { useMutation } from '@apollo/react-hooks';
+import { useMutation } from '@apollo/client';
 import { FilePond, registerPlugin } from 'react-filepond';
 import FilePondPluginImageCrop from 'filepond-plugin-image-crop';
 import FilePondPluginImageResize from 'filepond-plugin-image-resize';
@@ -133,6 +133,7 @@ const RecipeHeader = ({ placeholderPhoto }) => {
   const disableEditing = () => setEditing(null);
 
   const handleClick = (e) => {
+    if (!recipe) return;
     if (!containerRef.current) return;
     if (containerRef.current.contains(e.target)) return;
     disableEditing();

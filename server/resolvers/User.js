@@ -1,6 +1,6 @@
 module.exports = {
   recipes: ({ id }, args, ctx) => {
-    return ctx.prisma.user({ id }).recipes();
+    return ctx.prisma.user.findOne({ where: { id } }).recipes();
   },
   avatar: (parent) => {
     return parent.avatar
@@ -8,19 +8,17 @@ module.exports = {
       : `/static/placeholders/avatar-${Math.floor(Math.random() * 2 + 1)}.jpg`;
   },
   recipeCount: ({ id }, args, ctx) => {
-    return ctx.prisma
-      .recipesConnection({ where: { author: { id } } })
-      .aggregate()
-      .count();
+    return ctx.prisma.recipe.count({
+      where: {
+        author: { id },
+      },
+    });
   },
   modifiedRecipeCount: ({ id }, args, ctx) => {
-    return ctx.prisma
-      .modificationsConnection({
-        where: {
-          AND: [{ user: { id } }, { recipe: { author: { id_not: id } } }],
-        },
-      })
-      .aggregate()
-      .count();
+    return ctx.prisma.modification.count({
+      where: {
+        user: { id },
+      },
+    });
   },
 };

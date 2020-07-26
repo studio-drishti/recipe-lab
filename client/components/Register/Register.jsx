@@ -1,6 +1,6 @@
 import React, { useState, useContext, useRef } from 'react';
 import { useRouter } from 'next/router';
-import { useMutation } from '@apollo/react-hooks';
+import { useMutation } from '@apollo/client';
 import isEmail from 'validator/lib/isEmail';
 import { login } from '../../lib/auth';
 import UserContext from '../../context/UserContext';
