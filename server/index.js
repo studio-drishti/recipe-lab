@@ -9,7 +9,7 @@ const { addResolversToSchema } = require('@graphql-tools/schema');
 const { PrismaClient } = require('@prisma/client');
 const morgan = require('morgan');
 const resolvers = require('./resolvers');
-const permissions = require('./permissions');
+// const permissions = require('./permissions');
 const routes = require('./routes');
 
 const prisma = new PrismaClient();

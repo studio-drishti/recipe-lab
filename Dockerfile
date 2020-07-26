@@ -32,15 +32,15 @@ ENV PATH /opt/node_app/node_modules/.bin:$PATH
 # next.js depends on this cache directory for building the app
 RUN mkdir -p /opt/node_app/app/node_modules/.cache
 
-# Generate prisma client
-RUN npx prisma generate
-
 # check every 30s to ensure this service returns HTTP 200
 HEALTHCHECK --interval=30s CMD node server/healthcheck.js
 
 # copy in our source code last, as it changes the most
 WORKDIR /opt/node_app/app
 COPY . .
+
+# Generate prisma client
+RUN npx prisma generate
 
 COPY docker-entrypoint.sh /usr/local/bin/
 ENTRYPOINT ["docker-entrypoint.sh"]
