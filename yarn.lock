@@ -2115,6 +2115,7 @@ __metadata:
     babel-core: 7.0.0-bridge.0
     babel-eslint: 10.1.0
     babel-jest: 26.1.0
+    concurrently: ^5.3.0
     cross-env: 7.0.2
     enzyme: 3.11.0
     enzyme-adapter-react-16: 1.15.2
@@ -4801,6 +4802,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"cliui@npm:^5.0.0":
+  version: 5.0.0
+  resolution: "cliui@npm:5.0.0"
+  dependencies:
+    string-width: ^3.1.0
+    strip-ansi: ^5.2.0
+    wrap-ansi: ^5.1.0
+  checksum: 25e61dc985279bd7ec16715df53288346e5c36ff43956f7de31bf55b2432ce1259e75148b28c3ed41265caf1baee1d204363c429ae5fee54e6f78bed5a5d82b3
+  languageName: node
+  linkType: hard
+
 "cliui@npm:^6.0.0":
   version: 6.0.0
   resolution: "cliui@npm:6.0.0"
@@ -5023,6 +5035,25 @@ __metadata:
     readable-stream: ^2.2.2
     typedarray: ^0.0.6
   checksum: 7a97b7a7d0938e36800bdb6f5caf938bac8c523a6ec15df1f2ac41d3785541be30a6671c9f4c0d1ac9609e6ab29dcab8f54d1c84035e3e3b7b24f9336da68ab0
+  languageName: node
+  linkType: hard
+
+"concurrently@npm:^5.3.0":
+  version: 5.3.0
+  resolution: "concurrently@npm:5.3.0"
+  dependencies:
+    chalk: ^2.4.2
+    date-fns: ^2.0.1
+    lodash: ^4.17.15
+    read-pkg: ^4.0.1
+    rxjs: ^6.5.2
+    spawn-command: ^0.0.2-1
+    supports-color: ^6.1.0
+    tree-kill: ^1.2.2
+    yargs: ^13.3.0
+  bin:
+    concurrently: bin/concurrently.js
+  checksum: c46bb460ea0fdf1a15232d84b6122e1ec56655043c154d2be70375ab6eafe04a9224d0da35af5bf190e09d85343bda7a670a886cc67e678fabc4996e9f41650f
   languageName: node
   linkType: hard
 
@@ -5656,6 +5687,13 @@ __metadata:
     whatwg-mimetype: ^2.3.0
     whatwg-url: ^8.0.0
   checksum: 42239927c6a202e2d02b7f41c94ca53e3cea036898b97b8bf6120ed1b25e0dd11c48ec7aa5c84cf807c2cb9f3a637df9fb50f3ca25a52863186a4ac46254726b
+  languageName: node
+  linkType: hard
+
+"date-fns@npm:^2.0.1":
+  version: 2.15.0
+  resolution: "date-fns@npm:2.15.0"
+  checksum: 045c172823f361aa466338a2d2670629b2639ad33da22d5f4012d97e2726e92d8fc617a0d6c815a11086a0e6d2226192c2191c4d5c0d898c5a978794f21007cb
   languageName: node
   linkType: hard
 
@@ -10963,7 +11001,7 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"normalize-package-data@npm:^2.5.0":
+"normalize-package-data@npm:^2.3.2, normalize-package-data@npm:^2.5.0":
   version: 2.5.0
   resolution: "normalize-package-data@npm:2.5.0"
   dependencies:
@@ -11701,6 +11739,13 @@ fsevents@^1.2.7:
   version: 2.2.2
   resolution: "picomatch@npm:2.2.2"
   checksum: 20fa75e0a58b39d83425b3db68744d5f6f361fd4fd66ec7745d884036d502abba0d553a637703af79939b844164b13e60eea339ccb043d7fbd74c3da2592b864
+  languageName: node
+  linkType: hard
+
+"pify@npm:^3.0.0":
+  version: 3.0.0
+  resolution: "pify@npm:3.0.0"
+  checksum: 18af2b29148c4d6fd4c7741dbd953ff76beea17d1b4a6d5792d7ff1d7202f43671c3f29313aa5ec01a66d050dbdbb0cf23f17de69531da8dc8bda42d327cf960
   languageName: node
   linkType: hard
 
@@ -13204,6 +13249,17 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
+"read-pkg@npm:^4.0.1":
+  version: 4.0.1
+  resolution: "read-pkg@npm:4.0.1"
+  dependencies:
+    normalize-package-data: ^2.3.2
+    parse-json: ^4.0.0
+    pify: ^3.0.0
+  checksum: cc1ed67240e0f8c51e11ab3dbe17041ceae75427925babf816812e437d0adfbe2c8449142a41feaed81a5c2572a986e27be2fa093dab8b3f2eb29951ca24f8d2
+  languageName: node
+  linkType: hard
+
 "read-pkg@npm:^5.2.0":
   version: 5.2.0
   resolution: "read-pkg@npm:5.2.0"
@@ -13782,6 +13838,15 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
+"rxjs@npm:^6.5.2":
+  version: 6.6.2
+  resolution: "rxjs@npm:6.6.2"
+  dependencies:
+    tslib: ^1.9.0
+  checksum: 9b16cd36093b87ce454726f14783e204b80431e6657d36191877e4d9d4b0713c73e5ee8b45be336b081d47b10cd016b3812ea3bd4b27bf87942b1410aa18ee04
+  languageName: node
+  linkType: hard
+
 "safe-buffer@npm:5.1.2, safe-buffer@npm:^5.0.1, safe-buffer@npm:^5.1.2, safe-buffer@npm:~5.1.0, safe-buffer@npm:~5.1.1":
   version: 5.1.2
   resolution: "safe-buffer@npm:5.1.2"
@@ -14260,6 +14325,13 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
+"spawn-command@npm:^0.0.2-1":
+  version: 0.0.2
+  resolution: "spawn-command@npm:0.0.2"
+  checksum: 961fb1551f2d5848509ec661f639c515e582034b010724fcaad6949148e21c50226e30889dd710a70dce25c4ba43437665aad621fc37c0f8a75fa9ec3e46a69f
+  languageName: node
+  linkType: hard
+
 "spdx-correct@npm:^3.0.0":
   version: 3.1.1
   resolution: "spdx-correct@npm:3.1.1"
@@ -14531,7 +14603,7 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"string-width@npm:^3.0.0":
+"string-width@npm:^3.0.0, string-width@npm:^3.1.0":
   version: 3.1.0
   resolution: "string-width@npm:3.1.0"
   dependencies:
@@ -14647,7 +14719,7 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"strip-ansi@npm:^5.1.0":
+"strip-ansi@npm:^5.0.0, strip-ansi@npm:^5.1.0, strip-ansi@npm:^5.2.0":
   version: 5.2.0
   resolution: "strip-ansi@npm:5.2.0"
   dependencies:
@@ -15263,6 +15335,15 @@ fsevents@^1.2.7:
   version: 0.6.6
   resolution: "traverse@npm:0.6.6"
   checksum: f2bfaae69246bc1b630ad51d44be0a2a953be1650f754c299e5a05e4f00e4b493aa6c37a98410f9c2c902a21bef7f1ab10a9cdb9b9e8ee8813e1a9e95074dafd
+  languageName: node
+  linkType: hard
+
+"tree-kill@npm:^1.2.2":
+  version: 1.2.2
+  resolution: "tree-kill@npm:1.2.2"
+  bin:
+    tree-kill: cli.js
+  checksum: 967643efa4a231868232ea9d046c3ba7494ea6061fbb1e661c699b43ca0f0a14dad0782a631d915959d562830035166bab80ed726f9fe33b838af8a7516624ed
   languageName: node
   linkType: hard
 
@@ -16261,6 +16342,17 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
+"wrap-ansi@npm:^5.1.0":
+  version: 5.1.0
+  resolution: "wrap-ansi@npm:5.1.0"
+  dependencies:
+    ansi-styles: ^3.2.0
+    string-width: ^3.0.0
+    strip-ansi: ^5.0.0
+  checksum: 9622c3aa2742645e9a6941d297436a433c65ffe1b1416578ad56e0df657716bda6857401c5c9cc485c0abbc04e852aafedf295d87e2d6ec58a01799d6bcb2fdf
+  languageName: node
+  linkType: hard
+
 "wrap-ansi@npm:^6.2.0":
   version: 6.2.0
   resolution: "wrap-ansi@npm:6.2.0"
@@ -16401,6 +16493,16 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
+"yargs-parser@npm:^13.1.2":
+  version: 13.1.2
+  resolution: "yargs-parser@npm:13.1.2"
+  dependencies:
+    camelcase: ^5.0.0
+    decamelize: ^1.2.0
+  checksum: 82d3b7ab99085d70a5121399ad407d2b98d296538bf7012ac2ce044a61160ca891ea617de6374699d81955d9a61c36a3b2a6a51588e38f710bd211ce2e63c33c
+  languageName: node
+  linkType: hard
+
 "yargs-parser@npm:^18.1.2, yargs-parser@npm:^18.1.3":
   version: 18.1.3
   resolution: "yargs-parser@npm:18.1.3"
@@ -16408,6 +16510,24 @@ fsevents@^1.2.7:
     camelcase: ^5.0.0
     decamelize: ^1.2.0
   checksum: 33871721679053cc38165afc6356c06c3e820459589b5db78f315886105070eb90cbb583cd6515fa4231937d60c80262ca2b7c486d5942576802446318a39597
+  languageName: node
+  linkType: hard
+
+"yargs@npm:^13.3.0":
+  version: 13.3.2
+  resolution: "yargs@npm:13.3.2"
+  dependencies:
+    cliui: ^5.0.0
+    find-up: ^3.0.0
+    get-caller-file: ^2.0.1
+    require-directory: ^2.1.1
+    require-main-filename: ^2.0.0
+    set-blocking: ^2.0.0
+    string-width: ^3.0.0
+    which-module: ^2.0.0
+    y18n: ^4.0.0
+    yargs-parser: ^13.1.2
+  checksum: 92c612cd14a9217d7421ae4f42bc7c460472633bfc2e45f7f86cd614a61a845670d3bac7c2228c39df7fcecce0b8c12b2af65c785b1f757de974dcf84b5074f9
   languageName: node
   linkType: hard
 
