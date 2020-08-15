@@ -16,7 +16,7 @@ import { FilePond, registerPlugin } from 'react-filepond';
 import FilePondPluginImageCrop from 'filepond-plugin-image-crop';
 import FilePondPluginImageResize from 'filepond-plugin-image-resize';
 import FilePondPluginImageTransform from 'filepond-plugin-image-transform';
-import { TIME_OPTIONS } from '../../../constants';
+import { TIME_OPTIONS } from '../../constants';
 import { getFieldValue, renderFieldWithMods } from '../../lib/recipe';
 import UserContext from '../../context/UserContext';
 import RecipeContext from '../../context/RecipeContext';

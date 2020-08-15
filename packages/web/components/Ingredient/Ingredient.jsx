@@ -26,7 +26,7 @@ import {
 import { areAllFieldsEmpty, getFieldValue } from '../../lib/recipe';
 import Tooltip from '../Tooltip';
 import DiffText from '../DiffText';
-import { MEASURE_UNITS } from '../../../constants';
+import { MEASURE_UNITS } from '../../constants';
 import IconButton from '../IconButton';
 import IconButtonGroup from '../IconButtonGroup';
 import TextInput from '../TextInput';

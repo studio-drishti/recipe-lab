@@ -1,5 +1,5 @@
 import React from 'react';
-import { TIME_OPTIONS } from '../../constants';
+import { TIME_OPTIONS } from '../constants';
 import DiffText from '../components/DiffText';
 import Tooltip from '../components/Tooltip';
 

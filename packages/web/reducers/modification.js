@@ -2,7 +2,7 @@ import cuid from 'cuid';
 import { areArraysEqual, reorder } from '../lib/arrays';
 import { getSorted } from '../lib/recipe';
 
-export default (state, action) => {
+const modificationReducer = (state, action) => {
   switch (action.type) {
     case 'SET_MODIFICATION':
       return { ...state, ...action.payload };
@@ -279,3 +279,5 @@ export default (state, action) => {
       throw new Error();
   }
 };
+
+export default modificationReducer;
