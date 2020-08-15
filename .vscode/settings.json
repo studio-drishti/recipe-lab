@@ -1,8 +1,10 @@
 {
-    "eslint.workingDirectories": [
-        {
-            "directory": "./test-project",
-            "changeProcessCWD": true
-        }
-    ]
+  "eslint.nodePath": ".yarn/sdks",
+  "prettier.prettierPath": ".yarn/sdks/prettier/index.js",
+  "stylelint.stylelintPath": ".yarn/sdks/stylelint/lib/index.js",
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.codeActionsOnSave": {
+    "source.fixAll.stylelint": true
+  }
 }
