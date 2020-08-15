@@ -1,11 +1,10 @@
 {
-  "css.validate": false,
+  "eslint.nodePath": ".yarn/sdks",
+  "prettier.prettierPath": ".yarn/sdks/prettier/index.js",
+  "stylelint.stylelintPath": ".yarn/sdks/stylelint/lib/index.js",
   "editor.formatOnSave": true,
-  "javascript.format.enable": false,
-  "html.format.enable": false,
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.codeActionsOnSave": {
-    "source.fixAll.stylelint": true,
-    "source.fixAll.eslint": true
+    "source.fixAll.stylelint": true
   }
 }
