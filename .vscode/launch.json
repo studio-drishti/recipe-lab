@@ -1,25 +1,16 @@
 {
-  "version": "0.2.0",
-  "configurations": [
-    {
-      "name": "Attach 9229 --inspect",
-      "type": "node",
-      "request": "attach",
-      "protocol": "inspector",
-      "port": 9229,
-      "localRoot": "${workspaceRoot}",
-      "remoteRoot": "/opt/app"
-    },
-    {
-      "name": "Docker Test (Attach 9230 --inspect)",
-      "type": "node",
-      "request": "attach",
-      "protocol": "inspector",
-      "port": 9230,
-      "localRoot": "${workspaceRoot}",
-      "remoteRoot": "/opt/app",
-      "preLaunchTask": "Docker npm run test-wait-debuger", // See ./tasks.json
-      "internalConsoleOptions": "openOnSessionStart"
-    }
-  ]
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Launch Server",
+            "program": "${workspaceFolder}/test-project/server.js",
+            "cwd": "${workspaceFolder}/test-project",
+            "preLaunchTask": "npm: install - test-project"
+        }
+    ]
 }

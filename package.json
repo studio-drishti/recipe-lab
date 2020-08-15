@@ -9,7 +9,7 @@
     "www": "./bin/www.js"
   },
   "scripts": {
-    "start": "node server",
+    "start": "cross-env NODE_ENV=development PORT=3000 node ./bin/www.js",
     "dev-docker": "../node_modules/nodemon/bin/nodemon.js --debug=5858",
     "dev-host": "nodemon --debug=5858",
     "start-watch": "nodemon server --inspect=0.0.0.0:9229",
@@ -23,6 +23,7 @@
     "prettier": "prettier --write \"**/*.{js,jsx,json,yml,xml,md,css}\"",
     "build": "next build",
     "prisma:up": "prisma migrate up --experimental",
+    "prisma:generate": "prisma generate",
     "seed": "node server/seed.js"
   },
   "dependencies": {
@@ -36,6 +37,7 @@
     "bcrypt": "5.0.0",
     "bson": "4.0.4",
     "classnames": "2.2.6",
+    "cross-fetch": "3.0.5",
     "cuid": "2.1.8",
     "diff-match-patch": "1.0.5",
     "dotenv": "8.2.0",
