@@ -1,4 +1,4 @@
-import { CHEF_ROLES } from '../../constants';
+import { CHEF_ROLES } from '../constants';
 
 export const getChefBio = (chef) => {
   if (chef.bio.length > 0) return chef.bio;

@@ -1,4 +1,4 @@
-export default (state, action) => {
+const recipeReducer = (state, action) => {
   switch (action.type) {
     case 'SET_RECIPE_PHOTO': {
       const { photo } = action.payload;
@@ -11,3 +11,5 @@ export default (state, action) => {
       throw new Error();
   }
 };
+
+export default recipeReducer;
