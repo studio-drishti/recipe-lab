@@ -2,17 +2,18 @@
 {
 	"name": "Node.js & PostgreSQL",
 	"dockerComposeFile": "docker-compose.yml",
-	"service": "web",
+	"service": "app",
 	"workspaceFolder": "/workspace",
+	"forwardPorts": [3000, 4000],
 
 	// Set *default* container specific settings.json values on container create.
 	"settings": { 
-		"terminal.integrated.shell.linux": "/bin/bash"
+		"terminal.integrated.shell.linux": "/bin/zsh"
 	},
 
 	// Add the IDs of extensions you want installed when the container is created.
 	"extensions": [
-		"dbaeumer.vscode-eslint"
+		"dbaeumer.vscode-eslint", "prisma.prisma"
 	]
 
 	// Uncomment the next line if you want start specific services in your Docker Compose config.

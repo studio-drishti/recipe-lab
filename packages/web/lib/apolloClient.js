@@ -75,7 +75,7 @@ export const createApolloClient = (initialState, ctx) => {
   const { token } = nextCookie(ctx ? ctx : {});
 
   const httpLink = createUploadLink({
-    uri: 'http://localhost:3000/graphql',
+    uri: 'http://localhost:4000/graphql',
     credentials: 'same-origin',
     fetch,
   });

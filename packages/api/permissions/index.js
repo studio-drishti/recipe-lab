@@ -1,5 +1,5 @@
 const { rule, shield, or } = require('graphql-shield');
-const getUserId = require('./utils/getUserId');
+const getUserId = require('../utils/getUserId');
 
 const rules = {
   /**

@@ -1,3 +1,0 @@
-{
-  "ignore": ["client/**/*", "__tests__/**/*", "prisma/**/*"]
-}

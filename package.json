@@ -1,30 +1,21 @@
 {
-  "name": "recipe-lab",
+  "name": "@studiodrishti/recipe-lab",
+  "private": true,
   "description": "Play with your food.",
   "version": "0.0.1",
-  "main": "server/index.js",
   "license": "GPL-3.0-or-later",
   "repository": "https://github.com/jayarnielsen/recipe-lab",
-  "bin": {
-    "www": "./bin/www.js"
-  },
+  "workspaces": [
+    "packages/*"
+  ],
   "scripts": {
-    "start": "cross-env NODE_ENV=development PORT=3000 node ./bin/www.js",
-    "dev-docker": "../node_modules/nodemon/bin/nodemon.js --debug=5858",
-    "dev-host": "nodemon --debug=5858",
-    "start-watch": "nodemon server --inspect=0.0.0.0:9229",
-    "start-wait-debuger": "nodemon server --inspect-brk=0.0.0.0:9229",
-    "test": "cross-env NODE_ENV=test PORT=8081 node --inspect=0.0.0.0:9230 /opt/node_app/node_modules/.bin/jest",
-    "test-watch": "cross-env NODE_ENV=test PORT=8081 node --inspect=0.0.0.0:9230 /opt/node_app/node_modules/.bin/jest --runInBand --no-cache --watch",
-    "test-wait-debuger": "cross-env NODE_ENV=test PORT=8081 node --inspect-brk=0.0.0.0:9230 /opt/node_app/node_modules/.bin/jest",
-    "test-cicd": "jest",
+    "bootstrap": "yarn workspaces foreach bootstrap",
+    "start:all": "concurrently \"yarn:start:api\" \"yarn:start:web\"",
+    "start:web": "yarn workspace @studiodrishti/recipe-lab-web dev",
+    "start:api": "yarn workspace @studiodrishti/recipe-lab-api start",
     "lint-css": "stylelint \"client/**/*.css\"",
     "lint-js": "eslint \"**/*.{js,jsx}\"",
-    "prettier": "prettier --write \"**/*.{js,jsx,json,yml,xml,md,css}\"",
-    "build": "next build",
-    "prisma:up": "prisma migrate up --experimental",
-    "prisma:generate": "prisma generate",
-    "seed": "node server/seed.js"
+    "prettier": "prettier --write \"**/*.{js,jsx,json,yml,xml,md,css}\""
   },
   "dependencies": {
     "@apollo/client": "3.0.2",
@@ -37,6 +28,7 @@
     "bcrypt": "5.0.0",
     "bson": "4.0.4",
     "classnames": "2.2.6",
+    "concurrently": "^5.3.0",
     "cross-fetch": "3.0.5",
     "cuid": "2.1.8",
     "diff-match-patch": "1.0.5",
