@@ -48,7 +48,9 @@ module.exports = shield(
       recipePhotoUpload: or(rules.isRecipeOwner, rules.isExecutiveChef),
       recipePhotoDelete: or(rules.isRecipeOwner, rules.isExecutiveChef),
       updateUser: or(rules.isAccountOwner, rules.isExecutiveChef),
+      createRecipe: rules.isAuthenticatedUser,
       publishRecipe: rules.isRecipeOwner,
+      saveModification: rules.isAuthenticatedUser,
     },
   },
   {
