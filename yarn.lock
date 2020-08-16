@@ -2133,7 +2133,6 @@ __metadata:
   dependencies:
     "@babel/core": 7.11.1
     "@yarnpkg/pnpify": ^2.1.0
-    babel-core: 7.0.0-bridge.0
     babel-eslint: 10.1.0
     babel-jest: 26.3.0
     concurrently: ^5.3.0
@@ -3767,15 +3766,6 @@ __metadata:
   version: 1.10.1
   resolution: "aws4@npm:1.10.1"
   checksum: 53f2897324997542e3cfeca0b24f5960e2470eb8527f0b6587432a4607dcb8ca817955aef4297a3b429f1ca5fa688ba1b6bc57d744add41292ffcb59466392bb
-  languageName: node
-  linkType: hard
-
-"babel-core@npm:7.0.0-bridge.0":
-  version: 7.0.0-bridge.0
-  resolution: "babel-core@npm:7.0.0-bridge.0"
-  peerDependencies:
-    "@babel/core": ^7.0.0-0
-  checksum: f412bc1a48f25b47f731e62a449861ae0ecd7c19f7ca5d9a4b6ea3bd6e13d617a33fd3636476816ab1f97ef03f971752c3fb3dc7f18d7c2b7851b89bb11011eb
   languageName: node
   linkType: hard
 

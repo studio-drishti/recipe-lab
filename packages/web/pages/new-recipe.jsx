@@ -22,4 +22,4 @@ NewRecipePage.getInitialProps = () => {
   };
 };
 
-export default withAuthGuard(NewRecipePage);
+export default withAuthGuard()(NewRecipePage);

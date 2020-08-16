@@ -1,9 +1,17 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import Router from 'next/router';
+import Error from 'next/error';
+import UserContext from '../context/UserContext';
 import { auth } from '../lib/auth';
 
-const withAuthGuard = (PageComponent) => {
+const withAuthGuard = (...allowedRoles) => (PageComponent) => {
   const WithAuthGuard = (pageProps) => {
+    const { user } = useContext(UserContext);
+
+    if (allowedRoles.length > 0 && !allowedRoles.includes(user.role)) {
+      return <Error statusCode={403} title="Forbidden" />;
+    }
+
     return <PageComponent {...pageProps} />;
   };
 

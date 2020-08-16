@@ -48,7 +48,7 @@
       }
     },
     {
-      "files": ["client/**/*.js", "client/**/*.jsx"],
+      "files": ["packages/web/**/*.{js,jsx}"],
       "env": {
         "browser": true
       },
@@ -57,7 +57,7 @@
       }
     },
     {
-      "files": ["bin/**/*.js", "server/**/*.js"],
+      "files": ["packages/api/**/*.js"],
       "rules": {
         "no-console": 0,
         "no-process-exit": 0

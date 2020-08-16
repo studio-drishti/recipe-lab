@@ -4,7 +4,7 @@ import css from './Dashboard.module.css';
 
 const Dashboard = ({ modifiedRecipes, originalRecipes, chef }) => (
   <div>
-    {originalRecipes.length && (
+    {originalRecipes.length > 0 && (
       <>
         <h2>Recently Updated</h2>
         <div className={css.recipesList}>
