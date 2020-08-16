@@ -5,36 +5,36 @@ import React, {
   useContext,
   useMemo,
   useCallback,
-} from 'react';
-import PropTypes from 'prop-types';
+} from "react";
+import PropTypes from "prop-types";
 import {
   MdClear,
   MdEdit,
   MdRefresh,
   MdCheck,
   MdDragHandle,
-} from 'react-icons/md';
-import classnames from 'classnames';
-import { fraction } from 'mathjs';
-import { Draggable } from 'react-beautiful-dnd';
-import RecipeContext from '../../context/RecipeContext';
+} from "react-icons/md";
+import classnames from "classnames";
+import { fraction } from "mathjs";
+import { Draggable } from "react-beautiful-dnd";
+import RecipeContext from "../../context/RecipeContext";
 import {
   undoRemoval,
   setAlteration,
   removeIngredient,
-} from '../../actions/modification';
-import { areAllFieldsEmpty, getFieldValue } from '../../lib/recipe';
-import Tooltip from '../Tooltip';
-import DiffText from '../DiffText';
-import { MEASURE_UNITS } from '../../constants';
-import IconButton from '../IconButton';
-import IconButtonGroup from '../IconButtonGroup';
-import TextInput from '../TextInput';
-import Select from '../Select';
-import css from './Ingredient.module.css';
+} from "../../actions/modification";
+import { areAllFieldsEmpty, getFieldValue } from "../../lib/recipe";
+import Tooltip from "../Tooltip";
+import DiffText from "../DiffText";
+import { MEASURE_UNITS } from "../../constants";
+import IconButton from "../IconButton";
+import IconButtonGroup from "../IconButtonGroup";
+import TextInput from "../TextInput";
+import Select from "../Select";
+import css from "./Ingredient.module.css";
 
 const Ingredient = ({ index, ingredient, itemId, stepId, setStepHovering }) => {
-  const ingredientFields = ['quantity', 'unit', 'name', 'processing'];
+  const ingredientFields = ["quantity", "unit", "name", "processing"];
   const {
     modification: { removals, alterations },
     modificationDispatch,
@@ -67,35 +67,35 @@ const Ingredient = ({ index, ingredient, itemId, stepId, setStepHovering }) => {
     ingredientFields.forEach((fieldName) => {
       if (ingredient[fieldName])
         removedIngredient.push(
-          'name' === fieldName && ingredient['processing']
-            ? ingredient[fieldName] + ','
+          "name" === fieldName && ingredient["processing"]
+            ? ingredient[fieldName] + ","
             : ingredient[fieldName]
         );
     });
 
-    return <del>{removedIngredient.join(' ')}</del>;
+    return <del>{removedIngredient.join(" ")}</del>;
   }, [isRemoved]);
 
   const renderIngredientWithMods = useCallback(() => {
     const originalQty = ingredient.quantity;
     const modifiedQty =
-      !ingredient.quantity && !getIngredientValue('quantity')
-        ? '??'
-        : getIngredientValue('quantity');
+      !ingredient.quantity && !getIngredientValue("quantity")
+        ? "??"
+        : getIngredientValue("quantity");
     const originalUnit = ingredient.unit;
-    const modifiedUnit = getIngredientValue('unit');
+    const modifiedUnit = getIngredientValue("unit");
     let qtyAndUnit;
     if (originalQty !== modifiedQty && originalUnit !== modifiedUnit) {
       qtyAndUnit = (
         <>
           <del>
             {originalQty}
-            {originalQty ? ' ' : ''}
+            {originalQty ? " " : ""}
             {originalUnit}
           </del>
           <ins>
             {modifiedQty}
-            {modifiedQty ? ' ' : ''}
+            {modifiedQty ? " " : ""}
             {modifiedUnit}
           </ins>
         </>
@@ -126,7 +126,7 @@ const Ingredient = ({ index, ingredient, itemId, stepId, setStepHovering }) => {
       qtyAndUnit = (
         <span>
           {originalQty}
-          {originalUnit ? ' ' : ''}
+          {originalUnit ? " " : ""}
           {originalUnit}
         </span>
       );
@@ -134,27 +134,27 @@ const Ingredient = ({ index, ingredient, itemId, stepId, setStepHovering }) => {
 
     const original =
       ingredient.name +
-      (ingredient.processing ? ', ' : '') +
+      (ingredient.processing ? ", " : "") +
       ingredient.processing;
     const modified =
-      (!ingredient.name && !getIngredientValue('name')
-        ? '???'
-        : getIngredientValue('name')) +
-      (getIngredientValue('processing') ? ', ' : '') +
-      getIngredientValue('processing');
+      (!ingredient.name && !getIngredientValue("name")
+        ? "???"
+        : getIngredientValue("name")) +
+      (getIngredientValue("processing") ? ", " : "") +
+      getIngredientValue("processing");
 
     return (
       <>
-        {edits['quantity'] !== undefined && errors['quantity'] ? (
-          <Tooltip className={css.error} tip={errors['quantity']}>
+        {edits["quantity"] !== undefined && errors["quantity"] ? (
+          <Tooltip className={css.error} tip={errors["quantity"]}>
             {qtyAndUnit}
           </Tooltip>
         ) : (
           qtyAndUnit
         )}
 
-        {edits['name'] !== undefined && errors['name'] ? (
-          <Tooltip className={css.error} tip={errors['name']}>
+        {edits["name"] !== undefined && errors["name"] ? (
+          <Tooltip className={css.error} tip={errors["name"]}>
             <DiffText original={original} modified={modified} />
           </Tooltip>
         ) : (
@@ -193,7 +193,7 @@ const Ingredient = ({ index, ingredient, itemId, stepId, setStepHovering }) => {
   };
 
   const handleKeybdSelect = (e) => {
-    if (e.key !== 'Enter') return;
+    if (e.key !== "Enter") return;
     handleSelect(e);
   };
 
@@ -203,7 +203,7 @@ const Ingredient = ({ index, ingredient, itemId, stepId, setStepHovering }) => {
   };
 
   const handleKeybdRemove = (e) => {
-    if (e.key !== 'Enter') return;
+    if (e.key !== "Enter") return;
     e.preventDefault();
     handleRemove(e);
   };
@@ -214,7 +214,7 @@ const Ingredient = ({ index, ingredient, itemId, stepId, setStepHovering }) => {
   };
 
   const handleKeybdRestore = (e) => {
-    if (e.key !== 'Enter') return;
+    if (e.key !== "Enter") return;
     e.preventDefault();
     handleRestore(e);
     ingredientRef.current.focus();
@@ -243,18 +243,18 @@ const Ingredient = ({ index, ingredient, itemId, stepId, setStepHovering }) => {
     let err = undefined;
 
     switch (fieldName) {
-      case 'quantity':
+      case "quantity":
         try {
           if (!value) throw new Error();
           fraction(value);
         } catch {
           err =
-            'Please enter quantity as whole numbers and fractions (e.g. 1 1/3)';
+            "Please enter quantity as whole numbers and fractions (e.g. 1 1/3)";
         }
         break;
-      case 'name':
+      case "name":
         if (value.length < 3 || value.length > 125)
-          err = 'Ingredient name must be between 3 and 125 characters';
+          err = "Ingredient name must be between 3 and 125 characters";
         break;
     }
 
@@ -268,15 +268,15 @@ const Ingredient = ({ index, ingredient, itemId, stepId, setStepHovering }) => {
 
   useEffect(() => {
     if (editing) {
-      document.addEventListener('mousedown', handleClick);
+      document.addEventListener("mousedown", handleClick);
       quantityInputRef.current.focus();
     } else {
-      document.removeEventListener('mousedown', handleClick);
+      document.removeEventListener("mousedown", handleClick);
       if (areAllFieldsEmpty(ingredientFields, ingredient, alterations, edits))
         removeIngredient(ingredient, modificationDispatch);
     }
     return () => {
-      document.removeEventListener('mousedown', handleClick);
+      document.removeEventListener("mousedown", handleClick);
     };
   }, [editing]);
 
@@ -308,15 +308,15 @@ const Ingredient = ({ index, ingredient, itemId, stepId, setStepHovering }) => {
                     name="quantity"
                     title="Quantity"
                     inputRef={quantityInputRef}
-                    value={getIngredientValue('quantity')}
-                    placeholder={'Qty'}
+                    value={getIngredientValue("quantity")}
+                    placeholder={"Qty"}
                     onChange={handleIngredientChange}
                     error={errors.quantity}
                   />
                   <Select
                     name="unit"
                     title="Unit"
-                    value={getIngredientValue('unit')}
+                    value={getIngredientValue("unit")}
                     onChange={handleIngredientChange}
                   >
                     <option value="">--</option>
@@ -329,26 +329,31 @@ const Ingredient = ({ index, ingredient, itemId, stepId, setStepHovering }) => {
                   <TextInput
                     name="name"
                     title="Name"
-                    value={getIngredientValue('name')}
-                    placeholder={'Name'}
+                    value={getIngredientValue("name")}
+                    placeholder={"Name"}
                     onChange={handleIngredientChange}
                     error={errors.name}
                   />
                   <TextInput
                     name="processing"
                     title="Process"
-                    value={getIngredientValue('processing')}
-                    placeholder={'Process'}
+                    value={getIngredientValue("processing")}
+                    placeholder={"Process"}
                     onChange={handleIngredientChange}
                   />
                 </fieldset>
               )}
 
               {!editing && (
-                <div className={css.ingredientText} onMouseDown={handleSelect}>
-                  {isRemoved
-                    ? renderRemovedIngredient()
-                    : renderIngredientWithMods()}
+                <div
+                  className={css.ingredientText}
+                  {...provided.dragHandleProps}
+                >
+                  <span onMouseDown={handleSelect}>
+                    {isRemoved
+                      ? renderRemovedIngredient()
+                      : renderIngredientWithMods()}
+                  </span>
                 </div>
               )}
 
