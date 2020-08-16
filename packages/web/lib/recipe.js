@@ -1,7 +1,7 @@
-import React from 'react';
-import { TIME_OPTIONS } from '../constants';
-import DiffText from '../components/DiffText';
-import Tooltip from '../components/Tooltip';
+import React from "react";
+import { TIME_OPTIONS, MEASURE_UNITS } from "../constants";
+import DiffText from "../components/DiffText";
+import Tooltip from "../components/Tooltip";
 
 export const getSorted = (unsorted, sortings, parentId) => {
   const sortMod = sortings.find((mod) => mod.parentId === parentId);
@@ -43,7 +43,7 @@ export const areAllFieldsEmpty = (fields, source, alterations, edits) =>
  */
 export const getFieldValue = (fieldName, source, alterations, edits = {}) => {
   if (edits[fieldName] !== undefined) return edits[fieldName];
-  if (!source) return '';
+  if (!source) return "";
   const mod = alterations.find(
     (mod) => mod.sourceId === source.uid && mod.field === fieldName
   );
@@ -52,14 +52,16 @@ export const getFieldValue = (fieldName, source, alterations, edits = {}) => {
 
 export const maybeGetEnumValue = (fieldName, value) => {
   switch (fieldName) {
-    case 'time':
+    case "time":
       return TIME_OPTIONS[value];
+    case "unit":
+      return MEASURE_UNITS[value];
     default:
       return value;
   }
 };
 
-export const isEnumField = (fieldName) => ['time'].includes(fieldName);
+export const isEnumField = (fieldName) => ["time", "unit"].includes(fieldName);
 
 export const renderFieldWithMods = (
   fieldName,
@@ -97,22 +99,22 @@ export const renderFieldWithMods = (
 
 export const getLocalStorageModifications = () =>
   Object.entries(localStorage)
-    .filter(([key]) => key.startsWith('MOD'))
+    .filter(([key]) => key.startsWith("MOD"))
     .map(([key, value]) => {
       const { sortings, alterations, removals, additions } = JSON.parse(value);
       return {
-        recipeId: key.replace('MOD-', ''),
+        recipeId: key.replace("MOD-", ""),
         sortings,
         alterations,
         removals,
         items: additions
-          .filter((addition) => addition.kind === 'Item')
+          .filter((addition) => addition.kind === "Item")
           .map(({ kind, ...item }) => item),
         steps: additions
-          .filter((addition) => addition.kind === 'Step')
+          .filter((addition) => addition.kind === "Step")
           .map(({ kind, ...step }) => step),
         ingredients: additions
-          .filter((addition) => addition.kind === 'Ingredient')
+          .filter((addition) => addition.kind === "Ingredient")
           .map(({ kind, ...ingredient }) => ingredient),
       };
     });

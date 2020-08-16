@@ -21,6 +21,28 @@
       ]
     },
     {
+      "tag": "CreateEnum",
+      "enum": "MeasureUnit",
+      "values": [
+        "NONE",
+        "CUP",
+        "TABLESPOON",
+        "TEASPOON",
+        "GALLON",
+        "QUART",
+        "PINT",
+        "POUND",
+        "OUNCE",
+        "GRAM",
+        "LITER",
+        "MILLILITER",
+        "DROP",
+        "DASH",
+        "PINCH",
+        "PACKAGE"
+      ]
+    },
+    {
       "tag": "CreateSource",
       "source": "db"
     },
@@ -1172,7 +1194,7 @@
     {
       "tag": "CreateField",
       "model": "Step",
-      "field": "Ingredient",
+      "field": "ingredients",
       "type": "Ingredient",
       "arity": "List"
     },
@@ -1423,7 +1445,7 @@
       "tag": "CreateField",
       "model": "Ingredient",
       "field": "unit",
-      "type": "String",
+      "type": "MeasureUnit",
       "arity": "Required"
     },
     {
@@ -1449,7 +1471,7 @@
         "directive": "default"
       },
       "argument": "",
-      "value": "\"\""
+      "value": "NONE"
     },
     {
       "tag": "CreateField",

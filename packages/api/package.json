@@ -7,9 +7,11 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
+    "prisma:save": "prisma migrate save --experimental",
     "prisma:up": "prisma migrate up --experimental",
     "prisma:generate": "prisma generate",
     "prisma:seed": "node seed.js",
+    "prisma:studio": "prisma studio --experimental",
     "bootstrap": "yarn prisma:up && yarn prisma:generate && yarn prisma:seed"
   },
   "dependencies": {

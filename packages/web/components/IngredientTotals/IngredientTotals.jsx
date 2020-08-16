@@ -1,10 +1,10 @@
-import React, { useContext, useMemo } from 'react';
-import PropTypes from 'prop-types';
-import RecipeContext from '../../context/RecipeContext';
-import { addFractions } from '../../lib/math';
+import React, { useContext, useMemo } from "react";
+import PropTypes from "prop-types";
+import RecipeContext from "../../context/RecipeContext";
+import { addFractions } from "../../lib/math";
 
-import css from './IngredientTotals.module.css';
-import { MEASURE_UNITS } from '../../constants';
+import css from "./IngredientTotals.module.css";
+import { MEASURE_UNITS } from "../../constants";
 
 const IngredientTotals = ({ ingredients }) => {
   const {
@@ -23,9 +23,9 @@ const IngredientTotals = ({ ingredients }) => {
         });
 
       if (
-        ingredient.name === '' ||
-        ingredient.unit === '' ||
-        ingredient.quantity === ''
+        ingredient.name === "" ||
+        ingredient.unit === "" ||
+        ingredient.quantity === ""
       )
         return;
 
@@ -53,7 +53,7 @@ const IngredientTotals = ({ ingredients }) => {
 
     return Object.entries(totals).map(([key, val]) => ({
       name: key,
-      divided: 'divided' in val,
+      divided: "divided" in val,
       quantities: Object.entries(val.quantities)
         .map(([key, val]) => ({
           unit: key,
@@ -69,13 +69,13 @@ const IngredientTotals = ({ ingredients }) => {
   const formatIngredientTotal = (ingredient) => {
     let text = ingredient.quantities
       .map((qty) => {
-        return qty.unit !== 'undefined'
-          ? `${qty.quantity} ${qty.unit}`
+        return qty.unit !== "NONE"
+          ? `${qty.quantity} ${MEASURE_UNITS[qty.unit]}`
           : qty.quantity;
       })
-      .join(' + ');
-    text += ' ' + ingredient.name;
-    if (ingredient.divided) text += ', divided';
+      .join(" + ");
+    text += " " + ingredient.name;
+    if (ingredient.divided) text += ", divided";
     return text;
   };
 

@@ -82,8 +82,8 @@ const Ingredient = ({ index, ingredient, itemId, stepId, setStepHovering }) => {
       !ingredient.quantity && !getIngredientValue("quantity")
         ? "??"
         : getIngredientValue("quantity");
-    const originalUnit = ingredient.unit;
-    const modifiedUnit = getIngredientValue("unit");
+    const originalUnit = MEASURE_UNITS[ingredient.unit];
+    const modifiedUnit = MEASURE_UNITS[getIngredientValue("unit")];
     let qtyAndUnit;
     if (originalQty !== modifiedQty && originalUnit !== modifiedUnit) {
       qtyAndUnit = (
@@ -319,10 +319,9 @@ const Ingredient = ({ index, ingredient, itemId, stepId, setStepHovering }) => {
                     value={getIngredientValue("unit")}
                     onChange={handleIngredientChange}
                   >
-                    <option value="">--</option>
-                    {MEASURE_UNITS.map((unit) => (
-                      <option key={unit} value={unit}>
-                        {unit}
+                    {Object.entries(MEASURE_UNITS).map(([key, val]) => (
+                      <option key={key} value={key}>
+                        {val}
                       </option>
                     ))}
                   </Select>

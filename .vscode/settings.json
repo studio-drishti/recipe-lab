@@ -8,5 +8,13 @@
     "source.fixAll.stylelint": true
   },
   "css.validate": false,
-  "javascript.format.enable": false
+  "javascript.format.enable": false,
+  "[prisma]": {
+    "editor.defaultFormatter": "Prisma.prisma"
+  },
+  "files.watcherExclude": {
+    "**/.git/objects/**": true,
+    "**/.git/subtree-cache/**": true,
+    "**/.hg/store/**": true
+  }
 }
