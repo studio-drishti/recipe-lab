@@ -13,8 +13,8 @@
     "start:all": "concurrently \"yarn:start:api\" \"yarn:start:web\"",
     "start:web": "yarn workspace @studiodrishti/recipe-lab-web dev",
     "start:api": "yarn workspace @studiodrishti/recipe-lab-api start",
-    "lint-css": "stylelint \"client/**/*.css\"",
-    "lint-js": "eslint \"**/*.{js,jsx}\"",
+    "lint:css": "stylelint \"**/*.css\"",
+    "lint:js": "eslint \"**/*.{js,jsx}\"",
     "prettier": "prettier --write \"**/*.{js,jsx,json,yml,xml,md,css}\""
   },
   "devDependencies": {
@@ -30,12 +30,14 @@
     "eslint-plugin-node": "11.1.0",
     "eslint-plugin-prettier": "3.1.4",
     "eslint-plugin-react": "7.20.6",
+    "eslint-plugin-react-hooks": "^4.0.8",
     "identity-obj-proxy": "3.0.0",
     "jest": "26.4.0",
     "jest-localstorage-mock": "2.4.3",
     "prettier": "2.0.5",
     "stylelint": "13.6.1",
     "stylelint-config-prettier": "8.0.2",
+    "stylelint-config-recommended": "^3.0.0",
     "stylelint-prettier": "1.1.2"
   },
   "engines": {

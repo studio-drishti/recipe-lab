@@ -2143,12 +2143,14 @@ __metadata:
     eslint-plugin-node: 11.1.0
     eslint-plugin-prettier: 3.1.4
     eslint-plugin-react: 7.20.6
+    eslint-plugin-react-hooks: ^4.0.8
     identity-obj-proxy: 3.0.0
     jest: 26.4.0
     jest-localstorage-mock: 2.4.3
     prettier: 2.0.5
     stylelint: 13.6.1
     stylelint-config-prettier: 8.0.2
+    stylelint-config-recommended: ^3.0.0
     stylelint-prettier: 1.1.2
   languageName: unknown
   linkType: soft
@@ -6038,6 +6040,15 @@ __metadata:
     eslint: ">=5.0.0"
     prettier: ">=1.13.0"
   checksum: 4e4df155790a20a7ceef9008bbc22a677a8f7e790e9ef613a049a78dfe0b5dc3726afcd4bfd2a8ce41abc88c9a11db029819a722f70b940da32a03629e7f7832
+  languageName: node
+  linkType: hard
+
+"eslint-plugin-react-hooks@npm:^4.0.8":
+  version: 4.0.8
+  resolution: "eslint-plugin-react-hooks@npm:4.0.8"
+  peerDependencies:
+    eslint: ^3.0.0 || ^4.0.0 || ^5.0.0 || ^6.0.0 || ^7.0.0
+  checksum: 6e6ce44f1f5981fd07d921bf4e2142183a2670bbd51d7fd41c2ae9b8f117b5c8da8bb6b4db2d092e29e698b026987ead53634e5a4d308a67c32e5127ab7fa73f
   languageName: node
   linkType: hard
 
@@ -13361,6 +13372,15 @@ fsevents@^1.2.7:
     stylelint-config-prettier: bin/check.js
     stylelint-config-prettier-check: bin/check.js
   checksum: dd7b09ed02d2a932d9c2de4a1532298c559d590683dcb6c9974592e4e0a74e1d4b0962c9770a0499798dfef9341d4a0dac6a57877b23edc3d1e97e7f99cfd077
+  languageName: node
+  linkType: hard
+
+"stylelint-config-recommended@npm:^3.0.0":
+  version: 3.0.0
+  resolution: "stylelint-config-recommended@npm:3.0.0"
+  peerDependencies:
+    stylelint: ">=10.1.0"
+  checksum: 455fcb427786528495f66c2de1fbcb7cc7e8007aca303d21ad8f34b7150a3f4b7669a46d2b1c69ea7ac7f4f446c43b94c0920a3619b4a8d4dc5f3eee9df7cfa2
   languageName: node
   linkType: hard
 
