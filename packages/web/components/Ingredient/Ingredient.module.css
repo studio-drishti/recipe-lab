@@ -4,7 +4,7 @@
 
 .ingredient {
   background: var(--color-white);
-  padding: 0.5rem;
+  padding: 0.25rem;
   border: 0.01em solid transparent;
   border-radius: var(--border-radius);
   transition: all ease-out 0.3s;
@@ -85,6 +85,6 @@
   }
 }
 
-.error [role='button'] {
+.error [role="button"] {
   color: red;
 }
