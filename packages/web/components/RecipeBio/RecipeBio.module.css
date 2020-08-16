@@ -1,9 +1,25 @@
 .bio {
-  display: grid;
   grid-template-columns: 1fr 6fr;
-  border: 1px solid lightgray;
   padding: 1rem;
   grid-column-gap: 2rem;
   align-items: center;
+  margin: 0 auto;
   margin-bottom: 2rem;
+  text-align: center;
+
+  & figure {
+    margin: 0 auto;
+    max-width: 50%;
+  }
+
+  & img {
+    border-radius: 50%;
+    border: 1px solid var(--color-medium-light-gray);
+  }
+}
+
+@media (--medium-viewport) {
+  .bio {
+    max-width: 50%;
+  }
 }
