@@ -6,6 +6,7 @@ mutation UpdateUser(
   $email: String!
   $password: String
   $slug: String!
+  $role: String
 ) {
   updateUser(
     userId: $userId
@@ -14,6 +15,7 @@ mutation UpdateUser(
     email: $email
     password: $password
     slug: $slug
+    role: $role
   ) {
     ...ChefDetails
   }

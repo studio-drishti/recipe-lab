@@ -10,8 +10,9 @@ import AvatarDeleteMutation from '../../../graphql/AvatarDeleteMutation.graphql'
 import UpdateUserMutation from '../../../graphql/UpdateUserMutation.graphql';
 import FormInput from '../../FormInput';
 import FormButton from '../../FormButton';
-// import UserContext from '../../../context/UserContext';
+import UserContext from '../../../context/UserContext';
 import ChefContext from '../../../context/ChefContext';
+import { CHEF_ROLES } from '../../../constants';
 import css from './Account.module.css';
 
 registerPlugin(
@@ -22,7 +23,7 @@ registerPlugin(
 
 const Account = () => {
   const { chef, refreshChef } = useContext(ChefContext);
-  // const { user } = useContext(UserContext);
+  const { user } = useContext(UserContext);
   const [errors, setErrors] = useState({});
   const [edits, setEdits] = useState({});
   const [acceptedConsequences, setAcceptedConsequences] = useState(false);
@@ -34,8 +35,8 @@ const Account = () => {
   ] = useMutation(UpdateUserMutation);
   const validationTimeouts = useRef({});
   const pond = useRef();
-  // const isProfileOwner = user.id === chef.id;
-  // const isAdmin = user.role === 'EXECUTIVE_CHEF';
+  const isProfileOwner = user.id === chef.id;
+  const isAdmin = user.role === 'EXECUTIVE_CHEF';
 
   const getChefValue = (fieldName) => {
     if (edits[fieldName] !== undefined) return edits[fieldName];
@@ -62,6 +63,10 @@ const Account = () => {
         } else if (value !== chef.slug && !acceptedConsequences) {
           err = 'You must accept the consequences of changing your username.';
         }
+        break;
+      case 'role':
+        if (!Object.keys(CHEF_ROLES).includes(value))
+          err = 'Please select a valid user role.';
         break;
       case 'email':
         if (!isEmail(value)) err = 'Please enter a valid email address';
@@ -174,6 +179,10 @@ const Account = () => {
         slug: getChefValue('slug'),
       };
 
+      if (isAdmin && !isProfileOwner) {
+        variables.role = getChefValue('role');
+      }
+
       if (edits.password) {
         variables.password = edits.password;
       }
@@ -240,6 +249,23 @@ const Account = () => {
         value={getChefValue('slug')}
         error={errors.slug}
       />
+      {isAdmin && (
+        <FormInput
+          label="Role"
+          name="role"
+          type="select"
+          onChange={handleFormChange}
+          value={getChefValue('role')}
+          error={errors.role}
+          disabled={isProfileOwner}
+        >
+          {Object.entries(CHEF_ROLES).map(([key, val]) => (
+            <option key={key} value={key}>
+              {val}
+            </option>
+          ))}
+        </FormInput>
+      )}
       {edits.slug !== undefined && edits.slug !== chef.slug && (
         <>
           <p>
