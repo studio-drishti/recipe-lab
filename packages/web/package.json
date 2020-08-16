@@ -2,7 +2,7 @@
   "name": "@studiodrishti/recipe-lab-web",
   "description": "Play with your food.",
   "version": "0.0.1",
-  "license": "GPL-3.0-or-later",
+  "license": "AGPL-3.0-or-later",
   "repository": "https://github.com/jayarnielsen/recipe-lab",
   "scripts": {
     "dev": "next dev",
