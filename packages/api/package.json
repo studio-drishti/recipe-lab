@@ -3,10 +3,11 @@
   "description": "Play with your food.",
   "version": "0.0.1",
   "license": "AGPL-3.0-or-later",
-  "repository": "https://github.com/jayarnielsen/recipe-lab",
-  "main": "index.js",
+  "repository": "https://github.com/studiodrishti/recipe-lab",
+  "main": "app.js",
   "scripts": {
-    "start": "node index.js",
+    "start": "node server.js",
+    "deploy": "serverless deploy",
     "prisma:save": "prisma migrate save --experimental",
     "prisma:up": "prisma migrate up --experimental",
     "prisma:generate": "prisma generate",
@@ -15,11 +16,7 @@
     "bootstrap": "yarn prisma:up && yarn prisma:generate && yarn prisma:seed"
   },
   "dependencies": {
-    "@graphql-tools/graphql-file-loader": "6.0.18",
-    "@graphql-tools/load": "6.0.18",
     "@graphql-tools/schema": "6.0.18",
-    "@prisma/cli": "2.4.1",
-    "@prisma/client": "2.4.1",
     "apollo-server-express": "2.16.1",
     "bcrypt": "5.0.0",
     "cuid": "2.1.8",
@@ -35,5 +32,10 @@
   },
   "engines": {
     "node": ">=12.*"
+  },
+  "devDependencies": {
+    "@prisma/cli": "2.4.1",
+    "@prisma/client": "2.4.1",
+    "serverless": "^1.78.1"
   }
 }

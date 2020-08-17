@@ -1,0 +1,11 @@
+component: express
+app: recipe-lab
+name: recipe-lab-api
+
+inputs:
+  src:
+    src: ./
+    hook: npm install --no-package-lock --production
+    dist: ./
+  env:
+    DATABASE_URL: ${env:DATABASE_URL}
