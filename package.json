@@ -10,7 +10,7 @@
   ],
   "scripts": {
     "bootstrap": "yarn workspaces foreach run bootstrap",
-    "deploy": "yarn workspace foreach run deploy",
+    "deploy": "yarn workspaces foreach run deploy",
     "start:all": "concurrently \"yarn:start:api\" \"yarn:start:web\"",
     "start:web": "yarn workspace @studiodrishti/recipe-lab-web dev",
     "start:api": "yarn workspace @studiodrishti/recipe-lab-api start",
