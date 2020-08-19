@@ -10,9 +10,6 @@ env:
 jobs:
   api:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: packages/api
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2-beta
@@ -22,9 +19,8 @@ jobs:
         with:
           useLockFile: false
           working-directory: packages/api
-      - name: generate prisma client
-        run: npm run prisma:generate
       - name: serverless deploy
         uses: serverless/github-action@master
         with:
           args: deploy
+          working-directory: packages/api
