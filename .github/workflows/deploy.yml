@@ -15,12 +15,12 @@ jobs:
       - uses: actions/setup-node@v2-beta
         with:
           node-version: "12"
-      - uses: bahmutov/npm-install@v1.53.0
+      - uses: bahmutov/npm-install@v1
         with:
           useLockFile: false
           working-directory: packages/api
       - name: serverless deploy
-        uses: serverless/github-action@v1
+        uses: serverless/github-action@v1.53.0
         with:
           args: deploy
           working-directory: packages/api
