@@ -4,9 +4,6 @@ app: recipe-lab
 name: recipe-lab-api
 
 inputs:
-  src:
-    src: ./
-    hook: npm install --no-package-lock --production
-    dist: ./
+  src: ./
   env:
     DATABASE_URL: ${env:DATABASE_URL}
