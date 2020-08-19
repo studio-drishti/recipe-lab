@@ -20,7 +20,7 @@ jobs:
           useLockFile: false
           working-directory: packages/api
       - name: serverless deploy
-        uses: serverless/github-action@v1.53.0
+        uses: serverless/github-action@master
         with:
           args: deploy
           working-directory: packages/api
