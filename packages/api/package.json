@@ -4,11 +4,17 @@
   "version": "0.0.1",
   "license": "AGPL-3.0-or-later",
   "repository": "https://github.com/studiodrishti/recipe-lab",
-  "main": "app.js",
+  "main": "dist/app.js",
+  "targets": {
+    "main": {
+      "context": "node",
+      "includeNodeModules": true
+    }
+  },
   "scripts": {
     "build": "yarn clean && yarn prisma:generate && yarn compile",
     "clean": "rm -rf dist generated",
-    "compile": "NODE_ENV=production webpack",
+    "compile": "parcel build app.js",
     "start": "node server.js",
     "deploy": "serverless deploy",
     "prisma:save": "prisma migrate save --experimental",
@@ -26,7 +32,7 @@
     "express": "4.17.1",
     "graphql": "15.3.0",
     "graphql-middleware": "4.0.2",
-    "graphql-shield": "7.3.4",
+    "graphql-shield": "7.3.5",
     "jsonwebtoken": "8.5.1",
     "mathjs": "^7.1.0",
     "morgan": "1.10.0",
@@ -37,14 +43,10 @@
     "node": ">=12.*"
   },
   "devDependencies": {
-    "@babel/core": "^7.11.4",
-    "@prisma/cli": "2.5.0",
-    "@prisma/client": "2.5.0",
-    "babel-loader": "^8.1.0",
-    "babel-preset-env": "^1.7.0",
-    "serverless": "^1.79.0",
-    "webpack": "next",
-    "webpack-cli": "^3.3.12",
-    "webpack-node-externals": "^2.5.1"
+    "@babel/core": "^7.0.0",
+    "@prisma/cli": "2.5.1",
+    "@prisma/client": "2.5.1",
+    "parcel": "next",
+    "serverless": "^1.79.0"
   }
 }

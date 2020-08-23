@@ -10,3 +10,5 @@ inputs:
     dist: ./dist
   env:
     DATABASE_URL: ${env:DATABASE_URL}
+    NODE_ENV: production
+  domain: api.recipelab.io

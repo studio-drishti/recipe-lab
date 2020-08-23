@@ -2,7 +2,6 @@ const path = require("path");
 const express = require("express");
 const { ApolloServer } = require("apollo-server-express");
 const { makeExecutableSchema } = require("@graphql-tools/schema");
-const morgan = require("morgan");
 const { applyMiddleware } = require("graphql-middleware");
 const { PrismaClient } = require("./generated/client");
 const resolvers = require("./resolvers");
@@ -30,7 +29,7 @@ const server = new ApolloServer({
 });
 
 const app = express();
-app.use(morgan("common"));
+
 app.use("/public", express.static(path.resolve(__dirname, "public")));
 
 server.applyMiddleware({ app });
