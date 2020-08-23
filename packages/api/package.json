@@ -19,6 +19,7 @@
     "@prisma/cli": "2.4.1",
     "@prisma/client": "2.4.1",
     "apollo-server-express": "2.16.1",
+    "aws-sdk": "^2.734.0",
     "bcrypt": "5.0.0",
     "cuid": "2.1.8",
     "express": "4.17.1",
@@ -28,6 +29,7 @@
     "jsonwebtoken": "8.5.1",
     "mathjs": "^7.1.0",
     "morgan": "1.10.0",
+    "nodemailer": "^6.4.11",
     "speakingurl": "14.0.1",
     "validator": "13.1.1"
   },

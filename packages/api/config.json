@@ -1,0 +1,13 @@
+{
+  "accessKeyId": "AKIA2O42FPHG5DPAK5ZM",
+  "secretAccessKey": "BGI96Jc59bN/HTOqyQ8SxEu3lk+vM6t/pxcMFYyEPRiN",
+  "region": "us-west-2",
+
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": "ses:SendRawEmail",
+      "Resource": "*"
+    }
+  ]
+}
