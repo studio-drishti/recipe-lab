@@ -1,7 +1,8 @@
 .DS_Store
 packages/api/public/*
 !packages/api/public/.gitkeep
-packages/api/generated/*
+packages/**/generated
+packages/**/dist
 
 # Logs
 logs

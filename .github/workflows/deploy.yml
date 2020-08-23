@@ -1,4 +1,4 @@
-name: Deploy
+name: deploy
 
 on: pull_request
 
@@ -8,19 +8,14 @@ env:
   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
 jobs:
-  api:
+  serverless:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: "packages/api"
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2-beta
         with:
           node-version: "12"
       - name: install dependencies
-        run: npm install --production --no-optional --no-package-lock
-      - name: prisma generate
-        run: npm run prisma:generate
+        run: yarn install
       - name: serverless deploy
-        run: npm run deploy
+        run: yarn deploy

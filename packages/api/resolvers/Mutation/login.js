@@ -1,6 +1,6 @@
-const { compare } = require('bcrypt');
-const { sign } = require('jsonwebtoken');
-const createModification = require('../../utils/createModification');
+const { compare } = require("bcryptjs");
+const { sign } = require("jsonwebtoken");
+const createModification = require("../../utils/createModification");
 
 module.exports = async (parent, { email, password, modifications }, ctx) => {
   const user = await ctx.prisma.user.findOne({ where: { email } });
@@ -12,7 +12,7 @@ module.exports = async (parent, { email, password, modifications }, ctx) => {
 
   const passwordValid = await compare(password, user.password);
   if (!passwordValid) {
-    throw new Error('Invalid password');
+    throw new Error("Invalid password");
   }
 
   if (modifications) {

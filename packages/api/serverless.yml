@@ -4,6 +4,9 @@ app: recipe-lab
 name: recipe-lab-api
 
 inputs:
-  src: ./
+  src:
+    src: ./
+    hook: yarn build
+    dist: ./dist
   env:
     DATABASE_URL: ${env:DATABASE_URL}
