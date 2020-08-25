@@ -225,7 +225,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/core@npm:7.11.4, @babel/core@npm:^7.0.0":
+"@babel/core@npm:7.11.4, @babel/core@npm:^7.0.0, @babel/core@npm:^7.11.4":
   version: 7.11.4
   resolution: "@babel/core@npm:7.11.4"
   dependencies:
@@ -3309,7 +3309,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@studiodrishti/recipe-lab-api@workspace:packages/api"
   dependencies:
-    "@babel/core": ^7.0.0
+    "@babel/core": ^7.11.4
     "@graphql-tools/schema": 6.0.18
     "@prisma/cli": 2.5.1
     "@prisma/client": 2.5.1
@@ -3317,11 +3317,11 @@ __metadata:
     bcryptjs: ^2.4.3
     cuid: 2.1.8
     express: 4.17.1
-    graphql: 15.3.0
+    graphql: 14.7.0
     graphql-middleware: 4.0.2
     graphql-shield: 7.3.5
     jsonwebtoken: 8.5.1
-    mathjs: ^7.1.0
+    mathjs: ^7.2.0
     morgan: 1.10.0
     parcel: next
     serverless: ^1.79.0
@@ -3359,7 +3359,7 @@ __metadata:
     jest-localstorage-mock: 2.4.3
     jest-transform-graphql: 2.1.0
     js-cookie: 2.2.1
-    mathjs: ^7.1.0
+    mathjs: ^7.2.0
     next: 9.5.2
     next-cookies: 2.0.3
     next-plugin-graphql: 0.0.2
@@ -3400,8 +3400,8 @@ __metadata:
     identity-obj-proxy: 3.0.0
     jest: 26.4.2
     jest-localstorage-mock: 2.4.3
-    lint-staged: ^10.2.11
-    prettier: 2.0.5
+    lint-staged: ^10.2.12
+    prettier: 2.1.0
     stylelint: 13.6.1
     stylelint-config-prettier: 8.0.2
     stylelint-config-recommended: ^3.0.0
@@ -6823,6 +6823,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"commander@npm:^6.0.0":
+  version: 6.0.0
+  resolution: "commander@npm:6.0.0"
+  checksum: c7dad02c772d6c6eb76f0642756408df98c730a17c764f5329700638045abd9633038251277ce7d6a077a96d89e6261ee268a4249a3bc4edd607ca8a0126642f
+  languageName: node
+  linkType: hard
+
 "commander@npm:~4.1.1":
   version: 4.1.1
   resolution: "commander@npm:4.1.1"
@@ -7149,6 +7156,19 @@ __metadata:
     path-type: ^4.0.0
     yaml: ^1.7.2
   checksum: bbd6bbaefe15938107da21f2b5f2d5ede75c7ed4bca5af904d91987c59b050ac95f5e786d9021e16959e0119b36174b190f6040a1daf6fddc75361ab123c0d45
+  languageName: node
+  linkType: hard
+
+"cosmiconfig@npm:^7.0.0":
+  version: 7.0.0
+  resolution: "cosmiconfig@npm:7.0.0"
+  dependencies:
+    "@types/parse-json": ^4.0.0
+    import-fresh: ^3.2.1
+    parse-json: ^5.0.0
+    path-type: ^4.0.0
+    yaml: ^1.10.0
+  checksum: 151fcb91773c0ae826fc801eab86f8f818605dbf63c8e5515adf0ff0fec5ede8e614f387f93c088d65527a2ea9021f0cd8c6b6e5c7fef2b77480b5e2c33700dc
   languageName: node
   linkType: hard
 
@@ -8558,7 +8578,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"enquirer@npm:^2.3.5":
+"enquirer@npm:^2.3.5, enquirer@npm:^2.3.6":
   version: 2.3.6
   resolution: "enquirer@npm:2.3.6"
   dependencies:
@@ -9133,7 +9153,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"execa@npm:^4.0.0, execa@npm:^4.0.1":
+"execa@npm:^4.0.0, execa@npm:^4.0.1, execa@npm:^4.0.3":
   version: 4.0.3
   resolution: "execa@npm:4.0.3"
   dependencies:
@@ -10493,19 +10513,19 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"graphql@npm:15.3.0":
-  version: 15.3.0
-  resolution: "graphql@npm:15.3.0"
-  checksum: f01c05eb9102a88f33b4276b38399f066067d5be03c66c3bfec3e71e1793a91750e408f7abb001831bc2daf09746ab70ac0af16894d0ef1f1c1246fb0c2f4b0e
-  languageName: node
-  linkType: hard
-
-"graphql@npm:^14.5.3":
+"graphql@npm:14.7.0, graphql@npm:^14.5.3":
   version: 14.7.0
   resolution: "graphql@npm:14.7.0"
   dependencies:
     iterall: ^1.2.2
   checksum: 3b7d50f98f5c66db36327d6dd331367c6da166d701b5bad669664e8602a180ee50dcb5ae3e1f9874e7fa59c1217f50a52a922fc77b5a1e04276426e67815b0ed
+  languageName: node
+  linkType: hard
+
+"graphql@npm:15.3.0":
+  version: 15.3.0
+  resolution: "graphql@npm:15.3.0"
+  checksum: f01c05eb9102a88f33b4276b38399f066067d5be03c66c3bfec3e71e1793a91750e408f7abb001831bc2daf09746ab70ac0af16894d0ef1f1c1246fb0c2f4b0e
   languageName: node
   linkType: hard
 
@@ -11085,7 +11105,7 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"import-fresh@npm:^3.0.0, import-fresh@npm:^3.1.0":
+"import-fresh@npm:^3.0.0, import-fresh@npm:^3.1.0, import-fresh@npm:^3.2.1":
   version: 3.2.1
   resolution: "import-fresh@npm:3.2.1"
   dependencies:
@@ -13026,7 +13046,7 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"lint-staged@npm:^10.0.8, lint-staged@npm:^10.2.11":
+"lint-staged@npm:^10.0.8":
   version: 10.2.11
   resolution: "lint-staged@npm:10.2.11"
   dependencies:
@@ -13051,6 +13071,31 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
+"lint-staged@npm:^10.2.12":
+  version: 10.2.12
+  resolution: "lint-staged@npm:10.2.12"
+  dependencies:
+    chalk: ^4.1.0
+    cli-truncate: ^2.1.0
+    commander: ^6.0.0
+    cosmiconfig: ^7.0.0
+    debug: ^4.1.1
+    dedent: ^0.7.0
+    enquirer: ^2.3.6
+    execa: ^4.0.3
+    listr2: ^2.6.0
+    log-symbols: ^4.0.0
+    micromatch: ^4.0.2
+    normalize-path: ^3.0.0
+    please-upgrade-node: ^3.2.0
+    string-argv: 0.3.1
+    stringify-object: ^3.3.0
+  bin:
+    lint-staged: bin/lint-staged.js
+  checksum: 286f043aa5b5687ca61e11f6c8d88ff4a873ad98b277054bebca5d39741517078d06cb3e604651d28257176cde8747bb22b36517435d125d7e4261fde1e88abe
+  languageName: node
+  linkType: hard
+
 "listr2@npm:^2.1.0":
   version: 2.5.1
   resolution: "listr2@npm:2.5.1"
@@ -13066,6 +13111,24 @@ fsevents@^1.2.7:
   peerDependencies:
     enquirer: ">= 2.3.0 < 3"
   checksum: e746edec471ade98aed1e6bfb4ca920e71d414a8be61a2bdcd8d090ceb63540ac732ecde6d0087953095bac08f49143fc912f8789855dad519b528bfcc65821a
+  languageName: node
+  linkType: hard
+
+"listr2@npm:^2.6.0":
+  version: 2.6.0
+  resolution: "listr2@npm:2.6.0"
+  dependencies:
+    chalk: ^4.1.0
+    cli-truncate: ^2.1.0
+    figures: ^3.2.0
+    indent-string: ^4.0.0
+    log-update: ^4.0.0
+    p-map: ^4.0.0
+    rxjs: ^6.6.2
+    through: ^2.3.8
+  peerDependencies:
+    enquirer: ">= 2.3.0 < 3"
+  checksum: c0d47e8a6c76ff8d7398ff67fb826c6b602cb834fd598bfd6e1956ca65c33b41c177f7f4cdc9df32e9b2c58c685e0e399a642feeb763eea45aebf50b18cf1d5c
   languageName: node
   linkType: hard
 
@@ -13540,9 +13603,9 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"mathjs@npm:^7.1.0":
-  version: 7.1.0
-  resolution: "mathjs@npm:7.1.0"
+"mathjs@npm:^7.2.0":
+  version: 7.2.0
+  resolution: "mathjs@npm:7.2.0"
   dependencies:
     complex.js: ^2.0.11
     decimal.js: ^10.2.0
@@ -13554,7 +13617,7 @@ fsevents@^1.2.7:
     typed-function: ^2.0.0
   bin:
     mathjs: bin/cli.js
-  checksum: a73a832ca88fb5cbd2342e785473813d52a1b7067323d18430eda10d6df8247672fddc2266c9feb7595448de90e9d674713bbf7dee8fbd03f65c492335daeb10
+  checksum: 3bc543491ca0d11128695541b1fa75e045c958e8e7c3300dc2c9d2723901a48ffc9e10f80fe62f86d1e2a7b1a85c83b5aa78a642b343824acf8fb9baa3c8602e
   languageName: node
   linkType: hard
 
@@ -16476,12 +16539,12 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"prettier@npm:2.0.5":
-  version: 2.0.5
-  resolution: "prettier@npm:2.0.5"
+"prettier@npm:2.1.0":
+  version: 2.1.0
+  resolution: "prettier@npm:2.1.0"
   bin:
     prettier: bin-prettier.js
-  checksum: d249d89361870a29b20e8b268cb09e908490b8c9e21f70393d12a213701f29ba7e95b7f9ce0ad63929c16ce475176742481911737ae3da4a498873e4a3b90990
+  checksum: f955d380d2892284c28bbfe32b1601cfcd7a24d8b310832937773b9e733f624e38ff70cbafee80e9553bdb3c55783d019163667bf9a69df4e6f7c2acdcf54c06
   languageName: node
   linkType: hard
 
@@ -21112,7 +21175,7 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"yaml@npm:^1.7.2":
+"yaml@npm:^1.10.0, yaml@npm:^1.7.2":
   version: 1.10.0
   resolution: "yaml@npm:1.10.0"
   checksum: d4cc9f9724f8d0aebc2cf52e4e6aa7059f12d50deb54b5225d103462fb2af36e5c0bb419101ca4b1f0cd3b4db9e4139cf2c690e863ac6227648d39d6f4e2522c
