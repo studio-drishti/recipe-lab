@@ -10,16 +10,15 @@ const typeDefs = require("./schema");
 
 const prisma = new PrismaClient();
 
-const schema = applyMiddleware(
-  makeExecutableSchema({
-    typeDefs,
-    resolvers,
-  }),
-  permissions
-);
+const schema = makeExecutableSchema({
+  typeDefs,
+  resolvers,
+});
+
+const schemaWithMiddleware = applyMiddleware(schema, permissions);
 
 const server = new ApolloServer({
-  schema,
+  schema: schemaWithMiddleware,
   context: (request) => {
     return {
       ...request,

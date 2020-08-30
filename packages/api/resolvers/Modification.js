@@ -1,5 +1,3 @@
-const { mod } = require('mathjs');
-
 module.exports = {
   alterations: ({ id }, args, ctx) =>
     ctx.prisma.alteration.findMany({ where: { modification: { id } } }),
