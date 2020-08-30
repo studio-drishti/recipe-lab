@@ -1,7 +1,7 @@
 const app = require("./app");
-// const morgan = require("morgan");
+const morgan = require("morgan");
 
-// app.use(morgan("common"));
+app.use(morgan("common"));
 
 const PORT = process.env.PORT || 4000;
 
