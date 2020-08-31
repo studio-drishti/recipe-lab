@@ -1,7 +1,8 @@
-component: "@sls-next/serverless-component"
 org: studiodrishti
 app: recipe-lab
 name: recipe-lab-web
 
-inputs:
-  domain: api.recipelab.io
+recipe-lab-web:
+  component: "@sls-next/serverless-component"
+  inputs:
+    domain: api.recipelab.io
