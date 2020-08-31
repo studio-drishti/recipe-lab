@@ -1,4 +1,4 @@
-component: serverless-next.js
+component: "@sls-next/serverless-component"
 org: studiodrishti
 app: recipe-lab
 name: recipe-lab-web
