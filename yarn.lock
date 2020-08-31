@@ -2259,7 +2259,6 @@ __metadata:
   dependencies:
     "@apollo/client": 3.1.4
     "@babel/core": 7.11.4
-    "@prisma/client": 2.5.1
     apollo-upload-client: 14.1.1
     babel-jest: 26.3.0
     classnames: 2.2.6
