@@ -5,4 +5,4 @@ name: recipe-lab-web
 recipe-lab-web:
   component: "@sls-next/serverless-component"
   inputs:
-    domain: api.recipelab.io
+    domain: recipelab.io
