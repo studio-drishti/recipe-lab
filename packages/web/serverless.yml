@@ -1,0 +1,7 @@
+component: serverless-next.js
+org: studiodrishti
+app: recipe-lab
+name: recipe-lab-web
+
+inputs:
+  domain: api.recipelab.io

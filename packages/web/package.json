@@ -7,13 +7,11 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "deploy": "serverless"
   },
   "dependencies": {
     "@apollo/client": "3.1.4",
-    "@graphql-tools/graphql-file-loader": "6.1.0",
-    "@graphql-tools/load": "6.1.0",
-    "@graphql-tools/schema": "6.1.0",
     "@prisma/client": "2.5.1",
     "apollo-upload-client": "14.1.1",
     "classnames": "2.2.6",
@@ -25,8 +23,6 @@
     "filepond-plugin-image-resize": "2.0.7",
     "filepond-plugin-image-transform": "3.7.4",
     "graphql": "15.3.0",
-    "graphql-middleware": "4.0.2",
-    "graphql-shield": "7.3.5",
     "graphql-tag": "^2.11.0",
     "isomorphic-unfetch": "3.0.0",
     "js-cookie": "2.2.1",
@@ -43,6 +39,7 @@
     "react-icons": "3.11.0",
     "react-textarea-autosize": "8.2.0",
     "react-uid": "2.3.0",
+    "serverless": "^1.80.0",
     "subscriptions-transport-ws": "^0.9.18",
     "validator": "13.1.1"
   },

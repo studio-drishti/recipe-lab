@@ -8,21 +8,36 @@ env:
   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
 jobs:
-  api:
+  # api:
+  #   runs-on: ubuntu-latest
+  #   defaults:
+  #     run:
+  #       working-directory: packages/api
+  #   steps:
+  #     - uses: actions/checkout@v2
+  #     - uses: actions/setup-node@v2-beta
+  #       with:
+  #         node-version: "12"
+  #     - name: install all dependencies
+  #       run: npm install --no-optional --no-package-lock
+  #     - name: generate prisma client
+  #       run: npm run prisma:generate
+  #     - name: prune dependencies
+  #       run: npm prune --production
+  #     - name: serverless deploy
+  #       run: npm run deploy
+
+  web:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: packages/api
+        working-directory: packages/web
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2-beta
         with:
           node-version: "12"
-      - name: install all dependencies
-        run: npm install --no-optional --no-package-lock
-      - name: generate prisma client
-        run: npm run prisma:generate
-      - name: prune dependencies
-        run: npm prune --production
+      - name: install dependencies
+        run: npm install --production --no-optional --no-package-lock
       - name: serverless deploy
         run: npm run deploy
