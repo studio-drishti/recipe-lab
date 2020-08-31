@@ -8,6 +8,20 @@ env:
   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
 jobs:
+  web:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: packages/web
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2-beta
+        with:
+          node-version: "12"
+      - name: install dependencies
+        run: npm install --production --no-optional --no-package-lock
+      - name: serverless deploy
+        run: npm run deploy
   # api:
   #   runs-on: ubuntu-latest
   #   defaults:
@@ -26,18 +40,3 @@ jobs:
   #       run: npm prune --production
   #     - name: serverless deploy
   #       run: npm run deploy
-
-  web:
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: packages/web
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2-beta
-        with:
-          node-version: "12"
-      - name: install dependencies
-        run: npm install --production --no-optional --no-package-lock
-      - name: serverless deploy
-        run: npm run deploy
