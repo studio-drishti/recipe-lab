@@ -14,3 +14,9 @@ inputs:
     NODE_ENV: production
   domain: api.recipelab.io
   region: us-west-2
+  vpc:
+    securityGroupIds:
+      - sg-1318933a
+    subnetIds:
+      - subnet-22a0067f
+      - subnet-9f79ade7
