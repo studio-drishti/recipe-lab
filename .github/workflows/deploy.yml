@@ -1,43 +1,43 @@
-name: deploy
+# name: deploy
 
-on: pull_request
+# on: pull_request
 
-env:
-  SERVERLESS_ACCESS_KEY: ${{ secrets.SERVERLESS_ACCESS_KEY }}
-  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-  DATABASE_URL: ${{ secrets.DATABASE_URL }}
+# env:
+#   SERVERLESS_ACCESS_KEY: ${{ secrets.SERVERLESS_ACCESS_KEY }}
+#   AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+#   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+#   DATABASE_URL: ${{ secrets.DATABASE_URL }}
 
-jobs:
-  api:
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: packages/api
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2-beta
-        with:
-          node-version: "12"
-      - name: install all dependencies
-        run: npm install --no-optional --no-package-lock
-      - name: generate prisma client
-        run: npm run prisma:generate
-      - name: prune dependencies
-        run: npm prune --production
-      - name: serverless deploy
-        run: npm run deploy
-  # web:
-  #   runs-on: ubuntu-latest
-  #   defaults:
-  #     run:
-  #       working-directory: packages/web
-  #   steps:
-  #     - uses: actions/checkout@v2
-  #     - uses: actions/setup-node@v2-beta
-  #       with:
-  #         node-version: "12"
-  #     - name: install dependencies
-  #       run: npm install --production --no-optional --no-package-lock
-  #     - name: serverless deploy
-  #       run: npm run deploy
+# jobs:
+#   api:
+#     runs-on: ubuntu-latest
+#     defaults:
+#       run:
+#         working-directory: packages/api
+#     steps:
+#       - uses: actions/checkout@v2
+#       - uses: actions/setup-node@v2-beta
+#         with:
+#           node-version: "12"
+#       - name: install all dependencies
+#         run: npm install --no-optional --no-package-lock
+#       - name: generate prisma client
+#         run: npm run prisma:generate
+#       - name: prune dependencies
+#         run: npm prune --production
+#       - name: serverless deploy
+#         run: npm run deploy
+#   web:
+#     runs-on: ubuntu-latest
+#     defaults:
+#       run:
+#         working-directory: packages/web
+#     steps:
+#       - uses: actions/checkout@v2
+#       - uses: actions/setup-node@v2-beta
+#         with:
+#           node-version: "12"
+#       - name: install dependencies
+#         run: npm install --production --no-optional --no-package-lock
+#       - name: serverless deploy
+#         run: npm run deploy
