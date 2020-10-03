@@ -1,6 +1,6 @@
-const { hash } = require('bcrypt');
-const normalizeEmail = require('validator/lib/normalizeEmail');
-const getUserId = require('../../utils/getUserId');
+const { hash } = require("bcryptjs");
+const normalizeEmail = require("validator/lib/normalizeEmail");
+const getUserId = require("../../utils/getUserId");
 
 module.exports = async (
   parent,
@@ -21,7 +21,7 @@ module.exports = async (
   /**
    * Only Executive Chefs may change a user's role
    */
-  if (role && sessionUser.role === 'EXECUTIVE_CHEF') {
+  if (role && sessionUser.role === "EXECUTIVE_CHEF") {
     data.role = role;
   }
 

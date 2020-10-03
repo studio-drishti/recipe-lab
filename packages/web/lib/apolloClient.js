@@ -1,8 +1,8 @@
-import { ApolloClient, InMemoryCache } from '@apollo/client';
-import { createUploadLink } from 'apollo-upload-client';
-import { setContext } from '@apollo/client/link/context';
-import fetch from 'isomorphic-unfetch';
-import nextCookie from 'next-cookies';
+import { ApolloClient, InMemoryCache } from "@apollo/client";
+import { createUploadLink } from "apollo-upload-client";
+import { setContext } from "@apollo/client/link/context";
+import fetch from "isomorphic-unfetch";
+import nextCookie from "next-cookies";
 
 // On the client, we store the Apollo Client in the following variable.
 // This prevents the client from reinitializing between page transitions.
@@ -19,11 +19,11 @@ export const initOnContext = (ctx) => {
 
   // We consider installing `withApollo({ ssr: true })` on global App level
   // as antipattern since it disables project wide Automatic Static Optimization.
-  if (process.env.NODE_ENV === 'development') {
+  if (process.env.NODE_ENV === "development") {
     if (inAppContext) {
       console.warn(
-        'Warning: You have opted-out of Automatic Static Optimization due to `withApollo` in `pages/_app`.\n' +
-          'Read more: https://err.sh/next.js/opt-out-auto-static-optimization\n'
+        "Warning: You have opted-out of Automatic Static Optimization due to `withApollo` in `pages/_app`.\n" +
+          "Read more: https://err.sh/next.js/opt-out-auto-static-optimization\n"
       );
     }
   }
@@ -59,7 +59,7 @@ export const initOnContext = (ctx) => {
 export const initApolloClient = (initialState, ctx) => {
   // Make sure to create a new client for every server-side request so that data
   // isn't shared between connections (which would be bad)
-  if (typeof window === 'undefined') {
+  if (typeof window === "undefined") {
     return createApolloClient(initialState, ctx);
   }
 
@@ -75,15 +75,15 @@ export const createApolloClient = (initialState, ctx) => {
   const { token } = nextCookie(ctx ? ctx : {});
 
   const httpLink = createUploadLink({
-    uri: 'http://localhost:4000/graphql',
-    credentials: 'same-origin',
+    uri: process.env.NEXT_PUBLIC_API_URL,
+    credentials: "same-origin",
     fetch,
   });
 
   const authLink = setContext((_, { headers }) => ({
     headers: {
       ...headers,
-      Authorization: token ? `Bearer ${token}` : '',
+      Authorization: token ? `Bearer ${token}` : "",
     },
   }));
 

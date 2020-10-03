@@ -1,11 +1,11 @@
-version: '3'
+version: "3"
 services:
   app:
     # Uncomment the next line to use a non-root user for all processes.
     # See https://aka.ms/vscode-remote/containers/non-root for details.
     # user: node
 
-    build: 
+    build:
       context: .
       dockerfile: Dockerfile
       args:
@@ -14,7 +14,7 @@ services:
         # On Linux, you may need to update USER_UID and USER_GID below if not your local UID is not 1000.
         USER_UID: 1000
         USER_GID: 1000
-    
+
     volumes:
       - ..:/workspace:cached
 
@@ -22,6 +22,7 @@ services:
       - NODE_ENV=development
       - APP_SECRET=secret1234
       - EMAIL_FROM=no-reply@recipelab.io
+      - DATABASE_URL="postgresql://dbadmin:secretsauce@db:5432/recipelab"
 
     # Overrides default command so things don't shut down after the process ends.
     command: sleep infinity
@@ -32,10 +33,9 @@ services:
   db:
     image: postgres:12
     restart: unless-stopped
-    ports: 
+    ports:
       - 5432:5432
     environment:
       POSTGRES_PASSWORD: secretsauce
       POSTGRES_USER: dbadmin
       POSTGRES_DB: recipelab
- 
